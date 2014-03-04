@@ -1,0 +1,11 @@
+navigation={
+	app{
+		home()
+		catalogos(){
+			puesto(controller:'puesto',action:'index')
+			empleado(controller:'empleado',action:'index')
+			departamento(controller:'departamento',action:'index')
+			ubicacion(controller:'ubicacion',action:'index')
+		}
+	}
+}
