@@ -1,3 +1,5 @@
+<%@page expressionCodec="none" %>
+
 <div class="panel panel-default">
 	<div class="panel-heading">
 		
@@ -13,7 +15,15 @@
 					<f:field property="nombres" input-class="form-control"/>
 					<f:field property="curp" input-class="form-control"/>
 					<f:field property="rfc" input-class="form-control"/>
-					<f:field property="alta" input-class="form-control"/>
+                                        
+                                        
+                                        <f:field property="alta" input-class="form-control" input-id="alta"/>
+                                        <%--
+					<f:field property="alta">
+                                            <jqueryPicker:date class="form-control" name="alta" value="${empleadoInstance.alta}" />
+                                        </f:field>
+                                        --%>
+                                        
 				</f:with>
 			</fieldset>
 			

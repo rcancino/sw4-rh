@@ -113,3 +113,15 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+//jqueryDateTimePicker {
+//    format {
+//        java {
+//            datetime = "dd/MM/yyyy HH:mm"
+//            date = "dd/MM/yyyy"
+//        }
+//        picker {
+//            date = "'dd/mm/yy'"
+//            time = "'H-mm'"
+//        }
+//    }
+//}

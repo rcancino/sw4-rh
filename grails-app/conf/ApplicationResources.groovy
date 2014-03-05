@@ -7,4 +7,8 @@ modules = {
     	resource url:'css/luxor.css'
 
     }
+    datepicker{
+        dependsOn 'jquery-ui'
+        resource url:'js/jquery.ui.datepicker-es.js'
+    }
 }
