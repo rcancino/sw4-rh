@@ -6,6 +6,14 @@ navigation={
 			empleado(controller:'empleado',action:'index')
 			departamento(controller:'departamento',action:'index')
 			ubicacion(controller:'ubicacion',action:'index')
+            sat(controller:'catalogosDelSat'){
+            	bancos()
+            	percepciones()
+            	deducciones()
+            	incapacidades()
+            	regimenes(titleText:'Tipos de Régimen')  
+            	riesgos()
+            }
 		}
 	}
 }

@@ -11,10 +11,11 @@
 		<div class="collapse navbar-collapse" id="mainMenu">
 		<ul class="nav navbar-nav">
 			
-			<li class="dropdown">
+			%{-- <li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown">Catálogos <b class="caret"></b></a>
 				<nav:menu id="catalogosMenu" scope="app/catalogos" depth="2" class="dropdown-menu"/>
-			</li>
+			</li> --}%
+			<g:render template="/_menu/catalogos"/>
 			<li><a href="#">Operaciones</a></li>
 			<li><a href="#">Reportes</a></li>
 			

@@ -11,7 +11,7 @@
 				<div class="col-md-12">
 					<g:pageProperty name="page.header"/>
 					<div class="btn-group">
-						<g:link action="list" class="btn btn-default">
+						<g:link action="index" class="btn btn-default">
 							<span class="glyphicon glyphicon-repeat"></span> Todos
 						</g:link>
 						<g:link action="create" class="btn btn-default">
