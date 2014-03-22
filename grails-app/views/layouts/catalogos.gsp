@@ -6,10 +6,19 @@
 	</head>
 	</html>
 	<body>
-		<div class="container-fluid">
+		<div class="container">
 			<div class="row">
 				<div class="col-md-12">
-					<g:pageProperty name="page.header"/>
+					
+					<div class="alert alert-info">
+						<g:pageProperty name="page.header"/>
+						<g:if test="${flash.message}">
+							<div class="message" role="status">
+								<strong>${flash.message}</strong>
+							</div>
+						</g:if>
+					</div>
+					
 					<div class="btn-group">
 						<g:link action="index" class="btn btn-default">
 							<span class="glyphicon glyphicon-repeat"></span> Todos

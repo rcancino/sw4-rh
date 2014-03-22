@@ -9,6 +9,6 @@ class SatBanco {
     static constraints = {
         clave blank:false,unique:true,maxSize:3
         nombre blank:false,maxSize:300
-        nombreCorto blank:false,maxSize:30
+        nombreCorto blank:false,maxSize:40
     }
 }

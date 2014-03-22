@@ -1,16 +1,26 @@
 <%@page expressionCodec="none" %>
 <r:require module="datepicker"/>
-<input type="text" id="${id}" class="form-control"></input>
+<div class="input-group">
+	<input type="text" id="${property}" name="${property}" class="form-control" value="${g.formatDate(date:value,format:'dd/MM/yyyy') }"></input>
+	<span class="input-group-btn">
+        <button id="${property}Btn" class="btn btn-default" type="button"><span class="glyphicon glyphicon-calendar"></span></button>
+      </span>
+</div>
+
 
 <r:script>
     /** JavaScrip para date picker **/
-    var item=$("#${id}").datepicker({
-        showOn: "both",
+    var item=$("#${property}").datepicker({
+        //showOn: "both",
         changeMonth: true,
         changeYear: true,
         appendText: "",
         showAnim: "fold",
-        showButtonPanel: true 
+        showButtonPanel: true,
+        dateFormat:"dd/mm/yy" 
+    });
+    $("#${property}Btn").click(function(){
+    	item.datepicker('show');
     });
     //console.log('Tipo: '+item)
 </r:script>

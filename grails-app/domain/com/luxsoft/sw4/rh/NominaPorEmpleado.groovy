@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh
 
-class ConceptoDeNomita {
+class NominaPorEmpleado {
 
     static constraints = {
     }

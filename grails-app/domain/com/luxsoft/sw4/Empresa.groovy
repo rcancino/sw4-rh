@@ -1,7 +1,7 @@
 package com.luxsoft.sw4
 
 
-class Empresa {
+class Empresa implements Serializable{
 	
 	String clave
 	String nombre

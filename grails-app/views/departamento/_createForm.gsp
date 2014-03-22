@@ -5,11 +5,12 @@
 	</div>
 	<div class="panel-body">	
 	
-		<g:form action="create" role="form" class="form-horizontal">
+		<g:form action="${actionForm?:'save' }" role="form" class="form-horizontal" method="${actionMethod?:'POST' }">
 			<fieldset>
 			<f:with bean="departamentoInstance">
-				<f:field property="clave" input-class="form-control" />
-				<f:field property="descripcion" input-class="form-control" />
+				<g:hiddenField name="id" value="${departamentoInstance?.id}"/>
+				<f:field property="clave" input-class="form-control" value="${departamentoInstance?.clave }"/>
+				<f:field property="descripcion" input-class="form-control" value="${departamentoInstance?.descripcion }"/>
 			</f:with>
 			</fieldset>
 			<div class="form-group">

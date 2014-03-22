@@ -6,6 +6,10 @@ navigation={
 			empleado(controller:'empleado',action:'index')
 			departamento(controller:'departamento',action:'index')
 			ubicacion(controller:'ubicacion',action:'index')
+			conceptos(controller:'conceptoDeNomina', action:'index'){
+				percepciones()
+				deducciones()
+			}
             sat(controller:'catalogosDelSat'){
             	bancos()
             	percepciones()
@@ -14,6 +18,12 @@ navigation={
             	regimenes(titleText:'Tipos de Régimen')  
             	riesgos()
             }
+		}
+		operaciones(){
+			compensaciones()
+			aportaciones()
+			incapacidades()
+			horasExtras()
 		}
 	}
 }

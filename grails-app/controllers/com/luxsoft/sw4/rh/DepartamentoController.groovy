@@ -11,7 +11,7 @@ class DepartamentoController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
+        params.max = Math.min(max ?: 15, 100)
         respond Departamento.list(params), model:[departamentoInstanceCount: Departamento.count()]
     }
 
@@ -36,18 +36,22 @@ class DepartamentoController {
         }
 
         departamentoInstance.save flush:true
-
-        request.withFormat {
+		flash.message = message(code: 'default.created.message', args: [message(code: 'departamentoInstance.label', default: 'Departamento'), departamentoInstance.clave])
+		
+        redirect action:'index'
+		/*
+		request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'departamentoInstance.label', default: 'Departamento'), departamentoInstance.id])
                 redirect departamentoInstance
             }
             '*' { respond departamentoInstance, [status: CREATED] }
-        }
+        }*/
     }
 
     def edit(Departamento departamentoInstance) {
-        respond departamentoInstance
+        //respond departamentoInstance
+		render view:'create', model:[departamentoInstance:departamentoInstance,actionForm:'update',actionMethod:'PUT']
     }
 
     @Transactional
@@ -63,14 +67,16 @@ class DepartamentoController {
         }
 
         departamentoInstance.save flush:true
-
+		flash.message = message(code: 'default.updated.message', args: [message(code: 'Departamento.label', default: 'Departamento'), departamentoInstance.clave])
+		redirect action:'index'
+		/*
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'Departamento.label', default: 'Departamento'), departamentoInstance.id])
                 redirect departamentoInstance
             }
             '*'{ respond departamentoInstance, [status: OK] }
-        }
+        }*/
     }
 
     @Transactional

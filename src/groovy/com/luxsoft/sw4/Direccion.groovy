@@ -4,7 +4,7 @@ import grails.validation.Validateable;
 
 
 @Validateable
-class Direccion {
+class Direccion implements Serializable{
 	
 	String calle
 	String numeroInterior

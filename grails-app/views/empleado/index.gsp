@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
@@ -6,9 +7,8 @@
 </head>
 <body>
 	<content tag="header">
-		<div class="alert alert-info">
-			<h3>Catálogo de empleados</h3>
-		</div>
+		<h3>Catálogo de empleados</h3>
+		
 		
 	</content>
 	<content tag="grid">

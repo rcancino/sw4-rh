@@ -97,9 +97,9 @@ environments {
 log4j = {
     // Example of changing the log pattern for the default console appender:
     //
-    //appenders {
-    //    console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
-    //}
+    appenders {
+        console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+    }
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
@@ -112,16 +112,11 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
+		   
+	info 'grails.app.controllers'
+	
 }
-//jqueryDateTimePicker {
-//    format {
-//        java {
-//            datetime = "dd/MM/yyyy HH:mm"
-//            date = "dd/MM/yyyy"
-//        }
-//        picker {
-//            date = "'dd/mm/yy'"
-//            time = "'H-mm'"
-//        }
-//    }
-//}
+
+grails.plugins.twitterbootstrap.fixtaglib = true
+
+grails.databinding.dateFormats= ['dd/MM/yyyy','MMddyyyy', 'yyyy-MM-dd HH:mm:ss.S', "yyyy-MM-dd'T'hh:mm:ss'Z'"]
