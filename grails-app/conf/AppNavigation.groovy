@@ -20,10 +20,12 @@ navigation={
             }
 		}
 		operaciones(){
+			tiempoExtras(controller:'tiempoExtra',action:'index')
+			nomina(controller:'nomina',action:'index')
 			compensaciones()
 			aportaciones()
 			incapacidades()
-			horasExtras()
+			
 		}
 	}
 }

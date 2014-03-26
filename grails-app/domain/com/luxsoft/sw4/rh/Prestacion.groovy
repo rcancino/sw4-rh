@@ -2,7 +2,7 @@ package com.luxsoft.sw4.rh
 
 import com.luxsoft.sw4.Empresa
 
-class Pestacion {
+class Prestacion {
 	
 	Empresa empresa
 	String nombre

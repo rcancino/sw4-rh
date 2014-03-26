@@ -2,17 +2,16 @@ package com.luxsoft.sw4.rh
 
 class SeguridadSocial {
 	
-	String tipoDeEmpleado
+	Empleado empleado
 	String numero
-	String tipoDeContrato
 	Date alta
 	String turno
 	String unidadMedica
-	
+	String comentario
 
     static constraints = {
-		tipoDeEmpleado inList:['SINDICALIZADO','CONFIANZA']
-		tipoDeContrato inList:['EVENTUAL','MEDIO TIEMPO','TIEMPO COMPLETO']
 		turno inList:['MATUTINO','NOCTURNO','MIXTO']
+		unidadMedica nullable:true
+		comentario nullable:true,maxSize:300
     }
 }

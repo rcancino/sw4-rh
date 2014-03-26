@@ -5,7 +5,6 @@ import com.luxsoft.sw4.Direccion
 class DatosPersonales {
 	
 	Empleado empleado
-	Date fechaDeNacimiento
 	String lugarDeNacimiento
 	String telefono1
 	String telefono2

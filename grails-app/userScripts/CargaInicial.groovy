@@ -52,8 +52,8 @@ def cargarUbicaciones(){
 }
 
 cargarEmpresa()
-cargarDepartamentos()
-cargarPuestos()
-cargarUbicaciones()
+//cargarDepartamentos()
+//cargarPuestos()
+//cargarUbicaciones()
 
 

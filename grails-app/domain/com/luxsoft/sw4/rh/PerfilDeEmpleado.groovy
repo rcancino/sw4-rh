@@ -8,11 +8,13 @@ class PerfilDeEmpleado implements Serializable{
 	
 	Empresa empresa
 	Empleado empleado
-	Integer numeroDeTrabajador
+	String tipo
+	String numeroDeTrabajador
 	Puesto puesto
 	Departamento departamento
 	Ubicacion ubicacion
-	
+	String tipoDeContrato
+	String jornada
 
 	Date dateCreated
 	Date lastUpdated
@@ -20,9 +22,12 @@ class PerfilDeEmpleado implements Serializable{
     static constraints = {
 		empresa()
 		empleado()
+		tipo inList:['SINDICALIZADO','CONFIANZA']
 		numeroDeTrabajador(nullable:true)
 		puesto()
 		departamento()
 		ubicacion()
+		tipoDeContrato inList:['EVENTUAL','MEDIO TIEMPO','TIEMPO COMPLETO']
+		jornada inList:['MEDIA','COMPLETA']
     }
 }

@@ -4,7 +4,7 @@
 	<input type="text" id="${property}" name="${property}" class="form-control" value="${g.formatDate(date:value,format:'dd/MM/yyyy') }"></input>
 	<span class="input-group-btn">
         <button id="${property}Btn" class="btn btn-default" type="button"><span class="glyphicon glyphicon-calendar"></span></button>
-      </span>
+     </span>
 </div>
 
 
