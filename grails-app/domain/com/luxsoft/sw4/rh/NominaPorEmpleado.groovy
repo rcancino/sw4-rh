@@ -12,7 +12,7 @@ class NominaPorEmpleado {
 	BigDecimal salarioDiarioBase
 	BigDecimal salarioDiarioIntegrado
 	BigDecimal total
-	BigDecimal totalGrabado
+	BigDecimal totalGravado
 	BigDecimal totalExcento
 	
 	/* Tiempo extra ?? */

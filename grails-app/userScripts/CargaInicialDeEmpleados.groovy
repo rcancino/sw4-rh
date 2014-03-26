@@ -66,7 +66,8 @@ def empleados(){
 				  status:fields[6].toUpperCase(),
 				  alta:Date.parse("dd/MM/yy", fields[7]?.trim()),
 				  sexo:'M',
-				  fechaDeNacimiento:Date.parse("dd/MM/yy", fields[17]?.trim())
+				  fechaDeNacimiento:Date.parse("dd/MM/yy", fields[17]?.trim()),
+				  clave:fields[1]
 				  )
 			  empleado.save(failOnError:true)
 		  }
@@ -163,3 +164,4 @@ bajas()
 perfiles()
 salarios()
 securoSocial()
+conceptos()

@@ -30,8 +30,8 @@ class Empleado  implements Serializable{
 
     static constraints = {
 	
-    	apellidoPaterno blank:true,maxSize:150
-    	apellidoMaterno blank:true,maxSize:150
+    	apellidoPaterno nullable:true,maxSize:150
+    	apellidoMaterno nullable:true,maxSize:150
     	nombres blank:false,maxSize:300
 		clave nullable:true
     	curp size:1..25,unique:true

@@ -6,7 +6,7 @@ import groovy.transform.EqualsAndHashCode
 class NominaPorEmpleadoDet {
 
 	ConceptoDeNomina concepto
-	BigDecimal importeGrabado
+	BigDecimal importeGravado
 	BigDecimal importeExcento
 	String comentario
 
@@ -20,6 +20,6 @@ class NominaPorEmpleadoDet {
     }
 
     String toString(){
-    	"$tipo Grabado: $importeGrabado Excento: $importeExcento "
+    	"$concepto Grabado: $importeGrabado Excento: $importeExcento "
     }
 }

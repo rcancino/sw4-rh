@@ -13,6 +13,23 @@
 import com.luxsoft.sw4.*
 import com.luxsoft.sw4.rh.*
 
+[[folio:1],[folio:2]].each{ it->
+	it.folio
+}
+
+def nomina=new Nomina(
+	empresa:Empresa.first(),
+	folio:1,
+	periodo:new Periodo('01/01/2014','15/01/2014'),
+	diasPagados:15,
+	pago:Date.parse('dd/MM/yyyy','14/01/2014'),
+	tipo:'GENERAL',
+	periodicidad:'QUINCENAL',
+	formaDePago:'TRANSFERENCIA'
+	)
+nomina.diasPagados=nomina.getDiasPagados()
+nomina.save()
+
 /* Paso 1
 def empleado=Empleado.findWhere(apellidoPaterno:'PRADO')
 def concepto=ConceptoDeNomina.findWhere(clave:'D012')
