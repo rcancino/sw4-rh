@@ -1,5 +1,5 @@
 %{-- nav.navbar.navbar-default.navbar.fixed-top[role="navigation"]>.container>.navbar-header>button.navbar-toggle[type="button" data-toggle="collapse" data-target="#mainMenu"]>span.icon-bar*3^a.navbar-brand[href="#"]{Luxor} --}%
-<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
 	<div class="container">
 		<div class="navbar-header">
 			<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#mainMenu">

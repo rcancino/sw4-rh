@@ -149,6 +149,7 @@ def conceptos(){
 			descripcion=fields[2]
 			tipo=fields[0]
 			claveSat=fields[3].toInteger()
+			clase=fields[4]
 		}
 		
 		concepto.save(failOnError:true)

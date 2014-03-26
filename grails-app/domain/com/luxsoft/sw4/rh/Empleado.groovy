@@ -12,7 +12,7 @@ class Empleado  implements Serializable{
 	String apellidoPaterno
 	String apellidoMaterno
 	String nombres
-	
+	String clave
 	String curp
 	String rfc
     Date alta
@@ -33,6 +33,7 @@ class Empleado  implements Serializable{
     	apellidoPaterno blank:true,maxSize:150
     	apellidoMaterno blank:true,maxSize:150
     	nombres blank:false,maxSize:300
+		clave nullable:true
     	curp size:1..25,unique:true
     	rfc  blank:false,minSize:12,maxSize:13
 		sexo inList:['M','F']
