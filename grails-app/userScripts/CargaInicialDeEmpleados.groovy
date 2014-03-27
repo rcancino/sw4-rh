@@ -127,7 +127,6 @@ def salarios(){
 				salarioDiario:fields[12].toBigDecimal(),
 				salarioDiarioIntegrado:fields[13].toBigDecimal(),
 				formaDePago:'TRANSFERENCIA',
-				banco:'BANAMEX',
 				clabe:fields[14],
 				periodicidad:fields[11]?.startsWith("S")?'SEMANAL':'QUINCENAL'
 			)
