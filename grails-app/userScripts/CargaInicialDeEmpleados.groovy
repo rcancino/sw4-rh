@@ -3,6 +3,7 @@ import java.util.Date;
 import com.luxsoft.sw4.Empresa
 import com.luxsoft.sw4.Direccion
 import com.luxsoft.sw4.rh.*
+import com.luxsoft.sw4.rh.sat.*
 
 import org.apache.commons.lang.exception.ExceptionUtils
 
@@ -18,7 +19,7 @@ def cargarEmpresa(){
 			municipio:'AZCAPOTZALCO',
 			codigoPostal:'02870',
 			estado:'DISTRITO FEDERAL',
-			pais:'MEXICO') 
+			pais:'MEXICO')
 		empresa.save(failOnError:true)
 		println "Empresa inicial generada: $empresa"
 	}else
@@ -28,19 +29,19 @@ def cargarEmpresa(){
 def procesar(Closure task){
   def file=grailsApplication.mainContext.getResource("/WEB-INF/data/empleados.csv").file
   file.eachLine{line,row ->
-    if(row>1){
+	if(row>1){
 		def fields=line.split(",")
 		def curp=fields[9]
 		def empleado=Empleado.findWhere(curp:curp)
-      	//if(empleado){
-          try{
+		  //if(empleado){
+		  try{
 			  task empleado,fields,row
-          }catch(Exception ex){
-		  	String msg=ExceptionUtils.getRootCauseMessage(ex)
+		  }catch(Exception ex){
+			  String msg=ExceptionUtils.getRootCauseMessage(ex)
 			println "Error procesando registro ${fields} Exception: ${msg}"
-          } 
-      	//}
-      	
+		  }
+		  //}
+		  
 	}
   }
 }
@@ -56,7 +57,7 @@ def catalogos(){
 def empleados(){
   procesar{empleado,fields,row ->
 		if(!empleado){
-          def curp=fields[9]
+		  def curp=fields[9]
 			 empleado=new Empleado(
 				  curp:curp,
 				  rfc:fields[10],
@@ -84,7 +85,7 @@ def bajas(){
 		  bajaDeEmpleado.comentario='BAJA IMPORTADA'
 		  bajaDeEmpleado.motivo='OTROS'
 		  bajaDeEmpleado.save(failOnError:true)
-		  println "Baja PROCESADA: ${empleado.curp}  baja:${baja} registro: ${row} " 
+		  println "Baja PROCESADA: ${empleado.curp}  baja:${baja} registro: ${row} "
 		}
 		
 	}
@@ -92,20 +93,29 @@ def bajas(){
 
 def perfiles(){
 	def empresa=Empresa.first()
+	  def riesgoPuesto=SatRiesgoPuesto.first()
+	  def regimenContratacion=SatRegimenContratacion.first()
 	procesar{empleado,fields,row->
-      if(empleado){
-        def perfil=new PerfilDeEmpleado()
+	  if(empleado){
+		def perfil=new PerfilDeEmpleado()
 		perfil.empresa=empresa
 		perfil.tipo=fields[16].toUpperCase()
 		perfil.numeroDeTrabajador=fields[0]
 		perfil.puesto=Puesto.findWhere(clave:fields[21])
-      	perfil.departamento=Departamento.findWhere(clave:fields[18])
-      	perfil.ubicacion=Ubicacion.findWhere(clave:fields[19])
-        perfil.tipoDeContrato='TIEMPO COMPLETO'
+		  perfil.departamento=Departamento.findWhere(clave:fields[18])
+		  perfil.ubicacion=Ubicacion.findWhere(clave:fields[19])
+		perfil.tipoDeContrato='BASE'
 		perfil.jornada=fields[22]=='MEDIA'?'MEDIA':'COMPLETA'
-        empleado.perfil=perfil
-      	empleado.save(failOnError:true)
-      }
+		perfil.riesgoPuesto=riesgoPuesto
+		perfil.regimenContratacion=regimenContratacion
+		empleado.perfil=perfil
+		empleado.save(failOnError:true)
+		perfil.validate()
+		if(perfil.hasErrors())
+			  println 'Error en perfil:' +perfil.errors
+		
+			  
+	  }
 		
 	}
 }
@@ -121,7 +131,7 @@ def salarios(){
 				clabe:fields[14],
 				periodicidad:fields[11]?.startsWith("S")?'SEMANAL':'QUINCENAL'
 			)
-			empleado.save(failOnError:true)	
+			empleado.save(failOnError:true)
 		}
 	}
 }
@@ -156,7 +166,6 @@ def conceptos(){
 		concepto.save(failOnError:true)
 	}
 }
-
 cargarEmpresa()
 catalogos()
 empleados()
@@ -165,3 +174,4 @@ perfiles()
 salarios()
 securoSocial()
 conceptos()
+ 

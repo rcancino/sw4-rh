@@ -23,6 +23,7 @@ class Salario {
 		formaDePago inList:['TRANSFERENCIA','CHEQUE','EFECTIVO']
 		clabe nullable:true
 		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','CATORCENAL','BIMESTRAL','UNIDAD DE OBRA','COMISION','PRECIO ALZADO']
+		banco nullable:true
     }
 	
 	static transients=['salarioMensual']

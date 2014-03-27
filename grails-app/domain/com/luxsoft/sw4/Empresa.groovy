@@ -29,10 +29,11 @@ class Empresa implements Serializable{
 		direccion(nullable:false)
 		registroPatronal(size:1..20)
 		regimen (blank:false,maxSize:300)
-		numeroDeCertificado(blank:true,minSize:1,maxSize:20)
+		numeroDeCertificado(nullable:true,minSize:1,maxSize:20)
 		certificadoDigital(nullable:true,maxSize:1024*1024*2)
 		certificadoDigitalPfx(nullable:true,maxSize:1024*1024*2)
 		llavePrivada(nullable:true,maxSize:1024*1024*2)
+		passwordPfx nullable:true 
     }
 	
 	static mapping = {
