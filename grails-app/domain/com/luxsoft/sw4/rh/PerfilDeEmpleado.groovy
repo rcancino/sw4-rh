@@ -1,8 +1,10 @@
 package com.luxsoft.sw4.rh
 
-import java.util.Date;
 
-import com.luxsoft.sw4.Empresa;
+
+import com.luxsoft.sw4.Empresa
+import com.luxsoft.sw4.rh.sat.SatRegimenContratacion;
+import com.luxsoft.sw4.rh.sat.SatRiesgoPuesto;
 
 class PerfilDeEmpleado implements Serializable{
 	
@@ -15,6 +17,10 @@ class PerfilDeEmpleado implements Serializable{
 	Ubicacion ubicacion
 	String tipoDeContrato
 	String jornada
+	
+	
+	SatRegimenContratacion regimenContratacion
+	SatRiesgoPuesto riesgoPuesto
 
 	Date dateCreated
 	Date lastUpdated
@@ -27,7 +33,7 @@ class PerfilDeEmpleado implements Serializable{
 		puesto()
 		departamento()
 		ubicacion()
-		tipoDeContrato inList:['EVENTUAL','MEDIO TIEMPO','TIEMPO COMPLETO']
-		jornada inList:['MEDIA','COMPLETA']
+		tipoDeContrato inList:['BASE','EVENTUAL','CONFIANZA','SINDICALIZADO','A PRUEBA']
+		jornada inList:['MEDIA','COMPLETA','DIURNA','NOCTURAN','MIXTA','POR HORA','REDUCIDA','CONTINUADA','POR TURNOS']
     }
 }

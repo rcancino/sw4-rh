@@ -18,8 +18,14 @@ class NominaPorEmpleadoDet {
     static constraints = {
     	
     }
+	
+	static transients = ['total']
 
     String toString(){
     	"$concepto Grabado: $importeGrabado Excento: $importeExcento "
     }
+	
+	BigDecimal getTotal() {
+		return importeExcento+importeGravado
+	}
 }

@@ -13,5 +13,6 @@ class SeguridadSocial {
 		turno inList:['MATUTINO','NOCTURNO','MIXTO']
 		unidadMedica nullable:true
 		comentario nullable:true,maxSize:300
+		numero maxSize:15
     }
 }

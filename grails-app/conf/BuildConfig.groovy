@@ -50,6 +50,13 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         runtime 'mysql:mysql-connector-java:5.1.27'
         // runtime 'org.postgresql:postgresql:9.3-1100-jdbc41'
+		compile 'org.apache.xmlbeans:xmlbeans:2.4.0'
+		compile 'com.luxsoft:cfdi:2.3'
+		compile 'axis:axis:1.4'
+		compile 'com.edicom.ediwinws:cfdiClient:1.0'
+		compile 'org.apache.commons:commons-compress:1.1'
+		compile 'net.glxn:qrgen:1.2'
+		//compile 'nomina:nomina:1.0'
     }
 
     plugins {

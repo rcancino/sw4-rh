@@ -18,8 +18,8 @@ class ConceptoDeNomina {
 	Date lastUpdated
 
     static constraints = {
-		clave nullable:false,maxSize:20,unique:true
-		descripcion size:1..250
+		clave nullable:false,maxSize:15,unique:true
+		descripcion size:1..100
 		tipo inList:['PERCEPCION','DEDUCCION']
 		//clase inList:['COMPENSACIONES','','','','']
 		clase maxSize:30

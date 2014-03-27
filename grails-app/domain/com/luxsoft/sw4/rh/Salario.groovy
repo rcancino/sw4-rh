@@ -1,5 +1,7 @@
 package com.luxsoft.sw4.rh
 
+import com.luxsoft.sw4.rh.sat.SatBanco;
+
 class Salario {
 	
 	Empleado empleado
@@ -7,10 +9,12 @@ class Salario {
 	BigDecimal salarioDiario
 	BigDecimal salarioDiarioIntegrado
 	String formaDePago
-	String banco
+	
 	String clabe
 	String baseCotizacion
 	String periodicidad
+	
+	SatBanco banco
 
     static constraints = {
 		salarioDiario()
@@ -18,7 +22,7 @@ class Salario {
 		baseCotizacion nullable:true,maxSize:50
 		formaDePago inList:['TRANSFERENCIA','CHEQUE','EFECTIVO']
 		clabe nullable:true
-		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL']
+		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','CATORCENAL','BIMESTRAL','UNIDAD DE OBRA','COMISION','PRECIO ALZADO']
     }
 	
 	static transients=['salarioMensual']
