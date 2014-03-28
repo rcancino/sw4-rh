@@ -19,7 +19,7 @@ def generarNomina(def folio,def per,def pago,def dia){
 	
 }
 
-generarNomina(new Periodo('01/01/2014','15/01/2014'),Date.parse('dd/MM/yyyy','14/01/2014'),'MARTES')
+//generarNomina(1,new Periodo('01/01/2014','15/01/2014'),Date.parse('dd/MM/yyyy','14/01/2014'),'MARTES')
 
 def importar(def archivo){
 	
@@ -47,7 +47,12 @@ def importar(def archivo){
 			totalGravado:0.0,
 			totalExcento:0.0,
 			total:0.0,
-			comentario:'IMPORTACION INICIAL'
+			comentario:'IMPORTACION INICIAL',
+			antiguedadEnSemanas:0,
+			baseGravable:0.0,
+			impuestoSubsidio:0.0,
+			subsidioEmpleoAplicado:0.0,
+			ubicacion:empleado.perfil.ubicacion
 			)
 		  
 		  println 'Importando nomina para: '+empleado
@@ -58,17 +63,24 @@ def importar(def archivo){
 			  BigDecimal importe=importeString as BigDecimal
 			  if(importe){
 				def cve=columnas[it-1].trim().substring(0,4)
-				def excento=columnas[it-1].contains("E")
-				def concepto=ConceptoDeNomina.findWhere(clave:cve)
+                def subsidioEmpleoAplicado=columnas[it-1].endsWith("A")
+                 
+				 if(!subsidioEmpleoAplicado){
+                    def excento=columnas[it-1].contains("E")
+					def concepto=ConceptoDeNomina.findWhere(clave:cve)
 				
-				def nominaEmpDet=new NominaPorEmpleadoDet(
-				  concepto:concepto,
-				  comentario:'IMPORTACION INICIAL',
-				  importeGravado:!excento?importe:0.0,
-				  importeExcento:excento?importe:0.0
-				)
-				nominaPorEmpleado.addToConceptos(nominaEmpDet)
-				println " Agregando ${nominaEmpDet.concepto}   para: "+it +' '+cve+ " Importe: "+importe
+					def nominaEmpDet=new NominaPorEmpleadoDet(
+						concepto:concepto,
+						comentario:'IMPORTACION INICIAL',
+						importeGravado:!excento?importe:0.0,
+						importeExcento:excento?importe:0.0
+					)
+					nominaPorEmpleado.addToConceptos(nominaEmpDet)
+					println " Agregando ${nominaEmpDet.concepto}   para: "+it +' '+cve+ " Importe: "+importe
+                  }else{
+				   nominaPorEmpleado.subsidioEmpleoAplicado=importe
+				  }
+				
 				
 			  }
 			  
@@ -85,16 +97,16 @@ def importar(def archivo){
 	  
   }
   
-  importar("nomina_q1.csv")
+// importar("nomina_q1.csv")
   
   def actualizarNomina(){
 	  def nomina=Nomina.get(1)
 	  nomina.partidas.each{ ne->
 		
-		def percepcionesG=ne.conceptos.sum{ it.concepto.tipo=='PERCEPCION'?it.importeGrabado:0.0}
+		def percepcionesG=ne.conceptos.sum{ it.concepto.tipo=='PERCEPCION'?it.importeGravado:0.0}
 		def percepcionesE=ne.conceptos.sum{ it.concepto.tipo=='PERCEPCION'?it.importeExcento:0.0}
 		
-		def deduccionG=ne.conceptos.sum{ it.concepto.tipo=='DEDUCCION'?it.importeGrabado:0.0}
+		def deduccionG=ne.conceptos.sum{ it.concepto.tipo=='DEDUCCION'?it.importeGravado:0.0}
 		def deduccionE=ne.conceptos.sum{ it.concepto.tipo=='DEDUCCION'?it.importeExcento:0.0}
 		
 		ne.totalGravado= percepcionesG-deduccionG
