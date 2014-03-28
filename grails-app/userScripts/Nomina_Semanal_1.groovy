@@ -8,12 +8,12 @@ def generarNomina(def folio,def per,def pago,def dia){
 		empresa:Empresa.first(),
 		folio:folio,
 		periodo:per,
-		diasPagados:15,
+		diasPagados:5,
 		pago:pago,
 		tipo:'GENERAL',
 		diaDePago:dia,
 		formaDePago:'TRANSFERENCIA',
-		  periodicidad:'QUINCENAL',
+		  periodicidad:'SEMANAL',
 		total:0.0
 		).save(failOnError:true)
 	
@@ -65,25 +65,29 @@ def importar(def archivo, def id){
 			  if(importe){
 				def cve=columnas[it-1].trim().substring(0,4)
                 def subsidioEmpleoAplicado=columnas[it-1].endsWith("A")
-                 
-				 if(!subsidioEmpleoAplicado){
-                    def excento=columnas[it-1].contains("E")
-					def concepto=ConceptoDeNomina.findWhere(clave:cve)
+                def sucursal = columnas[it-1].equals("UBICACION")
 				
-					def nominaEmpDet=new NominaPorEmpleadoDet(
-						concepto:concepto,
-						comentario:'IMPORTACION INICIAL',
-						importeGravado:!excento?importe:0.0,
-						importeExcento:excento?importe:0.0
-					)
-					nominaPorEmpleado.addToConceptos(nominaEmpDet)
-					println " Agregando ${nominaEmpDet.concepto}   para: "+it +' '+cve+ " Importe: "+importe
-                  }else{
-				   nominaPorEmpleado.subsidioEmpleoAplicado=importe
-				  }
-				
-				
-			  }
+				if(!sucursal){
+					if(!subsidioEmpleoAplicado){
+						def excento=columnas[it-1].contains("E")
+						def concepto=ConceptoDeNomina.findWhere(clave:cve)
+					
+						def nominaEmpDet=new NominaPorEmpleadoDet(
+							concepto:concepto,
+							comentario:'IMPORTACION INICIAL',
+							importeGravado:!excento?importe:0.0,
+							importeExcento:excento?importe:0.0
+						)
+						nominaPorEmpleado.addToConceptos(nominaEmpDet)
+						println " Agregando ${nominaEmpDet.concepto}   para: "+it +' '+cve+ " Importe: "+importe
+					  }else{
+					   nominaPorEmpleado.subsidioEmpleoAplicado=importe
+					  }
+					}else{
+					   	def ubicacion=Ubicacion.findWhere(clave:importe)
+						nominaPorEmpleado.subsidioEmpleoAplicado=ubicacion
+					}
+			 }
 			  
 			}
 			 
@@ -126,6 +130,6 @@ def importar(def archivo, def id){
 
 
 
-//generarNomina(4,new Periodo('16/02/2014','28/02/2014'),Date.parse('dd/MM/yyyy','27/02/2014'),'JUEVES')
+ //generarNomina(1,new Periodo('01/01/2014','05/01/2014'),Date.parse('dd/MM/yyyy','02/01/2014'),'')
 //importar("nomina_q2.csv",6)
 //actualizarNomina(6)
