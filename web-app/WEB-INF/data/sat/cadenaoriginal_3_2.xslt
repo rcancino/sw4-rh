@@ -25,7 +25,7 @@
 	<xsl:include href="http://www.sat.gob.mx/sitio_internet/cfd/TuristaPasajeroExtranjero/TuristaPasajeroExtranjero.xslt"/>
 	<xsl:include href="http://www.sat.gob.mx/sitio_internet/cfd/leyendasFiscales/leyendasFisc.xslt"/>
 	<xsl:include href="http://www.sat.gob.mx/sitio_internet/cfd/spei/spei.xslt"/>
-	<xsl:include href="http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina.xslt"/>
+	<xsl:include href="http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina11.xslt"/>
 	<!-- Aquí iniciamos el procesamiento de la cadena original con su | inicial y el terminador || -->
 	<xsl:template match="/">|<xsl:apply-templates select="/cfdi:Comprobante"/>||</xsl:template>
 	<!--  Aquí iniciamos el procesamiento de los datos incluidos en el comprobante -->

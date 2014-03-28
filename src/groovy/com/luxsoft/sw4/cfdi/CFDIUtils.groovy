@@ -74,6 +74,7 @@ class CFDIUtils {
 		return ubicacion
 	}
 	
+	/*
 	static  depurar(ComprobanteDocument document){
 		XmlCursor cursor=document.newCursor()
 		if(cursor.toFirstChild()){
@@ -81,6 +82,20 @@ class CFDIUtils {
 			cursor.setAttributeText(qname,"http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" )
 			cursor.toNextToken()
 			cursor.insertNamespace("cfdi", "http://www.sat.gob.mx/cfd/3")
+		}
+	}
+	*/
+	
+	static  depurar(ComprobanteDocument document){
+		XmlCursor cursor=document.newCursor()
+		if(cursor.toFirstChild()){
+			QName qname=new QName("http://www.w3.org/2001/XMLSchema-instance","schemaLocation","xsi")
+			cursor.setAttributeText(new QName("http://www.w3.org/2001/XMLSchema-instance","schemaLocation","xsi")
+				,"http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd http://www.sat.gob.mx/nomina  http://www.sat.gob.mx/sitio_internet/cfd/nomina/nomina11.xsd" )
+			cursor.toNextToken()
+			cursor.insertNamespace("cfdi", "http://www.sat.gob.mx/cfd/3")
+			cursor.toNextToken()
+			cursor.insertNamespace("nomina", "http://www.sat.gob.mx/nomina")
 		}
 	}
 	
