@@ -2,6 +2,7 @@ package com.luxsoft.sw4.cfdi
 
 import java.util.List;
 
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject
 import org.apache.xmlbeans.XmlOptions
 import org.apache.xmlbeans.XmlValidationError
@@ -19,6 +20,7 @@ import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Complemento
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Conceptos
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Conceptos.Concepto
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Emisor
+import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Impuestos;
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Receptor
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.TipoDeComprobante
 import mx.gob.sat.nomina.NominaDocument
@@ -95,12 +97,15 @@ class CfdiService {
 		
 		NominaDocument nominaDocto=NominaDocument.Factory.newInstance()
 		Nomina nomina=nominaDocto.addNewNomina()
+		
 		//nomina.set
+		XmlCursor nominaCursor=nomina.newCursor()
 		
 		nomina.with{
 			registroPatronal=empresa.registroPatronal
 			numEmpleado=empleado.numeroDeTrabajador
 			cURP=empleado.curp
+			setCURP("")
 			tipoRegimen=empleado.perfil.regimenContratacion.clave
 			numSeguridadSocial=empleado.seguridadSocial.numero
 			setAntiguedad(nominaEmpleado.antiguedad)
@@ -126,7 +131,8 @@ class CfdiService {
 		nominaEmpleado.conceptos.each{
 			if(it.concepto.tipo=='PERCEPCION') {
 				Percepcion pp=per.addNewPercepcion()
-				pp.setTipoPercepcion(it.concepto.claveSat)
+				pp.setTipoPercepcion((int)it.concepto.claveSat)
+				
 				pp.setClave(it.concepto.clave)
 				pp.setConcepto(it.concepto.descripcion)
 				pp.setImporteGravado(it.importeGravado)
@@ -172,9 +178,13 @@ class CfdiService {
 		//nomina.domNode.parentNode.textContent
 		
 		//complemento.
-		comprobante.setSello(cfdiSellador.sellar(empresa.privateKey,document))
+		comprobante.setSello(cfdiSellador.sellar(empresa.getPrivateKey(),document))
 		byte[] encodedCert=Base64.encode(empresa.getCertificado().getEncoded())
 		comprobante.setCertificado(new String(encodedCert))
+		
+		//Impuestos
+		Impuestos impuestos=comprobante.addNewImpuestos()
+		impuestos.setTotalImpuestosRetenidos(nomina.getDeducciones().getTotalExento()+nomina.getDeducciones().getTotalGravado())
 		
 		XmlOptions options = new XmlOptions()
 		options.setCharacterEncoding("UTF-8")

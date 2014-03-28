@@ -20,7 +20,7 @@ environments {
             //url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
             pooled = true
            //dbCreate = "update"
-			dbCreate="create"
+			dbCreate="update"
             url = "jdbc:mysql://localhost/rh"
             //url="jdbc:mysql://10.10.1.225/rh"
             driverClassName = "com.mysql.jdbc.Driver"
