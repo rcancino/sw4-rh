@@ -1,14 +1,17 @@
 package com.luxsoft.sw4.rh
 
+import com.luxsoft.sw4.cfdi.Cfdi;
+
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+
 
 @EqualsAndHashCode(includes='empleado')
 @ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
 class NominaPorEmpleado {
 
 	
-	Empleado empleado
+	Empleado empleado 
 	Ubicacion ubicacion
 	BigDecimal salarioDiarioBase
 	BigDecimal salarioDiarioIntegrado
@@ -16,10 +19,11 @@ class NominaPorEmpleado {
 	BigDecimal totalGravado
 	BigDecimal totalExcento
 	
-	BigDecimal baseGrabable
+	BigDecimal baseGravable
 	BigDecimal subsidioEmpleoAplicado
 	BigDecimal impuestoSubsidio
 	List conceptos
+	Cfdi cfdi
 	
 	
 	/* Tiempo extra ?? */
@@ -32,7 +36,8 @@ class NominaPorEmpleado {
 
     static constraints = {
     	comentario nullable:true,maxSize:200
-		antiguedadEnSemanas nullable:false,minSize:1 
+		antiguedadEnSemanas nullable:false,minSize:1
+		cfdi nullable:true 
     }
 	
 	static transients=['antiguedad'
@@ -84,7 +89,15 @@ class NominaPorEmpleado {
 		}
 	}
 	
+	def actualizar() {
+		total=percepciones-deducciones
+		totalGravado=percepcionesGravadas-deduccionesGravadas
+		totalExcento=percepcionesGravadas-percepcionesExcentas
+	}
+	
 	def beforeInsert= {
 		antiguedadEnSemanas=getAntiguedad()
+		
 	}
+	
 }

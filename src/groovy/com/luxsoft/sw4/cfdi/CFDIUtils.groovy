@@ -102,12 +102,15 @@ class CFDIUtils {
 	
 	static Receptor registrarReceptor(Comprobante cfd,Empleado empleado){
 		Receptor receptor=cfd.addNewReceptor()
-		receptor.setNombre(empleado.nombre)
+		receptor.setNombre(empleado.toString())
 		receptor.setRfc(empleado.rfc)
-		Direccion direccion=empleado.datosPersonales.direccion
-		TUbicacion ubicacion=receptor.addNewDomicilio()
-		if(empleado.rfc!='')
-			CFDIUtils.generarUbicacion(direccion,ubicacion)
+		if(empleado?.datosPersonales?.direccion) {
+			Direccion direccion=empleado.datosPersonales.direccion
+			TUbicacion ubicacion=receptor.addNewDomicilio()
+			if(empleado.rfc!='')
+				CFDIUtils.generarUbicacion(direccion,ubicacion)
+		}
+		
 		return receptor
 	}
 	

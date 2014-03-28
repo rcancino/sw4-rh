@@ -2,18 +2,18 @@ package com.luxsoft.sw4.rh
 
 import mx.gob.sat.cfd.x3.ComprobanteDocument
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante
+
+import com.luxsoft.sw4.cfdi.Cfdi;
 import com.luxsoft.sw4.cfdi.TimbreFiscal
 
 class ReciboDeNomina {
 	
 	Empleado empleado
-	Byte[] cfdi
-	String folio
+	Cfdi cfdi
 	
 	
-	ComprobanteDocument comprobanteDocument
 	
-	static transients = ['comprobanteDocument','comprobante','timbreFiscal']
+	
 	
 	Date dateCreated
 	Date lastUpdated

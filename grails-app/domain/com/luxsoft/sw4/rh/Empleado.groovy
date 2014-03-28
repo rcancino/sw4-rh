@@ -2,8 +2,11 @@ package com.luxsoft.sw4.rh
 
 import java.util.Date
 import groovy.transform.EqualsAndHashCode
+
 import groovy.transform.EqualsAndHashCode
+
 import com.luxsoft.sw4.Empresa
+
 
 
 @EqualsAndHashCode(includes='curp,rfc')
@@ -20,6 +23,7 @@ class Empleado  implements Serializable{
 	String status
 	Date fechaDeNacimiento
 	
+	String nombre
 
     Date dateCreated
     Date lastUpdated
@@ -44,8 +48,15 @@ class Empleado  implements Serializable{
 		datosPersonales nullable:true
 
     }
+	
+	static transients = ['nombre']
 
+	String getNombre() {
+		return "$nombres $apellidoPaterno $apellidoMaterno"
+	}
+	
     String toString(){
     	return "$nombres $apellidoPaterno $apellidoMaterno"
     }
+	
 }

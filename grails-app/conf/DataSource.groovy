@@ -19,7 +19,7 @@ environments {
             //dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
             //url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE"
             pooled = true
-           // dbCreate = "update"
+           //dbCreate = "update"
 			dbCreate="create"
             url = "jdbc:mysql://localhost/rh"
             //url="jdbc:mysql://10.10.1.225/rh"

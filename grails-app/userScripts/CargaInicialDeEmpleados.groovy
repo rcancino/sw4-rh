@@ -19,11 +19,22 @@ def cargarEmpresa(){
 			municipio:'AZCAPOTZALCO',
 			codigoPostal:'02870',
 			estado:'DISTRITO FEDERAL',
-			pais:'MEXICO')
+			pais:'MEXICO',
+        )
 		empresa.save(failOnError:true)
+      
 		println "Empresa inicial generada: $empresa"
-	}else
-		println "Empresa $empresa ya generada .."
+	}else{
+      println "Empresa $empresa ya generada .."
+    }
+  
+	empresa.numeroDeCertificado='00001000000202171318'
+	empresa.certificadoDigital=grailsApplication.mainContext
+  		.getResource("/WEB-INF/data/sat/00001000000202171318.cer").file.readBytes()
+  	empresa.certificadoDigitalPfx=grailsApplication.mainContext
+  		.getResource("/WEB-INF/data/sat/PAPEL_CFDI_CERT.pfx").file.readBytes()	
+  	empresa.llavePrivada=grailsApplication.mainContext
+  		.getResource("/WEB-INF/data/sat/PAPEL_CFD.key").file.readBytes()	
 }
 
 def procesar(Closure task){

@@ -22,7 +22,7 @@ class NominaPorEmpleadoDet {
 	static transients = ['total']
 
     String toString(){
-    	"$concepto Grabado: $importeGrabado Excento: $importeExcento "
+    	"$concepto Grabado: $importeGravado Excento: $importeExcento "
     }
 	
 	BigDecimal getTotal() {

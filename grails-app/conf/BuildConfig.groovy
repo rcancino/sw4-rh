@@ -56,6 +56,7 @@ grails.project.dependency.resolution = {
 		compile 'com.edicom.ediwinws:cfdiClient:1.0'
 		compile 'org.apache.commons:commons-compress:1.1'
 		compile 'net.glxn:qrgen:1.2'
+		compile 'org.bouncycastle:bcprov-jdk14:1.45'
 		//compile 'nomina:nomina:1.0'
     }
 

@@ -1,4 +1,6 @@
-package com.luxsoft.sw4.rh
+package com.luxsoft.sw4.cfdi
+
+import java.util.List;
 
 import org.apache.xmlbeans.XmlObject
 import org.apache.xmlbeans.XmlOptions
@@ -9,6 +11,7 @@ import com.luxsoft.sw4.cfdi.CFDIUtils
 import com.luxsoft.sw4.cfdi.Cfdi
 import com.luxsoft.sw4.cfdi.CfdiException
 import com.luxsoft.sw4.cfdi.Folio
+import com.luxsoft.sw4.rh.NominaPorEmpleado;
 
 import mx.gob.sat.cfd.x3.ComprobanteDocument
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante
@@ -28,34 +31,34 @@ import mx.gob.sat.nomina.NominaDocument.Nomina.Percepciones
 import mx.gob.sat.nomina.NominaDocument.Nomina.Percepciones.Percepcion
 import grails.transaction.Transactional
 
+import grails.transaction.Transactional
+
 @Transactional
-class ReciboDeNominaService {
+class CfdiService {
 	
 	def cfdiSellador
 	
 	def cfdiTimbrador
 
-    ReciboDeNomina generarRecibo(def nominaEmpleadoId) {
-		
+    Cfdi generarComprobante(def nominaEmpleadoId) {
 		def fecha=new Date()
-    	def nominaEmpleado=NominaPorEmpleado.get(nominaEmpleadoId)
+		def nominaEmpleado=NominaPorEmpleado.get(nominaEmpleadoId)
 		def empresa=nominaEmpleado.nomina.empresa
 		def empleado=nominaEmpleado.empleado
 		
-		Folio folio=Folio.findOrSaveWhere(empresa:empresa.clave,serie:'NOMINA_CFDI')
-		def recibo=new ReciboDeNomina()
-		recibo.folio=folio.next()
+		Folio folio=Folio.findOrSaveWhere(empresa:empresa,serie:'NOMINA_CFDI')
+		folio.next()
 		
 		final ComprobanteDocument document=ComprobanteDocument.Factory.newInstance()
 		final Comprobante comprobante=document.addNewComprobante()
 		CFDIUtils.depurar(document)
 		comprobante.serie='NOMINA_CFDI'
-		comprobante.folio=recibo.folio.toString()
+		comprobante.folio=folio.next().toString()
 		comprobante.setVersion("3.2")
 		comprobante.setFecha(CFDIUtils.toXmlDate(fecha).getCalendarValue())
 		comprobante.setFormaDePago("PAGO EN UNA SOLA EXHIBICION")
 		comprobante.setMetodoDePago(nominaEmpleado.nomina.formaDePago)
-		comprobante.setMoneda(Currency.getInstance(new Locale("es","mx")))
+		comprobante.setMoneda(Currency.getInstance(new Locale("es","mx")).currencyCode)
 		comprobante.setTipoCambio(1.0)
 		
 		comprobante.setTipoDeComprobante(TipoDeComprobante.EGRESO)
@@ -66,8 +69,12 @@ class ReciboDeNominaService {
 		
 		//Importes
 		comprobante.setSubTotal(nominaEmpleado.total)
-		comprobante.setDescuento(nominaEmpleado.conceptos.sum{ concepto->
-			
+		comprobante.setDescuento(nominaEmpleado.conceptos.sum{
+			def vv=0.0
+			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat!=2) {
+				vv+=it.importeGravado+it.importeExcento
+			}
+			return vv
 		})
 		comprobante.setMotivoDescuento("Deducciones nómina")
 		comprobante.setTotal(nominaEmpleado.total)
@@ -111,7 +118,7 @@ class ReciboDeNominaService {
 			setSalarioDiarioIntegrado(nominaEmpleado.salarioDiarioIntegrado)
 		}
 		
-		// Percepciones 
+		// Percepciones
 		Percepciones per=nomina.addNewPercepciones()
 		per.totalGravado=nominaEmpleado.percepcionesGravadas
 		per.totalExento=nominaEmpleado.percepcionesExcentas
@@ -160,8 +167,11 @@ class ReciboDeNominaService {
 		
 		
 		Complemento complemento=comprobante.addNewComplemento()
-		complemento.set(nomina)
+		//complemento.set(nomina)
+		complemento.newCursor()
+		//nomina.domNode.parentNode.textContent
 		
+		//complemento.
 		comprobante.setSello(cfdiSellador.sellar(empresa.privateKey,document))
 		byte[] encodedCert=Base64.encode(empresa.getCertificado().getEncoded())
 		comprobante.setCertificado(new String(encodedCert))
@@ -184,8 +194,6 @@ class ReciboDeNominaService {
 		validarDocumento(document)
 		cfdi.save(failOnError:true)
 		
-		
-
     }
 	
 	void validarDocumento(ComprobanteDocument document) {
