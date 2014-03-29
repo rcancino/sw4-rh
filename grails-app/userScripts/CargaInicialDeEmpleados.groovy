@@ -104,8 +104,8 @@ def bajas(){
 
 def perfiles(){
 	def empresa=Empresa.first()
-	  def riesgoPuesto=SatRiesgoPuesto.first()
-	  def regimenContratacion=SatRegimenContratacion.first()
+	  def riesgoPuesto=SatRiesgoPuesto.findWhere(clave:2)
+	  def regimenContratacion=SatRegimenContratacion.findWhere(clave:2)
 	procesar{empleado,fields,row->
 	  if(empleado){
 		def perfil=new PerfilDeEmpleado()

@@ -6,7 +6,7 @@ class Folio {
 
 	Empresa empresa
 	String serie
-	Long folio
+	Long folio=0
 
     static constraints = {
     	empresa()
