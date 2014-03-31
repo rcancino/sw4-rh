@@ -85,7 +85,7 @@ class CfdiPrintUtils {
 		parametros['DIAS_PAGADOS']=nomina.numDiasPagados
 		parametros['CLABE']=nomina.CLABE
 		
-		parametros['DIAS_HORAS_EXTRA']=nomina?.horasExtras?.horasExtraArray[0]?.dias
+		//parametros['DIAS_HORAS_EXTRA']=nomina?.horasExtras?.horasExtraArray[0]?.dias
 		
 		
 		
