@@ -5,6 +5,7 @@ import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante;
 import com.luxsoft.sw4.Mes;
 import com.luxsoft.sw4.cfdi.Cfdi;
 import com.luxsoft.sw4.cfdi.CfdiPrintUtils;
+import com.luxsoft.sw4.cfdi.ComplementoNomina;
 
 class ReciboDeNominaController {
 
@@ -43,18 +44,20 @@ class ReciboDeNominaController {
 		def modelData=conceptos.collect { cc ->
 			
 			def res=[
-				'GRUPO':'GRUPO ?',
-				'DESCRIPCION':'PAGO',
-				'IMPORTE_GRABADO':0.0,
+				'GRUPO':''+cc.cantidad,
+				'DESCRIPCION':''+cc.unidad,
+				'IMPORTE_GRABADO':cc.valorUnitario,
 				'IMPORTE_EXCENTO':0.0
 			 ]
 			return res
 		}
-		def repParams=CfdiPrintUtils.resolverParametros(comprobante)
-		//params<<repParams
+		ComplementoNomina complemento=new ComplementoNomina(comprobante)
+		def repParams=CfdiPrintUtils.resolverParametros(comprobante,complemento.nomina)
+		params<<repParams
 		params.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
-		//chain(controller:'jasper',action:'index',model:[data:modelData],params:params)
-		chain(controller:'jasper',action:'index',params:params)
+		println 'Parametros enviados: '+params
+		chain(controller:'jasper',action:'index',model:[data:modelData],params:params)
+		//chain(controller:'jasper',action:'index',params:params)
 	}
 	
 	def showXml(Long id){

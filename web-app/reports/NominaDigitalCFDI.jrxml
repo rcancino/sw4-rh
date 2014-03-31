@@ -9,7 +9,6 @@
 	<import value="java.util.*"/>
 	<import value="net.sf.jasperreports.engine.data.*"/>
 	<parameter name="COMPANY" class="java.lang.String" isForPrompting="false"/>
-	
 	<parameter name="IMP_CON_LETRA" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="NUM_CERTIFICADO" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["FALTA"]]></defaultValueExpression>
@@ -17,7 +16,7 @@
 	<parameter name="SELLO_DIGITAL" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="NOMBRE" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="RFC" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="FECHA" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="FECHA" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="NFISCAL" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="TOTAL" class="java.math.BigDecimal" isForPrompting="false"/>
 	<parameter name="GRUPO" class="java.lang.String" isForPrompting="false"/>
@@ -40,9 +39,9 @@
 	<parameter name="CERTIFICADO_SAT" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="CADENA_ORIGINAL_SAT" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="TIPO_NOMINA" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="FECHA_INICIAL" class="java.util.Date" isForPrompting="false"/>
-	<parameter name="FECHA_FINAL" class="java.util.Date" isForPrompting="false"/>
-	<parameter name="DIAS_PAGADOS" class="java.math.BigDecimal" isForPrompting="false"/>
+	<parameter name="FECHA_INICIAL" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FECHA_FINAL" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="DIAS_PAGADOS" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="PERIOCIDAD_PAGO" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="BANCO" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="CLABE" class="java.lang.String" isForPrompting="false"/>
@@ -55,9 +54,9 @@
 	<parameter name="PUESTO" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="RIESGO_PUESTO" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="TIPO_CONTRATO" class="java.lang.String" isForPrompting="false"/>
-	<parameter name="SALARIO_DIARIO_BASE" class="java.math.BigDecimal" isForPrompting="false"/>
-	<parameter name="SALARIO_DIARIO_INTEGRADO" class="java.math.BigDecimal" isForPrompting="false"/>
-	<parameter name="FECHA_INGRESO_LABORAL" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="SALARIO_DIARIO_BASE" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="SALARIO_DIARIO_INTEGRADO" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FECHA_INGRESO_LABORAL" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="TIPO_JORNADA" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="ANTIGUEDAD" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="SUCURSAL" class="java.lang.String" isForPrompting="false"/>

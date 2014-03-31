@@ -118,6 +118,7 @@ class CfdiService {
 			setRiesgoPuesto(empleado.perfil.riesgoPuesto.clave)
 			setSalarioBaseCotApor(nominaEmpleado.salarioDiarioBase)
 			setSalarioDiarioIntegrado(nominaEmpleado.salarioDiarioIntegrado)
+			puesto=empleado?.perfil?.puesto?.clave
 		  }
 		// Percepciones
 		Percepciones per=nomina.addNewPercepciones()

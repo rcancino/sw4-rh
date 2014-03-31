@@ -7,6 +7,8 @@ import java.text.MessageFormat;
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante;
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Emisor;
 import mx.gob.sat.cfd.x3.TUbicacion;
+import mx.gob.sat.nomina.NominaDocument;
+import mx.gob.sat.nomina.NominaDocument.Nomina;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -16,39 +18,12 @@ import org.apache.commons.lang.StringUtils;
 
 class CfdiPrintUtils {
 	
-	static resolverParametros(Comprobante comprobante){
+	static resolverParametros(Comprobante comprobante,Nomina nomina){
+		//NominaDocument nominaDocto=NominaDocument.Factory.parse(comprobante.getCo)
+		
+		
 		
 		def parametros=[:]
-		// Datos tomados del Comprobante fiscal digital XML
-		
-		parametros.put("SERIE", 			comprobante.getSerie());
-		parametros.put("FOLIO", 			comprobante.getFolio());
-		parametros.put("NUM_CERTIFICADO", 	comprobante.getNoCertificado());
-		parametros.put("SELLO_DIGITAL", 	comprobante.getSello());
-		
-		parametros.put("RECEPTOR_NOMBRE", 			comprobante.getReceptor().getNombre()); //Recibir como Parametro
-		parametros.put("RECEPTOR_RFC", 				comprobante.getReceptor().getRfc());
-		parametros.put("FECHA", 			comprobante.getFecha().getTime());
-		parametros.put("NFISCAL", 			comprobante.getSerie()+" - "+comprobante.getFolio());
-		parametros.put("IMPORTE", 			comprobante.getSubTotal());
-		parametros.put("IVA", 			comprobante.getImpuestos().getTotalImpuestosTrasladados());
-		parametros.put("TOTAL", 			comprobante.getTotal());
-		parametros.put("RECEPTOR_DIRECCION", 		getDireccionEnFormatoEstandar(comprobante.getReceptor().getDomicilio()) );
-		parametros.put("NUM_CTA_PAGO", 		comprobante.getNumCtaPago());
-		parametros.put("METODO_PAGO", 		comprobante.getMetodoDePago());
-		//Datos tomado de la aplicacion
-		parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetra(comprobante.getTotal()));
-		parametros['FORMA_DE_PAGO']=comprobante.formaDePago
-		parametros['PINT_IVA']='16 '
-		parametros['TIPO_DE_COMPROBANTE']=comprobante.tipoDeComprobante.toString().toUpperCase()
-		
-		parametros.put("DESCUENTOS", 	comprobante.getDescuento()?:0.0);
-		
-		
-		if(comprobante.getReceptor().rfc=='XAXX010101000'){
-			parametros.put("IMPORTE", 			comprobante.getTotal());
-		}
-		
 		Emisor emisor=comprobante.getEmisor();
 		parametros.put("EMISOR_NOMBRE", 	emisor.getNombre());
 		parametros.put("EMISOR_RFC", 		emisor.getRfc());
@@ -69,6 +44,74 @@ class CfdiPrintUtils {
 		parametros.put("EMISOR_DIRECCION", direccionEmisor);
 		parametros.put("EXPEDIDO_DIRECCION", direccionEmisor);
 		parametros.put("REGIMEN",comprobante.getEmisor().getRegimenFiscalArray(0).regimen);
+		parametros.put("METODO_DE_PAGO", 		comprobante.getMetodoDePago());
+		
+		// Datos tomados del Comprobante fiscal digital XML
+		parametros.put("NOMBRE", 			comprobante.getReceptor().getNombre()); //Recibir como Parametro
+		parametros.put("RFC", 				comprobante.getReceptor().getRfc());
+		parametros['NUMERO_EMPLEADO']=nomina.numEmpleado
+		parametros['NUMERO_IMSS']=nomina.numSeguridadSocial
+		parametros['CURP']=nomina.CURP
+		parametros['REGIMEN_TRABAJADOR']=nomina.tipoRegimen.toString()
+		parametros['EMISOR_RFC']=comprobante.emisor.rfc
+		//parametros['TIPO_NOMINA']=nomina.
+		parametros['PERIOCIDAD_PAGO']=nomina.periodicidadPago
+		
+		
+		parametros.put("SERIE", 			comprobante.getSerie());
+		
+		parametros.put("FOLIO", 			comprobante.getFolio());
+		parametros.put("NUM_CERTIFICADO", 	comprobante.getNoCertificado());
+		parametros.put("SELLO_DIGITAL", 	comprobante.getSello());
+		parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetra(comprobante.getTotal()));
+		
+		parametros['REGISTRO_PATRONAL']=nomina.registroPatronal
+		
+		parametros.put("NFISCAL", 			comprobante.getSerie()+" - "+comprobante.getFolio());
+		parametros['PUESTO']=nomina.puesto
+		parametros['DEPARTAMENTO']=nomina.departamento
+		//parametros['SUCURSAL']=nomina.departamento
+		parametros['RIESGO_PUESTO']=''+nomina.riesgoPuesto
+		parametros['TIPO_JORNADA']=nomina.tipoJornada
+		parametros['DEPARTAMENTO']=nomina.departamento
+		parametros['FECHA_INGRESO_LABORAL']=nomina.fechaInicioRelLaboral?.format("yyyy-MM-dd'T'HH:mm:ss")
+		parametros['ANTIGUEDAD']=''+nomina.antiguedad
+		parametros['TIPO_CONTRATO']=nomina.tipoContrato
+		parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor
+		parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
+		
+		parametros['FECHA_INICIAL']=nomina.fechaInicialPago?.format("yyyy-MM-dd'T'HH:mm:ss")
+		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd'T'HH:mm:ss")
+		parametros['DIAS_PAGADOS']=nomina.numDiasPagados
+		parametros['CLABE']=nomina.CLABE
+		
+		parametros['DIAS_HORAS_EXTRA']=nomina?.horasExtras?.horasExtraArray[0]?.dias
+		
+		
+		
+		/*
+		//parametros.put("FECHA", 			comprobante.getFecha().getTime());
+		parametros.put("NFISCAL", 			comprobante.getSerie()+" - "+comprobante.getFolio());
+		parametros.put("IMPORTE", 			comprobante.getSubTotal());
+		parametros.put("IVA", 			comprobante.getImpuestos().getTotalImpuestosTrasladados());
+		parametros.put("TOTAL", 			comprobante.getTotal());
+		parametros.put("RECEPTOR_DIRECCION", 		getDireccionEnFormatoEstandar(comprobante.getReceptor().getDomicilio()) );
+		parametros.put("NUM_CTA_PAGO", 		comprobante.getNumCtaPago());
+		
+		//Datos tomado de la aplicacion
+		
+		parametros['FORMA_DE_PAGO']=comprobante.formaDePago
+		parametros['PINT_IVA']='16 '
+		parametros['TIPO_DE_COMPROBANTE']=comprobante.tipoDeComprobante.toString().toUpperCase()
+		
+		parametros.put("DESCUENTOS", 	comprobante.getDescuento()?:0.0);
+		
+		
+		if(comprobante.getReceptor().rfc=='XAXX010101000'){
+			parametros.put("IMPORTE", 			comprobante.getTotal());
+		}
+		
+		
 		
 		if (emisor.getExpedidoEn() != null){
 			TUbicacion expedido=emisor.getExpedidoEn();
@@ -86,7 +129,7 @@ class CfdiPrintUtils {
 				);
 			parametros.put("EXPEDIDO_DIRECCION", expedidoDir);
 		}
-			
+		*/	
 		
 		//Especiales para CFDI
 			
