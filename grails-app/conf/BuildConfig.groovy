@@ -94,7 +94,11 @@ grails.project.dependency.resolution = {
         compile ':jquery-date-time-picker:0.1.0'
 		compile ':webflow:2.0.8.1'
 		runtime ':console:1.3'
-        //compile ":jasper:1.7.0"
+		//compile ":jasper:1.8.0"
+		runtime ':jasper:1.6.1'
+		
+		//compile ":export:1.5"
+		//compile ":easygrid:1.4.6"
         //compile ":mail:1.0.1"
     }
 }

@@ -187,6 +187,7 @@ class CfdiService {
 		
 		cfdi=cfdiTimbrador.timbrar(cfdi,"PAP830101CR3", "yqjvqfofb")
 		//println cfdi.comprobante
+		nominaEmpleado.cfdi=cfdi
 		println cfdi.xmlName
 		return cfdi
 		
