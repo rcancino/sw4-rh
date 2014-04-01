@@ -26,7 +26,7 @@ def importar(def archivo, def folio){
   
 	  println'nomina: '+ nomina.folio
 	
-	  File file=grailsApplication.mainContext.getResource("/WEB-INF/data/"+archivo).file
+	  File file=grailsApplication.mainContext.getResource("/WEB-INF/data/kio/"+archivo).file
 		def row=0
 		 def columnas
 		file.eachLine { line ->
@@ -150,6 +150,6 @@ def importar(def archivo, def folio){
 
 
 
-//generarNomina(3,new Periodo('06/01/2014','12/01/2014'),Date.parse('dd/MM/yyyy','09/01/2014'),'JUEVES')
-//importar("nomina_s2.csv",2)
-actualizarNomina(2)
+//generarNomina(13,new Periodo('24/03/2014','30/03/2014'),Date.parse('dd/MM/yyyy','29/03/2014'),'JUEVES')
+//importar("nomina_s13.csv",13)
+actualizarNomina(13)

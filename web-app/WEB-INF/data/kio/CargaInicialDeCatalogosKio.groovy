@@ -10,16 +10,18 @@ import org.apache.commons.lang.exception.ExceptionUtils
 def cargarEmpresa(){
 	def empresa=Empresa.findWhere(clave:'PAPEL')
 	if(!empresa){
-		empresa=new Empresa(clave:'PAPEL',nombre:'PAPEL SA DE CV',rfc:'PAP830101CR3',regimen:'REGIMEN GENERAL DE LEY PERSONAS MORALE'
-			,registroPatronal:'01070619109')
+		empresa=new Empresa(clave:'GASOC',nombre:'OPERADORA Y ADMINISTRADOR GASOC S.A. DE C.V.',
+			rfc:'OAG100209GN8',
+			regimen:'REGIMEN GENERAL DE LEY PERSONAS MORALE',
+            registroPatronal:'0')
 		empresa.direccion=new Direccion(
-			calle:'BIOLOGO MAXIMINO MARTINEZ',
-			numeroExterior:'3902',
-			colonia:'SAN SALVADOR XOCHIMANCA',
-			municipio:'AZCAPOTZALCO',
-			codigoPostal:'02870',
+			calle:'AVENIDA CUAUHTEMOC',
+			numeroExterior:'1461',
+			colonia:'SANTA CRUZ ATOYAC',
+			municipio:'BENITO JUAREZ',
+			codigoPostal:'03310',
 			estado:'DISTRITO FEDERAL',
-			pais:'MEXICO',
+			pais:'MEXICO'
         )
 		empresa.save(failOnError:true)
       
@@ -28,17 +30,17 @@ def cargarEmpresa(){
       println "Empresa $empresa ya generada .."
     }
   
-	empresa.numeroDeCertificado='00001000000202171318'
+	empresa.numeroDeCertificado='00001000000201478375'
 	empresa.certificadoDigital=grailsApplication.mainContext
-  		.getResource("/WEB-INF/data/sat/00001000000202171318.cer").file.readBytes()
-  	empresa.certificadoDigitalPfx=grailsApplication.mainContext
-  		.getResource("/WEB-INF/data/sat/PAPEL_CFDI_CERT.pfx").file.readBytes()	
+  		.getResource("/WEB-INF/data/kio/gasoc.cer").file.readBytes()
+  	//empresa.certificadoDigitalPfx=grailsApplication.mainContext
+  		//.getResource("/WEB-INF/data/kio/PAPEL_CFDI_CERT.pfx").file.readBytes()	
   	empresa.llavePrivada=grailsApplication.mainContext
-  		.getResource("/WEB-INF/data/sat/PAPEL_CFD.key").file.readBytes()	
+  		.getResource("/WEB-INF/data/kio/gasoc.key").file.readBytes()	
 }
 
 def procesar(Closure task){
-  def file=grailsApplication.mainContext.getResource("/WEB-INF/data/empleados.csv").file
+  def file=grailsApplication.mainContext.getResource("/WEB-INF/data/kio/empleadosKio.csv").file
   file.eachLine{line,row ->
 	if(row>1){
 		def fields=line.split(",")
