@@ -22,6 +22,9 @@ import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Conceptos
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Conceptos.Concepto
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Emisor
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Impuestos;
+import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Impuestos.Retenciones;
+import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Impuestos.Retenciones.Retencion;
+import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Impuestos.Retenciones.Retencion.Impuesto;
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Receptor
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.TipoDeComprobante
 import mx.gob.sat.nomina.NominaDocument
@@ -71,17 +74,8 @@ class CfdiService {
 		Emisor emisor=CFDIUtils.registrarEmisor(comprobante, empresa)
 		Receptor receptor=CFDIUtils.registrarReceptor(comprobante, nominaEmpleado.empleado)
 		
-		//Importes
-		comprobante.setSubTotal(nominaEmpleado.total)
-		comprobante.setDescuento(nominaEmpleado.conceptos.sum{
-			def vv=0.0
-			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat!=2) {
-			  vv+=it.importeGravado+it.importeExcento
-			}
-			return vv
-		})
-		comprobante.setMotivoDescuento("Deducciones nómina")
-		comprobante.setTotal(nominaEmpleado.total)
+		
+		
 	  
 		//Conceptos
 		Conceptos conceptos=comprobante.addNewConceptos()
@@ -114,11 +108,16 @@ class CfdiService {
 			setDepartamento(empleado.perfil.departamento.clave)
 			//setBanco(empleado.salario.banco?.clave)
 			setTipoJornada(empleado.perfil.jornada)
+			tipoContrato=empleado.perfil.tipoDeContrato
 			setPeriodicidadPago(empleado.salario.periodicidad)
-			setRiesgoPuesto(empleado.perfil.riesgoPuesto.clave)
+			setRiesgoPuesto(empleado.perfil?.riesgoPuesto?.clave)
 			setSalarioBaseCotApor(nominaEmpleado.salarioDiarioBase)
 			setSalarioDiarioIntegrado(nominaEmpleado.salarioDiarioIntegrado)
-			puesto=empleado?.perfil?.puesto?.clave
+			puesto=empleado.perfil.puesto?.clave
+			//
+			if(empleado?.salario?.banco?.clave)
+				banco=empleado.salario.banco.clave
+			//setBanco(?:null)
 		  }
 		// Percepciones
 		Percepciones per=nomina.addNewPercepciones()
@@ -161,11 +160,38 @@ class CfdiService {
 		def cn=nomina.newCursor()
 		cn.moveXml(cursor)
 		
-		comprobante.sello=cfdiSellador.sellar(empresa.privateKey,document)
 		
+		
+		//Importes
+		comprobante.setSubTotal(nominaEmpleado.percepciones)
+		comprobante.setDescuento(nominaEmpleado.conceptos.sum{
+			def vv=0.0
+			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat!=2) {
+			  vv+=it.importeGravado+it.importeExcento
+			}
+			return vv
+		})
+		comprobante.setMotivoDescuento("Deducciones nómina")
+		//Calculamos el total
+		def retenciones=nominaEmpleado.conceptos.sum{
+			def vv=0.0
+			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat==2) {
+			  vv+=it.importeGravado+it.importeExcento
+			}
+			return vv
+		}
+		
+		comprobante.setTotal(comprobante.subTotal-comprobante.descuento-retenciones)
 		//Impuestos
 		Impuestos impuestos=comprobante.addNewImpuestos()
-	   // impuestos.setTotalImpuestosRetenidos()
+		impuestos.setTotalImpuestosRetenidos(retenciones)
+		
+		Retenciones retNod=impuestos.addNewRetenciones()
+		Retencion ret=retNod.addNewRetencion()
+		ret.importe=retenciones
+		ret.impuesto=Impuesto.ISR
+		
+		comprobante.sello=cfdiSellador.sellar(empresa.privateKey,document)
 		
 		 XmlOptions options = new XmlOptions()
 		  options.setCharacterEncoding("UTF-8")
@@ -194,169 +220,7 @@ class CfdiService {
 		
 	}
 
-    Cfdi generarComprobanteOld(def nominaEmpleadoId) {
-		def fecha=new Date()
-		def nominaEmpleado=NominaPorEmpleado.get(nominaEmpleadoId)
-		def empresa=nominaEmpleado.nomina.empresa
-		def empleado=nominaEmpleado.empleado
-		
-		Folio folio=Folio.findOrSaveWhere(empresa:empresa,serie:'NOMINA_CFDI')
-		folio.next()
-		
-		final ComprobanteDocument document=ComprobanteDocument.Factory.newInstance()
-		final Comprobante comprobante=document.addNewComprobante()
-		CFDIUtils.depurar(document)
-		comprobante.serie='NOMINA_CFDI'
-		comprobante.folio=folio.next().toString()
-		comprobante.setVersion("3.2")
-		comprobante.setFecha(CFDIUtils.toXmlDate(fecha).getCalendarValue())
-		comprobante.setFormaDePago("PAGO EN UNA SOLA EXHIBICION")
-		comprobante.setMetodoDePago(nominaEmpleado.nomina.formaDePago)
-		comprobante.setMoneda(Currency.getInstance(new Locale("es","mx")).currencyCode)
-		comprobante.setTipoCambio(1.0)
-		
-		comprobante.setTipoDeComprobante(TipoDeComprobante.EGRESO)
-		comprobante.setLugarExpedicion(empresa.direccion.pais)
-		//comprobante.addNewEmisor()
-		Emisor emisor=CFDIUtils.registrarEmisor(comprobante, empresa)
-		Receptor receptor=CFDIUtils.registrarReceptor(comprobante, nominaEmpleado.empleado)
-		
-		//Importes
-		comprobante.setSubTotal(nominaEmpleado.total)
-		comprobante.setDescuento(nominaEmpleado.conceptos.sum{
-			def vv=0.0
-			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat!=2) {
-				vv+=it.importeGravado+it.importeExcento
-			}
-			return vv
-		})
-		comprobante.setMotivoDescuento("Deducciones nómina")
-		comprobante.setTotal(nominaEmpleado.total)
-		
-		//Conceptos
-		Conceptos conceptos=comprobante.addNewConceptos()
-		Concepto c=conceptos.addNewConcepto();
-		c.setCantidad(1);
-		c.setUnidad("Servicio");
-		c.setNoIdentificacion('CARGO');
-		c.setDescripcion(nominaEmpleado.comentario);
-		c.setValorUnitario(nominaEmpleado.percepciones);
-		c.setImporte(nominaEmpleado.percepciones);
-		
-		//Impuestos
-		
-		comprobante.setNoCertificado(empresa.numeroDeCertificado)
-		
-		NominaDocument nominaDocto=NominaDocument.Factory.newInstance()
-		Nomina nomina=nominaDocto.addNewNomina()
-		
-		//nomina.set
-		XmlCursor nominaCursor=nomina.newCursor()
-		
-		nomina.with{
-			registroPatronal=empresa.registroPatronal
-			numEmpleado=empleado.numeroDeTrabajador
-			cURP=empleado.curp
-			setCURP("")
-			tipoRegimen=empleado.perfil.regimenContratacion.clave
-			numSeguridadSocial=empleado.seguridadSocial.numero
-			setAntiguedad(nominaEmpleado.antiguedad)
-			setFechaInicioRelLaboral(CFDIUtils.toXmlDate(nominaEmpleado.alta).getCalendarValue())
-			setFechaPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.pago).getCalendarValue())
-			setFechaInicialPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaInicial).getCalendarValue())
-			setFechaFinalPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaFinal).getCalendarValue())
-			setNumDiasPagados(nominaEmpleado.nomina.diasPagados as BigDecimal)
-			setDepartamento(empleado.departamento.clave)
-			setBanco(empleado.salario.banco?.clave)
-			setTipoJornada(empleado.perfil.jornada)
-			setPeriodicidadPago(empleado.salario.periodicidad)
-			setRiesgoPuesto(empleado.perfil.riesgoPuesto.clave)
-			setSalarioBaseCotApor(nominaEmpleado.salarioDiarioBase)
-			setSalarioDiarioIntegrado(nominaEmpleado.salarioDiarioIntegrado)
-		}
-		
-		// Percepciones
-		Percepciones per=nomina.addNewPercepciones()
-		per.totalGravado=nominaEmpleado.percepcionesGravadas
-		per.totalExento=nominaEmpleado.percepcionesExcentas
-		
-		nominaEmpleado.conceptos.each{
-			if(it.concepto.tipo=='PERCEPCION') {
-				Percepcion pp=per.addNewPercepcion()
-				pp.setTipoPercepcion((int)it.concepto.claveSat)
-				
-				pp.setClave(it.concepto.clave)
-				pp.setConcepto(it.concepto.descripcion)
-				pp.setImporteGravado(it.importeGravado)
-				pp.setImporteExento(it.importeExcento)
-			}
-		}
-		
-		// Deducciones
-		Deducciones ded=nomina.addNewDeducciones()
-		ded.totalGravado=nominaEmpleado.deduccionesGravadas
-		ded.totalExento=nominaEmpleado.totalExcento
-		
-		nominaEmpleado.conceptos.each{
-			if(it.concepto.tipo=='DEDUCCION') {
-				Deduccion dd=per.addNewPercepcion()
-				dd.setTipoPercepcion(it.concepto.claveSat)
-				dd.setClave(it.concepto.clave)
-				dd.setConcepto(it.concepto.descripcion)
-				dd.setImporteGravado(it.importeGravado)
-				dd.setImporteExento(it.importeExcento)
-			}
-		}
-		
-		/*Incapacidades PENDIENTE
-		Incapacidades incapacidades=null
-		nominaEmpleado.conceptos.each {
-			if([14,6].contains(it.concepto.claveSat)) {
-				
-				if(incapacidades==null)
-					incapacidades=nomina.addNewIncapacidades()
-					
-				Incapacidad incapacidad=incapacidades.addNewIncapacidad()
-				//incapacidad.setTipoIncapacidad(0)
-				//incapacidad.setDiasIncapacidad(null)
-				incapacidad.setDescuento(it.total)
-			}
-		}*/
-		
-		
-		Complemento complemento=comprobante.addNewComplemento()
-		//complemento.set(nomina)
-		complemento.newCursor()
-		//nomina.domNode.parentNode.textContent
-		
-		//complemento.
-		comprobante.setSello(cfdiSellador.sellar(empresa.getPrivateKey(),document))
-		byte[] encodedCert=Base64.encode(empresa.getCertificado().getEncoded())
-		comprobante.setCertificado(new String(encodedCert))
-		
-		//Impuestos
-		Impuestos impuestos=comprobante.addNewImpuestos()
-		impuestos.setTotalImpuestosRetenidos(nomina.getDeducciones().getTotalExento()+nomina.getDeducciones().getTotalGravado())
-		
-		XmlOptions options = new XmlOptions()
-		options.setCharacterEncoding("UTF-8")
-		options.put( XmlOptions.SAVE_INNER )
-		options.put( XmlOptions.SAVE_PRETTY_PRINT )
-		options.put( XmlOptions.SAVE_AGGRESSIVE_NAMESPACES )
-		options.put( XmlOptions.SAVE_USE_DEFAULT_NAMESPACE )
-		options.put(XmlOptions.SAVE_NAMESPACES_FIRST)
-		ByteArrayOutputStream os=new ByteArrayOutputStream()
-		document.save(os, options)
-		
-		Cfdi cfdi=new Cfdi(comprobante)
-		cfdi.setXml(os.toByteArray())
-		cfdi.setXmlName("$cfdi.receptorRfc-$cfdi.serie-$cfdi.folio"+".xml")
-		//Validacion del comprobante
-		StringUtils.leftPad("1", 3, '0')
-		validarDocumento(document)
-		cfdi.save(failOnError:true)
-		
-    }
+    
 	
 	void validarDocumento(ComprobanteDocument document) {
 		List<XmlValidationError> errores=findErrors(document);

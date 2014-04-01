@@ -75,7 +75,7 @@ class NominaPorEmpleado {
 	
 	BigDecimal getDeducciones() {
 		conceptos.sum{
-			return it.concepto.tipo=='DECUCCION'?it.importeGravado+it.importeExcento:0.0
+			return it.concepto.tipo=='DEDUCCION'?it.importeGravado+it.importeExcento:0.0
 		}
 	}
 	BigDecimal getDeduccionesGravadas() {

@@ -1,7 +1,9 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
+			<g:sortableColumn property="id" title="Id"/>
 			<g:sortableColumn property="empleado" title="Empleado"/>
+			<g:sortableColumn property="empleado.clave" title="Clave"/>
 			<th><g:message code="Empleado.ubicacion.label" default="Ubicación" encodeAs="html"/></th>
 			<th><g:message code="Empleado.percepciones.label" default="Percepciones" encodeAs="html"/></th>
 			<th><g:message code="Empleado.deducciones.label" default="Deducciones" encodeAs="html"/></th>
@@ -12,6 +14,12 @@
 	<tbody>
 		<g:each in="${nominaInstance?.partidas}" var="row">
 			<tr>
+				<td>
+					<g:link action="show" id="${row.id}">
+						<g:formatNumber number="${row.id}" format="######"/>
+					</g:link>
+				</td>
+				<td>${fieldValue(bean:row,field:"empleado.clave")}</td>
 				<td>
 					<g:link action="show" id="${row.id}">
 						${fieldValue(bean:row,field:"empleado.nombre")}
@@ -37,7 +45,7 @@
 								controller="reciboDeNomina"
 								action="imprimirCfdi"
 								jasper="NominaDigitalCFDI" 
-								format="HTML" 
+								format="HTML,PDF" 
 								name="Recibo de Nomina">
 								<g:hiddenField name="id" value="${row.cfdi.id}"/>
 							</g:jasperReport>

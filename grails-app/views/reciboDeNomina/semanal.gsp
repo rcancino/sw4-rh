@@ -34,7 +34,7 @@
 								<ul class="nav nav-pills nav-stacked">
 									<g:each in="${nominasPorMesInstanceMap[mes.nombre]}" var="nomina">
 										<li class="${nomina.id==nominaInstance?.id?'active':'' }">
-											<g:link  params="[nominaId:nomina.id,mesInstance:mes.nombre]" >Folio: ${nomina.folio} (${nomina.tipo})</g:link>
+											<g:link action='semanal' params="[nominaId:nomina.id,mesInstance:mes.nombre]" >Folio: ${nomina.folio} (${nomina.tipo})</g:link>
 										</li>
 									</g:each>
 								</ul>

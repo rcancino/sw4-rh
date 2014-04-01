@@ -4,6 +4,8 @@ package com.luxsoft.sw4.cfdi
 import java.security.Policy.Parameters;
 import java.text.MessageFormat;
 
+import javax.imageio.ImageIO;
+
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante;
 import mx.gob.sat.cfd.x3.ComprobanteDocument.Comprobante.Emisor;
 import mx.gob.sat.cfd.x3.TUbicacion;
@@ -84,6 +86,8 @@ class CfdiPrintUtils {
 		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd'T'HH:mm:ss")
 		parametros['DIAS_PAGADOS']=nomina.numDiasPagados
 		parametros['CLABE']=nomina.CLABE
+		parametros.put("TOTAL", comprobante.getTotal());
+		parametros['COMENTARIO_NOM']='Nómina'
 		
 		//parametros['DIAS_HORAS_EXTRA']=nomina?.horasExtras?.horasExtraArray[0]?.dias
 		
@@ -136,7 +140,7 @@ class CfdiPrintUtils {
 		
 			//println 'Imagen generada: '+img
 			def img=QRCodeUtils.generarQR(comprobante)
-			println 'Imagen generada: '+img
+			//println 'Imagen generada: '+img
 			parametros.put("QR_CODE",img);
 			//parametros.put("QR_CODE",QRCodeUtils.getQCode(cfdi.getComprobante()))
 			TimbreFiscal timbre=new TimbreFiscal(comprobante)
@@ -146,7 +150,11 @@ class CfdiPrintUtils {
 			parametros.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
 			parametros.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
 		
-		
+			parametros["EMPRESA_LOGO"]=new File("z://siipapex/etc/empresaFacLogo.jpg")
+			
+			
+			
+		//println 'Cadena original sat: '+parametros['CADENA_ORIGINAL_SAT']
 		
 		
 		return parametros;

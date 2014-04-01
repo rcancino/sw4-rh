@@ -24,7 +24,7 @@ def importar(def archivo, def folio){
 	
 		def nomina =Nomina.findWhere(folio:folio,periodicidad:'QUINCENAL')
   
-	  println'nomina: '+ nomina.folio
+      println'nomina: '+ nomina.folio
 	
 	  File file=grailsApplication.mainContext.getResource("/WEB-INF/data/"+archivo).file
 		def row=0
@@ -64,10 +64,10 @@ def importar(def archivo, def folio){
 			  BigDecimal importe=importeString as BigDecimal
 			  if(importe){
 				def cve=columnas[it-1].trim().substring(0,4)
-				def subsidioEmpleoAplicado=columnas[it-1].endsWith("A")
-				 
+                def subsidioEmpleoAplicado=columnas[it-1].endsWith("A")
+                 
 				 if(!subsidioEmpleoAplicado){
-					def excento=columnas[it-1].contains("E")
+                    def excento=columnas[it-1].contains("E")
 					def concepto=ConceptoDeNomina.findWhere(clave:cve)
 				
 					def nominaEmpDet=new NominaPorEmpleadoDet(
@@ -78,7 +78,7 @@ def importar(def archivo, def folio){
 					)
 					nominaPorEmpleado.addToConceptos(nominaEmpDet)
 					println " Agregando ${nominaEmpDet.concepto}   para: "+it +' '+cve+ " Importe: "+importe
-				  }else{
+                  }else{
 				   nominaPorEmpleado.subsidioEmpleoAplicado=importe
 				  }
 				
@@ -104,11 +104,11 @@ def importar(def archivo, def folio){
 	  def nomina =Nomina.findWhere(folio:folio,periodicidad:'QUINCENAL')
 	  nomina.partidas.each{ ne->
 		
-		def percepcionesG=ne.conceptos.sum 0.0,{ it.concepto.tipo=='PERCEPCION'?it.importeGravado:0.0}
-		def percepcionesE=ne.conceptos.sum 0.0,{ it.concepto.tipo=='PERCEPCION'?it.importeExcento:0.0}
+		def percepcionesG=ne.conceptos.sum{ it.concepto.tipo=='PERCEPCION'?it.importeGravado:0.0}
+		def percepcionesE=ne.conceptos.sum{ it.concepto.tipo=='PERCEPCION'?it.importeExcento:0.0}
 		
-		def deduccionG=ne.conceptos.sum 0.0,{ it.concepto.tipo=='DEDUCCION'?it.importeGravado:0.0}
-		def deduccionE=ne.conceptos.sum 0.0,{ it.concepto.tipo=='DEDUCCION'?it.importeExcento:0.0}
+		def deduccionG=ne.conceptos.sum{ it.concepto.tipo=='DEDUCCION'?it.importeGravado:0.0}
+		def deduccionE=ne.conceptos.sum{ it.concepto.tipo=='DEDUCCION'?it.importeExcento:0.0}
 		
 		ne.totalGravado= percepcionesG-deduccionG
 		ne.totalExcento=percepcionesE-deduccionE
@@ -126,6 +126,6 @@ def importar(def archivo, def folio){
 
 
 
-//generarNomina(5,new Periodo('01/03/2014','15/03/2014'),Date.parse('dd/MM/yyyy','14/03/2014'),'VIERNES')
-//importar("nomina_q5.csv",5)
-actualizarNomina(5)
+//generarNomina(3,new Periodo('01/02/2014','15/02/2014'),Date.parse('dd/MM/yyyy','14/02/2014'),'JUEVES')
+importar("nomina_q3.csv",3)
+//actualizarNomina(3)

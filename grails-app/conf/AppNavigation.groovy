@@ -22,7 +22,9 @@ navigation={
 		operaciones(){
 			tiempoExtras(controller:'tiempoExtra',action:'index')
 			nomina(controller:'nomina',action:'index')
-			recibos(controller:'reciboDeNomina',action:'index')
+			
+			recibos(controller:'reciboDeNomina',action:'index',titleText:'Recibos (Quincenal)')
+			recibosSemanal(controller:'reciboDeNomina',action:'semanal',titleText:'Recibos (Semanal)')
 			compensaciones()
 			aportaciones()
 			incapacidades()

@@ -23,7 +23,7 @@ class QRCodeUtils {
 			TimbreFiscal timbre=new TimbreFiscal(cfdi)
 			String pattern="?re={0}&rr={1}&tt={2,number,##########.######}&id,{3}"
 			String qq=MessageFormat.format(pattern, cfdi.getEmisor().getRfc(),cfdi.getReceptor().getRfc(),cfdi.getTotal(),timbre.UUID)
-			println 'Generando QCode para: '+qq
+			//println 'Generando QCode para: '+qq
 			File file=QRCode.from(qq).to(ImageType.GIF).withSize(250, 250).file()
 			//BufferedImage img=ImageIO.read(file);
 			return file.toURI().toURL()
