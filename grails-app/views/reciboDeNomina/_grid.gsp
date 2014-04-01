@@ -34,26 +34,16 @@
 						<li><g:link action="showXml" id="${row.cfdi.id}" class="">
 							<p class="text-success"><span class="glyphicon glyphicon-ok"></span>  XML</p>
 						</g:link></li>
-						<li><%--
-							<g:jasperReport
-								jasper="ReciboDeNominaCfdi"
-								format="PDF"
-								name="">
-							</g:jasperReport>
-							 --%>
+						<li>
 							<g:jasperReport
 								controller="reciboDeNomina"
 								action="imprimirCfdi"
 								jasper="NominaDigitalCFDI" 
-								format="HTML,PDF" 
-								name="Recibo de Nomina">
+								format="PDF,HTML" 
+								name="">
 								<g:hiddenField name="id" value="${row.cfdi.id}"/>
 							</g:jasperReport>
 							
-							<%-- 
-							<g:link action="showPdf" id="${row.cfdi.id}" class="">
-							<p class="text-success"><span class="glyphicon glyphicon-ok"></span>  PDF</p>
-							</g:link>--%>
 						</li>
 						
 					</ul>

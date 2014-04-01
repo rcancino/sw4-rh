@@ -49,6 +49,7 @@ class CfdiService {
 	Cfdi generarComprobante(def nominaEmpleadoId) {
 		
 		def fecha=new Date()
+		//def fecha=Date.parse('dd/MM/yyy hh:mm:ss','31/03/2014 23:'+new Date().format('mm:ss'))
 		def nominaEmpleado=NominaPorEmpleado.get(nominaEmpleadoId)
 		def empresa=nominaEmpleado.nomina.empresa
 		def empleado=nominaEmpleado.empleado
@@ -135,23 +136,22 @@ class CfdiService {
 		  }
 		
 		//Deducciones
-		
-		  Deducciones ded=nomina.addNewDeducciones()
-		  ded.totalGravado=nominaEmpleado.deduccionesGravadas
-		  ded.totalExento=nominaEmpleado.totalExcento
-		  
-		  nominaEmpleado.conceptos.each{
-			if(it.concepto.tipo=='DEDUCCION') {
-			  Deduccion dd=ded.addNewDeduccion()
-			  dd.setTipoDeduccion(StringUtils.leftPad(it.concepto.claveSat.toString(), 3, '0'))
-			  dd.setClave(it.concepto.clave)
-			  dd.setConcepto(it.concepto.descripcion)
-			  dd.setImporteGravado(it.importeGravado)
-			  dd.setImporteExento(it.importeExcento)
+		if(nominaEmpleado.deducciones){
+			Deducciones ded=nomina.addNewDeducciones()
+			ded.totalGravado=nominaEmpleado.deduccionesGravadas
+			ded.totalExento=nominaEmpleado.totalExcento
+			
+			nominaEmpleado.conceptos.each{
+			  if(it.concepto.tipo=='DEDUCCION') {
+				Deduccion dd=ded.addNewDeduccion()
+				dd.setTipoDeduccion(StringUtils.leftPad(it.concepto.claveSat.toString(), 3, '0'))
+				dd.setClave(it.concepto.clave)
+				dd.setConcepto(it.concepto.descripcion)
+				dd.setImporteGravado(it.importeGravado)
+				dd.setImporteExento(it.importeExcento)
+			  }
 			}
-		  }
-		
-	   
+		} 
 		
 		
 		Complemento complemento=comprobante.addNewComplemento()
@@ -164,7 +164,7 @@ class CfdiService {
 		
 		//Importes
 		comprobante.setSubTotal(nominaEmpleado.percepciones)
-		comprobante.setDescuento(nominaEmpleado.conceptos.sum{
+		comprobante.setDescuento(nominaEmpleado.conceptos.sum {
 			def vv=0.0
 			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat!=2) {
 			  vv+=it.importeGravado+it.importeExcento
@@ -173,14 +173,19 @@ class CfdiService {
 		})
 		comprobante.setMotivoDescuento("Deducciones nómina")
 		//Calculamos el total
-		def retenciones=nominaEmpleado.conceptos.sum{
+		def retenciones=nominaEmpleado.conceptos.sum {
 			def vv=0.0
 			if(it.concepto.tipo=='DEDUCCION' && it.concepto.claveSat==2) {
 			  vv+=it.importeGravado+it.importeExcento
 			}
 			return vv
 		}
-		
+		if(retenciones==null) 
+			retenciones=0.0
+		if(comprobante.descuento==null)
+			comprobante.descuento=0.0
+		if(comprobante.subTotal==null)
+			comprobante.subTotal=0.0
 		comprobante.setTotal(comprobante.subTotal-comprobante.descuento-retenciones)
 		//Impuestos
 		Impuestos impuestos=comprobante.addNewImpuestos()
@@ -210,10 +215,10 @@ class CfdiService {
 		cfdi.setXmlName("$cfdi.receptorRfc-$cfdi.serie-$cfdi.folio"+".xml")
 		
 		validarDocumento(document)
-		//def timbrador=ctx.getBean('cfdiTimbrador')
+		
 		
 		cfdi=cfdiTimbrador.timbrar(cfdi,"PAP830101CR3", "yqjvqfofb")
-		//println cfdi.comprobante
+		
 		nominaEmpleado.cfdi=cfdi
 		println cfdi.xmlName
 		return cfdi

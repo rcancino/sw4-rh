@@ -16,7 +16,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<div class="alert alert-info">
 					<h4 class="text-center">Nomina</h4>
 				</div>
@@ -46,7 +46,7 @@
 					</g:each>
 				</div>
 			</div>
-			<div class="col-md-9">
+			<div class="col-md-10">
 				<div class="alert alert-info">
 					<h4 class="text-center">Recibos</h4>
 				</div>

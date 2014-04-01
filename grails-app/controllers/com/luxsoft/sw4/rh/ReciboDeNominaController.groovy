@@ -61,13 +61,14 @@ class ReciboDeNominaController {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'cfdiInstance.label', default: 'Cfdi'), params.id])
 			redirect action: "show", params:[id:id]
 		}
+		NominaPorEmpleado nominaPorEmpleado=NominaPorEmpleado.findByCfdi(cfdi)
 		Comprobante comprobante=cfdi.comprobante
 		ComplementoNomina complemento=new ComplementoNomina(comprobante)
 		
-		//def conceptos=comprobante.getConceptos().getConceptoArray()
+		
 		mx.gob.sat.nomina.NominaDocument.Nomina nomina=complemento.nomina
 		
-		def deducciones=nomina.deducciones.deduccionArray
+		def deducciones=nomina?.deducciones?.deduccionArray
 		def modelData=deducciones.collect { cc ->
 			def res=[
 				'GRUPO':cc.tipoDeduccion,
@@ -99,6 +100,8 @@ class ReciboDeNominaController {
 		def repParams=CfdiPrintUtils.resolverParametros(comprobante,complemento.nomina)
 		params<<repParams
 		params.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
+		//params['SALARIO_DIARIO_BASE']=nominaPorEmpleado.salarioDiarioBase
+		params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado
 		//println 'Parametros enviados: '+params
 		chain(controller:'jasper',action:'index',model:[data:modelData],params:params)
 		//chain(controller:'jasper',action:'index',params:params)

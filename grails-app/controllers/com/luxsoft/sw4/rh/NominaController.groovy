@@ -11,12 +11,12 @@ class NominaController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond Nomina.list(params), model:[nominaInstanceCount: Nomina.count()]
+        params.max = Math.min(max ?: 20, 100)
     }
 
-    def show(Nomina nominaInstance) {
-        respond nominaInstance
+    def show(Long id) {
+		def nominaInstance=Nomina.get(id)
+		        
     }
 
     def create() {

@@ -58,33 +58,33 @@ class NominaPorEmpleado {
 	}
 	
 	BigDecimal getPercepciones() {
-		conceptos.sum{
+		conceptos.sum 0.0 ,{
 			return it.concepto.tipo=='PERCEPCION'?it.importeGravado+it.importeExcento:0.0
 		}
 	}
 	BigDecimal getPercepcionesGravadas() {
-		conceptos.sum{
+		conceptos.sum 0.0, {
 			return it.concepto.tipo=='PERCEPCION'?it.importeGravado:0.0
 		}
 	}
 	BigDecimal getPercepcionesExcentas() {
-		conceptos.sum{
+		conceptos.sum 0.0, {
 			return it.concepto.tipo=='PERCEPCION'?it.importeExcento:0.0
 		}
 	}
 	
 	BigDecimal getDeducciones() {
-		conceptos.sum{
+		conceptos.sum 0.0,{
 			return it.concepto.tipo=='DEDUCCION'?it.importeGravado+it.importeExcento:0.0
 		}
 	}
 	BigDecimal getDeduccionesGravadas() {
-		conceptos.sum{
+		conceptos.sum 0.0,{
 			return it.concepto.tipo=='DEDUCCION'?it.importeGravado:0.0
 		}
 	}
 	BigDecimal getDeduccionesExcentas() {
-		conceptos.sum{
+		conceptos.sum 0.0,{
 			return it.concepto.tipo=='DEDUCCION'?it.importeExcento:0.0
 		}
 	}

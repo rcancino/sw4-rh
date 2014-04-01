@@ -19,7 +19,7 @@ class CfdiTimbrador {
 	
 	Cfdi timbrar(Cfdi cfdi,String user,String password){
 		try {
-			println 'Timbrando: '+cfdi
+			//println 'Timbrando: '+cfdi
 			String nombre=cfdi.xmlName
 			byte[] xml=cfdi.xml
 			assert xml,'El cfdi esta mal generado no contiene datos xml'
