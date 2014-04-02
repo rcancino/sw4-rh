@@ -12,6 +12,7 @@ class NominaController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 20, 100)
+		println 'Localizando nominas: '+params
     }
 
     def show(Long id) {
