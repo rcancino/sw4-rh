@@ -23,6 +23,7 @@
 				<f:field property="descripcion" input-class="form-control" value="${conceptoInstance?.descripcion }"/>
 				<f:field property="claveSat" input-class="form-control" value="${conceptoInstance?.claveSat}"/>
 				<f:field property="tipo" input-class="form-control" value="${conceptoInstance?.tipo }"/>
+				<f:field property="general" input-class="form-control" value="${conceptoInstance?.general }"/>
 			</f:with>
 			</fieldset>
 			<div class="form-group">

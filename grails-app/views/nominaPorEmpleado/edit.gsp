@@ -26,8 +26,19 @@
 					<div class="panel-heading">Operaciones</div>
 					
 					<div class="list-group">
+						<g:link controller="nomina" action="show" id="${nominaPorEmpleadoInstance?.nomina?.id}"
+							class="list-group-item" >
+							<span class="glyphicon glyphicon-arrow-left"></span> Regresar 
+						</g:link>	 
+						<g:link  action="agregarConcepto" params="[tipo:'PERCEPCION']"
+							id="${nominaPorEmpleadoInstance.id}" 
+							class="list-group-item" 
+							data-toggle="modal"
+							data-target="#percepcionModal">
+							<span class="glyphicon glyphicon-plus"></span> Agregar Percepcion
+						</g:link>
 						<g:link class="list-group-item" action="agregarConcepto" id="${nominaPorEmpleadoInstance?.id}">
-						<span class="glyphicon glyphicon-plus"></span> Agregar Percepción</g:link>
+							<span class="glyphicon glyphicon-plus"></span> Agregar Percepción</g:link>
 						<g:link class="list-group-item" action="todo">
 						<span class="glyphicon glyphicon-plus"></span> Agregar Deducción</g:link>
 						<g:link class="list-group-item" action="todo">
@@ -108,6 +119,23 @@
 		</div>
 
 	</div>
+
+	<!-- Modal para el alta de percepciones -->
+	<div class="modal fade" id="percepcionModal" tabindex="-1" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				%{-- <div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Percepción</h4>
+				</div>
+				<div class="modal-body"><p>Forma para el mantenimiento</p></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        			<button type="button" class="btn btn-primary">Salvar</button>
+				</div> --}%
+			</div> <!-- moda-content -->
+		</div> <!-- modal-dialog -->
+	</div> <!-- .modal  -->
 
 </body>
 </html>

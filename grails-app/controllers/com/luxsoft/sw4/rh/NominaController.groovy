@@ -22,6 +22,7 @@ class NominaController {
 
     def show(Long id) {
 		def nominaInstance=Nomina.get(id)
+		
 		[nominaInstance:nominaInstance]
 		        
     }

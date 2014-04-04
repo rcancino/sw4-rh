@@ -13,15 +13,15 @@ class NominaPorEmpleado {
 	
 	Empleado empleado 
 	Ubicacion ubicacion
-	BigDecimal salarioDiarioBase
-	BigDecimal salarioDiarioIntegrado
-	BigDecimal total
-	BigDecimal totalGravado
-	BigDecimal totalExcento
+	BigDecimal salarioDiarioBase=0.0
+	BigDecimal salarioDiarioIntegrado=0.0
+	BigDecimal total=0.0
+	BigDecimal totalGravado=0.0
+	BigDecimal totalExcento=0.0
 	
-	BigDecimal baseGravable
-	BigDecimal subsidioEmpleoAplicado
-	BigDecimal impuestoSubsidio
+	BigDecimal baseGravable=0.0
+	BigDecimal subsidioEmpleoAplicado=0.0
+	BigDecimal impuestoSubsidio=0.0
 	List conceptos
 	Cfdi cfdi
 	

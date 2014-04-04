@@ -15,5 +15,24 @@ class NominaPorEmpleadoController {
     	[nominaPorEmpleadoInstance:ne]
     }
 
+    def agregarConcepto(Long id,String tipo){
+    	
+    	request.withFormat{
+    		html {
+				def conceptos=ConceptoDeNomina.findAll{tipo==tipo}
+    			render (template:'agregarConceptoform'
+    			,model:[nominaEmpleadoId:id,
+    				nominaPorEmpleadoDetInstance:new NominaPorEmpleadoDet(),
+    				conceptosList:conceptos
+    				])
+    		}
+			form {
+				//Generar el alta de la nomina por empleado
+			}    	
+    	}
+    	
+    	
+    }
+
     
 }
