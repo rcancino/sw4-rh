@@ -150,7 +150,7 @@ class CfdiPrintUtils {
 			parametros.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
 			parametros.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
 		
-			parametros["EMPRESA_LOGO"]=new File("z://siipapex/etc/empresaFacLogo.jpg")
+			//parametros["EMPRESA_LOGO"]=new File("z://siipapex/etc/empresaFacLogo.jpg")
 			
 			
 			

@@ -1,5 +1,11 @@
 /* Base CSS file for Luxor */
 body{
-	padding-top: 70px;
+	padding-top: 60px;
 	padding-bottom: 50px;
+}
+
+.button-panel{
+    
+    /*margin-bottom: 10px;*/
+    padding-bottom: 15px;
 }

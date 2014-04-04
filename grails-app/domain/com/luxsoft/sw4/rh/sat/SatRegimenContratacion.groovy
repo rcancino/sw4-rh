@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh.sat
 
-class SatRegimenContratacion {
+class SatRegimenContratacion implements Serializable{
     int clave
     String descripcion
 

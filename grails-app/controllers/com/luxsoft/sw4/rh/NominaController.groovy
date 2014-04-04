@@ -2,104 +2,166 @@ package com.luxsoft.sw4.rh
 
 
 
-import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
 
-@Transactional(readOnly = true)
+import grails.transaction.Transactional
+import grails.validation.Validateable
+import groovy.transform.ToString
+
+//@Transactional(readOnly = true)
 class NominaController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    //static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 20, 100)
-		println 'Localizando nominas: '+params
+		params.periodicidad=params.periodicidad?:'QUINCENAL'
+		//println 'Localizando nominas: '+params
+		def query=Nomina.where{periodicidad==params.periodicidad}
+		[nominaInstanceList:query.list(),nominaInstanceListTotal:query.count()]
     }
 
     def show(Long id) {
 		def nominaInstance=Nomina.get(id)
+		[nominaInstance:nominaInstance]
 		        
     }
 
-    def create() {
-        respond new Nomina(params)
+    def agregar(){
+		def nomina=Nomina.get(params.id)
+		params.periodicidad=nomina.periodicidad
+		params.folio=nomina.folio
+        redirect view:'agregarPartida', params:params
     }
 
-    @Transactional
-    def save(Nomina nominaInstance) {
-        if (nominaInstance == null) {
-            notFound()
-            return
-        }
+    def agregarPartidaFlow={
+        initialize {
+            action{
+				
+                log.info 'Inicianlizando flow para agregar partidas a nomina params: '+params
+                
+                def nominaCmd=new NominaCmd()
+                bindData(nominaCmd, params)
+				
+                //flow.persistenceContext.flush()
+                //flow.persistenceContext.persistenceContext.clear()
+               
+                def empleados=findEmpleadosDisponibles(nominaCmd.id,nominaCmd.periodicidad)
+                flow.nominaCmd=nominaCmd
+				NominaEmpleadoCmd flow.nominaEmpleado=new NominaEmpleadoCmd()
+                [nominaInstance:flow.nominaCmd,
+                nominaEmpleado:flow.nominaEmpleado,
+                empleadosList:empleados]
 
-        if (nominaInstance.hasErrors()) {
-            respond nominaInstance.errors, view:'create'
-            return
-        }
-
-        nominaInstance.save flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'nominaInstance.label', default: 'Nomina'), nominaInstance.id])
-                redirect nominaInstance
             }
-            '*' { respond nominaInstance, [status: CREATED] }
+            on("success").to "seleccionDeEmpleado"
+			
         }
+		
+        seleccionDeEmpleado {
+            on("siguiente"){NominaEmpleadoCmd cmd ->
+				
+				bindData(flow.nominaEmpleado,params)
+				flow.nominaEmpleado.validate()
+				println 'Empleado en flow: '+ flow.nominaEmpleado
+				if(flow.nominaEmpleado.hasErrors()) {
+					flash.message="Errores de validacion"
+					println 'Errores de validacion en registro: '+flow.nominaEmpleado
+					return error()
+				}
+				println 'Empleado salario: '+flow.nominaEmpleado?.empleado?.salario?.salarioDiario
+                flow.salario=new SalarioCmd(
+                    salarioDiario:flow.nominaEmpleado?.empleado?.salario?.salarioDiario,
+                    salarioDiarioIntegrado:flow.nominaEmpleado?.empleado?.salario?.salarioDiarioIntegrado)
+				[nominaEmpleado:flow.nominaEmpleado,salario:flow.salario]
+				
+			}.to("salarios")
+            on("cancelar").to("cancelar")
+
+        }
+        salarios{
+			
+			on("anterior").to("seleccionDeEmpleado")
+			on("siguiente"){ SalarioCmd command ->
+                    println 'Validando: '+command
+					flow.salario=command
+					command.validate()
+					if(command.hasErrors()) {
+						flash.message="Errores de validacion en el salario"
+						return error()
+					}
+                }.to("percepciones")
+			on("cancelar").to("cancelar")
+		}
+		percepciones{
+			on("anterior").to("salarios")
+			on("siguiente").to("deducciones")
+			on("cancelar").to("cancelar")
+		}
+		deducciones{
+			on("anterior").to("percepciones")
+			on("siguiente").to("verificar")
+			on("cancelar").to("cancelar")
+		}
+		verificar{
+			on("anterior").to("deducciones")
+			on("siguiente").to("verificar")
+			on("cancelar").to("cancelar")
+		}
+        cancelar{
+			/*def nom=flow.nominaCmd
+			println 'Cancelando agrgado nomina: '+nom.class
+            redirect action:'show',params:[id:nom.id]
+            */
+			
+			redirect action:'index'
+        }
+
+
     }
 
-    def edit(Nomina nominaInstance) {
-        respond nominaInstance
+    private List findEmpleadosDisponibles(Long nominaId,String periodicidad){
+        def res=Empleado.findAll(
+            "from Empleado e where e.status ='ALTA' and e.salario.periodicidad=? and e.id not in(select ne.empleado.id from NominaPorEmpleado ne where ne.nomina.id=?) "
+            ,[periodicidad,nominaId])
     }
 
-    @Transactional
-    def update(Nomina nominaInstance) {
-        if (nominaInstance == null) {
-            notFound()
-            return
-        }
+    
+}
 
-        if (nominaInstance.hasErrors()) {
-            respond nominaInstance.errors, view:'edit'
-            return
-        }
+@Validateable
+@ToString(includePackage=false,includeNames=true)
+class NominaCmd implements Serializable{
+    
+    Long id
+    Integer folio  
+    String periodicidad
+    
 
-        nominaInstance.save flush:true
+}
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Nomina.label', default: 'Nomina'), nominaInstance.id])
-                redirect nominaInstance
-            }
-            '*'{ respond nominaInstance, [status: OK] }
-        }
-    }
 
-    @Transactional
-    def delete(Nomina nominaInstance) {
 
-        if (nominaInstance == null) {
-            notFound()
-            return
-        }
+@ToString(includePackage=false,includeNames=true)
+class NominaEmpleadoCmd implements Serializable{
+    Long nominaId
+    Empleado empleado
+    Ubicacion ubicacion
+	
+	static constraints = {
+		empleado nullable:false
+		ubicacion nullable:false
+	}
 
-        nominaInstance.delete flush:true
+}
 
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Nomina.label', default: 'Nomina'), nominaInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
-    }
+@ToString(includePackage=false,includeNames=true)
+class SalarioCmd implements Serializable{
+    BigDecimal salarioDiario
+    BigDecimal salarioDiarioIntegrado
 
-    protected void notFound() {
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.not.found.message', args: [message(code: 'nominaInstance.label', default: 'Nomina'), params.id])
-                redirect action: "index", method: "GET"
-            }
-            '*'{ render status: NOT_FOUND }
-        }
+    static constraints={
+        salarioDiario nullable:false,min:1.0
+        salarioDiarioIntegrado nullable:false,min:1.0
     }
 }
+

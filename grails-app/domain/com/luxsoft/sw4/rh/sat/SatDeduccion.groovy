@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh.sat
 
-class SatDeduccion {
+class SatDeduccion implements Serializable{
     int clave
     String descripcion
 

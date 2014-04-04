@@ -22,6 +22,6 @@ class Ubicacion implements Serializable{
     static embedded = ['direccion']
 
     String toString(){
-    	return "$clave ($empresa.clave)"
+    	return "$clave (${empresa?.clave})"
     }
 }

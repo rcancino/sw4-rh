@@ -1,31 +1,13 @@
 
-	<div class="row">
-		<div class="col-md-12">
-			<div class="btn-group">
-				<button class="btn btn-default">Cargar</button>
-				<button class="btn btn-default">Opcion 2</button>
-				<button class="btn btn-default">Opcion 3</button>
-				<button class="btn btn-default">Opcion 4</button>
-			</div>
-		</div>
-		
-	</div>
-
-
-
-
 
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
-			<g:sortableColumn property="folio" title="folio"/>
+			<g:sortableColumn property="folio" title="Folio"/>
 			<g:sortableColumn property="empresa.clave" title="Empresa"/>
-			<th>
-				<g:message code="nomina.tipo.label" default="Tipo" encodeAs="html"/>
-			</th>
-			<g:sortableColumn property="periodo.fechaInicial" title="folio"/>
-			<th><g:message code="periodo.fechaFinal" encodaAs="html"/></th>
-			
+			<th><g:message code="nomina.periodicidad.label" encodeAs="html"/></th>
+			<th><g:message code="nomina.tipo.label" default="Tipo" encodeAs="html"/></th>
+			<th><g:message code="periodo.label" encodaAs="html"/></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -37,9 +19,12 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"empresa.clave")}</td>
+				<td>${fieldValue(bean:row,field:"periodicidad")}</td>
 				<td>${fieldValue(bean:row,field:"tipo")}</td>
-				<td>${fieldValue(bean:row.periodo,field:"fechaInicial")}</td>
-				<td>${fieldValue(bean:row.periodo,field:"fechaFinal")}</td>
+				<td>
+					<g:formatDate date="${row.pago}" format="MMM-yyyy"/>
+				</td>
+				
 				
 			</tr>
 		</g:each>

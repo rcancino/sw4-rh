@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh.sat
 
-class SatBanco {
+class SatBanco implements Serializable{
     
     int clave
     String nombre

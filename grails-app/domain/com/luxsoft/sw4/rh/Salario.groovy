@@ -2,7 +2,7 @@ package com.luxsoft.sw4.rh
 
 import com.luxsoft.sw4.rh.sat.SatBanco;
 
-class Salario {
+class Salario implements Serializable{
 	
 	Empleado empleado
 	BigDecimal salarioMensual  // Dato informatico

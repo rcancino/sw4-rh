@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh
 
-class SeguridadSocial {
+class SeguridadSocial implements Serializable{
 	
 	Empleado empleado
 	String numero

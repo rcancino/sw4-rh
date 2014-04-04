@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh.sat
 
-class SatPercepcion {
+class SatPercepcion implements Serializable{
     
     int clave
     String descripcion

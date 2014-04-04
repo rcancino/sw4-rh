@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh.sat
 
-class SatIncapacidad {
+class SatIncapacidad implements Serializable{
     int clave
     String descripcion
 
