@@ -28,6 +28,12 @@ navigation={
 			compensaciones()
 			aportaciones()
 			incapacidades()
+			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
+				vigentes()
+				pagados()
+				reportes()
+
+			}
 			
 		}
 	}

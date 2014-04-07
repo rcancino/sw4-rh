@@ -40,7 +40,7 @@ class Nomina {
     static constraints = {
 		tipo inList:['GENERAL','ESPECIAL','AGINALDO','UTILIDADES']
 		diaDePago inList:['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO']
-		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','ESPECIAL']
+		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','ANUAL','ESPECIAL']
 		formaDePago inList:['CHEQUE','TRANSFERENCIA']
     }
 
