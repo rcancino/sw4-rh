@@ -35,8 +35,13 @@ navigation={
 
 			}
 		}
-		preferencias(){
-			configuracionDeNominas(titleText:'Configuracion de nominas')
+		configuracion(){
+			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){
+				porNomina()
+				porConcepto()
+			}
+			concepto(controller:'',action:'index')
+			
 		}
 	}
 }
