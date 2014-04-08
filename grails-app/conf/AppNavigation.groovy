@@ -34,7 +34,9 @@ navigation={
 				reportes()
 
 			}
-			
+		}
+		preferencias(){
+			configuracionDeNominas(titleText:'Configuracion de nominas')
 		}
 	}
 }

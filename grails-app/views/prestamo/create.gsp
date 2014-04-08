@@ -36,7 +36,7 @@
 		<g:form class="form-horizontal" action="save">
 			
 			<f:with bean="${prestamoInstance }">
-				<g:hiddenField name="empresa" value="${prestamoInstance.empresa}"/>
+				
 				<f:field property="empleado" input-class="form-control"/>
 				<f:field property="alta" input-class="form-control"/>
 				<f:field property="autorizo" input-class="form-control"/>

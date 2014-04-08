@@ -4,7 +4,7 @@ import com.luxsoft.sw4.Empresa
 
 class Prestamo {
 	
-	Empresa empresa
+	
 	Empleado empleado
 	Date alta
 	String autorizo
@@ -14,11 +14,10 @@ class Prestamo {
 	BigDecimal tasaDescuento=0.3
 
 	BigDecimal importe=0
-	
 	BigDecimal saldo=0
-	List abonosPorNomina
-	List abonosEspeciales
-
+	BigDecimal totalAbonos
+	
+	List abonos
 
 
 	Date dateCreated
@@ -30,30 +29,28 @@ class Prestamo {
     	tipo inList:['DESCUENTO_POR_NOMINA']
     }
 
-    static hasMany = [abonosPorNomina: PrestamoAbono,abonosEspeciales:PrestamoAbonoEspecial]
+    static hasMany = [abonos: PrestamoAbono]
 
-    static transients = ['abonos']
+    static transients=['totalAbonos']
 
-    BigDecimal getAbonos(){
-    	def porNomina=abonosPorNomina?.sum 0.0,{
+    BigDecimal getTotalAbonos(){
+    	def totalAbono=abonos?.sum 0.0,{
     		it.importe
     	}
-    	def especiales=abonosEspeciales?.sum 0.0,{
-    		it.importe
-    	}
+    	return totalAbono;
     }
 
     def actualizarSaldo(){
-    	importe=importe?:0
-    	def abonos=getAbonos()?:0
+    	importe=importe?:0.0
+    	def abonos=getTotalAbonos()?:0.0
     	saldo=importe-abonos
     }
 
-    def beforeInsert() {
+    def afterInsert() {
     	actualizarSaldo()
     }
 
-    def beforeUpdate() {
+    def afterUpdate() {
     	actualizarSaldo()
     }
 }

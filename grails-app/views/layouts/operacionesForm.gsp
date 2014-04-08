@@ -37,8 +37,14 @@
 					</div>
 				</div>
 			</div>
+			
 			<div class="col-md-9">
-				<div class="panel panel-default">
+				<g:if test="${ pageProperty(name:'page.documentPanel') }">
+					<g:pageProperty name="page.documentPanel"/>
+				</g:if>
+				
+				<g:else>
+					<div class="panel panel-default">
 					<div class="panel-heading text-center">
 						<g:if test="${ pageProperty(name:'page.formTitle') }">
 							<g:pageProperty name="page.formTitle"/>
@@ -51,9 +57,12 @@
 					<div class="grid-panel">
 						<g:pageProperty name="page.gridPanel"/>
 					</div>
-					
 				</div>
+				
+				</g:else>
+				
 			</div>
+			
 		</div> <!-- end row 2
 
 		

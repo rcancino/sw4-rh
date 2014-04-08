@@ -95,9 +95,10 @@ class NominaPorEmpleado {
 		totalExcento=percepcionesGravadas-percepcionesExcentas
 	}
 	
+	/*
 	def beforeInsert= {
 		antiguedadEnSemanas=getAntiguedad()
 		
-	}
+	}*/
 	
 }

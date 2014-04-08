@@ -15,17 +15,17 @@
 		<g:each in="${prestamoInstanceList}" var="row">
 			<tr>
 				<td>
-					<g:link action="show" id="${row.id}">
-						<g:formatNumber number="${row.folio}" format="######"/>
+					<g:link action="edit" id="${row.id}">
+						<g:formatNumber number="${row.id}" format="######"/>
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.nombre")}</td>
 				<td><g:formatDate date="${row.alta}" format="dd/MM/yyyy"/></td>
 				<td>
-					<g:numberFormat number="${row.importe}" format="#,###.##"/>
+					<g:formatNumber number="${row.importe}" format="#,###.##"/>
 				</td>
 				<td>
-					<g:numberFormat number="${row.saldo}" format="#,###.##"/>
+					<g:formatNumber number="${row.saldo}" format="#,###.##"/>
 				</td>
 				<td><g:formatDate date="${row.lastUpdated}" format="dd-MMM-yyyy hh:mm"/></td>
 				

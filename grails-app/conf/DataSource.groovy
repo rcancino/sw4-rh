@@ -22,7 +22,7 @@ environments {
            //dbCreate = "update"
 			dbCreate="update"
             url = "jdbc:mysql://localhost/rh"
-            //url="jdbc:mysql://10.10.1.225/rh"
+            //url="jdbc:mysql://10.10.1.9/rhkyo"
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = org.hibernate.dialect.MySQL5InnoDBDialect
             username = "root"

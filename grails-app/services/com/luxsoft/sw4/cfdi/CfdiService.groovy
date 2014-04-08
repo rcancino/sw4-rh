@@ -51,6 +51,9 @@ class CfdiService {
 		def fecha=new Date()
 		//def fecha=Date.parse('dd/MM/yyy hh:mm:ss','31/03/2014 23:'+new Date().format('mm:ss'))
 		def nominaEmpleado=NominaPorEmpleado.get(nominaEmpleadoId)
+		assert nominaEmpleado,'No existe la nomina empleado: '+nominaEmpleadoId
+		assert nominaEmpleado.cfdi==null,'Ya esta timbrada la nomina para el empleado: '+nominaEmpleado
+		
 		def empresa=nominaEmpleado.nomina.empresa
 		def empleado=nominaEmpleado.empleado
 		Folio folio=Folio.findOrSaveWhere(empresa:empresa,serie:'NOMINA_CFDI')
