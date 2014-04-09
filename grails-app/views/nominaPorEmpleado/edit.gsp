@@ -12,7 +12,8 @@
 			<div class="col-md-12">
 				<div class="page-header">
 					<h3>Nómina de : ${nominaPorEmpleadoInstance?.empleado}
-						<small>${nominaPorEmpleadoInstance?.ubicacion}</small>
+						<small>${nominaPorEmpleadoInstance?.ubicacion}  (${nominaPorEmpleadoInstance?.nomina?.periodo})  Días:${nominaPorEmpleadoInstance?.nomina?.diasPagados}</small>
+						
 					</h3>
 				</div>
 			</div>
@@ -41,6 +42,14 @@
 							<span class="glyphicon glyphicon-plus"></span> Agregar Percepción</g:link>
 						<g:link class="list-group-item" action="todo">
 						<span class="glyphicon glyphicon-plus"></span> Agregar Deducción</g:link>
+						
+						<g:link class="list-group-item" 
+								controller="procesadorDeNomina" 
+								action="actualizarNominaPorEmpleado"
+								id="${nominaPorEmpleadoInstance.id}">
+							<span class="glyphicon glyphicon-refresh"></span> Actualizar
+						</g:link>
+						
 						<g:link class="list-group-item" action="todo">
 						<span class="glyphicon glyphicon-pencil"></span> Modificar </g:link>
 						<g:link class="list-group-item" action="todo">

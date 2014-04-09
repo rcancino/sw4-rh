@@ -1,50 +1,42 @@
-//Alta de nomina
+// Groovy Code here
 
+// Implicit variables include:
+//     ctx: the Spring application context
+//     grailsApplication: the Grails application
+//     config: the Grails configuration
+//     request: the HTTP request
+//     session: the HTTP session
+
+// Shortcuts:
+//     Execute: Ctrl-Enter
+//     Clear: Esc
 import com.luxsoft.sw4.*
 import com.luxsoft.sw4.rh.*
-import org.apache.commons.lang.exception.*
+import com.luxsoft.sw4.rh.imss.*
+import java.math.*
+  
+def ne=NominaPorEmpleado.get(5169)
+
+def det=ne.conceptos.find(){ it.concepto.clave=='D002'}
+
+def percepciones=ne.getPercepcionesGravadas()
+
+def diasEjercicio=365
+def diasMes= (diasEjercicio/12).setScale(1,RoundingMode.HALF_EVEN)
 
 
-/** Siguiente nomina Quincenal
-def nomina=new Nomina(folio:7,periodo:new Periodo('01/04/2014','15/04/2014'),
-						pago:Date.parse('dd/MM/yyyy','14/04/2014'),
-						diasPagados:15,tipo:'GENERAL',periodicidad:'QUINCENAL',
-						formaDePago:'TRANSFERENCIA',diaDePago:'JUEVES',
-						total:0.0,
-						empresa:Empresa.first()).save(failOnError:true)
-**/
-//Procesar las percepciones generales
-def nomina=Nomina.where{folio==7 && tipo=='GENERAL' && periodicidad=='QUINCENAL'}.find()
 
-def percepciones=ConceptoDeNomina.where{tipo=='PERCEPCION' && general==true}.findAll()
+def found =TarifaIsr.obtenerTabla(15).find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
 
-percepciones.each{ per ->
-  //Iteramos sobre todos los empleados de la nomina
-  nomina.partidas.each{ ne->
-	
-	// Buscamos el concepto
-	NominaPorEmpleadoDet det=ne.conceptos.find{ it.concepto.id=per.id}
-	//Si no la encuentra lo agregamos la percepcion
-	if(!det){
-	  det=new NominaPorEmpleadoDet(concepto:per,importeGravado:0.0,importeExcento:0.0,comentario:'PRUEBAS')
-	  ne.addToConceptos(det)
-	}else{ println 'Ya existe el registro...'}
-	//Si es salario lo calculamos
-	if(per.clave=='P001'){
-	  println 'Procesando P001'
-	  formula(ne.empleado,ne,det)
-	}
-	
-	
-  }
-  nomina.save(failOnError:true)
-}
+//println found
 
-//Formula para el calculo del concepto Salario
-def formula( empleado,nominaEmpleado,nominaEmpleadoDet) {
-  def salarioDiario=empleado.salario.salarioDiario
-  def diasTrabajados=nominaEmpleado.nomina.getDiasPagados()
-  def importeGravado=salarioDiario*diasTrabajados
-  nominaEmpleadoDet.importeGravado=importeGravado
-}
+def importeGravado=percepciones-found.limiteInferior
+importeGravado*=found.porcentaje
+importeGravado/=100
+importeGravado+=found.cuotaFija
+importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
+//println found.porcentaje +'  cf:'+found.cuotaFija+ 'Dia mes:'+diasMes
+det.importeGravado=importeGravado
+det.importeExcento=0.0
+ne.actualizar()
 

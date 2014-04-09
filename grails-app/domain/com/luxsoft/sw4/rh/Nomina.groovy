@@ -46,6 +46,10 @@ class Nomina {
 
     static hasMany = [partidas: NominaPorEmpleado]
 	
+	static mapping = {
+		partidas cascade: "all-delete-orphan"
+	}
+	
 	public Integer getDiasPagados(){
 		use(TimeCategory){
 			def duration= periodo.fechaFinal-periodo.fechaInicial+1.day

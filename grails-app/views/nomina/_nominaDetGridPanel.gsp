@@ -22,7 +22,7 @@
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.clave")}</td>
 				<td>
-					<g:link action="show" id="${row.id}">
+					<g:link controller="nominaPorEmpleado" action="edit" id="${row.id}">
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>

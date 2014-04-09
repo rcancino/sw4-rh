@@ -53,6 +53,10 @@ class NominaPorEmpleado {
 
     static hasMany = [conceptos: NominaPorEmpleadoDet]
 	
+	static mapping = {
+		conceptos cascade: "all-delete-orphan"
+	}
+	
 	Integer getAntiguedad(){
 		return (int)Math.floor((nomina?.pago-empleado?.alta)/7)
 	}

@@ -25,7 +25,7 @@ navigation={
 			
 			recibos(controller:'reciboDeNomina',action:'index',titleText:'Recibos (Quincenal)')
 			recibosSemanal(controller:'reciboDeNomina',action:'semanal',titleText:'Recibos (Semanal)')
-			compensaciones()
+			
 			aportaciones()
 			incapacidades()
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
@@ -33,6 +33,14 @@ navigation={
 				pagados()
 				reportes()
 
+			}
+			vacaciones()
+			bonos(){
+				productividad()
+				desempeno()
+				comisiones()
+				incentivo()
+				compensaciones()
 			}
 		}
 		configuracion(){

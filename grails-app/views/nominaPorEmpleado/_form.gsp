@@ -8,7 +8,7 @@
 				<f:field property="salarioDiarioIntegrado" label="SDI" input-class="form-control"/>
 				<f:field property="ubicacion"/>
 				<f:field property="comentario" input-class="form-control col-lg-6"/>
-				<f:field property="antiguedadEnSemanas" input-disabled="" input-class="form-control"/>
+				<f:field property="antiguedadEnSemanas" input-disabled="" input-class="form-control" label="Antiguedad"/>
 			</f:with>
 		</g:form>
 	</div>
@@ -37,6 +37,15 @@
     			<div class="col-sm-8">
       				<p class="form-control-static">
       					<g:formatNumber number="${nominaPorEmpleadoInstance?.total }" format="###.##" type="currency"/>
+      				</p>
+    			</div>
+  			</div>
+  			
+  			<div class="form-group">
+   				<label class="col-sm-4 control-label">Subsidio</label>
+    			<div class="col-sm-8">
+      				<p class="form-control-static">
+      					<g:formatNumber number="${nominaPorEmpleadoInstance?.subsidioEmpleoAplicado}" format="###.##" type="currency"/>
       				</p>
     			</div>
   			</div>

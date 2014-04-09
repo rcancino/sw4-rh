@@ -12,13 +12,18 @@ class ConceptoDeNominaController {
 
     def percepciones(Integer max){
     	params.max = Math.min(max ?: 15, 100)
-    	def conceptosList=ConceptoDeNomina.findAllByTipo('PERCEPCION')
+		String tipo=params.tipo?:'PERCEPCION'
+    	def conceptosList=ConceptoDeNomina.findAllByTipo(tipo)
     	[conceptosList:conceptosList]
     }
 
     
 
-    def deducciones(){}
+    def deducciones(Integer max){
+		params.max = Math.min(max ?: 15, 100)
+		def conceptosList=ConceptoDeNomina.findAllByTipo('DEDUCCION')
+		[conceptosList:conceptosList]
+	}
 
     def create(){
     	//println 'Alta de concepto'+params
