@@ -1,5 +1,7 @@
 package com.luxsoft.sw4.rh
 
+import grails.transaction.Transactional;
+
 class NominaPorEmpleadoController {
 
     def index() { }
@@ -15,6 +17,7 @@ class NominaPorEmpleadoController {
     	[nominaPorEmpleadoInstance:ne]
     }
 
+	@Transactional
     def agregarConcepto(Long id,String tipo){
     	
     	request.withFormat{
@@ -27,7 +30,14 @@ class NominaPorEmpleadoController {
     				])
     		}
 			form {
-				//Generar el alta de la nomina por empleado
+				
+				NominaPorEmpleado ne=NominaPorEmpleado.get(id)
+				println 'Agrgndo concepto: '+ne
+				NominaPorEmpleadoDet det=new NominaPorEmpleadoDet(params)
+				ne.addToConceptos(det)
+				ne.save(failOnError:true)
+				
+				redirect action:'edit',params:[id:ne.id]
 			}    	
     	}
     	

@@ -2,6 +2,7 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
+			<th>Clave</th>
 			<th>Concepto</th>
 			<th>Gravado</th>
 			<th>Excento</th>
@@ -15,7 +16,11 @@
 			
 			<tr>
 				<td>
-				${fieldValue(bean:it,field:"concepto.clave")}</td>
+					${fieldValue(bean:it,field:"concepto.clave")}
+				</td>
+				<td>
+					${fieldValue(bean:it,field:"concepto.descripcion")}
+				</td>
 				<td class="text-right"><g:formatNumber number="${it.importeGravado}" format="#,###,###.##"/></td>
 				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##"/></td>
 				<td class="text-center">
@@ -35,6 +40,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
+			<th></th>
 			<th>Total</th>
 			<th class="text-right"><g:formatNumber 
 				number="${param=='PERCEPCION'?nominaPorEmpleadoInstance?.percepcionesGravadas:nominaPorEmpleadoInstance?.deduccionesGravadas}" format="#,###.##"/></th>

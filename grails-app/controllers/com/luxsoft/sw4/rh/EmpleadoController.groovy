@@ -26,8 +26,12 @@ class EmpleadoController {
 		[empleadoInstanceList:Empleado.list(params),empleadoInstanceCount:Empleado.count()]
 	}
 	
+	def show(Empleado empleadoInstance){
+		[empleadoInstance:empleadoInstance]
+	}
+	
 	def create(){
-		redirect action:'altaDeEmpleado'
+		[empleadoInstance:new Empleado()]
 	}
 	
 	

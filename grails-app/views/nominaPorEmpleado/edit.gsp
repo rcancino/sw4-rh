@@ -38,8 +38,7 @@
 							data-target="#percepcionModal">
 							<span class="glyphicon glyphicon-plus"></span> Agregar Percepcion
 						</g:link>
-						<g:link class="list-group-item" action="agregarConcepto" id="${nominaPorEmpleadoInstance?.id}">
-							<span class="glyphicon glyphicon-plus"></span> Agregar Percepción</g:link>
+						
 						<g:link class="list-group-item" action="todo">
 						<span class="glyphicon glyphicon-plus"></span> Agregar Deducción</g:link>
 						
