@@ -20,7 +20,7 @@ navigation={
             }
 		}
 		operaciones(){
-			tiempoExtras(controller:'tiempoExtra',action:'index')
+			
 			nomina(controller:'nomina',action:'index')
 			
 			recibos(controller:'reciboDeNomina',action:'index',titleText:'Recibos (Quincenal)')
@@ -35,6 +35,7 @@ navigation={
 
 			}
 			vacaciones()
+			tiempoExtras(controller:'tiempoExtra',action:'index')
 			bonos(){
 				productividad()
 				desempeno()
@@ -42,6 +43,7 @@ navigation={
 				incentivo()
 				compensaciones()
 			}
+			solicitudes()
 		}
 		configuracion(){
 			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){

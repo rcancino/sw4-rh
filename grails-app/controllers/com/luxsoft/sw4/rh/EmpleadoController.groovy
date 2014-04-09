@@ -5,9 +5,11 @@ import groovy.transform.ToString;
 
 import java.util.Date;
 
-import org.grails.databinding.BindingFormat;
+import org.grails.databinding.BindingFormat
 
-import com.luxsoft.sw4.Empresa;
+import com.luxsoft.sw4.Empresa
+
+
 
 
 
@@ -17,86 +19,94 @@ class EmpleadoController {
 	
     static navigationScope="catalogos"
 	
+	def index(Long max) {
+		params.max = Math.min(max ?: 10, 100)
+		params.sort='apellidoPaterno'
+		params.order='asc'
+		[empleadoInstanceList:Empleado.list(params),empleadoInstanceCount:Empleado.count()]
+	}
 	
 	def create(){
 		redirect action:'altaDeEmpleado'
 	}
 	
-	def altaDeEmpleadoFlow={
-		initialize {
-			action{
-				log.info 'Iniciando wizard para alta de empleado'
-				println 'Inicializando wizard...'
-				// Cargamos la empresa en el flow
-				def empresa=Empresa.first()
-				assert empresa,"Debe existir la empresa a la que pertenecera el empleado"
-				
-				[empleado:new Empleado(),empresa:empresa]
-			}
-			on("success").to "datosGenerales"
-		}
-		
-		datosGenerales{
-			on("siguiente"){ 
-				log.info "Validando datos generales: "+params
-				println 'Validando datos generales: '+params
-				def empleado=flow.empleado
-				bindData(empleado,params)
-				
-				if(!empleado.validate()){
-					flow.empleado=empleado
-					return error()
-				}
-				//Preparamso el perfil para el siguiente paso
-				def perfil=new PerfilDeEmpleado(empleado:empleado,empresa:flow.empresa)
-				[empleado:empleado,perfil:perfil]
-				
-			}.to "perfilDePuesto"
-			on("cancelar").to "terminar"
-		}
-		
-		perfilDePuesto{
-			on("siguiente"){
-				println 'Validando perfil de empleado: '+params
-				def perfil=flow.perfil//new PerfilDeEmpleado(params)
-				bindData(perfil,params)
-				if(!perfil.validate()){
-					flow.perfil=perfil
-					return error()
-				}
-				[perfil:perfil]
-			}.to "datosPersonales"
-			on("anterior").to "datosGenerales"
-			on("cancelar").to "terminar"
-			
-		}
-		
-		datosPersonales{
-			on("siguiente").to "direcciion"
-			on("anterior").to "datosGenerales"
-			on("cancelar").to "terminar"
-			on("salvar").to "salvar"
-		}
-		
-		salvar{
-			action{
-				def empleado=flow.empleado
-				assert empleado ,"Debe existir un empleado en el flow"
-				def perfil=flow.perfil
-				println 'Salvando el empleado: '+empleado+  " Perfil: "+perfil
-				empleado.save()
-			}
-			on("success").to "terminar"
-			
-		}
-		
-		terminar{
-			
-			redirect action:'index'
-		}
-		
-		
-	}
+	
+	
+//	def altaDeEmpleadoFlow={
+//		initialize {
+//			action{
+//				log.info 'Iniciando wizard para alta de empleado'
+//				println 'Inicializando wizard...'
+//				// Cargamos la empresa en el flow
+//				def empresa=Empresa.first()
+//				assert empresa,"Debe existir la empresa a la que pertenecera el empleado"
+//				
+//				[empleado:new Empleado(),empresa:empresa]
+//			}
+//			on("success").to "datosGenerales"
+//		}
+//		
+//		datosGenerales{
+//			on("siguiente"){ 
+//				log.info "Validando datos generales: "+params
+//				println 'Validando datos generales: '+params
+//				def empleado=flow.empleado
+//				bindData(empleado,params)
+//				
+//				if(!empleado.validate()){
+//					flow.empleado=empleado
+//					return error()
+//				}
+//				//Preparamso el perfil para el siguiente paso
+//				def perfil=new PerfilDeEmpleado(empleado:empleado,empresa:flow.empresa)
+//				[empleado:empleado,perfil:perfil]
+//				
+//			}.to "perfilDePuesto"
+//			on("cancelar").to "terminar"
+//		}
+//		
+//		perfilDePuesto{
+//			on("siguiente"){
+//				println 'Validando perfil de empleado: '+params
+//				def perfil=flow.perfil//new PerfilDeEmpleado(params)
+//				bindData(perfil,params)
+//				if(!perfil.validate()){
+//					flow.perfil=perfil
+//					return error()
+//				}
+//				[perfil:perfil]
+//			}.to "datosPersonales"
+//			on("anterior").to "datosGenerales"
+//			on("cancelar").to "terminar"
+//			
+//		}
+//		
+//		datosPersonales{
+//			on("siguiente").to "direcciion"
+//			on("anterior").to "datosGenerales"
+//			on("cancelar").to "terminar"
+//			on("salvar").to "salvar"
+//		}
+//		
+//		salvar{
+//			action{
+//				def empleado=flow.empleado
+//				assert empleado ,"Debe existir un empleado en el flow"
+//				def perfil=flow.perfil
+//				println 'Salvando el empleado: '+empleado+  " Perfil: "+perfil
+//				empleado.save()
+//			}
+//			on("success").to "terminar"
+//			
+//		}
+//		
+//		terminar{
+//			
+//			redirect action:'index'
+//		}
+//		
+//		
+//	}
 
 }
 /**

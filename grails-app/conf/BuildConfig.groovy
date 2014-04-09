@@ -44,6 +44,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
+		mavenRepo "http://repo.grails.org/grails/core"
     }
 
     dependencies {
@@ -92,14 +93,14 @@ grails.project.dependency.resolution = {
         compile ":fields:1.3"
         compile ":jquery-ui:1.10.3"
         compile ':jquery-date-time-picker:0.1.0'
-		compile ':webflow:2.0.8.1'
+		//compile ':webflow:2.0.8.1'
 		runtime ':console:1.3'
 		//compile ":jasper:1.8.0"
 		//runtime ":jasper:1.8.0"
 		runtime ':jasper:1.6.1'
-		
+		compile ":searchable:0.6.6"
 		//compile ":export:1.5"
-		//compile ":easygrid:1.4.6"
+		//compile ":easygrid:1.5.0"
         //compile ":mail:1.0.1"
     }
 }

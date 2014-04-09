@@ -1,9 +1,11 @@
+<%@page defaultCodec="none" %>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8">
 	<meta name="layout" content="catalogos"/>
 	<title>Empleados</title>
+	
 </head>
 <body>
 	<content tag="header">
