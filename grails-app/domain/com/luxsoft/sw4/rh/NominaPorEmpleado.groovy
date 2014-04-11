@@ -30,6 +30,8 @@ class NominaPorEmpleado {
 	String comentario
 	
 	Integer antiguedadEnSemanas
+	Integer faltas
+	Integer incapacidades
 
 	Date dateCreated
 	Date lastUpdated
@@ -38,6 +40,8 @@ class NominaPorEmpleado {
     	comentario nullable:true,maxSize:200
 		antiguedadEnSemanas nullable:false,minSize:1
 		cfdi nullable:true 
+		faltas nullable:true
+		incapacidades nullable:true
     }
 	
 	static transients=['antiguedad'
