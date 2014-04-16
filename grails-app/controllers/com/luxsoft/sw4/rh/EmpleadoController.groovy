@@ -21,7 +21,7 @@ class EmpleadoController {
 	
 	def index(Long max) {
 		params.max = Math.min(max ?: 10, 100)
-		params.sort='apellidoPaterno'
+		params.sort=params.sort?:'apellidoPaterno'
 		params.order='asc'
 		[empleadoInstanceList:Empleado.list(params),empleadoInstanceCount:Empleado.count()]
 	}

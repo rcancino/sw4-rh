@@ -4,8 +4,10 @@ package com.luxsoft.sw4.rh
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
+import grails.plugin.springsecurity.annotation.Secured
 
 @Transactional(readOnly = true)
+
 class DepartamentoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]

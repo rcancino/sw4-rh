@@ -6,12 +6,15 @@ package com.luxsoft.sw4.rh
 import grails.transaction.Transactional
 import grails.validation.Validateable
 import groovy.transform.ToString
+import grails.plugin.springsecurity.annotation.Secured
+
 
 //@Transactional(readOnly = true)
+@Secured(["hasRole('RH_USER')"])
 class NominaController {
 
     //static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-
+    
     def index(Integer max) {
         params.max = Math.min(max ?: 20, 100)
 		params.periodicidad=params.periodicidad?:'QUINCENAL'

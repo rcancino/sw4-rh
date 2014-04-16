@@ -2,9 +2,9 @@
 	<thead>
 		<tr>
 			<g:sortableColumn property="clave" title="Clave"/>
-			<g:sortableColumn property="nombre" title="Nombre"/>
-			<g:sortableColumn property="apellidoPaterno" title="Apellido P."/>
-			<g:sortableColumn property="apellidoMaterno" title="Apellido M"/>
+			<g:sortableColumn property="nombres" title="Nombre"/>
+			<g:sortableColumn property="perfil.ubicacion.clave" title="Ubicación"/>
+			<g:sortableColumn property="perfil.departamento.clave" title="Departamento"/>
 			
 			<th>CURP</th>
 			<g:sortableColumn property="alta" title="Alta"/>
@@ -18,9 +18,9 @@
 						${fieldValue(bean:row,field:"clave")}
 					</g:link>
 				</td>
-				<td>${fieldValue(bean:row,field:"nombres")}</td>
-				<td>${fieldValue(bean:row,field:"apellidoPaterno")}</td>
-				<td>${fieldValue(bean:row,field:"apellidoMaterno")}</td>
+				<td>${fieldValue(bean:row,field:"nombre")}</td>
+				<td>${fieldValue(bean:row,field:"perfil.ubicacion.clave")}</td>
+				<td>${fieldValue(bean:row,field:"perfil.departamento.clave")}</td>
 				
 				
 				<td>${fieldValue(bean:row,field:"curp")}</td>

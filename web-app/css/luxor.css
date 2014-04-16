@@ -12,3 +12,12 @@ body{
     padding-left: 2px;
 
 }
+
+.col-centered{
+	float: none;
+	margin: 0 auto;
+}
+
+.icon-exit{
+	background-image: url('${fam.icon(name: 'door_out')}');
+}

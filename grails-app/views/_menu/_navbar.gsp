@@ -8,24 +8,23 @@
 				<span class="icon-bar"></span>
 			</button><a href="#" class="navbar-brand">Luxor</a>
 		</div>
+		<sec:ifLoggedIn>
 		<div class="collapse navbar-collapse" id="mainMenu">
-		<ul class="nav navbar-nav">
-			
-			
-			<g:render template="/_menu/catalogos"/>
-			<g:render template="/_menu/operaciones"/>
-			
-			
-			<li><a href="#">Reportes</a></li>
-			<g:render template="/_menu/configuracion"/>
-			
-		</ul>
-			
-			%{-- <nav:primary class="nav navbar-nav"/> --}%
-			%{-- <ul class="nav navbar">
-				<li class="dropdown"><a href="#" data-toggle="dropdown">Catálogos<b class="caret"></b></a></li>
-			</ul> --}%
+			<ul class="nav navbar-nav">
+				<g:render template="/_menu/catalogos"/>
+				<g:render template="/_menu/operaciones"/>
+				<li><a href="#">Reportes</a></li>
+				<g:render template="/_menu/configuracion"/>
+			</ul>
+				%{-- <nav:primary class="nav navbar-nav"/> --}%
+				%{-- <ul class="nav navbar">
+					<li class="dropdown"><a href="#" data-toggle="dropdown">Catálogos<b class="caret"></b></a></li>
+				</ul> --}%
+			<ul class="nav navbar-nav navbar-right">
+				<g:render template="/_menu/user"/>
+			</ul>
 		</div>
+		</sec:ifLoggedIn>
 	</div>
 	
 </nav>

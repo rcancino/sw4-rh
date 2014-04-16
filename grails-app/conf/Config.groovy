@@ -125,3 +125,27 @@ log4j = {
 grails.plugins.twitterbootstrap.fixtaglib = true
 
 grails.databinding.dateFormats= ['dd/MM/yyyy','MMddyyyy', 'yyyy-MM-dd HH:mm:ss.S', "yyyy-MM-dd'T'hh:mm:ss'Z'"]
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.logout.postOnly = false
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.luxsoft.sec.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.luxsoft.sec.UserRole'
+grails.plugin.springsecurity.authority.className = 'com.luxsoft.sec.Role'
+//grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+//grails.plugin.springsecurity.interceptUrlMap = [
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll'],
+    '/login/**':          ['permitAll'],
+    '/logout/**':         ['permitAll'],
+	'/spring-security-ui/**':		  ['ROLE_ADMIN'],
+	'/role/**':			              ['ROLE_ADMIN'],
+    '/console/**':                    ['ROLE_ADMIN']
+]
+

@@ -45,6 +45,7 @@ grails.project.dependency.resolution = {
         mavenRepo "http://download.java.net/maven/2/"
         //mavenRepo "http://repository.jboss.com/maven2/"
 		mavenRepo "http://repo.grails.org/grails/core"
+		mavenRepo "http://repo.spring.io/milestone/"
     }
 
     dependencies {
@@ -101,6 +102,12 @@ grails.project.dependency.resolution = {
 		compile ":searchable:0.6.6"
 		//compile ":export:1.5"
 		//compile ":easygrid:1.5.0"
-        //compile ":mail:1.0.1"
+        
+		
+		compile ":spring-security-core:2.0-RC2"
+		compile ":mail:1.0.1"
+		compile ":famfamfam:1.0.1"
+		compile ":spring-security-ui:1.0-RC1"
+		
     }
 }
