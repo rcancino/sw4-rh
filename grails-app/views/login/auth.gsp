@@ -12,7 +12,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12 jumbotron">
-			<h1>Luxor RH
+			<h1>SIIPAP RH
 				<p>Sistema integral de recursos humanos</p>
 			</h1>
 		</div>
