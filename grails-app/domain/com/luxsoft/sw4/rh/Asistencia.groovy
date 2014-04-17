@@ -21,12 +21,19 @@ class Asistencia {
 	Time entrada3
 	Time salida3
 
+	String status
 	String comentario
+	
+	NominaPorEmpleado nominaPorEmpleado
+	String retardoEntrada1
+	String retardoComida
+	Boolean checadoIncompleto=false
 
 	Date dateCreated
 	Date lastUpdated
 
     static constraints = {
+		
     	comentario nullable:true
     	entrada1 nullable:true
     	entrada2 nullable:true
@@ -37,6 +44,7 @@ class Asistencia {
     }
 
 	static mapping = {
+		fecha type:'date'
 		entrada1 type:'time'
 		entrada2 type:'time'
 		entrada3 type:'time'

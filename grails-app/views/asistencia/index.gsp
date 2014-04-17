@@ -1,0 +1,28 @@
+<%@ page import="com.luxsoft.sw4.rh.Asistencia" %>
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="layout" content="operaciones"/>
+	<title>Lista de asistencia</title>
+</head>
+<body>
+	<content tag="header">
+		<h3>Control de asistencia</h3>
+	</content>
+	<content tag="consultas">
+		<ul class="nav nav-pills nav-stacked">
+  			<nav:menu scope="app/operaciones/asistencia" class="nav nav-pills nav-stacked" path=""/>
+		</ul>
+	</content>
+	<content tag="gridTitle">Lista de asistencia </content>
+	<content tag="gridTasks">
+  		<g:link class="btn btn-primary" action="importar">Importar</g:link>
+  		<g:link class="btn btn-success" action="create">Procesar</g:link>
+	</content>
+	<content tag="gridPanel">
+		<g:render template="asistenciaGridPanel"/>
+	</content>
+	
+</body>
+</html>

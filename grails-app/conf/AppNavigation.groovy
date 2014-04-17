@@ -25,7 +25,10 @@ navigation={
 			
 			recibos(controller:'reciboDeNomina',action:'index',titleText:'Recibos (Quincenal)')
 			recibosSemanal(controller:'reciboDeNomina',action:'semanal',titleText:'Recibos (Semanal)')
-			
+			asistencia(controller:'asistencia',action:'index',titleText:'Control de asistencia'){
+				importer()
+				actualizar()
+			}
 			aportaciones()
 			incapacidades()
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
