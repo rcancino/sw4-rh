@@ -10,7 +10,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 
 //@Transactional(readOnly = true)
-@Secured(["hasRole('RH_USER')"])
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class NominaController {
 
     //static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]

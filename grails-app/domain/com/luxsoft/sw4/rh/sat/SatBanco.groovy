@@ -11,4 +11,8 @@ class SatBanco implements Serializable{
         nombre blank:false,maxSize:300
         nombreCorto blank:false,maxSize:40
     }
+
+    String toString(){
+    	return "${nombre}"
+    }
 }

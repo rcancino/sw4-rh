@@ -109,6 +109,8 @@ grails.project.dependency.resolution = {
 		compile ":famfamfam:1.0.1"
 		compile ":spring-security-ui:1.0-RC1"
 		compile ":standalone:1.2.3"
+
+        //compile ":less-resources:1.3.3.2"
 		
     }
 	grails.plugin.standalone.useJetty = true

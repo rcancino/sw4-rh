@@ -8,7 +8,7 @@ class PrestamoService {
 	
 	
 	 @Transactional(readOnly=true)
-	 @grails.events.Listener(namespace='gorm')
+	 //@grails.events.Listener(namespace='gorm')
 	 def onSaveOrUpdate(Prestamo prestamo) {
 		 log.info 'Procesando reglas de negocios para nomina: '+prestamo
 		 //Se aplican los procesadores para cada

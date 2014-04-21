@@ -12,7 +12,7 @@ class ConceptoDeNomina {
 	Integer claveSat
 	Boolean general=false
 	String clase  
-	
+	Boolean importeExcento=false
 	
 	Date dateCreated
 	Date lastUpdated
@@ -23,6 +23,7 @@ class ConceptoDeNomina {
 		tipo inList:['PERCEPCION','DEDUCCION']
 		//clase inList:['COMPENSACIONES','','','','']
 		clase maxSize:30
+		importeExcento nullable:true
     }
 
     String toString(){

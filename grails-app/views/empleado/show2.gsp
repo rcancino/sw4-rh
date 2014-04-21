@@ -1,7 +1,6 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	%{-- <meta name="layout" content="operacionesForm"/> --}%
 	<title>Empleado: ${empleadoInstance.perfil.numeroDeTrabajador}</title>
 </head>
 <body>

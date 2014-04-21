@@ -140,6 +140,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/index.gsp':                     ['permitAll'],
 	'/**/js/**':                      ['permitAll'],
 	'/**/css/**':                     ['permitAll'],
+    '/**/less/**':                     ['permitAll'],
 	'/**/images/**':                  ['permitAll'],
 	'/**/favicon.ico':                ['permitAll'],
     '/login/**':          ['permitAll'],
@@ -149,4 +150,10 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
     '/console/**':                    ['ROLE_ADMIN'],
 	'/user/**':                    ['ROLE_ADMIN']
 ]
+// grails.resources.modules = {
+//     'bootswatch' {
+//         dependsOn 'bootstrap'
+//         resource url:[dir: 'less', file: 'bootswatch.less'], attrs:[rel: "stylesheet/less", type:'css']
+//     }
 
+// }

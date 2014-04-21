@@ -6,7 +6,8 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
-			</button><a href="#" class="navbar-brand">Luxor</a>
+			</button>
+			<span class="glyphicon glyphicon-home"></span><a href="#" class="navbar-brand">Luxor</a>
 		</div>
 		<sec:ifLoggedIn>
 		<div class="collapse navbar-collapse" id="mainMenu">

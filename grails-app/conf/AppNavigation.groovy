@@ -3,7 +3,17 @@ navigation={
 		home()
 		catalogos(){
 			puesto(controller:'puesto',action:'index')
-			empleado(controller:'empleado',action:'index')
+			empleado(controller:'empleado',action:'index'){
+				generales()
+				datosPersonales()
+				perfil()
+				salario()
+				seguridadSocial()
+				documentos()
+				asistencia()
+				reportes()
+
+			}
 			departamento(controller:'departamento',action:'index')
 			ubicacion(controller:'ubicacion',action:'index')
 			conceptos(controller:'conceptoDeNomina', action:'index'){
