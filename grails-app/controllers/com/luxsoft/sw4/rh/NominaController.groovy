@@ -1,8 +1,6 @@
 package com.luxsoft.sw4.rh
 
 
-
-
 import grails.transaction.Transactional
 import grails.validation.Validateable
 import groovy.transform.ToString

@@ -18,9 +18,10 @@
 	<form class="form-horizontal" method="post">
 		<g:hiddenField name="id" value="${empleadoInstance.id}"/>
 		<g:hiddenField name="version" value="${empleadoInstance?.version}" />
+		
 		<div class="col-md-6">
 		
-			<fieldset ${!edit?'disabled=""':''}>
+			<fieldset ${!edit?'disabled':''}>
 				<f:with bean="empleadoInstance">
 					<f:field property="apellidoPaterno" input-class="form-control" />	
 					<f:field property="apellidoMaterno" input-class="form-control" />	
@@ -31,6 +32,7 @@
 			</fieldset>
 		
 		</div>
+		
 		<div class="col-md-6">
 		
 			<fieldset ${!edit?'disabled=""':''}>
@@ -42,8 +44,7 @@
 					<f:field property="status" input-class="form-control" />	
 				</f:with>
 			</fieldset>
-		
-	</div>
+		</div>
 	
 	<g:if test="${edit}">
 	<div class="form-group">

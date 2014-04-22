@@ -1,8 +1,11 @@
 package com.luxsoft.sw4.rh
 
 
+import grails.plugin.springsecurity.annotation.Secured;
+
 import com.luxsoft.sw4.rh.sat.*	    
 
+@Secured(['ROLE_ADMIN','RH_USER'])
 class CatalogosDelSatController {
 
     def index() { }

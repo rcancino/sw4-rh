@@ -62,6 +62,10 @@ class EmpleadoController {
 	def seguridadSocial(Empleado empleadoInstance){
 		[empleadoInstance:empleadoInstance,edit:params.edit]
 	}
+	
+	def datosPersonales(Empleado empleadoInstance){
+		[empleadoInstance:empleadoInstance,edit:params.edit]
+	}
 
 	protected void notFound() {
         request.withFormat {

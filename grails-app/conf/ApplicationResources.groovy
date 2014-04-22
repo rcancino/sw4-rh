@@ -14,12 +14,13 @@ modules = {
     }  
     datepicker{
         dependsOn 'jquery-ui'
-        resource url:'js/jquery.ui.datepicker-es.js'
+        resource url:'js/jquery.ui.datepicker-es.js'  
     }
+	/*
     overrides {
         'bootstrap-css' {
-            resource id: 'bootstrap-css', url:'/css/superhero.css'
+            resource id: 'bootstrap-css', url:'/css/cerulean.css'
         }
     }
-    
+    */
 }

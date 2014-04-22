@@ -7,7 +7,9 @@ import com.luxsoft.sw4.Mes;
 import com.luxsoft.sw4.cfdi.Cfdi;
 import com.luxsoft.sw4.cfdi.CfdiPrintUtils;
 import com.luxsoft.sw4.cfdi.ComplementoNomina;
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class ReciboDeNominaController {
 
     def index(long nominaId) {

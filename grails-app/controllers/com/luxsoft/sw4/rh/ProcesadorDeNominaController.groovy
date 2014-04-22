@@ -5,9 +5,10 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import groovy.lang.Binding
 
+import grails.plugin.springsecurity.annotation.Secured;
 import grails.transaction.Transactional;
 
-
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class ProcesadorDeNominaController {
 	
 	@Transactional

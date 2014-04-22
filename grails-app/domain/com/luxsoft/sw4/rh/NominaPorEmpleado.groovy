@@ -22,7 +22,7 @@ class NominaPorEmpleado {
 	BigDecimal baseGravable=0.0
 	BigDecimal subsidioEmpleoAplicado=0.0
 	BigDecimal impuestoSubsidio=0.0
-	List conceptos
+	List conceptos=[]
 	Cfdi cfdi
 	
 	

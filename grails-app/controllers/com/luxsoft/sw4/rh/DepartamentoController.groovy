@@ -6,8 +6,8 @@ import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
 
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 @Transactional(readOnly = true)
-
 class DepartamentoController {
 
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]

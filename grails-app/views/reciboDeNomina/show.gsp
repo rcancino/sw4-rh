@@ -1,5 +1,5 @@
 
-<%@ page import="com.luxsoft.cfdi.Cfdi" %>
+
 <!DOCTYPE html>
 <html>
 	<head>

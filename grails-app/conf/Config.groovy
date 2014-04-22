@@ -148,7 +148,8 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/spring-security-ui/**':		  ['ROLE_ADMIN'],
 	'/role/**':			              ['ROLE_ADMIN'],
     '/console/**':                    ['ROLE_ADMIN'],
-	'/user/**':                    ['ROLE_ADMIN']
+	'/user/**':                    	  ['ROLE_ADMIN'],
+	'/jasper/**':                     ['RH_USER','ROLE_ADMIN']
 ]
 // grails.resources.modules = {
 //     'bootswatch' {

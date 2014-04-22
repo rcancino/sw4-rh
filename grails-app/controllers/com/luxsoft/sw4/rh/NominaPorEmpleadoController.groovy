@@ -1,7 +1,9 @@
 package com.luxsoft.sw4.rh
 
 import grails.transaction.Transactional;
+import grails.plugin.springsecurity.annotation.Secured
 
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class NominaPorEmpleadoController {
 
     def index() { }

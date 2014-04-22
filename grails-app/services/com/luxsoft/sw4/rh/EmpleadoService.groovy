@@ -21,6 +21,15 @@ class EmpleadoService {
     				)
     		}
     }
+	
+	/**
+	 * Proceso para actualizar el salario diario integrado
+	 * 
+	 * @return
+	 */
+	def actualizarSalarioDiarioIntegrado(){
+		
+	}
 }
 
 

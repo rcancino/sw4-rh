@@ -7,7 +7,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<span class="glyphicon glyphicon-home"></span><a href="#" class="navbar-brand">Luxor</a>
+			<g:link controller="home" action="index" class="navbar-brand"><span class="glyphicon glyphicon-home"></span> Luxor</g:link>
 		</div>
 		<sec:ifLoggedIn>
 		<div class="collapse navbar-collapse" id="mainMenu">

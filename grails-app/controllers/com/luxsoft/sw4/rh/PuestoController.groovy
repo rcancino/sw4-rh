@@ -3,8 +3,11 @@ package com.luxsoft.sw4.rh
 
 
 import static org.springframework.http.HttpStatus.*
+import grails.plugin.springsecurity.annotation.Secured;
 import grails.transaction.Transactional
 
+//@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
+@Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
 class PuestoController {
 

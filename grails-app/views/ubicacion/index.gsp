@@ -6,9 +6,7 @@
 </head>
 <body>
 	<content tag="header">
-		<div class="alert alert-info">
-			<h3>Catálogo de ubicaciones (Sucursales)</h3>
-		</div>
+		<h3>Catálogo de ubicaciones (Sucursales)</h3>
 		
 	</content>
 	<content tag="grid">
