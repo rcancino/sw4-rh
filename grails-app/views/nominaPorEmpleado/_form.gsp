@@ -4,12 +4,21 @@
 		<g:form class="form-horizontal">
 			<f:with bean="${nominaPorEmpleadoInstance}">
 				<g:hiddenField name="id" value="${nominaPorEmpleadoInstance?.id }"/>
-				<f:field property="salarioDiarioBase" label="S. Base" input-class="form-control"/>
+				<f:field property="salarioDiarioBase" label="S. Base" input-class="form-control" input-disabled=""/>
 				<f:field property="salarioDiarioIntegrado" label="SDI" input-class="form-control"/>
-				<f:field property="ubicacion"/>
-				<f:field property="comentario" input-class="form-control col-lg-6"/>
-				<f:field property="antiguedadEnSemanas" input-disabled="" input-class="form-control" label="Antiguedad"/>
+				<f:field property="faltas" input-class="form-control"/>
+				<f:field property="incapacidades" input-class="form-control" label="Inc"/>
+				<%-- 
+				<f:field property="incapacidades" input-class="form-control" label="Inca"/>
+				<f:field property="comentario" input-class="form-control"/>
+				--%>
+				
 			</f:with>
+			<div class="form-group">
+    			<div class="col-sm-offset-8 col-sm-12">
+      				<g:actionSubmit class="btn btn-primary"  value="Actualizar" action="update"/>
+    			</div>
+			</div>
 		</g:form>
 	</div>
 	
@@ -49,6 +58,18 @@
       				</p>
     			</div>
   			</div>
+  			
+  			<div class="form-group">
+   				<label class="col-sm-4 control-label">Antiguedad</label>
+    			<div class="col-sm-8">
+      				<p class="form-control-static">
+      					<g:formatNumber number="${nominaPorEmpleadoInstance?.antiguedadEnSemanas}" format="###" />
+      				</p>
+    			</div>
+  			</div>
+  			
+  			
+			
 		</g:form>
 	</div>
 </div>

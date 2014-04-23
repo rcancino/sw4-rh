@@ -24,7 +24,7 @@
 				<td class="text-right"><g:formatNumber number="${it.importeGravado}" format="#,###,###.##"/></td>
 				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##"/></td>
 				<td class="text-center">
-					<g:link action="eliminarConcepto" id="${it.id}" data-toggle="tooltip"  title="Modificar concepto">
+					<g:link action="modificarConcepto" id="${it.id}" data-toggle="tooltip"  title="Modificar concepto">
 						<span class="glyphicon glyphicon-pencil"></span>
 					</g:link>
 					

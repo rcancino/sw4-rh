@@ -30,6 +30,9 @@ class Nomina {
 	String formaDePago
 	BigDecimal total //Valor de la nomina
 	
+	String status
+	Date corte
+	
 	Date dateCreated
 	Date lastUpdated
 	
@@ -42,6 +45,8 @@ class Nomina {
 		diaDePago inList:['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO']
 		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','ANUAL','ESPECIAL']
 		formaDePago inList:['CHEQUE','TRANSFERENCIA']
+		status inList:['PENDIENTE','REVISION','CERRADA']
+		corte nullable:true
     }
 
     static hasMany = [partidas: NominaPorEmpleado]

@@ -7,7 +7,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 
 
-@Secured(['ROLE_ADMIN'])
+@Secured(['ROLE_ADMIN','RH_USER'])
 class EmpleadoController {
 	
     def empleadoService

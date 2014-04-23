@@ -34,13 +34,13 @@
 							<g:link action="index" class="btn btn-default">
 								<span class="glyphicon glyphicon-repeat"></span> Refrescar
 							</g:link>
-							<g:link action="create" class="btn btn-primary">
-								<span class="glyphicon glyphicon-floppy-saved"></span> Alta
+							<g:link action="generar" class="btn btn-primary" params="[periodicidad:periodicidad]">
+								 Generar 
 							</g:link>
-							<g:link action="create" class="btn btn-default">
+							<g:link action="buscar" class="btn btn-default" >
 								<span class="glyphicon glyphicon-search"></span> Buscar
 							</g:link>
-							<g:link action="create" class="btn btn-default">
+							<g:link action="filtrar" class="btn btn-default" >
 								<span class="glyphicon glyphicon-filter"></span> Filtrar
 							</g:link>
 							</div>

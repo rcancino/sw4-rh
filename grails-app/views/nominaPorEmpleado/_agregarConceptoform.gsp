@@ -17,8 +17,7 @@
 					noSelection="[null:'Seleccione un concepto']"
 				/>
 			</f:field>
-			<f:field property="importeGravado" input-class="form-control"/>
-			<f:field property="importeExcento" input-class="form-control"/>
+			<f:field property="importeGravado" input-class="form-control" label="Importe"/>
 			<f:field property="comentario" input-class="form-control"/>
 		</f:with>
 	</div>

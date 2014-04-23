@@ -58,6 +58,10 @@ navigation={
 			}
 			solicitudes()
 		}
+		procesos(){
+			empleados()
+			salarioDiarioIntegrado()
+		}
 		configuracion(){
 			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){
 				porNomina()

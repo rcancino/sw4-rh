@@ -1,6 +1,8 @@
 package com.luxsoft.sw4.rh
 
 
+import com.luxsoft.sw4.Empresa;
+
 import grails.transaction.Transactional
 import grails.validation.Validateable
 import groovy.transform.ToString
@@ -11,14 +13,17 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class NominaController {
 
+	def nominaService
     //static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     
     def index(Integer max) {
-        params.max = Math.min(max ?: 20, 100)
+        params.max = Math.min(max ?: 60, 100)
 		params.periodicidad=params.periodicidad?:'QUINCENAL'
-		//println 'Localizando nominas: '+params
+		params.sort=params.sort?:'folio'
+		params.order='asc'
+		
 		def query=Nomina.where{periodicidad==params.periodicidad}
-		[nominaInstanceList:query.list(),nominaInstanceListTotal:query.count()]
+		[nominaInstanceList:query.list(params),nominaInstanceListTotal:query.count(params),periodicidad:params.periodicidad]
     }
 
     def show(Long id) {
@@ -34,6 +39,11 @@ class NominaController {
 		params.folio=nomina.folio
         redirect view:'agregarPartida', params:params
     }
+	
+	def generar(String periodicidad){
+		nominaService.generarNominas('GENERAL',periodicidad)
+		redirect action:'index' ,params:params
+	}
 
     def agregarPartidaFlow={
         initialize {

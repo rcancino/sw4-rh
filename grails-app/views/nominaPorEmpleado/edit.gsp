@@ -50,9 +50,12 @@
 						</g:link>
 						
 						<g:link class="list-group-item" action="todo">
-						<span class="glyphicon glyphicon-pencil"></span> Modificar </g:link>
-						<g:link class="list-group-item" action="todo">
-						<span class="glyphicon glyphicon-remove-circle"></span> Cancelar </g:link>
+							<span class="glyphicon glyphicon-pencil"></span> Modificar </g:link>
+						
+						<g:link class="list-group-item" action="todo" onClick="return confirm('Eliminar registro de nómina?');">
+							<span class="glyphicon glyphicon-remove-circle"></span> Eliminar 
+						</g:link>
+						
 					</div>
 
 				</div>
