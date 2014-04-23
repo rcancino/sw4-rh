@@ -62,7 +62,14 @@
 				<button type="button" name="reportes" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Operaciones <span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li>
-						<g:link controller="procesadorDeNomina" action="generarPlantilla" id="${nominaInstance.id}"> Generar</g:link> 
+						<g:link controller="procesadorDeNomina" action="generarPlantilla" id="${nominaInstance.id}"> 
+							<span class="glyphicon glyphicon-cog"></span> Generar
+						</g:link> 
+					</li>
+					<li>
+						<g:link action="delete" id="${nominaInstance.id}" onclick="return confirm('Eliminar toda la nomina?');"> 
+							<span class="glyphicon glyphicon-trash"></span> Eliminar
+						</g:link> 
 					</li>
 				</ul>
 			</div> <!-- Fin .btn-group -->

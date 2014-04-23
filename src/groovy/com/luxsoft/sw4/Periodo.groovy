@@ -48,6 +48,11 @@ class Periodo {
 		return fechaFinal-fechaInicial
 	}
 	
+	public static Periodo getCurrentMonth() {
+		Calendar now=Calendar.getInstance()
+		return getPeriodoEnUnMes(now.get(Calendar.MONTH),now.get(Calendar.YEAR))
+	}
+	
 	public static Periodo getPeriodoEnUnMes(int mes){
 		Calendar cal=Calendar.getInstance();
 		cal.set(Calendar.MONTH,mes);

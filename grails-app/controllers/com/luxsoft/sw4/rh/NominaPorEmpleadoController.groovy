@@ -3,7 +3,8 @@ package com.luxsoft.sw4.rh
 import grails.transaction.Transactional;
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
+//@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
+@Secured(['ROLE_ADMIN'])
 class NominaPorEmpleadoController {
 
     def index() { }

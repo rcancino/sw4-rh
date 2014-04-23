@@ -3,7 +3,7 @@ package com.luxsoft.sw4.rh
 import com.luxsoft.sw4.Periodo
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(["hasRole('RH_USER')"])
+@Secured(['ROLE_ADMIN'])
 class AsistenciaController {
 	
 	def asistenciaService
@@ -15,5 +15,20 @@ class AsistenciaController {
 			fecha<=params.periodo.fechaFinal
 		}
 		[asistenciaInstanceList:query.list(),asistenciaTotalCount:query.count()]
+	}
+
+
+
+	def lectora(Integer max){
+		params.max = Math.min(max ?: 50, 100)
+		def query=Checado.where{fecha>=session.periodo.fechaInicial &&
+			fecha<=session.periodo.fechaFinal
+		}
+		[checadoInstanceList:query.list(params),checadoTotalCount:query.count(params)]
+
+	}
+	def importarLecturas(){
+		asistenciaService.importarLecturas(session.periodo)
+		
 	}
 }

@@ -4,10 +4,17 @@ import com.luxsoft.sw4.Empresa;
 import com.luxsoft.sw4.Periodo;
 
 import grails.transaction.Transactional
-import groovy.time.TimeCategory;
+import groovy.time.TimeCategory
+import grails.events.Listener
 
 @Transactional
 class NominaService {
+
+	def eliminarNomina(Long id){
+		def nomina=Nomina.get(id)
+		//nominaInstance.attach()
+		nomina.delete()
+	}
 
     def generarNominas(String tipo,String periodicidad) {
 		
@@ -84,4 +91,25 @@ class NominaService {
 			return nomina
 		}
 	}
+
+	@Listener(namespace='gorm')
+	def beforeDelete(Nomina nomina){
+		validarParaModificacion(nomina)
+	}
+
+	void validarParaModificacion(Nomina nomina){
+		log.info 'Validando la eliminacion de la nomina: '+nomina
+		if(nomina.status=='CERRADA')
+			throw new NominaException(message:"La nomina ${nomina.id} ya esta cerrada no se puede eliminar",nomina:nomina)
+		nomina.partidas.each{
+			if(it.cfdi){
+				throw new NominaException(message:"La nomina ${nomina.id} ya tiene partidas timbradas",nomina:nomina)
+			}
+		}
+	}
+}
+
+class NominaException extends RuntimeException{
+	String message
+	Nomina nomina
 }

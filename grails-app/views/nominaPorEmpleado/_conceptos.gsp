@@ -6,8 +6,10 @@
 			<th>Concepto</th>
 			<th>Gravado</th>
 			<th>Excento</th>
+			<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 			<th></th>
 			<th></th>
+			</g:if>
 		</tr>
 	</thead>
 	<tbody>
@@ -23,6 +25,7 @@
 				</td>
 				<td class="text-right"><g:formatNumber number="${it.importeGravado}" format="#,###,###.##"/></td>
 				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##"/></td>
+				<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 				<td class="text-center">
 					<g:link action="modificarConcepto" id="${it.id}" data-toggle="tooltip"  title="Modificar concepto">
 						<span class="glyphicon glyphicon-pencil"></span>
@@ -33,8 +36,8 @@
 					<g:link action="eliminarConcepto" id="${it.id}" data-toggle="tooltip"  title="Eliminar concepto">
 						<span class="glyphicon glyphicon-trash"></span>
 					</g:link>
-					
 				</td>
+				</g:if>
 			</tr>
 		</g:findAll>
 	</tbody>
@@ -46,8 +49,10 @@
 				number="${param=='PERCEPCION'?nominaPorEmpleadoInstance?.percepcionesGravadas:nominaPorEmpleadoInstance?.deduccionesGravadas}" format="#,###.##"/></th>
 			<th class="text-right"><g:formatNumber 
 				number="${param=='PERCEPCION'?nominaPorEmpleadoInstance?.percepcionesExcentas:nominaPorEmpleadoInstance?.deduccionesExcentas}" format="#,###.##"/></th>
+			<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 			<th></th>
 			<th></th>
+			</g:if>
 		</tr>
 	</tfoot>
 </table>

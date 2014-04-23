@@ -14,12 +14,15 @@
 				--%>
 				
 			</f:with>
+      <g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 			<div class="form-group">
     			<div class="col-sm-offset-8 col-sm-12">
       				<g:actionSubmit class="btn btn-primary"  value="Actualizar" action="update"/>
     			</div>
 			</div>
+      </g:if>
 		</g:form>
+
 	</div>
 	
 	<div class="col-md-5">

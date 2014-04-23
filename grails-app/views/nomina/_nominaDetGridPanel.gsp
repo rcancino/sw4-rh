@@ -45,7 +45,7 @@
 					</g:else>
 				</td>
 				<td class="text-center">
-					<g:link action="delete" id="${row.id}">
+					<g:link controller="nominaPorEmpleado" action="delete" id="${row.id}">
 						<span class="glyphicon glyphicon-trash"></span>
 					</g:link>
 				</td>

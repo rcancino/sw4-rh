@@ -30,7 +30,10 @@
 						<g:link controller="nomina" action="show" id="${nominaPorEmpleadoInstance?.nomina?.id}"
 							class="list-group-item" >
 							<span class="glyphicon glyphicon-arrow-left"></span> Regresar 
-						</g:link>	 
+						</g:link>
+						
+						<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
+						
 						<g:link  action="agregarConcepto" params="[tipo:'PERCEPCION']"
 							id="${nominaPorEmpleadoInstance.id}" 
 							class="list-group-item" 
@@ -40,7 +43,8 @@
 						</g:link>
 						
 						<g:link class="list-group-item" action="todo">
-						<span class="glyphicon glyphicon-plus"></span> Agregar Deducción</g:link>
+							<span class="glyphicon glyphicon-plus"></span> Agregar Deducción
+						</g:link>
 						
 						<g:link class="list-group-item" 
 								controller="procesadorDeNomina" 
@@ -55,7 +59,8 @@
 						<g:link class="list-group-item" action="todo" onClick="return confirm('Eliminar registro de nómina?');">
 							<span class="glyphicon glyphicon-remove-circle"></span> Eliminar 
 						</g:link>
-						
+
+						</g:if>	 
 					</div>
 
 				</div>
@@ -72,12 +77,18 @@
 
 				    <div id="collapseOne" class="panel-collapse collapse ">
 					    <div class="list-group">
-							<g:link class="list-group-item" action="todo">
-								<span class="glyphicon glyphicon-screenshot"></span> Timbrar
-							</g:link>
-							<g:link class="list-group-item" action="todo">
+
+					    	<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
+
+								<g:link class="list-group-item" action="todo" >
+									<span class="glyphicon glyphicon-screenshot"></span> Timbrar
+								</g:link>
+							</g:if>
+
+							<g:link class="list-group-item" action="cancelar" onclick="return confirm('Cancelar CFDI?');">
 								<span class="glyphicon glyphicon-ban-circle"></span> Cancelar
 							</g:link>
+
 							<g:link class="list-group-item" action="todo">
 								<span class="glyphicon glyphicon-print"></span> Imprimir
 							</g:link>

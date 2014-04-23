@@ -11,14 +11,16 @@
 		<h3>Control de asistencia</h3>
 	</content>
 	<content tag="consultas">
-		<ul class="nav nav-pills nav-stacked">
-  			<nav:menu scope="app/operaciones/asistencia" class="nav nav-pills nav-stacked" path=""/>
-		</ul>
+		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 	</content>
-	<content tag="gridTitle">Lista de asistencia </content>
+	<content tag="gridTitle">Lista de asistencia periodo:  ${session?.periodo} </content>
 	<content tag="gridTasks">
-  		<g:link class="btn btn-primary" action="importar">Importar</g:link>
-  		<g:link class="btn btn-success" action="create">Procesar</g:link>
+  		<g:link class="btn btn-default" action="importar">
+  			<span class="glyphicon glyphicon-import"></span>Importar
+  		</g:link>
+  		<g:link class="btn btn-default" action="actualizar">
+  			Procesar
+  		</g:link>
 	</content>
 	<content tag="gridPanel">
 		<g:render template="asistenciaGridPanel"/>
