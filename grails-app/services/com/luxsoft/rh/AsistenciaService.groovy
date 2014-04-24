@@ -1,6 +1,9 @@
 package com.luxsoft.rh
 
+import java.sql.Time;
+
 import grails.transaction.Transactional
+
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.Asistencia;
 import com.luxsoft.sw4.rh.Checado
@@ -59,6 +62,10 @@ class AsistenciaService {
 			map.each{ key,val->
 				
 				def empleado=Empleado.find("from Empleado e where e.perfil.numeroDeTrabajador=?",[key])
+				if(!empleado) {
+					log.info 'Empleado no registrado: '+key
+					
+				}
 				println 'Procesando: '+key+' '+empleado
 				val.sort(){ c->
 					c.hora
@@ -74,10 +81,32 @@ class AsistenciaService {
 						valid.add(reg)
 					}
 				}
-				def asistencia=Asistencia.findOrSaveWhere(empleado:empleado,fecha:date)
-				valid.each{ reg ->
-					println "$reg.lector $reg.hora"
+				def asistencia=Asistencia.findWhere(empleado:empleado,fecha:date)
+				if(asistencia==null)
+					asistencia=new Asistencia(empleado:empleado,fecha:date)
+				for(def i=0;i<valid.size;i++) {
+					def checado=valid[i]
+					def time=new Time(checado.hora.time)
+					switch(i) {
+						case 0:
+							
+							asistencia.entrada1=time
+							break
+						case 1:
+							asistencia.salida1=time
+							break
+						case 2:
+							asistencia.entrada2=time
+							break
+						case 3:
+							asistencia.salida2=time
+							break
+						default:
+							break
+					}
 				}
+				if(asistencia.empleado)	
+					asistencia.save(failOnError:true)
 			}
 		}
     }

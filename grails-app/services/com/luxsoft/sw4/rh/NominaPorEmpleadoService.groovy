@@ -1,84 +1,18 @@
 package com.luxsoft.sw4.rh
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import java.util.Map;
 
-import groovy.lang.Binding
+import grails.transaction.Transactional
 
-import grails.plugin.springsecurity.annotation.Secured;
-import grails.transaction.Transactional;
+@Transactional
+class NominaPorEmpleadoService {
+	
+	def static CONCEPTOS_BASICOS=['P001','D001','D002']
 
-@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
-class ProcesadorDeNominaController {
-	
-	def nominaPorEmpleadoService
-	
-	@Transactional
-    def generarPlantilla(Nomina nomina) { 
-		//log.info 'Generando plantilla para nomina: '+nomina
+    def actualizarNominaPorEmpleado(Long id) {
+		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
+		assert ne,'No localizo nomina por empleado: '+id
 		
-		switch (nomina.tipo){
-			case 'GENERAL':
-				nomina=generarPlantillaGeneralQuincenal(nomina)
-				break
-			default:
-				throw new RuntimeException("No hay procesador para el tipo de nomina: $nomina.tipo")
-		}
-		redirect controller:'nomina',action:'show',params:[id:nomina.id]
-	}
-	
-	@Transactional
-	private Nomina generarPlantillaGeneralQuincenal(Nomina nomina){
-		//Buscar todos los empleados activos y de periodicidad igual a la nomina
-		log.info 'Generando plantilla de nomina general a: '+nomina
-		def empleados=Empleado.findAll{status=='ALTA' && salario.periodicidad==nomina.periodicidad}
-		log.info 'Empleados a incluir: '+empleados.size()
-		empleados.each{ emp ->
-			NominaPorEmpleado ne=nomina.partidas.find{
-				it.empleado.id==emp.id
-			}
-			if(!ne){
-				ne=new NominaPorEmpleado(
-					empleado:emp,
-					ubicacion:emp.perfil.ubicacion,
-					antiguedadEnSemanas:0,
-					nomina:nomina
-					)
-				def res=nomina.addToPartidas(ne)
-				println 'Agregando '+ne+' Res: '+res
-				ne.antiguedadEnSemanas=ne.getAntiguedad()
-			}
-			//Actualizamos salarios si no se ha generado el recibo
-			if(!ne.cfdi){
-				ne.salarioDiarioBase=ne.empleado.salario.salarioDiario
-				ne.salarioDiarioIntegrado=ne.empleado.salario.salarioDiarioIntegrado
-				ne.antiguedadEnSemanas=ne.getAntiguedad()
-			}
-			
-			//Aregar los conceptos basicos de una poliza general
-			['P001','D001','D002'].each{ clave ->
-				def concepto=ne.conceptos.find(){ det ->
-					det.concepto.clave==clave
-				}
-				if(!concepto){
-					concepto=ConceptoDeNomina.findByClave(clave)
-					ne.addToConceptos(new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE'))
-				}
-				
-			}
-			
-			
-		}
-		
-		nomina=nomina.save()
-		println 'Partidas' +nomina.partidas.size()
-		return nomina
-		
-	}
-	
-	@Transactional
-	def actualizarNominaPorEmpleado(Long id){
-		/*
 		log.info 'Actualizando nomina de: '+ne
 		ne.salarioDiarioBase=ne.empleado.salario.salarioDiario
 		ne.salarioDiarioIntegrado=ne.empleado.salario.salarioDiarioIntegrado
@@ -86,7 +20,7 @@ class ProcesadorDeNominaController {
 		//Pasamos por cada concepto
 		
 		//Conceptos basicos
-		['P001','D001','D002'].each{ clave ->
+		CONCEPTOS_BASICOS.each{ clave ->
 			def concepto=ne.conceptos.find(){ det ->
 				det.concepto.clave==clave
 			}
@@ -95,7 +29,6 @@ class ProcesadorDeNominaController {
 				ne.addToConceptos(new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE'))
 			}
 		}
-		//Agregamo insentivos a quien corresponda
 		
 		ne.conceptos.each{ det ->
 			def concepto=det.concepto
@@ -122,15 +55,13 @@ class ProcesadorDeNominaController {
 			
 		}
 		ne.save(flush:true)
-		*/
-		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
-		redirect controller:'nominaPorEmpleado',action:'edit',params:[id:ne.id]
-	}
+		
+    }
 	
 	
 	
-	 static Map REGLAS=[
-		 'P001':"""
+	static Map REGLAS=[
+		'P001':"""
 	 		def salarioDiario=empleado.salario.salarioDiario
 	 		def diasTrabajados=nominaEmpleado.nomina.getDiasPagados()
 	 		def importeGravado=salarioDiario*diasTrabajados
@@ -138,12 +69,12 @@ class ProcesadorDeNominaController {
 			nominaEmpleadoDet.importeExcento=0
 
 		 """,
-		 'D002':REGLA_ISTP,
-		 'P021':REGLA_ISTP,
-		 'D001':REGLA_IMSS
-		 ]
-	 
-	 static def REGLA_ISTP="""
+		'D002':REGLA_ISTP,
+		'P021':REGLA_ISTP,
+		'D001':REGLA_IMSS
+		]
+	
+	static def REGLA_ISTP="""
 import com.luxsoft.sw4.*
 	 		import com.luxsoft.sw4.rh.*
 	 		import com.luxsoft.sw4.rh.imss.*
@@ -175,8 +106,8 @@ if(sub<0){
 }
 nominaEmpleado.actualizar()
 """
-	 
-	static def REGLA_IMSS="""
+	
+   static def REGLA_IMSS="""
 
 	import com.luxsoft.sw4.*
 	import com.luxsoft.sw4.rh.*

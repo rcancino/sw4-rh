@@ -15,9 +15,6 @@
 	</content>
 	<content tag="gridTitle">Lista de asistencia periodo:  ${session?.periodo} </content>
 	<content tag="gridTasks">
-  		<g:link class="btn btn-default" action="importar">
-  			<span class="glyphicon glyphicon-import"></span>Importar
-  		</g:link>
   		<g:link class="btn btn-default" action="actualizarAsistencia">
   			Actualizar
   		</g:link>

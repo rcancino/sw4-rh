@@ -27,13 +27,14 @@
 				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##"/></td>
 				<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 				<td class="text-center">
-					<g:link action="modificarConcepto" id="${it.id}" data-toggle="tooltip"  title="Modificar concepto">
+					<g:link class="disabled" action="modificarConcepto" id="${it.id}" data-toggle="tooltip"  title="Modificar concepto">
 						<span class="glyphicon glyphicon-pencil"></span>
 					</g:link>
 					
 				</td>
 				<td class="text-center">
-					<g:link action="eliminarConcepto" id="${it.id}" data-toggle="tooltip"  title="Eliminar concepto">
+					<g:link action="eliminarConcepto" id="${it.id}" data-toggle="tooltip"  title="Eliminar concepto"
+						onclick="return confirm('Eliminar concepto?')">
 						<span class="glyphicon glyphicon-trash"></span>
 					</g:link>
 				</td>

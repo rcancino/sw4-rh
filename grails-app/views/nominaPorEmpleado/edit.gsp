@@ -39,18 +39,23 @@
 							class="list-group-item" 
 							data-toggle="modal"
 							data-target="#percepcionModal">
-							<span class="glyphicon glyphicon-plus"></span> Agregar Percepcion
+							<span class="glyphicon glyphicon-plus"></span> Agregar Percepción
 						</g:link>
 						
-						<g:link class="list-group-item" action="todo">
+						<g:link  action="agregarConcepto" params="[tipo:'DEDUCCION']"
+							id="${nominaPorEmpleadoInstance.id}" 
+							class="list-group-item" 
+							data-toggle="modal"
+							data-target="#percepcionModal">
 							<span class="glyphicon glyphicon-plus"></span> Agregar Deducción
 						</g:link>
 						
-						<g:link class="list-group-item" 
-								controller="procesadorDeNomina" 
+						
+						
+						<g:link class="list-group-item"
 								action="actualizarNominaPorEmpleado"
 								id="${nominaPorEmpleadoInstance.id}">
-							<span class="glyphicon glyphicon-refresh"></span> Actualizar
+							<span class="glyphicon glyphicon-refresh"></span> Re-Calcular
 						</g:link>
 						
 						<g:link class="list-group-item" action="todo">

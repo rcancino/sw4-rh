@@ -6,6 +6,8 @@ import grails.plugin.springsecurity.annotation.Secured
 //@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 @Secured(['ROLE_ADMIN'])
 class NominaPorEmpleadoController {
+	
+	def nominaPorEmpleadoService
 
     def index() { }
 
@@ -21,13 +23,10 @@ class NominaPorEmpleadoController {
     }
 	
 	@Transactional
-	def update(NominaPorEmpleado ne){
-		log.info 'Actualizando ne '+ne
-		if(ne==null){
-			notFound()
-			return
-		}
-		ne.save(failOnError:true)
+	def update(Long id){
+		log.info 'Actualizando ne '+id
+		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+		//ne.save(failOnError:true)
 		redirect action:'edit' ,params:[id:ne.id]
 		//render view:'edit',model:[nominaPorEmpleadoInstance:ne]
 	}
@@ -47,7 +46,7 @@ class NominaPorEmpleadoController {
 			form {
 				
 				NominaPorEmpleado ne=NominaPorEmpleado.get(id)
-				println 'Agrgndo concepto: '+ne
+				log.info 'Agrgndo concepto: '+ne
 				NominaPorEmpleadoDet det=new NominaPorEmpleadoDet(params)
 				
 				if(det?.concepto?.importeExcento){
@@ -63,6 +62,11 @@ class NominaPorEmpleadoController {
     	
     	
     }
+	
+	def actualizarNominaPorEmpleado(Long id){
+		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+		redirect action:'edit',params:[id:ne.id]
+	}
 	
 	protected void notFound() {
 		request.withFormat {

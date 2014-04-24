@@ -21,13 +21,11 @@ class Asistencia {
 	Time entrada3
 	Time salida3
 
-	String status
+	
 	String comentario
 	
-	NominaPorEmpleado nominaPorEmpleado
-	String retardoEntrada1
-	String retardoComida
-	Boolean checadoIncompleto=false
+	
+	
 
 	Date dateCreated
 	Date lastUpdated
