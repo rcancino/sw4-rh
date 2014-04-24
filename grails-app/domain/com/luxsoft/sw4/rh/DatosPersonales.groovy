@@ -11,7 +11,7 @@ class DatosPersonales implements Serializable{
 	String email
 	String tipoDeSangre
 	String estadoCivil
-	String conyugue
+	String conyuge
 	String nombreDelPader
 	String nombreDeLaMadre
 	
@@ -20,6 +20,14 @@ class DatosPersonales implements Serializable{
 	static embedded = ['direccion']
 
     static constraints = {
-		estadoCivil inList:['SOLTERO','CASADO']
+		estadoCivil inList:['SOLTERO','CASADO','UNION_LIBRE']
+		conyuge nullable:true
+		nombreDelPader nullable:true
+		nombreDeLaMadre nullable:true
+		tipoDeSangre nullable:true
+		email nullable:true
+		telefono1 nullable:true
+		telefono2 nullable:true
+		lugarDeNacimiento nullable:true
     }
 }

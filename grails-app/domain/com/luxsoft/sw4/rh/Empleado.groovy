@@ -24,13 +24,24 @@ class Empleado  implements Serializable{
 	Date fechaDeNacimiento
 	
 	String nombre
+	//List contactos
 
     Date dateCreated
     Date lastUpdated
 	
-	static hasOne=[perfil:PerfilDeEmpleado,salario:Salario,seguridadSocial:SeguridadSocial,datosPersonales:DatosPersonales]
+	static hasOne=[perfil:PerfilDeEmpleado
+		,salario:Salario
+		,seguridadSocial:SeguridadSocial
+		,datosPersonales:DatosPersonales
+		,contacto:EmpleadoContacto]
 
+	/*
+	static hasMany = [contactos:EmpleadoContacto]
 	
+	static mapping = {
+		contactos cascade: "all-delete-orphan"
+	}
+	*/
 
     static constraints = {
 	
@@ -46,6 +57,7 @@ class Empleado  implements Serializable{
 		salario nullable:true
 		seguridadSocial nullable:true
 		datosPersonales nullable:true
+		contacto nullable:true 
 
     }
 	

@@ -21,6 +21,9 @@
 		<li>
 			<g:link controller="catalogosDelSat" action="index">SAT</g:link>
 		</li>
+		<li>
+			<g:link controller="tablas" action="index">Tablas</g:link>
+		</li>
 		
 	</ul>
 </li>

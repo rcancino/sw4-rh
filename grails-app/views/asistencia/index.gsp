@@ -18,8 +18,8 @@
   		<g:link class="btn btn-default" action="importar">
   			<span class="glyphicon glyphicon-import"></span>Importar
   		</g:link>
-  		<g:link class="btn btn-default" action="actualizar">
-  			Procesar
+  		<g:link class="btn btn-default" action="actualizarAsistencia">
+  			Actualizar
   		</g:link>
 	</content>
 	<content tag="gridPanel">

@@ -30,7 +30,7 @@
 					<f:field property="datosPersonales.email" input-class="form-control" />
 					<f:field property="datosPersonales.tipoDeSangre" input-class="form-control" />
 					<f:field property="datosPersonales.estadoCivil" input-class="form-control" />
-					<f:field property="datosPersonales.conyugue" label="Conyuge" input-class="form-control" />
+					<f:field property="datosPersonales.conyuge" label="Conyuge" input-class="form-control" />
 					
 					<f:field property="datosPersonales.nombreDelPader" input-class="form-control" />
 					

@@ -466,7 +466,9 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 					<rightPen lineWidth="0.5" lineStyle="Solid"/>
 </box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["Z:\\Reportes_MySQL\\VENTAS\\PAPEL, S.A. .jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String">
+					
+					</imageExpression>
 				</image>
 				<staticText>
 					<reportElement

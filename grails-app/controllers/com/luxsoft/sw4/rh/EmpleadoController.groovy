@@ -13,7 +13,7 @@ class EmpleadoController {
     def empleadoService
 	
 	def index(Long max) {
-		params.max = Math.min(max ?: 10, 100)
+		params.max = Math.min(max ?: 50, 100)
 		params.sort=params.sort?:'apellidoPaterno'
 		params.order='asc'
 		[empleadoInstanceList:Empleado.list(params),empleadoInstanceCount:Empleado.count()]
@@ -24,6 +24,10 @@ class EmpleadoController {
 	}
 
 	def generales(Empleado empleadoInstance){
+		[empleadoInstance:empleadoInstance,edit:params.edit]
+	}
+	
+	def contactos(Empleado empleadoInstance){
 		[empleadoInstance:empleadoInstance,edit:params.edit]
 	}
 	

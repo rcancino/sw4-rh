@@ -90,6 +90,7 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+		sw4.rh.asistencia.rowdata="Y://NOMIPLUS//RAWDATA"
     }
     production {
         grails.logging.jul.usebridge = false
@@ -158,3 +159,5 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 //     }
 
 // }
+
+

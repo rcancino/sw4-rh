@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
 			<g:sortableColumn property="clave" title="Clave"/>

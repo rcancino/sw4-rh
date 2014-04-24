@@ -4,11 +4,13 @@ navigation={
 		catalogos(){
 			puesto(controller:'puesto',action:'index')
 			empleado(controller:'empleado',action:'index'){
+				catalogo(controller:'empleado',action:'index')
 				generales()
 				datosPersonales()
 				perfil()
 				salario()
 				seguridadSocial()
+				contactos()
 				documentos()
 				asistencia()
 				reportes()
@@ -28,6 +30,11 @@ navigation={
             	regimenes(titleText:'Tipos de Régimen')  
             	riesgos()
             }
+			tablas(controller:'tablas',action:'index'){
+				tarifaIsr()
+				subsidio()
+				factorDeIntegracion()
+			}
 		}
 		operaciones(){
 			
