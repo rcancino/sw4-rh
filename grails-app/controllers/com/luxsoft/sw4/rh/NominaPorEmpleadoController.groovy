@@ -23,10 +23,11 @@ class NominaPorEmpleadoController {
     }
 	
 	@Transactional
-	def update(Long id){
-		log.info 'Actualizando ne '+id
-		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
-		//ne.save(failOnError:true)
+	def update(NominaPorEmpleado ne){
+		log.info 'Actualizando ne '+ne
+		//def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+		ne.save(failOnError:true)
+		ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
 		redirect action:'edit' ,params:[id:ne.id]
 		//render view:'edit',model:[nominaPorEmpleadoInstance:ne]
 	}
@@ -54,14 +55,20 @@ class NominaPorEmpleadoController {
 					det.importeGravado=0.0
 				}
 				ne.addToConceptos(det)
-				ne.save(failOnError:true)
-				
+				//ne.save(failOnError:true)
+				ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne)
 				redirect action:'edit',params:[id:ne.id]
 			}    	
     	}
     	
     	
     }
+	
+	@Transactional
+	def eliminarConcepto(Long id){
+		def ne=nominaPorEmpleadoService.eliminarConcepto(id)
+		redirect action:'edit',params:[id:ne.id]
+	}
 	
 	def actualizarNominaPorEmpleado(Long id){
 		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)

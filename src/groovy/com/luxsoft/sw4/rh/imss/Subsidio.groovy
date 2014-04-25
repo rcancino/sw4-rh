@@ -10,10 +10,11 @@ class Subsidio {
 	
 	static def valores=[
 		new Subsidio(desde:0.01,hasta:1768.96,subsidio:407.02),
-		new Subsidio(desde:1768.97,hasta:2653.38,subsidio:406.83),
-		new Subsidio(desde:2653.39,hasta:3472.84,subsidio:406.62),
-		new Subsidio(desde:3472.85,hasta:3537.87,subsidio:392.77),
-		new Subsidio(desde:3537.88,hasta:4446.15,subsidio:382.46),
+		new Subsidio(desde:1768.97,hasta:1978.7,subsidio:406.83),
+		new Subsidio(desde:1978.71,hasta:2653.38,subsidio:359.84),
+		new Subsidio(desde:2653.39,hasta:3472.84,subsidio:343.6),
+		new Subsidio(desde:3472.85,hasta:3537.87,subsidio:310.29),
+		new Subsidio(desde:3537.88,hasta:4446.15,subsidio:298.44),
 		new Subsidio(desde:4446.16,hasta:4717.18,subsidio:354.23),
 		new Subsidio(desde:4717.19,hasta:5335.42,subsidio:324.87),
 		new Subsidio(desde:5335.43,hasta:6224.67,subsidio:294.63),

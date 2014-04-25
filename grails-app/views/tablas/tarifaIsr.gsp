@@ -7,7 +7,7 @@
 <body>
 
 	<content tag="tabla">
-		Tarifas ISR
+		Tarifas ISR (Mensual)
 	</content>
 	<content tag="grid">
 		<g:render template="tarifaIsrGridPanel"/>

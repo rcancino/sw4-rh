@@ -7,7 +7,7 @@
 <body>
 
 	<content tag="tabla">
-		Subcidio al empleo
+		Subcidio al empleo (Mensual)
 	</content>
 	<content tag="grid">
 		<g:render template="subsidioGridPanel"/>

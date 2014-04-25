@@ -2,17 +2,38 @@ package com.luxsoft.sw4.rh
 
 import java.util.Map;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import grails.transaction.Transactional
 
 @Transactional
 class NominaPorEmpleadoService {
 	
 	def static CONCEPTOS_BASICOS=['P001','D001','D002']
-
-    def actualizarNominaPorEmpleado(Long id) {
+	
+	def eliminarConcepto(Long id){
+		NominaPorEmpleadoDet det=NominaPorEmpleadoDet.get(id)
+		println 'Eliminando concepto: '+det
+		def ne=det.parent
+		def target=ne.conceptos.find(){it.id==id}
+		println 'Found: '+target
+		ne.removeFromConceptos(target)
+		return recalcularConceptos(ne)
+	}
+	
+	@Transactional
+	def actualizarNominaPorEmpleado(Long id) {
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
-		assert ne,'No localizo nomina por empleado: '+id
-		
+		return recalcularConceptos(ne)
+	}
+	
+	@Transactional
+	def actualizarNominaPorEmpleado(NominaPorEmpleado ne) {
+		return recalcularConceptos(ne)
+	}
+	
+	@Transactional
+	def recalcularConceptos(NominaPorEmpleado ne) {
 		log.info 'Actualizando nomina de: '+ne
 		ne.salarioDiarioBase=ne.empleado.salario.salarioDiario
 		ne.salarioDiarioIntegrado=ne.empleado.salario.salarioDiarioIntegrado
@@ -44,6 +65,7 @@ class NominaPorEmpleadoService {
 					def shell=new GroovyShell(this.class.classLoader,binding)
 					shell.evaluate(rule)
 				} catch (Exception e) {
+					e.printStackTrace()
 					det.comentario="Error en calculo: "+ExceptionUtils.getRootCauseMessage(e)
 					log.error e
 				}
@@ -55,16 +77,26 @@ class NominaPorEmpleadoService {
 			
 		}
 		ne.save(flush:true)
-		
-    }
+	}
+
+    
 	
 	
 	
 	static Map REGLAS=[
 		'P001':"""
-	 		def salarioDiario=empleado.salario.salarioDiario
-	 		def diasTrabajados=nominaEmpleado.nomina.getDiasPagados()
+	 		def salarioDiario=empleado?.salario?.salarioDiario?:0
+			def factorDescanso=1/6
+			def faltas=nominaEmpleado.faltas?:0
+			faltas=faltas+(faltas*factorDescanso)
+			def incapacidades=nominaEmpleado.incapacidades?:0
+
+			def diasTrabajados=nominaEmpleado.nomina.getDiasPagados()
+			diasTrabajados=diasTrabajados-faltas-incapacidades
+			
+
 	 		def importeGravado=salarioDiario*diasTrabajados
+
 	 		nominaEmpleadoDet.importeGravado=importeGravado
 			nominaEmpleadoDet.importeExcento=0
 
@@ -109,14 +141,36 @@ nominaEmpleado.actualizar()
 	
    static def REGLA_IMSS="""
 
-	import com.luxsoft.sw4.*
+		import com.luxsoft.sw4.*
 	import com.luxsoft.sw4.rh.*
 	import com.luxsoft.sw4.rh.imss.*
 	import java.math.*
 
+    //// Para uso en consola con dato de prueba: 20089
+      //def nominaEmpleadoDet=NominaPorEmpleadoDet.get(20089)
+      //def nominaEmpleado=nominaEmpleadoDet.parent
+      //def empleado=nominaEmpleado.empleado
+    ///
 	def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
 	def sdi=empleado.salario.salarioDiarioIntegrado
+	
+	def factorDescanso=1/6
+	
+
+	def faltas=nominaEmpleado.faltas
+	faltas=faltas+(faltas*factorDescanso)
+	println 'Faltas: '+faltas
+
+	def incapacidades=nominaEmpleado.incapacidades?:0
+	println 'Incapacidades: '+incapacidades
+
 	def diasTrabajados=nominaEmpleado.nomina.getDiasPagados()
+	def diasDelPeriodo=diasTrabajados
+	diasTrabajados=diasTrabajados-faltas-incapacidades
+	
+
+	println 'Dias trabajados: '+diasTrabajados
+
 
 	def prima=0.5 //Numer magico por el momento
 
@@ -137,7 +191,7 @@ nominaEmpleado.actualizar()
 	}else{
 		emd=(salarioMinimo*25)-(salarioMinimo*3)
 	}
-	emd=(emd*0.40*diasTrabajados)/100
+	emd=(emd*0.40*diasDelPeriodo)/100
 	emd=emd.setScale(2,RoundingMode.HALF_EVEN)
 	println 'EyM sobre dif. entre SBC y 3 SMGDF: '+emd
 	aporacionAsegurado+=emd
@@ -151,12 +205,12 @@ nominaEmpleado.actualizar()
 	}else{
 		val3=(salarioMinimo*25)
 	}
-	def pd=((val3*0.25)*diasTrabajados)/100
+	def pd=((val3*0.25)*diasDelPeriodo)/100
 	pd=pd.setScale(2,RoundingMode.HALF_EVEN)
 	aporacionAsegurado+=pd
 	println 'Prestaciones en dinero EyM sobre SBC: '+pd
 
-	def gmp=((val3*0.375)*diasTrabajados)/100
+	def gmp=((val3*0.375)*diasDelPeriodo)/100
 	gmp=gmp.setScale(2,RoundingMode.HALF_EVEN)
 	aporacionAsegurado+=gmp
 	println 'Gastos mdicos pensionado sobre SBC: '+gmp

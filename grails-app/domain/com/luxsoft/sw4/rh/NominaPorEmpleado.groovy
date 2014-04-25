@@ -30,8 +30,8 @@ class NominaPorEmpleado {
 	String comentario
 	
 	Integer antiguedadEnSemanas
-	Integer faltas
-	Integer incapacidades
+	Integer faltas=0
+	Integer incapacidades=0
 
 	Date dateCreated
 	Date lastUpdated
