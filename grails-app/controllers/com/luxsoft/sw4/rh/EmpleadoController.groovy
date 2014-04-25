@@ -22,10 +22,21 @@ class EmpleadoController {
 	def show(Empleado empleadoInstance){
 		redirect action:'generales',params:params
 	}
+	
+	def search(String apellidoPaterno){
+		println 'Buscando empleados: '+apellidoPaterno
+		params.max = 20
+		params.sort='apellidoPaterno'
+		params.order='asc'
+		def query=Empleado.where{apellidoPaterno==~apellidoPaterno}
+		println 'Encontrados: '+query.list(params).size()
+		def model=[empleadoInstanceList:query.list(params),empleadoInstanceCount:query.count()]
+		render view:'index',model:model
+	}
 
 	def generales(Empleado empleadoInstance){
 		def baja=BajaDeEmpleado.findByEmpleado(empleadoInstance)?:new BajaDeEmpleado()
-		[empleadoInstance:empleadoInstance,edit:params.edit,bajaInstance:baja]
+		[empleadoInstance:empleadoInstance,edit:params.edit]
 	}
 	
 	def contactos(Empleado empleadoInstance){

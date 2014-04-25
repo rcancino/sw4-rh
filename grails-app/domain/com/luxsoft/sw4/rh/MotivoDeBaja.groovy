@@ -35,4 +35,8 @@ class MotivoDeBaja {
 		new MotivoDeBaja('A','Pensión').save(flush:true)
 		
 	}
+	
+	String toString() {
+		return descripcion
+	}
 }

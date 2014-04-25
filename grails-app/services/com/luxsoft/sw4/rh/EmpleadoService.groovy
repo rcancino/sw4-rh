@@ -17,6 +17,9 @@ class EmpleadoService {
     	
     	//Salvando empleado
     	try{
+			if(empleado.status!='BAJA'){
+				empleado.baja=null
+			}
     		empleado.save(failOnError:true)
     		return empleado
     		}catch(Exception ex){

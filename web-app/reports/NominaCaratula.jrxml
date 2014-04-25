@@ -100,6 +100,12 @@ $F{CONCEPTO}.equals( "D" ) ?
 $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 : 0.0 )]]></variableExpression>
 	</variable>
+	<variable name="TOTAL_SUC_GRAVADO" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_GRAVADO}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_SUC_EXENTO" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_EXENTO}]]></variableExpression>
+	</variable>
 
 		<group  name="GRUPO1" >
 			<groupExpression><![CDATA[$F{CONCEPTO}]]></groupExpression>
@@ -128,7 +134,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="59"
 						height="12"
-						key="textField-132"/>
+						key="textField-132">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.0"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -142,7 +150,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="15"
 						width="118"
 						height="12"
-						key="textField-134"/>
+						key="textField-134">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -156,7 +166,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="59"
 						height="12"
-						key="textField-136"/>
+						key="textField-136">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.0"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -176,7 +188,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[" ".concat($F{CONCEPTO}.equals("P")?" P E RC E P C I O N E S      ":" D E D U C C I O N E S      ").concat(" IMPORTE : ")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CONCEPTO}.equals("P")?" P E R C E P C I O N E S   IMPORTE : ":" D E D U C C I O N E S      "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -198,7 +210,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="1"
 						width="53"
 						height="0"
-						key="line-10"/>
+						key="line-10">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
 				<line direction="TopDown">
@@ -207,7 +221,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="1"
 						width="53"
 						height="0"
-						key="line-11"/>
+						key="line-11">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
 				<line direction="TopDown">
@@ -216,7 +232,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="53"
 						height="0"
-						key="line-12"/>
+						key="line-12">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
 				<line direction="TopDown">
@@ -225,7 +243,47 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="53"
 						height="0"
-						key="line-13"/>
+						key="line-13">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="486"
+						y="15"
+						width="59"
+						height="12"
+						key="textField-162">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOTAL_GRUPO_GRAVADO}.doubleValue()+$V{TOTAL_GRUPO_EXENTO}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="491"
+						y="1"
+						width="53"
+						height="0"
+						key="line-15">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="491"
+						y="3"
+						width="53"
+						height="0"
+						key="line-16">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
 			</band>
@@ -245,12 +303,14 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="59"
 						height="12"
-						key="textField-153"/>
+						key="textField-153">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_GRUPO_EXENTO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_SUC_EXENTO}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -258,12 +318,14 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="15"
 						width="118"
 						height="12"
-						key="textField-154"/>
+						key="textField-154">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOTAL_GRUPO_GRAVADO}.doubleValue()+$V{TOTAL_GRUPO_EXENTO}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOTAL_SUC_GRAVADO}.doubleValue()+$V{TOTAL_SUC_EXENTO}.doubleValue())]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -271,12 +333,14 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="59"
 						height="12"
-						key="textField-155"/>
+						key="textField-155">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_GRUPO_GRAVADO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_SUC_GRAVADO}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -284,7 +348,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="228"
 						height="12"
-						key="textField-156"/>
+						key="textField-156">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
@@ -310,7 +376,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="2"
 						width="53"
 						height="0"
-						key="line-8"/>
+						key="line-8">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
 				<line direction="TopDown">
@@ -319,7 +387,35 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="2"
 						width="53"
 						height="0"
-						key="line-9"/>
+						key="line-9">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="486"
+						y="15"
+						width="59"
+						height="12"
+						key="textField-163">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOTAL_SUC_GRAVADO}.doubleValue()+$V{TOTAL_SUC_EXENTO}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="492"
+						y="2"
+						width="53"
+						height="0"
+						key="line-14">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
 			</band>
@@ -370,8 +466,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					<rightPen lineWidth="0.5" lineStyle="Solid"/>
 </box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String">
-					</imageExpression>
+					<imageExpression class="java.lang.String"><![CDATA[]]></imageExpression>
 				</image>
 				<staticText>
 					<reportElement
@@ -867,6 +962,21 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					</textElement>
 				<text><![CDATA[N  O  M  I  N  A]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						x="468"
+						y="130"
+						width="79"
+						height="14"
+						key="staticText-189"/>
+					<box>					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[DEDUCCIONES]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
@@ -890,7 +1000,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="1"
 						width="59"
 						height="10"
-						key="textField-86"/>
+						key="textField-86">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
@@ -916,7 +1028,9 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="1"
 						width="59"
 						height="10"
-						key="textField-88"/>
+						key="textField-88">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
+						</reportElement>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
@@ -935,6 +1049,21 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CLAVE}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="486"
+						y="1"
+						width="59"
+						height="10"
+						key="textField-159">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue())]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -1058,7 +1187,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					<reportElement
 						x="350"
 						y="3"
-						width="168"
+						width="196"
 						height="15"
 						key="textField-152"/>
 					<box>					<topPen lineWidth="0.5"/>

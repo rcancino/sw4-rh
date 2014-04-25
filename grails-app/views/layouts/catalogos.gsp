@@ -23,13 +23,15 @@
 						<g:link action="index" class="btn btn-default">
 							<span class="glyphicon glyphicon-repeat"></span> Todos
 						</g:link>
-						<g:link action="create" class="btn btn-default">
+						<g:link action="index" class="btn btn-default">
 							<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
 						</g:link>
-						<g:link action="create" class="btn btn-default">
+						
+						<button class="btn btn-default" data-toggle="modal" data-target="#searchForm">
 							<span class="glyphicon glyphicon-search"></span> Buscar
-						</g:link>
-						<g:link action="create" class="btn btn-default">
+						</button>
+						
+						<g:link action="index" class="btn btn-default">
 							<span class="glyphicon glyphicon-filter"></span> Filtrar
 						</g:link>
 					</div>
@@ -38,9 +40,24 @@
 					</div>
 				</div>
 			</div>
-
 			
 			
 		</div>
+		
+	<!-- Modal para el alta de percepciones -->
+	<div class="modal fade" id="searchForm" tabindex="-1" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="myModalLabel">Buscar entidad</h4>
+				</div>
+				
+				<g:pageProperty name="page.searchForm"/>
+				 
+			</div> <!-- moda-content -->
+		</div> <!-- modal-dialog -->
+	</div> <!-- .modal  -->
+		
 	</body>
 </g:applyLayout>

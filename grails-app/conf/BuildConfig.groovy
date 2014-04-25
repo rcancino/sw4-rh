@@ -46,6 +46,12 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.jboss.com/maven2/"
 		mavenRepo "http://repo.grails.org/grails/core"
 		mavenRepo "http://repo.spring.io/milestone/"
+		
+		mavenRepo "http://repo.grails.org/grails/libs-releases/"
+		mavenRepo "http://m2repo.spockframework.org/ext/"
+		mavenRepo "http://m2repo.spockframework.org/snapshots/"
+		mavenRepo "http://repo.grails.org/grails/libs-releases/"
+		
     }
 
     dependencies {
@@ -111,6 +117,7 @@ grails.project.dependency.resolution = {
 		compile ":standalone:1.2.3"
 
         //compile ":less-resources:1.3.3.2"
+		compile ":filterpane:2.3.3"
 		
     }
 	

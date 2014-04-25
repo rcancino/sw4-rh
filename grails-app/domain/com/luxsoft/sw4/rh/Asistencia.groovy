@@ -3,8 +3,11 @@ package com.luxsoft.sw4.rh
 import java.sql.Time
 
 import org.grails.databinding.BindingFormat
+import groovy.transform.ToString
+import groovy.transform.EqualsAndHashCode
 
-
+@ToString(includes='empleado,fecha,periodo',includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes='empleado,fecha')
 class Asistencia {
 
 	Empleado empleado
@@ -24,9 +27,6 @@ class Asistencia {
 	
 	String comentario
 	
-	
-	
-
 	Date dateCreated
 	Date lastUpdated
 

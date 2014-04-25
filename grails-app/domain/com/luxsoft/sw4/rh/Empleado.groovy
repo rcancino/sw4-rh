@@ -11,6 +11,8 @@ import com.luxsoft.sw4.Empresa
 
 @EqualsAndHashCode(includes='curp,rfc')
 class Empleado  implements Serializable{
+	
+	static searchable = true
 
 	String apellidoPaterno
 	String apellidoMaterno
@@ -33,7 +35,8 @@ class Empleado  implements Serializable{
 		,salario:Salario
 		,seguridadSocial:SeguridadSocial
 		,datosPersonales:DatosPersonales
-		,contacto:EmpleadoContacto]
+		,contacto:EmpleadoContacto
+		,baja:BajaDeEmpleado]
 
 	/*
 	static hasMany = [contactos:EmpleadoContacto]

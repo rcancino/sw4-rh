@@ -50,11 +50,13 @@
 			
 			<fieldset ${!edit?'disabled=""':''}>
 				
-				<f:with bean="${bajaInstance}">
-					<f:field property="fecha" input-class="form-control" />	
-					<f:field property="motivo" input-class="form-control" />
-					<f:field property="causa" input-class="form-control" />
-					<f:field property="comentario" input-class="form-control" />	
+				<f:with bean="${empleadoInstance}">
+					<f:field property="baja.fecha"  input-class="form-control" label="Fecha B.">
+						<g:field type="text" name="baja.fecha" id="bajaFecha" class="form-control" value="${empleadoInstance?.baja?.fecha }"/>
+					</f:field>	
+					<f:field property="baja.motivo" input-class="form-control" />
+					<f:field property="baja.causa" input-class="form-control" />
+					<f:field property="baja.comentario" input-class="form-control" label="Comentario"/>	
 				</f:with>
 			</fieldset>
 			
@@ -73,7 +75,19 @@
 
 	</form>
 </content>
-		
+<r:script>
+    /** JavaScrip para date picker **/
+   $("#bajaFecha").datepicker({
+        //showOn: "both",
+        changeMonth: true,
+        changeYear: true,
+        appendText: "",
+        showAnim: "fold",
+        showButtonPanel: true,
+        dateFormat:"dd/mm/yy" 
+    });
+    
+</r:script>
 	
 </body>
 </html>
