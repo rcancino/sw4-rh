@@ -4,14 +4,14 @@ class BajaDeEmpleado {
 	
 	Empleado empleado
 	Date fecha
-	String motivo
 	String comentario
-	
+	MotivoDeBaja motivo
+	MotivoDeSeparacion causa
 	Date dateCreated
 	Date lastUpdated
 
     static constraints = {
-		motivo inList:['RENUNCIA','ABANDONO TRABAJO','PENSION','OTROS']
 		comentario nullable:true
+		
     }
 }

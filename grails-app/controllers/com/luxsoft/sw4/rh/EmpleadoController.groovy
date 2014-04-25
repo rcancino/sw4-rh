@@ -24,7 +24,8 @@ class EmpleadoController {
 	}
 
 	def generales(Empleado empleadoInstance){
-		[empleadoInstance:empleadoInstance,edit:params.edit]
+		def baja=BajaDeEmpleado.findByEmpleado(empleadoInstance)?:new BajaDeEmpleado()
+		[empleadoInstance:empleadoInstance,edit:params.edit,bajaInstance:baja]
 	}
 	
 	def contactos(Empleado empleadoInstance){

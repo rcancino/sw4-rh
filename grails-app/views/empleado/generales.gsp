@@ -37,13 +37,27 @@
 		
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
-					<f:field property="alta" input-class="form-control" />	
+						
 					<f:field property="curp" input-class="form-control" />	
 					<f:field property="rfc" input-class="form-control" />	
 					<f:field property="clave" input-class="form-control" />	
-					<f:field property="status" input-class="form-control" />	
+					<f:field property="status" input-class="form-control" />
+					<f:field property="alta" input-class="form-control" />	
 				</f:with>
 			</fieldset>
+			
+			
+			
+			<fieldset ${!edit?'disabled=""':''}>
+				
+				<f:with bean="${bajaInstance}">
+					<f:field property="fecha" input-class="form-control" />	
+					<f:field property="motivo" input-class="form-control" />
+					<f:field property="causa" input-class="form-control" />
+					<f:field property="comentario" input-class="form-control" />	
+				</f:with>
+			</fieldset>
+			
 		</div>
 	
 	<g:if test="${edit}">

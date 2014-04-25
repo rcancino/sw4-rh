@@ -33,6 +33,8 @@ class BootStrap {
 			UserRole.create(rh,rhManagerRole,true)
 		}
 		java.security.Security.addProvider(new BouncyCastleProvider())
+		
+		
     }
     def destroy = {
     }

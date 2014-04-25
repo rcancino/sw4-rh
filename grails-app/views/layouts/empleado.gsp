@@ -40,7 +40,7 @@
 							<g:pageProperty name="page.actions"/>
 						</div>
 					</div>
-					<div class="row">
+					<div class="panel-body">
 						<g:pageProperty name="page.content"/>
 					</div>
 					
