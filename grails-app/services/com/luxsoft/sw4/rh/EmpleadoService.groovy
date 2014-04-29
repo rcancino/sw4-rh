@@ -12,6 +12,16 @@ import com.luxsoft.sw4.Periodo;
 class EmpleadoService {
 	
 	def dataSource
+	
+	Empleado save(Empleado empleado) {
+		empleado.status='ALTA'
+		empleado.validate()
+		if(empleado.hasErrors()) {
+			throw new EmpleadoException(message:'Error de validacion',empleado:empleado)
+		}
+		empleado.save failOnError:true
+		return empleado
+	}
 
     Empleado updateEmpleado(Empleado empleado) {
     	

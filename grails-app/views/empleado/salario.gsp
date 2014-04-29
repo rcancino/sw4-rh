@@ -24,7 +24,7 @@
 		
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
-					<f:field property="salario.salarioMensual" input-type="text" input-class="form-control moneda-field" />	
+					
 					<f:field property="salario.salarioDiario" input-class="form-control moneda-field" />	
 					<f:field property="salario.salarioDiarioIntegrado" input-class="form-control moneda-field" />	
 					<f:field property="salario.formaDePago" input-class="form-control " />	
@@ -58,27 +58,7 @@
 	
 
 	</form>
-	<r:script>
-/*
-$(function(){
-	$("#empleadoForm").submit(function(event){
-		$(".moneda-field").each(function(index,element){
-			var val=$(element).val();
-			var name=$(this).attr('name');
-			var newVal=$(this).autoNumeric('get');
-			$(this).val(newVal);
-			console.log('Enviando elemento numerico con valor:'+name+" : "+val+ " new val:"+newVal);
-		});
-		
-	});
-	
-});
 
-jQuery(function($) {
-      $('.moneda-field').autoNumeric();    
-  });
-*/
-</r:script>	
 </content>
 		
 

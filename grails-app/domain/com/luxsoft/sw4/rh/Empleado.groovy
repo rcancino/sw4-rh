@@ -60,8 +60,8 @@ class Empleado  implements Serializable{
 		salario nullable:true
 		seguridadSocial nullable:true
 		datosPersonales nullable:true
-		contacto nullable:true 
-
+		contacto nullable:true
+		baja nullable:true
     }
 	
 	static transients = ['nombre']

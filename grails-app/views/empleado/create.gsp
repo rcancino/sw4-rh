@@ -4,24 +4,59 @@
 	<title>Alta de empleado</title>
 </head>
 <body>
-	<div class="container">
-		
 
-		<div class="row">
-			<div class="col-md-2">
-				<div class="list-group">
-					<a href=" link_1" class="list-group-item active">Operaciones</a>
-					<g:link action="index" class="list-group-item">
-						<span class="glyphicon glyphicon-list"></span> Catálogo
-					</g:link>
-					<a href=" link_3" class="list-group-item">Buscar</a>
-				</div>
-			</div>
-			<div class="col-md-9">
-				<g:render template="empleadoCreateForm"/>
-			</div>
+<content tag="actions">
+	
+</content>
+
+<content tag="content">
+	<form class="form-horizontal" method="post">
+		
+		<div class="col-md-6">
+			<fieldset >
+				<f:with bean="${empleadoInstance}">
+					<f:field property="apellidoPaterno" input-class="form-control" />	
+					<f:field property="apellidoMaterno" input-class="form-control" />	
+					<f:field property="nombres" input-class="form-control" />	
+					<f:field property="fechaDeNacimiento" input-class="form-control" label="F.Nacimiento"/>	
+					<f:field property="sexo" input-class="form-control" />	
+				</f:with>
+			</fieldset>
+		
 		</div>
+		
+		<div class="col-md-6">
+		
+			<fieldset >
+				<f:with bean="${empleadoInstance}">
+						
+					<f:field property="curp" input-class="form-control" />	
+					<f:field property="rfc" input-class="form-control" />	
+					<f:field property="clave" input-class="form-control" />	
+					
+					<f:field property="alta" input-class="form-control" />	
+				</f:with>
+			</fieldset>
+			
+			
+			
+			
+			
+		</div>
+	
+	
+	<div class="form-group">
+    	<div class="col-sm-offset-8 col-sm-12">
+      		<g:actionSubmit class="btn btn-primary"  value="Salvar" action="save"/>
+      		<g:link class="btn btn-default" action="generales" id="${empleadoInstance.id}" >Cancelar</g:link>
+    	</div>
 	</div>
 	
+
+	
+
+	</form>
+</content>
+
 </body>
 </html>

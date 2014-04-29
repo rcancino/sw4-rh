@@ -23,7 +23,7 @@
 						<g:link action="index" class="btn btn-default">
 							<span class="glyphicon glyphicon-repeat"></span> Todos
 						</g:link>
-						<g:link action="index" class="btn btn-default">
+						<g:link action="create" class="btn btn-default">
 							<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
 						</g:link>
 						

@@ -44,7 +44,21 @@ class EmpleadoController {
 	}
 	
 	def create(){
-		[empleadoInstance:new Empleado()]
+		[empleadoInstance:new Empleado(status:'ALTA')]
+	}
+	
+	def save(Empleado empleado) {
+		log.info 'Salvando empleado nuevo: '+empleado
+		try {
+			def res=empleadoService.save empleado
+			
+			render view:'generales',model:[empleadoInstance:res,edit:true]
+		}catch(EmpleadoException ex) {
+			ex.printStackTrace()
+			flash.message=ex.message
+			println 'Errores: '+ex.empleado.errors
+			render view:'create' ,model:[empleadoInstance:ex.empleado,edit:true]
+		}
 	}
 
 	def update(Empleado empleadoInstance){
