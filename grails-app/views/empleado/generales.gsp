@@ -52,7 +52,8 @@
 				
 				<f:with bean="${empleadoInstance}">
 					<f:field property="baja.fecha"  input-class="form-control" label="Fecha B.">
-						<g:field type="text" name="baja.fecha" id="bajaFecha" class="form-control" value="${empleadoInstance?.baja?.fecha }"/>
+						<g:field type="text" name="baja.fecha" id="bajaFecha" class="form-control" 
+							value="${g.formatDate(date:empleadoInstance?.baja?.fecha,format:'dd/MM/yyyy') }"/>
 					</f:field>	
 					<f:field property="baja.motivo" input-class="form-control" />
 					<f:field property="baja.causa" input-class="form-control" />

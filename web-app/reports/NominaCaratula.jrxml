@@ -30,6 +30,7 @@
 	<queryString><![CDATA[SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
+,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=n.id and e.ubicacion_id=z.ubicacion_id)) as SUBS_APLIC
 ,'BANAMEX' AS BANCO,N.FORMA_DE_PAGO,SUBSTR(C.TIPO,1,1) AS CONCEPTO,C.CLAVE,C.DESCRIPCION,C.CLAVE_SAT
 ,SUM(CASE WHEN C.TIPO='PERCEPCION' THEN IFNULL(D.importe_excento,0) ELSE 0 END) AS IMPORTE_EXENTO
 ,SUM(CASE WHEN C.TIPO='PERCEPCION' THEN IFNULL(D.importe_gravado,0) ELSE 0 END) AS IMPORTE_GRAVADO
@@ -45,6 +46,7 @@ UNION
 SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.periodo_fecha_inicial,N.periodo_fecha_final,N.TOTAL
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
+,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=n.id and e.ubicacion_id=z.ubicacion_id)) as subs_aplic
 ,'BANAMEX' AS BANCO,N.FORMA_DE_PAGO,SUBSTR(C.TIPO,1,1) AS CONCEPTO,C.CLAVE,C.DESCRIPCION,C.CLAVE_SAT
 ,SUM(CASE WHEN C.TIPO='DEDUCCION' THEN IFNULL(D.importe_excento,0) ELSE 0 END) AS IMPORTE_EXENTO
 ,SUM(CASE WHEN C.TIPO='DEDUCCION' THEN IFNULL(D.importe_gravado,0) ELSE 0 END) AS IMPORTE_GRAVADO
@@ -69,6 +71,7 @@ GROUP BY C.TIPO,C.CLAVE,C.DESCRIPCION,E.UBICACION_ID]]></queryString>
 	<field name="TOTAL" class="java.math.BigDecimal"/>
 	<field name="DIAS_PERIODO" class="java.lang.Long"/>
 	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="SUBS_APLIC" class="java.math.BigDecimal"/>
 	<field name="BANCO" class="java.lang.String"/>
 	<field name="FORMA_DE_PAGO" class="java.lang.String"/>
 	<field name="CONCEPTO" class="java.lang.String"/>
@@ -106,15 +109,18 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 	<variable name="TOTAL_SUC_EXENTO" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
 		<variableExpression><![CDATA[$F{IMPORTE_EXENTO}]]></variableExpression>
 	</variable>
+	<variable name="TOTAL_GRUPO_SUBS_APLIC" class="java.lang.Double" resetType="Group" resetGroup="GRUPO1" calculation="Sum">
+		<variableExpression><![CDATA[new Double($V{SUCURSAL_COUNT}.doubleValue()==1.0 ? $F{SUBS_APLIC}.doubleValue() : 0.0 )]]></variableExpression>
+	</variable>
 
 		<group  name="GRUPO1" >
 			<groupExpression><![CDATA[$F{CONCEPTO}]]></groupExpression>
 			<groupHeader>
-			<band height="14"  isSplitAllowed="true" >
+			<band height="13"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="139"
-						y="2"
+						y="1"
 						width="287"
 						height="12"
 						key="textField-158"/>
@@ -127,7 +133,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="27"  isSplitAllowed="true" >
+			<band height="39"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="409"
@@ -267,7 +273,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<line direction="TopDown">
 					<reportElement
 						x="491"
-						y="1"
+						y="13"
 						width="53"
 						height="0"
 						key="line-15">
@@ -278,7 +284,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<line direction="TopDown">
 					<reportElement
 						x="491"
-						y="3"
+						y="15"
 						width="53"
 						height="0"
 						key="line-16">
@@ -286,6 +292,38 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="486"
+						y="27"
+						width="59"
+						height="12"
+						key="textField-164">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{TOTAL_GRUPO_SUBS_APLIC}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="122"
+						y="27"
+						width="228"
+						height="12"
+						key="textField-165">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TOTAL SUBSIDIO PARA EL EMPLEO APLICADO : "]]></textFieldExpression>
+				</textField>
 			</band>
 			</groupFooter>
 		</group>
@@ -348,14 +386,13 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="3"
 						width="228"
 						height="12"
-						key="textField-156">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "P" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-156"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[(" ").concat(" IMPORTE : ")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CONCEPTO}.equals( "P" ) ? (" ").concat(" IMPORTE : ") :
+$F{SUCURSAL}.concat("          TOTAL : ")]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -368,7 +405,8 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{SUCURSAL}.concat("          ").concat(" TOTAL : ")]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CONCEPTO}.equals( "D" ) ? "SUBSIDIO PARA EL EMPLEO APLICADO : " :
+ $F{SUCURSAL}.concat("          TOTAL : ")]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
@@ -394,8 +432,8 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				</line>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="486"
-						y="15"
+						x="485"
+						y="3"
 						width="59"
 						height="12"
 						key="textField-163">
@@ -409,7 +447,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="492"
+						x="491"
 						y="2"
 						width="53"
 						height="0"
@@ -418,6 +456,22 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="485"
+						y="15"
+						width="59"
+						height="12"
+						key="textField-166">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SUBS_APLIC}]]></textFieldExpression>
+				</textField>
 			</band>
 			</groupFooter>
 		</group>
@@ -1182,12 +1236,12 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="18"  isSplitAllowed="true" >
+			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="350"
-						y="3"
-						width="196"
+						y="0"
+						width="195"
 						height="15"
 						key="textField-152"/>
 					<box>					<topPen lineWidth="0.5"/>
@@ -1201,7 +1255,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<staticText>
 					<reportElement
 						x="269"
-						y="3"
+						y="0"
 						width="81"
 						height="15"
 						key="staticText-187"/>
