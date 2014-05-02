@@ -28,7 +28,7 @@
 					<f:field property="salario.salarioDiario" input-class="form-control moneda-field" />	
 					<f:field property="salario.salarioDiarioIntegrado" input-class="form-control moneda-field" />	
 					<f:field property="salario.formaDePago" input-class="form-control " />	
-					<f:field property="salario.clabe" input-class="form-control" />	
+					<f:field property="salario.clabe" input-class="form-control" input-autocomplete="off"/>	
 					<f:field property="salario.periodicidad" input-class="form-control" />	
 					<f:field property="salario.banco" input-class="form-control" />	
 				</f:with>
