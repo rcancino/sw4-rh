@@ -45,9 +45,14 @@
 		
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
-					<f:field property="datosPersonales.direccion" input-class="form-control" />	
-					
-						
+					<f:field property="datosPersonales.direccion.calle" input-class="form-control" />	
+					<f:field property="datosPersonales.direccion.numeroExterior" input-class="form-control" />
+					<f:field property="datosPersonales.direccion.numeroInterior" input-class="form-control" />
+					<f:field property="datosPersonales.direccion.colonia" input-class="form-control" />
+					<f:field property="datosPersonales.direccion.municipio" input-class="form-control" />
+					<f:field property="datosPersonales.direccion.estado" input-class="form-control" />
+					<f:field property="datosPersonales.direccion.codigoPostal" input-class="form-control" />
+					<f:field property="datosPersonales.direccion.pais" input-class="form-control" />
 				</f:with>
 			</fieldset>
 		
