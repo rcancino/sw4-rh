@@ -20,7 +20,7 @@ class DatosPersonales implements Serializable{
 	static embedded = ['direccion']
 
     static constraints = {
-		estadoCivil inList:['SOLTERO','CASADO','UNION_LIBRE']
+		estadoCivil inList:['SOLTERO','CASADO','UNION_LIBRE','DIVORCIADO','VIUDO']
 		conyuge nullable:true
 		nombreDelPader nullable:true
 		nombreDeLaMadre nullable:true

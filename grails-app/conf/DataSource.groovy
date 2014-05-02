@@ -21,8 +21,9 @@ environments {
             pooled = true
            //dbCreate = "update"
 			dbCreate="update"
-            url = "jdbc:mysql://localhost/rh"
-            //url="jdbc:mysql://10.10.1.9/rhkyo"
+			//url="jdbc:mysql://10.10.1.228/rh?autoReconnect=true"
+            url = "jdbc:mysql://localhost/rh?autoReconnect=true"
+           // url="jdbc:mysql://10.10.1.9/rhkyo?autoReconnect=true"
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = org.hibernate.dialect.MySQL5InnoDBDialect
             username = "root"
@@ -32,10 +33,13 @@ environments {
                 maxIdle = 10
                 minIdle = 3
                 initialSize = 3
-                minEvictableIdleTimeMillis = 60000
-                timeBetweenEvictionRunsMillis = 60000
-                maxWait = 10000
-                validationQuery = "/* ping */"
+				minEvictableIdleTimeMillis=1800000
+				timeBetweenEvictionRunsMillis=1800000
+				numTestsPerEvictionRun=3
+				testOnBorrow=true
+				testWhileIdle=true
+				testOnReturn=true
+				maxWait = 10000
             }
             
             
@@ -54,21 +58,24 @@ environments {
 			pooled = true
 		   //dbCreate = "update"
 			dbCreate="update"
-			url="jdbc:mysql://10.10.1.228/rh"
-			//url="jdbc:mysql://10.10.6.1/rh"
+			url="jdbc:mysql://10.10.1.228/rh?autoReconnect=true"
+			//url="jdbc:mysql://10.10.6.1/rh?autoReconnect=true"
 			driverClassName = "com.mysql.jdbc.Driver"
 			dialect = org.hibernate.dialect.MySQL5InnoDBDialect
 			username = "root"
 			password = "sys"
 			properties {
 				maxActive = 10
-				maxIdle = 10
-				minIdle = 3
-				initialSize = 3
-				minEvictableIdleTimeMillis = 60000
-				timeBetweenEvictionRunsMillis = 60000
+                maxIdle = 10
+                minIdle = 3
+                initialSize = 3
+				minEvictableIdleTimeMillis=1800000
+				timeBetweenEvictionRunsMillis=1800000
+				numTestsPerEvictionRun=3
+				testOnBorrow=true
+				testWhileIdle=true
+				testOnReturn=true
 				maxWait = 10000
-				validationQuery = "/* ping */"
 			}
 			
 			

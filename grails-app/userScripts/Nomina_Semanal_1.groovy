@@ -12,6 +12,7 @@ def generarNomina(def folio,def per,def pago,def dia){
 		pago:pago,
 		tipo:'GENERAL',
 		diaDePago:dia,
+        status:'PENDIENTE',
 		formaDePago:'TRANSFERENCIA',
 		  periodicidad:'SEMANAL',
 		total:0.0
@@ -82,7 +83,7 @@ def importar(def archivo, def folio){
 				  
 				  def cve=columnas[it-1].trim().substring(0,4)
 				  
-				  if(col=='P021'){
+				  if(col=='P021E'){
 					  println 'Procesando: '+col+"  :"+importeString
 					cve='D013'
 					if(importe<0){
@@ -145,11 +146,33 @@ def importar(def archivo, def folio){
   }
 
 
+def timbrar(int folio){
+	   def cfdiService=ctx.getBean('cfdiService')
+	   cfdiService.cfdiTimbrador.timbradoDePrueba=false
+	   
+	def nomina =Nomina.findWhere(folio:folio,periodicidad:'SEMANAL')
+	
+	for(NominaPorEmpleado ne:nomina.partidas){
+		try{
+		  if(ne.cfdi==null){
+			println 'Timbrando Ne id:'+ne.id
+			def res=cfdiService.generarComprobante(ne.id)
+			println 'CFDI: '+res
+		  }
+			  
+		}catch(Exception ex){
+			println 'Error timbrando '+ExceptionUtils.getRootCauseMessage(ex)
+			
+		}
+	}
+  nomina.status='CERRADA'
+}
 
 
 
+def folio=17
 
-
-//generarNomina(3,new Periodo('06/01/2014','12/01/2014'),Date.parse('dd/MM/yyyy','09/01/2014'),'JUEVES')
-//importar("nomina_s2.csv",2)
-actualizarNomina(2)
+//generarNomina(folio,new Periodo('21/04/2014','27/04/2014'),Date.parse('dd/MM/yyyy','24/04/2014'),'JUEVES')
+//importar("nomina_s${folio}.csv",folio)
+//actualizarNomina(folio)
+timbrar(17)

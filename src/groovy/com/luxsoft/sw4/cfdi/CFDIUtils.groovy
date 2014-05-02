@@ -119,12 +119,13 @@ class CFDIUtils {
 		Receptor receptor=cfd.addNewReceptor()
 		receptor.setNombre(empleado.toString())
 		receptor.setRfc(empleado.rfc)
+		/*
 		if(empleado?.datosPersonales?.direccion) {
 			Direccion direccion=empleado.datosPersonales.direccion
 			TUbicacion ubicacion=receptor.addNewDomicilio()
 			if(empleado.rfc!='')
 				CFDIUtils.generarUbicacion(direccion,ubicacion)
-		}
+		}*/
 		
 		return receptor
 	}
