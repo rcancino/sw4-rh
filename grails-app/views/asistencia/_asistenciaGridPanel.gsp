@@ -3,16 +3,9 @@
 	<thead>
 		<tr>
 			<g:sortableColumn property="empleado.nombres" title="Empleado"/>
-			<g:sortableColumn property="empleado.nombre" title="N0"/>
-			<g:sortableColumn property="fecha" title="Fecha"/>
-			
-			<g:sortableColumn property="entrada1" title="Ent 1"/>
-			<g:sortableColumn property="salida1"  title="Sal 1"/>
-			
-			<g:sortableColumn property="entrada2" title="Ent 2"/>
-			<g:sortableColumn property="salida2"  title="Sal 2"/>
-			
-			
+			<g:sortableColumn property="empleado.perfil.numeroDeTrabajador" title="No"/>
+			<g:sortableColumn property="periodo.fechaInicial" title="Fecha Ini"/>
+			<g:sortableColumn property="periodo.fechaFinal" title="Fecha Fin"/>
 			
 		</tr>
 	</thead>
@@ -25,11 +18,8 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.perfil.numeroDeTrabajador")}</td>
-				<td><g:formatDate date="${row.fecha}" format="dd/MMM/yyyy"/></td>
-				<td><g:formatDate date="${row.entrada1}" format="hh:mm"/></td>
-				<td><g:formatDate date="${row.salida1}" format="hh:mm"/></td>
-				<td><g:formatDate date="${row.entrada2}" format="hh:mm"/></td>
-				<td><g:formatDate date="${row.salida2}" format="hh:mm"/></td>
+				<td><g:formatDate date="${row.periodo.fechaInicial}" format="dd/MMM/yyyy"/></td>
+				<td><g:formatDate date="${row.periodo.fechaFinal}" format="dd/MMM/yyyy"/></td>
 				
 				
 				

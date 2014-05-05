@@ -46,6 +46,7 @@ navigation={
 				asistencia(action:'index')
 				lectora()
 				
+				
 			}
 			aportaciones()
 			incapacidades()

@@ -6,6 +6,7 @@ import grails.transaction.Transactional
 
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.Asistencia;
+import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.Checado
 import com.luxsoft.sw4.rh.Empleado
 
@@ -15,11 +16,13 @@ class AsistenciaService {
 	def grailsApplication
 
     def importarLecturas(Periodo periodo){
+		log.info 'Importando lectoras para el periodo: '+periodo
     	for(date in periodo.fechaInicial..periodo.fechaFinal){
     		def sdate=date.format('yyyyMMdd')
     		
 			def rowdata=grailsApplication.config.sw4.rh.asistencia.rowdata
 			File file =new File(rowdata+"/"+sdate+".chk")
+			log.info 'Rawdata: '+file.path
     		//File file=grailsApplication.mainContext.getResource("/WEB-INF/data/"+sdate+'.chk').file
     		if(file.exists()){
     			log.info 'Importando lecturas para: '+sdate
@@ -50,6 +53,67 @@ class AsistenciaService {
     	}
     	
     }
+	
+	def registrarAsistencias(Periodo periodo,String tipo) {
+		//numero magico
+		def tolerancia1=(60*1000*10)
+		
+		def empleados=Empleado.findAll{salario.periodicidad==tipo && status=='ACTIVO'}
+		
+		empleados.each{empleado ->
+			//Maestro de asistencia
+			def asistencia =Asistencia
+				.find("from Asistencia a where a.empleado=? and a.tipo=? and date(a.periodo.fechaInicial)=? and date(a.periodo.fechaFinal)=?"
+					,[empleado,tipo,periodo.fechaInicial,periodo.fechaFinal])
+			if(asistencia) {
+				asistencia.partidas.clear()
+			}else {
+				asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo)
+			}
+			for(date in periodo.fechaInicial..periodo.fechaFinal){
+				def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){numeroDeEmpleado==empleado.perfil.numeroDeTrabajador && fecha==date}
+				lecturas.sort(){ c->
+					c.hora
+				}
+				
+				def valid =[]
+				def last=null
+				lecturas.each{ reg->
+					if(!last)last=reg.hora
+					def dif=reg.hora.time-last.time
+					if(dif>tolerancia1 || dif==0){
+						//println "$reg.lector $reg.hora"
+						last=reg.hora
+						valid.add(reg)
+					}
+				}
+				
+				def asistenciaDet=new AsistenciaDet(fecha:date)
+				for(def i=0;i<valid.size;i++) {
+					def checado=valid[i]
+					def time=new Time(checado.hora.time)
+					switch(i) {
+						case 0:
+							asistenciaDet.entrada1=time
+							break
+						case 1:
+							asistenciaDet.salida1=time
+							break
+						case 2:
+							asistenciaDet.entrada2=time
+							break
+						case 3:
+							asistenciaDet.salida2=time
+							break
+						default:
+							break
+					}
+				}
+				asistencia.addToPartidas(assitenciaDet)
+			}
+		}
+		
+	}
 
     def registrarAsistencias(Periodo periodo) {
 

@@ -15,13 +15,20 @@
 	</content>
 	<content tag="gridTitle">Lista de asistencia periodo:  ${session?.periodo} </content>
 	<content tag="gridTasks">
+		<button class="btn btn-default" data-toggle="modal" data-target="#periodoForm">
+			<span class="glyphicon glyphicon-calendar"></span> Periodo
+		</button>
+		<g:render template="/_common/periodoForm" model="[action:'cambiarPeriodo',periodo:periodo]"/>
   		<g:link class="btn btn-default" action="actualizarAsistencia">
   			Actualizar
   		</g:link>
+  		
 	</content>
 	<content tag="gridPanel">
 		<g:render template="asistenciaGridPanel"/>
 	</content>
+	
+	
 	
 </body>
 </html>

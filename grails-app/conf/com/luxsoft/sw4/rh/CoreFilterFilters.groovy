@@ -11,7 +11,7 @@ class CoreFilterFilters {
 				//println 'Verificando el periodo de la session'
 				if(session.periodo==null) {
 					session.periodo=Periodo.getCurrentMonth() 
-					//println 'Periodo: '+session.periodo
+					println 'Periodo: '+session.periodo
 				}
 				//println 'Periodo: '+session.periodo
 			}
