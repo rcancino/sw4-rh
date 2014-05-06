@@ -56,7 +56,7 @@ class AsistenciaController {
 	}
 	
 	def actualizarAsistencia(String tipo){
-		def periodo=new Periodo('22/04/2014','22/04/2014')
+		def periodo=session.periodo
 		asistenciaService.registrarAsistencias(periodo,tipo)
 		redirect action:'index'
 	}
