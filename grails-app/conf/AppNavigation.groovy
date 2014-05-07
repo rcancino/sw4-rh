@@ -43,10 +43,9 @@ navigation={
 			recibos(controller:'reciboDeNomina',action:'index',titleText:'Recibos (Quincenal)')
 			recibosSemanal(controller:'reciboDeNomina',action:'semanal',titleText:'Recibos (Semanal)')
 			asistencia(controller:'asistencia',action:'index',titleText:'Control de asistencia'){
-				asistencia(action:'index')
+				asistenciaQuincenal(action:'asistenciaQuincenal',titleText:'Quincenal')
+				asistenciaSemanal(action:'asistenciaSemanal',titleText:'Semanal')
 				lectora()
-				
-				
 			}
 			aportaciones()
 			incapacidades()

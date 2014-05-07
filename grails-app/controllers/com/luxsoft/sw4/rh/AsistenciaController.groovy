@@ -13,27 +13,37 @@ class AsistenciaController {
 		session.periodo=periodo?:Periodo.getCurrentMonth()
 		redirect action:'index'
 	}
+	
+	def asistenciaSemanal(){
+		session.periodicidad='SEMANAL'
+		redirect action:'index'
+	}
+	
+	def asistenciaQuincenal(){
+		session.periodicidad='QUINCENAL'
+		redirect action:'index'
+	}
 
     def index(Integer max) {
 		params.max = Math.min(max ?: 20, 100)
-		
+		def tipo=session.periodicidad?:'QUINCENAL'
 		def p=params.periodo?:session.periodo
-		println 'Periodo operativo: '+p
 		
-		def list=Asistencia.findAll(
-			"from Asistencia a where date(a.periodo.fechaInicial)>=? and date(a.periodo.fechaFinal)<=?"
-			,[p.fechaInicial,p.fechaFinal]
-			,params)  
-		println 'Regs: '+list.size()
-		//def query=Asistencia.where{periodo?.fechaInicial>=p.fechaInicial && periodo?.fechaFinal<=p.fechaFinal} 
 		def query=new DetachedCriteria(Asistencia).build{
 			ge 'periodo.fechaInicial',p.fechaInicial
 		}
 		query=query.build{
 			le 'periodo.fechaFinal',p.fechaFinal
 		}
+		query=query.build{
+			eq 'tipo',tipo
+		}
 		
-		[asistenciaInstanceList:query.list(params),asistenciaTotalCount:query.count(params),periodo:p]
+		[asistenciaInstanceList:query.list(params),asistenciaTotalCount:query.count(params),periodo:p,tipo:tipo]
+	}
+	
+	def show(Asistencia asistencia){
+		[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 	}
 
 
@@ -55,8 +65,10 @@ class AsistenciaController {
 		redirect action:'lectora',params:params
 	}
 	
-	def actualizarAsistencia(String tipo){
+	def actualizarAsistencia(){
 		def periodo=session.periodo
+		def tipo=session.periodicidad
+				
 		asistenciaService.registrarAsistencias(periodo,tipo)
 		redirect action:'index'
 	}

@@ -56,11 +56,15 @@ class AsistenciaService {
 	
 	def registrarAsistencias(Periodo periodo,String tipo) {
 		//numero magico
+		
 		def tolerancia1=(60*1000*10)
 		
-		def empleados=Empleado.findAll{salario.periodicidad==tipo && status=='ACTIVO'}
+		def empleados=Empleado.findAll{salario.periodicidad==tipo && status=='ALTA'}
+		
+		
 		
 		empleados.each{empleado ->
+			log.info "Actualizando asistencias ${empleado} ${periodo}"
 			//Maestro de asistencia
 			def asistencia =Asistencia
 				.find("from Asistencia a where a.empleado=? and a.tipo=? and date(a.periodo.fechaInicial)=? and date(a.periodo.fechaFinal)=?"
@@ -109,7 +113,13 @@ class AsistenciaService {
 							break
 					}
 				}
-				asistencia.addToPartidas(assitenciaDet)
+				asistencia.addToPartidas(asistenciaDet)
+			}
+			
+			try {
+				asistencia.save failOnError:true
+			} catch (Exception e) {
+				e.printStackTrace()
 			}
 		}
 		

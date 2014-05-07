@@ -13,7 +13,7 @@
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 	</content>
-	<content tag="gridTitle">Lista de asistencia periodo:  ${session?.periodo} </content>
+	<content tag="gridTitle">Lista de asistencia periodo:  ${session?.periodo}  (${tipo})</content>
 	<content tag="gridTasks">
 		<button class="btn btn-default" data-toggle="modal" data-target="#periodoForm">
 			<span class="glyphicon glyphicon-calendar"></span> Periodo
