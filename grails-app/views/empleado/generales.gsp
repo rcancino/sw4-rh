@@ -23,10 +23,10 @@
 		
 			<fieldset ${!edit?'disabled':''}>
 				<f:with bean="empleadoInstance">
-					<f:field property="apellidoPaterno" input-class="form-control" />	
-					<f:field property="apellidoMaterno" input-class="form-control" />	
+					<f:field property="apellidoPaterno" input-class="form-control" label="Apellido P."/>	
+					<f:field property="apellidoMaterno" input-class="form-control" label="Apellido M."/>	
 					<f:field property="nombres" input-class="form-control" />	
-					<f:field property="fechaDeNacimiento" input-class="form-control" />	
+					<f:field property="fechaDeNacimiento" input-class="form-control" label="F.Nacimiento"/>	
 					<f:field property="sexo" input-class="form-control" />	
 				</f:with>
 			</fieldset>

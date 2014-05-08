@@ -24,14 +24,27 @@ class EmpleadoController {
 	}
 	
 	def search(String apellidoPaterno){
-		println 'Buscando empleados: '+apellidoPaterno
+		//println 'Buscando empleados: '+apellidoPaterno
 		params.max = 20
 		params.sort='apellidoPaterno'
 		params.order='asc'
 		def query=Empleado.where{apellidoPaterno==~apellidoPaterno}
-		println 'Encontrados: '+query.list(params).size()
+		//println 'Encontrados: '+query.list(params).size()
 		def model=[empleadoInstanceList:query.list(params),empleadoInstanceCount:query.count()]
 		render view:'index',model:model
+	}
+	
+	def searchAndShow(String apellidoPaterno,String apellidoMaterno) {
+		def query=Empleado.where{apellidoPaterno==~apellidoPaterno }
+		//query=query.where{apellidoMaterno==~apellidoMaterno }
+		def found=query.list()
+		
+		if(found.size()==1) {
+			params.id=found[0].id
+			redirect action:'generales',params:params
+		}else {
+			render view:'index',model:[empleadoInstanceList:found,empleadoInstanceCount:found.size()]
+		}
 	}
 
 	def generales(Empleado empleadoInstance){

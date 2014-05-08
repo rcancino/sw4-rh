@@ -9,7 +9,7 @@
 			<th><g:message code="Empleado.deducciones.label" default="Deducciones" encodeAs="html"/></th>
 			<th><g:message code="Empleado.deducciones.total" default="Total" encodeAs="html"/></th>
 			<th><g:message code="Empleado.deducciones.total" default="CFDI" encodeAs="html"/></th>
-			<th><g:message code="default.deleted.label" default="CFDI" encodeAs="html"/></th>
+			
 		</tr>
 	</thead>
 	<tbody>
@@ -44,11 +44,7 @@
 						<p class="text-danger">PENDIENTE</p>
 					</g:else>
 				</td>
-				<td class="text-center">
-					<g:link controller="nominaPorEmpleado" action="delete" id="${row.id}">
-						<span class="glyphicon glyphicon-trash"></span>
-					</g:link>
-				</td>
+				
 			</tr>
 		</g:each>
 	</tbody>
