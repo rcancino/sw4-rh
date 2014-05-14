@@ -43,9 +43,9 @@
 					</li>
 					<li>
 						<g:jasperReport
-          						jasper="NominaCaratulaDet"
+          						jasper="Nomina"
           						format="PDF"
-          						name="Carátula Det">
+          						name="Detalle">
     							<g:hiddenField name="NOMINA" value="${nominaInstance.id}"/>
  						</g:jasperReport>
 					</li>

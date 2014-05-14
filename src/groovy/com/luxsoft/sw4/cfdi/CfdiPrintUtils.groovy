@@ -76,14 +76,14 @@ class CfdiPrintUtils {
 		parametros['RIESGO_PUESTO']=''+nomina.riesgoPuesto
 		parametros['TIPO_JORNADA']=nomina.tipoJornada
 		parametros['DEPARTAMENTO']=nomina.departamento
-		parametros['FECHA_INGRESO_LABORAL']=nomina.fechaInicioRelLaboral?.format("yyyy-MM-dd'T'HH:mm:ss")
+		parametros['FECHA_INGRESO_LABORAL']=nomina.fechaInicioRelLaboral?.format("yyyy-MM-dd")
 		parametros['ANTIGUEDAD']=''+nomina.antiguedad
 		parametros['TIPO_CONTRATO']=nomina.tipoContrato
 		parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor
 		parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
 		
-		parametros['FECHA_INICIAL']=nomina.fechaInicialPago?.format("yyyy-MM-dd'T'HH:mm:ss")
-		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd'T'HH:mm:ss")
+		parametros['FECHA_INICIAL']=nomina.fechaInicialPago?.format("yyyy-MM-dd")
+		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd")
 		parametros['DIAS_PAGADOS']=nomina.numDiasPagados
 		parametros['CLABE']=nomina.CLABE
 		parametros.put("TOTAL", comprobante.getTotal());

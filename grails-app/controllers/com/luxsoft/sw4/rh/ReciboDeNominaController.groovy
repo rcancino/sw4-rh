@@ -104,6 +104,7 @@ class ReciboDeNominaController {
 		params.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
 		//params['SALARIO_DIARIO_BASE']=nominaPorEmpleado.salarioDiarioBase
 		params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado
+		params['RECIBO_NOMINA']=nominaPorEmpleado.id 
 		//println 'Parametros enviados: '+params
 		chain(controller:'jasper',action:'index',model:[data:modelData],params:params)
 		//chain(controller:'jasper',action:'index',params:params)

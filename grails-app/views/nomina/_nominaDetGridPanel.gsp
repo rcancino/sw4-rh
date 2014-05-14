@@ -36,9 +36,10 @@
 							action="imprimirCfdi"
 							jasper="NominaDigitalCFDI" 
 							format="PDF" 
-							name="">
+							name="${row.cfdi.folio }">
 							<g:hiddenField name="id" value="${row.cfdi.id}"/>
 						</g:jasperReport>
+						
 					</g:if>
 					<g:else>
 						<p class="text-danger">PENDIENTE</p>
