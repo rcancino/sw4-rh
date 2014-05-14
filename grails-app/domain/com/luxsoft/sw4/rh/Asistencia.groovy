@@ -2,7 +2,7 @@ package com.luxsoft.sw4.rh
 
 import java.sql.Time
 
-import com.luxsoft.sw4.Periodo;
+import com.luxsoft.sw4.Periodo
 
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
