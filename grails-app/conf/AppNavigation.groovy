@@ -1,7 +1,9 @@
 navigation={
 	app{
 		home()
+		
 		catalogos(){
+			calendario()
 			puesto(controller:'puesto',action:'index')
 			empleado(controller:'empleado',action:'index'){
 				catalogo(controller:'empleado',action:'index')
@@ -22,6 +24,7 @@ navigation={
 				percepciones()
 				deducciones()
 			}
+			
             sat(controller:'catalogosDelSat'){
             	bancos()
             	percepciones()

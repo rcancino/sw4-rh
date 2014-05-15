@@ -1,5 +1,7 @@
 package com.luxsoft.sw4.rh
 
+import org.grails.databinding.BindingFormat;
+
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 
@@ -8,17 +10,25 @@ import groovy.transform.EqualsAndHashCode
 class Calendario {
 
 	Integer ejercicio
+	
+	
 	String tipo
+	
+	@BindingFormat("dd/MM/yyyy")
 	Date inicio
+	
+	@BindingFormat("dd/MM/yyyy")
 	Date fin
 	
 	String comentario
+	
 	List partidas
 
 	Date dateCreated
 	Date lastUpdated
 
     static constraints = {
+		ejercicio size:2014..2030
 		tipo inList:['SEMANA','QUINCENA','MES','CATORCENA','BIMESTRE','ESPECIAL']
     	comentario nullable:true,maxSize:200
     }
@@ -30,7 +40,6 @@ class Calendario {
 	
 	static mapping = {
 		partidas cascade: "all-delete-orphan"
-		ejercicio type:'calendar'
 		inicio type:'date'
 		fin type:'date'
 	}

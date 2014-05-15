@@ -5,7 +5,7 @@ class DiasFestivos {
 	Date dia
 	String descripcion
 
-	static belongsTo = [calendario: Calendario]
+	//static belongsTo = [calendario: Calendario]
 
     static constraints = {
     	descripcion blank:false

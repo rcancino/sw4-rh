@@ -1,6 +1,7 @@
 <li class="drop-down">
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown"> Cátalogos <b class="caret"></b></a>
 	<ul class="dropdown-menu">
+	
 		<li>
 			<g:link controller="departamento" action="index">Departamentos</g:link>
 		</li>
@@ -15,6 +16,9 @@
 		</li>
 		<li>
 			<g:link controller="conceptoDeNomina" action="index">Conceptos</g:link>
+		</li>
+		<li>
+			<g:link controller="calendario" action="index">Calendarios</g:link>
 		</li>
 
 		<li class="divider"></li>
