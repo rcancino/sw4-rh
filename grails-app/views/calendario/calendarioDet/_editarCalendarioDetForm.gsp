@@ -1,6 +1,4 @@
 <%@page expressionCodec="none"%>
-<r:require module="datepicker"/>
-
 
 <g:form action="editarPeriodo" id="${calendarioDetInstance.id}" class="form-horizontal" >
 	<div class="modal-body">
@@ -68,6 +66,3 @@
 	</div>
 </g:form>
 
-<r:script>
-
-</r:script>

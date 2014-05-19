@@ -16,6 +16,16 @@
 					<a href=" link_3" class="list-group-item" id="saveLink">
 						<span class="glyphicon glyphicon-floppy-save"></span> Salvar
 					</a>
+					<g:link action="delete" id="${calendarioInstance.id}" class="list-group-item" onclick="return confirm('¿ Elminar todo el calendario de operaciones?');">
+						<span class="glyphicon glyphicon-trash"></span> Eliminar
+					</g:link>
+					<g:if test="${!calendarioInstance.partidas}">
+						<g:link action="generarPeriodos" id="${calendarioInstance.id}" class="list-group-item" onclick="return confirm('¿ Generar periodos del trabajo para el calendario ?');">
+							<span class="glyphicon glyphicon-cog"></span> Generar Periodos
+						</g:link>
+					</g:if>
+					
+					
 					<a href="#" class="list-group-item" id="addPartida" data-toggle="modal" data-target="#periodoModalForm">
 						<span class="glyphicon glyphicon-floppy-plus"></span> Agregar
 					</a>

@@ -10,6 +10,8 @@ import static org.springframework.http.HttpStatus.*
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 @Transactional(readOnly = true)
 class CalendarioController {
+	
+	def calendarioService
 
     def index(Integer max) { 
 		params.max = Math.min(max ?: 10, 100)
@@ -73,6 +75,31 @@ class CalendarioController {
 		//render view:'edit', model:[calendarioInstance:calendarioInstance]
 	}
 	
+	@Transactional
+	def delete(Calendario calendarioInstance){
+		if(calendarioInstance==null){
+			notFound()
+			return
+		}
+		calendarioInstance.delete flush:true
+		flash.message="Calendario ${calendarioInstance.id} eliminado "
+		redirect action:'index'
+	}
+	
+	@Transactional
+	def generarPeriodos(Calendario calendarioInstance){
+		if(calendarioInstance==null){
+			notFound()
+			return
+		}
+		try{
+			calendarioInstance=calendarioService.generarPeriodos(calendarioInstance)
+		}catch(Exception ex){
+			flash.message="Error al generar periodo: "+ex.message
+		}
+		params.id=calendarioInstance.id
+		redirect action:'edit',params:params
+	}
 	
 	protected void notFound() {
 		request.withFormat {

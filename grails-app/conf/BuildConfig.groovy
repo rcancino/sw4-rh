@@ -118,6 +118,7 @@ grails.project.dependency.resolution = {
 
         //compile ":less-resources:1.3.3.2"
 		compile ":filterpane:2.3.3"
+		compile ':jquery-date-time-picker:0.1.0'
 		
     }
 	

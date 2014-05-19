@@ -26,7 +26,7 @@
 				<td><g:formatDate date="${row.asistencia.fechaFinal }" format="dd/MM/yyyy"/></td>
 				<td><g:formatDate date="${row.fechaDePago }" format="dd/MM/yyyy"/></td>
 				<td>
-					<g:link action="eliminarPeriodo" id="${row.id}">
+					<g:link action="eliminarPeriodo" id="${row.id}" onclick="return confirm('Elminar periodo de operación');">
 						<span class="glyphicon glyphicon-trash"></span>
 					</g:link>
 					

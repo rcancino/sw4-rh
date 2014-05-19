@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 import org.grails.databinding.BindingFormat;
 
 @Validateable
-class Periodo {
+class Periodo implements Comparable<Periodo>{
 	
 	@BindingFormat('dd/MM/yyyy')
 	Date fechaInicial
@@ -38,6 +38,11 @@ class Periodo {
 	Periodo(String f1,String f2){
 		fechaInicial=Date.parse(defaultFormat, f1).clearTime()
 		fechaFinal=Date.parse(defaultFormat,f2).clearTime()
+	}
+	
+	Periodo(Date f1,Date f2){
+		fechaInicial=f1
+		fechaFinal=f2
 	}
 	
 	String toString(){
@@ -87,7 +92,99 @@ class Periodo {
 		return p;
 	}
 	
+	public static List<Periodo> getPeriodosDelYear(int year){
+		Periodo p1=getPeriodoEnUnMes(0,year);
+		Periodo p2=getPeriodoEnUnMes(11,year);
+		Periodo p=new Periodo(p1.getFechaInicial(),p2.getFechaFinal());
+		return periodosMensuales(p);
+	}
 	
+	public static List<Periodo> periodosMensuales(final Periodo p){
+		List<Periodo> periodos=new ArrayList<Periodo>();
+		Set<Map<Integer,Integer>> meses=getMeses(p);
+		for(Map<Integer,Integer> mes:meses){
+			int year=mes.keySet().iterator().next();
+			int month=mes.values().iterator().next();
+			Periodo pp=getPeriodoEnUnMes(month,year);
+			periodos.add(pp);
+		}
+		Collections.sort(periodos);
+		if(periodos.size()==1){
+			periodos.clear();
+			periodos.add(p);
+		}
+		return periodos;
+	}
+	
+	public static Set<Map<Integer,Integer>> getMeses(final Periodo p){
+		
+		Set<Map<Integer,Integer>> set=new TreeSet<Map<Integer,Integer>>(new Comparator(){
+
+			@SuppressWarnings("unchecked")
+			public int compare(Object o1, Object o2) {
+				Map<Integer,Integer> map1=(Map<Integer,Integer>)o1;
+				Map<Integer,Integer> map2=(Map<Integer,Integer>)o2;
+				Integer y1=map1.entrySet().iterator().next().getKey();
+				Integer y2=map2.entrySet().iterator().next().getKey();
+				if(y1.equals(y2)){
+					Integer val1= map1.entrySet().iterator().next().getValue();
+					Integer val2= map2.entrySet().iterator().next().getValue();
+					return val1.compareTo(val2);
+				}
+				return y1.compareTo(y2);
+			}
+			
+		});
+		
+		///Set<Map<Integer,Integer>> set=new HashSet<Map<Integer,Integer>>();
+		//set=SetUtils.orderedSet(set);
+		for(Date d:p.getListaDeDias()){
+			Map<Integer,Integer> yearMonth=new HashMap<Integer,Integer>();
+			int year=obtenerYear(d);
+			int month=obtenerMes(d);
+			yearMonth.put(year,month);
+			//System.out.println("Analizando: Ao:"+year+"\t Mes: "+month);
+			set.add(yearMonth);
+		}
+		
+		return set;
+	}
+	
+	public List<Date> getListaDeDias(){
+		final List<Date> list=new ArrayList<Date>();
+		final Calendar calendar=Calendar.getInstance();
+		calendar.setTime(this.fechaInicial);
+		Date fecha=this.getFechaInicial();
+		while(fecha.compareTo(getFechaFinal())<=0){
+			list.add(fecha);
+			calendar.add(Calendar.DATE,1);
+			fecha=calendar.getTime();
+		}
+		return list;
+	}
+	
+	public static int obtenerMes(Date d){
+		Calendar c=Calendar.getInstance();
+		c.setTime(d);
+		int mes=c.get(Calendar.MONTH);
+		return mes;
+	}
+	
+	public static int obtenerYear(Date d){
+		Calendar c=Calendar.getInstance();
+		c.setTime(d);
+		int year=c.get(Calendar.YEAR);
+		return year;
+	}
+
+	@Override
+	public int compareTo(Periodo p2) {
+		// TODO Auto-generated method stub
+		if(fechaInicial.equals(p2-fechaInicial)){
+			return fechaFinal.compareTo(p2.fechaFinal);
+		}
+		return fechaInicial.compareTo(p2.fechaInicial);
+	}
 	
 
 }

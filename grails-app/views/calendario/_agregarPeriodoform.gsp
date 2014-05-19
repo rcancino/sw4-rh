@@ -20,6 +20,7 @@
     		<label for="inicio" class="col-sm-2 control-label">Inicio</label>
     		<div class="col-sm-10">
       			<g:field type="text" class="form-control dateField" id="inicio" name="inicio"/>
+      			
     		</div>
   		</div>
   		
