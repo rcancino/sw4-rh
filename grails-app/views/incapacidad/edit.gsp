@@ -13,7 +13,11 @@
 						<span class="glyphicon glyphicon-list"></span> Incapacidades
 					</g:link>
 				</li>
-				
+				<li>
+					<g:link controller="asistencia" action="index" class="list-group-item">
+						<span class="glyphicon glyphicon-list"></span> Control de asistencias
+					</g:link>
+				</li>
 			</ul>
 			<div class="col-md-12">
 				<g:render template="editForm"/>
