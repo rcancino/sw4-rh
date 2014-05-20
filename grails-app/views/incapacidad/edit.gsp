@@ -7,18 +7,18 @@
 	<div class="container">
 	
 		<div class="row">
-			<div class="col-md-3">
-				<div class="list-group">
-					<a href=" link_1" class="list-group-item active">Operaciones</a>
+			<ul class="nav nav-tabs">
+				<li>
 					<g:link action="index" class="list-group-item">
 						<span class="glyphicon glyphicon-list"></span> Incapacidades
 					</g:link>
-					<a href=" link_3" class="list-group-item">Buscar</a>
-				</div>
-			</div>
-			<div class="col-md-9">
+				</li>
+				
+			</ul>
+			<div class="col-md-12">
 				<g:render template="editForm"/>
 			</div>
+			
 		</div>
 	</div>
 	

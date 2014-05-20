@@ -6,7 +6,7 @@
 	<div class="panel-body">	
 		
 		<div class="row">
-			<div class="col-md-8">
+			<div class="col-md-6">
 				<g:form action="update" role="form" class="form-horizontal" >
 				<div class="form-group">
 				<fieldset>
@@ -25,9 +25,9 @@
 		    			</div>
 		  			</div>
 		</g:form>
-			</div><!-- End col-md-8 -->
+			</div><!-- End col-md-6 -->
 			
-			<div class="col-md-4">
+			<div class="col-md-6">
 				<fieldset><legend>Fechas</legend>
 				<ul>
 					<g:each in="${incapacidadInstance.partidas}" var="row">
@@ -36,15 +36,11 @@
 				</ul>
 				
 				<g:form action="agregarFecha" class="form-inline" id="${incapacidadInstance.id}">
-					<f:field bean="${new com.luxsoft.sw4.rh.IncapacidadDet()}" property="fecha" required="true"></f:field>
-					<div class="form-group">
-		    			<div class="col-sm-offset-4 col-sm-2">
-		    				<br/>
-		      				<button type="submit" class="btn btn-default">
-		      					<span class="glyphicon glyphicon-floppy-save"></span> Agregar
-		      				</button>
-		    			</div>
-		  			</div>
+					<f:field bean="${new com.luxsoft.sw4.rh.IncapacidadDet()}" property="fecha" required="true"/>
+					<button type="submit" class="btn btn-default">
+		      				<span class="glyphicon glyphicon-floppy-save"></span> Agregar
+		      		</button>
+					
 				</g:form>
 				</fieldset>
 				
