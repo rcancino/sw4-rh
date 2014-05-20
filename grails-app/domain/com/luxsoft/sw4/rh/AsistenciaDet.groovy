@@ -8,8 +8,8 @@ import groovy.transform.EqualsAndHashCode
 
 import org.grails.databinding.BindingFormat
 
-@ToString(includes='fecha',includeNames=true,includePackage=false)
-@EqualsAndHashCode(includes='fecha')
+@ToString(includes='fecha,entrada1,salida1,entrada2,salida2',includeNames=true,includePackage=false)
+//@EqualsAndHashCode(includes="fecha,entrada1,entrada2")
 class AsistenciaDet {
 	
 	@BindingFormat("dd/MM/yyyy")
@@ -24,6 +24,27 @@ class AsistenciaDet {
 	Time entrada3
 	Time salida3
 	
+	/**
+	 * Es el acumulado de retardos diarios menores a 10 minutos
+	 *  - Si en el periodo sobrepasa los 10 minutos pierde incentivo
+	 *  - El retardo
+	 */
+	Integer retardoMenor=0
+	
+	/**
+	 * Es el acumulado de retardos diarios mayores a 10 minutos
+	 *  - Se pierde el incentivo
+	 *  - Descuento de nomina por el acumulado
+	 */
+	Integer retardoMayor=0
+	
+	/**
+	 * Es el acumulado del retrsaso diario al regreso de la comida
+	 *  - Con un minuto se pierde el incentivo
+	 *
+	 */
+	Integer retardoComida=0
+	
 	String comentario
 	
 	Date dateCreated
@@ -31,7 +52,7 @@ class AsistenciaDet {
 	
 	static belongsTo = [asistencia:Asistencia]
 	
-	static embedded = ['periodo']
+	//static embedded = ['periodo']
 
     static constraints = {
 		comentario nullable:true

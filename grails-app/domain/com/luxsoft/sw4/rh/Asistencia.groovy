@@ -49,6 +49,8 @@ class Asistencia {
 	 */
 	Integer retardoComida=0
 	
+	List partidas
+	
 	static hasMany = [partidas:AsistenciaDet]
 	
 	String comentario

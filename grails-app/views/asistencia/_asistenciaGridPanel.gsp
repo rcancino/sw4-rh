@@ -30,3 +30,6 @@
 		</g:each>
 	</tbody>
 </table>
+<div class="pagination">
+	<g:paginate total="${asistenciaTotalCount ?: 0}" />
+</div>

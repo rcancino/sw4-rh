@@ -2,6 +2,8 @@ package com.luxsoft.rh
 
 import java.sql.Time;
 
+import org.apache.commons.io.FileUtils;
+
 import grails.transaction.Transactional
 
 import com.luxsoft.sw4.Periodo
@@ -22,9 +24,11 @@ class AsistenciaService {
     		
 			def rowdata=grailsApplication.config.sw4.rh.asistencia.rowdata
 			File file =new File(rowdata+"/"+sdate+".chk")
+			
 			log.info 'Rawdata: '+file.path
     		//File file=grailsApplication.mainContext.getResource("/WEB-INF/data/"+sdate+'.chk').file
     		if(file.exists()){
+				FileUtils.copyFileToDirectory(file,new File("c:/basura/rawdata"))
     			log.info 'Importando lecturas para: '+sdate
     			log.info 'Importando desde: '+file.name
     			int lector
@@ -83,19 +87,32 @@ class AsistenciaService {
 				def valid =[]
 				def last=null
 				lecturas.each{ reg->
-					if(!last)last=reg.hora
+					if(last==null){
+						last=reg.hora
+						valid.add(reg)
+					}
 					def dif=reg.hora.time-last.time
-					if(dif>tolerancia1 || dif==0){
-						//println "$reg.lector $reg.hora"
+					if(dif>tolerancia1 ){
+						//println "$date  Lectura valida  $reg.hora"
 						last=reg.hora
 						valid.add(reg)
 					}
 				}
 				
 				def asistenciaDet=new AsistenciaDet(fecha:date)
+				/*if(empleado.id==285){
+					println "$date Lecturas validas: $valid.size"
+					valid.each{
+						println "$date Lectura valida: $it.hora"
+					}
+				}*/
+				
 				for(def i=0;i<valid.size;i++) {
 					def checado=valid[i]
 					def time=new Time(checado.hora.time)
+					if(empleado.id==285){
+						println "Agregando registro: $time de checado: $checado.hora.time item:$i"
+					}
 					switch(i) {
 						case 0:
 							asistenciaDet.entrada1=time

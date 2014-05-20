@@ -50,6 +50,8 @@ navigation={
 				asistenciaSemanal(action:'asistenciaSemanal',titleText:'Semanal')
 				lectora()
 				incapacidad(controller:'incapacidad',action:'index',titleText:'Incapacidades')
+				incidencias()
+				vacaciones()
 			}
 			aportaciones()
 			
@@ -59,7 +61,7 @@ navigation={
 				reportes()
 
 			}
-			vacaciones()
+			
 			tiempoExtras(controller:'tiempoExtra',action:'index')
 			bonos(){
 				productividad()
