@@ -49,9 +49,10 @@ navigation={
 				asistenciaQuincenal(action:'asistenciaQuincenal',titleText:'Quincenal')
 				asistenciaSemanal(action:'asistenciaSemanal',titleText:'Semanal')
 				lectora()
+				incapacidad(controller:'incapacidad',action:'index',titleText:'Incapacidades')
 			}
 			aportaciones()
-			incapacidades()
+			
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
 				vigentes()
 				pagados()

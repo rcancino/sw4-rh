@@ -2,40 +2,44 @@ package com.luxsoft.sw4.rh
 
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.sat.SatIncapacidad
+import groovy.transform.EqualsAndHashCode
 
+@EqualsAndHashCode(includes='empleado,referenciaImms')
 class Incapacidad {
 
-	ConceptoDeNomina concepto
+	static searchable = true
+	
 	Empleado empleado
-	Periodo periodo
-	NominaPorEmpleado nominaPorEmpleado
+	
 	String referenciaImms
+	
 	String comentario
+	
 	SatIncapacidad tipo
+	
 	Integer dias
-	BigDecimal salarioBase
-	BigDecimal importe
 
 	Date dateCreated
+	
 	Date lastUpdated
 
     static constraints = {
-    	nominaPorEmpleado nullable:true
+    	
     	comentario nullable:true,maxSize:250
     }
+	
+	static hasMany = [partidas:IncapacidadDet]
 
     static transients = ['dias']
 	
-	static embedded = ['periodo']
+	static mapping = {
+		partidas cascade: "all-delete-orphan"
+	}
 
     String toString(){
-    	return " $tipo.descripcion  $concepto.clave $empleado Dias:$dias Importe:$importe"
+    	return "$empleado $tipo  "
     }
 
-    Incapacidad actualizar(){
-    	this.importe=dias*salarioBase
-    	return this
-    }
-
+   
 
 }

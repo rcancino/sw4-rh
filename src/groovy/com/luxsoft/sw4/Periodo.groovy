@@ -30,6 +30,8 @@ class Periodo implements Comparable<Periodo>{
 		})
 	}
 	
+	static transients = ['listaDeDias']
+	
 	Periodo(){
 		fechaInicial=new Date()
 		fechaFinal=new Date()
@@ -51,6 +53,30 @@ class Periodo implements Comparable<Periodo>{
 	
 	def int dias(){
 		return fechaFinal-fechaInicial
+	}
+	
+	public List<Date> getListaDeDias(){
+		final List<Date> list=new ArrayList<Date>();
+		final Calendar calendar=Calendar.getInstance();
+		calendar.setTime(this.fechaInicial);
+		Date fecha=this.getFechaInicial();
+		while(fecha.compareTo(getFechaFinal())<=0){
+			list.add(fecha);
+			calendar.add(Calendar.DATE,1);
+			fecha=calendar.getTime();
+		}
+		return list;
+	}
+	
+	
+
+	@Override
+	public int compareTo(Periodo p2) {
+		// TODO Auto-generated method stub
+		if(fechaInicial.equals(p2-fechaInicial)){
+			return fechaFinal.compareTo(p2.fechaFinal);
+		}
+		return fechaInicial.compareTo(p2.fechaInicial);
 	}
 	
 	public static Periodo getCurrentMonth() {
@@ -116,6 +142,8 @@ class Periodo implements Comparable<Periodo>{
 		return periodos;
 	}
 	
+	
+	
 	public static Set<Map<Integer,Integer>> getMeses(final Periodo p){
 		
 		Set<Map<Integer,Integer>> set=new TreeSet<Map<Integer,Integer>>(new Comparator(){
@@ -150,19 +178,6 @@ class Periodo implements Comparable<Periodo>{
 		return set;
 	}
 	
-	public List<Date> getListaDeDias(){
-		final List<Date> list=new ArrayList<Date>();
-		final Calendar calendar=Calendar.getInstance();
-		calendar.setTime(this.fechaInicial);
-		Date fecha=this.getFechaInicial();
-		while(fecha.compareTo(getFechaFinal())<=0){
-			list.add(fecha);
-			calendar.add(Calendar.DATE,1);
-			fecha=calendar.getTime();
-		}
-		return list;
-	}
-	
 	public static int obtenerMes(Date d){
 		Calendar c=Calendar.getInstance();
 		c.setTime(d);
@@ -175,15 +190,6 @@ class Periodo implements Comparable<Periodo>{
 		c.setTime(d);
 		int year=c.get(Calendar.YEAR);
 		return year;
-	}
-
-	@Override
-	public int compareTo(Periodo p2) {
-		// TODO Auto-generated method stub
-		if(fechaInicial.equals(p2-fechaInicial)){
-			return fechaFinal.compareTo(p2.fechaFinal);
-		}
-		return fechaInicial.compareTo(p2.fechaInicial);
 	}
 	
 

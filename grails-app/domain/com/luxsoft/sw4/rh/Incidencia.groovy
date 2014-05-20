@@ -7,22 +7,24 @@ import groovy.time.TimeCategory
 
 class Incidencia {
 
-	ConceptoDeNomina concepto
+	
 	Empleado empleado
+	
 	Periodo periodo
-	NominaPorEmpleado nominaPorEmpleado
-	BigDecimal salarioDiario
-	BigDecimal total
+	
 	List partidas
+	
 	String comentario
+	
 	int diasDescanso
 
 	Date dateCreated
+	
 	Date lastUpdated
 
     static constraints = {
     	comentario nullable:true
-    	nominaPorEmpleado nullable:true
+    	
     }
 
     static hasMany = [partidas: IncidenciaDet]
@@ -30,7 +32,7 @@ class Incidencia {
     static embedded = ['periodo']
 
     String toString(){
-    	return "$concepto.descripcion $empleado  $total"
+    	return "$empleado  $total"
     }
 	
 	private void calcularDescuento(BigDecimal horas) {
