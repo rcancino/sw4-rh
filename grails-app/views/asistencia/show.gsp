@@ -59,6 +59,12 @@
 										value="${asistenciaInstance.id}" />
 								</g:jasperReport>
 							</li>
+							<li><g:jasperReport jasper="TarjetaDeAsistencia"
+									format="PDF" name="Asistencia RH">
+									<g:hiddenField name="ASISTENCIA_ID"
+										value="${asistenciaInstance.id}" />
+								</g:jasperReport>
+							</li>
 						</ul>
 					</div>
 					
