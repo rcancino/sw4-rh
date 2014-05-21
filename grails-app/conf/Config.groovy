@@ -90,10 +90,11 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
-		sw4.rh.asistencia.rowdata="Y://NOMIPLUS//RAWDATA"
+		sw4.rh.asistencia.rawdata="/Users/rcancino/github/Data/rawdata"
     }
     production {
         grails.logging.jul.usebridge = false
+		sw4.rh.asistencia.rawdata="Y://NOMIPLUS//RAWDATA"
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }

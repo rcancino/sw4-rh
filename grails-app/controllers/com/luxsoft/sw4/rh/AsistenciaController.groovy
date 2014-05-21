@@ -72,4 +72,9 @@ class AsistenciaController {
 		asistenciaService.registrarAsistencias(periodo,tipo)
 		redirect action:'index'
 	}
+	
+	def actualizar(Long id) {
+		def asistencia=asistenciaService.actualizarAsistencia(id)
+		render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+	}
 }

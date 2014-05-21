@@ -9,9 +9,10 @@
 			<th><g:message code="asistenciaDet.salida1.label" default="Sal 1"/></th>
 			<th><g:message code="asistenciaDet.entrada2.label" default="Ent 2"/></th>
 			<th><g:message code="asistenciaDet.salida2.label" default="Sal 1"/></th>
-			<th><g:message code="asistenciaDet.retardo.label" default="Retardo"/></th>
-			<th><g:message code="asistenciaDet.comida.label" default="R. comida"/></th>
-			
+			<th><g:message code="asistenciaDet.retardoMenor.label" default="Ret men"/></th>
+			<th><g:message code="asistenciaDet.retardoMayor.label" default="Ret may"/></th>
+			<th><g:message code="asistenciaDet.retardoComida.label" default="Ret com"/></th>
+			<th><g:message code="asistenciaDet.comentario.label" default="Comentario"/></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -27,8 +28,10 @@
 				<td><g:formatDate date="${row.salida1}" format="HH:mm"/></td>
 				<td><g:formatDate date="${row.entrada2}" format="HH:mm"/></td>
 				<td><g:formatDate date="${row.salida2}" format="HH:mm"/></td>
-				<td></td>
-				<td></td>
+				<td><g:fieldValue bean="${row}" field="retardoMenor"/> </td>
+				<td><g:fieldValue bean="${row}" field="retardoMayor"/> </td>
+				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
+				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 			</tr>
 		</g:each>
 	</tbody>

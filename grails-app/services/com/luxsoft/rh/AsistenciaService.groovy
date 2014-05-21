@@ -5,6 +5,8 @@ import java.sql.Time;
 import org.apache.commons.io.FileUtils;
 
 import grails.transaction.Transactional
+import groovy.time.TimeCategory;
+import groovy.time.TimeDuration;
 
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.Asistencia;
@@ -22,13 +24,13 @@ class AsistenciaService {
     	for(date in periodo.fechaInicial..periodo.fechaFinal){
     		def sdate=date.format('yyyyMMdd')
     		
-			def rowdata=grailsApplication.config.sw4.rh.asistencia.rowdata
-			File file =new File(rowdata+"/"+sdate+".chk")
+			def rawdata=grailsApplication.config.sw4.rh.asistencia.rawdata
+			File file =new File(rawdata+"/"+sdate+".chk")
 			
-			log.info 'Rawdata: '+file.path
+			log.info 'Rawdata: '+file.path+' Exists: '+file.exists()
     		//File file=grailsApplication.mainContext.getResource("/WEB-INF/data/"+sdate+'.chk').file
     		if(file.exists()){
-				FileUtils.copyFileToDirectory(file,new File("c:/basura/rawdata"))
+				//FileUtils.copyFileToDirectory(file,new File("c:/basura/rawdata"))
     			log.info 'Importando lecturas para: '+sdate
     			log.info 'Importando desde: '+file.name
     			int lector
@@ -79,7 +81,7 @@ class AsistenciaService {
 				asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo)
 			}
 			for(date in periodo.fechaInicial..periodo.fechaFinal){
-				def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){numeroDeEmpleado==empleado.perfil.numeroDeTrabajador && fecha==date}
+				def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){numeroDeEmpleado==empleado?.perfil?.numeroDeTrabajador && fecha==date}
 				lecturas.sort(){ c->
 					c.hora
 				}
@@ -100,19 +102,12 @@ class AsistenciaService {
 				}
 				
 				def asistenciaDet=new AsistenciaDet(fecha:date)
-				/*if(empleado.id==285){
-					println "$date Lecturas validas: $valid.size"
-					valid.each{
-						println "$date Lectura valida: $it.hora"
-					}
-				}*/
+				
 				
 				for(def i=0;i<valid.size;i++) {
 					def checado=valid[i]
 					def time=new Time(checado.hora.time)
-					if(empleado.id==285){
-						println "Agregando registro: $time de checado: $checado.hora.time item:$i"
-					}
+					
 					switch(i) {
 						case 0:
 							asistenciaDet.entrada1=time
@@ -134,6 +129,7 @@ class AsistenciaService {
 			}
 			
 			try {
+				recalcularRetardos(asistencia)
 				asistencia.save failOnError:true
 			} catch (Exception e) {
 				e.printStackTrace()
@@ -141,64 +137,71 @@ class AsistenciaService {
 		}
 		
 	}
-
-    def registrarAsistencias(Periodo periodo) {
-
-		//numero magico
-		def tolerancia1=(60*1000*10)
-		
-		for(date in periodo.fechaInicial..periodo.fechaFinal){
-			def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){fecha==date}
-			def map=lecturas.groupBy{it.numeroDeEmpleado}
-			map.each{ key,val->
-				
-				def empleado=Empleado.find("from Empleado e where e.perfil.numeroDeTrabajador=?",[key])
-				if(!empleado) {
-					log.info 'Empleado no registrado: '+key
-					
+	
+	def actualizarAsistencia(Long id) {
+		Asistencia asistencia=Asistencia.get(id)
+		return recalcularRetardos(asistencia)
+	}
+	
+	def recalcularRetardos(Asistencia asistencia) {
+		def retardoMenor=0
+		asistencia.partidas.each{
+			
+			it.retardoMenor=0
+			it.retardoMayor=0
+			it.retardoComida=0
+			
+			if(it.entrada1) {
+				def entrada=Time.valueOf('09:00:00')
+				TimeDuration duration=TimeCategory.minus(it.entrada1,entrada)
+				def retraso=duration.getMinutes()
+				if(retraso>0 && retraso<=10) {
+					//println 'Entrada: '+it.entrada1+ "  Retraso: "+duration.getMinutes()
+					it.retardoMenor=retraso
 				}
-				println 'Procesando: '+key+' '+empleado
-				val.sort(){ c->
-					c.hora
+				if(retraso>10) {
+					it.retardoMayor=retraso
 				}
-				def last=null
-				def valid =[]
-				val.each{ reg->
-					if(!last)last=reg.hora
-					def dif=reg.hora.time-last.time
-					if(dif>tolerancia1 || dif==0){
-						//println "$reg.lector $reg.hora"
-						last=reg.hora
-						valid.add(reg)
-					}
-				}
-				def asistencia=Asistencia.findWhere(empleado:empleado,fecha:date)
-				if(asistencia==null)
-					asistencia=new Asistencia(empleado:empleado,fecha:date)
-				for(def i=0;i<valid.size;i++) {
-					def checado=valid[i]
-					def time=new Time(checado.hora.time)
-					switch(i) {
-						case 0:
-							
-							asistencia.entrada1=time
-							break
-						case 1:
-							asistencia.salida1=time
-							break
-						case 2:
-							asistencia.entrada2=time
-							break
-						case 3:
-							asistencia.salida2=time
-							break
-						default:
-							break
-					}
-				}
-				if(asistencia.empleado)	
-					asistencia.save(failOnError:true)
 			}
+			if(it.salida1 && it.entrada2) {
+				TimeDuration comida=TimeCategory.minus(it.entrada2,it.salida1)
+				def retComida=( (comida.getHours()-1)*60 + comida.getMinutes() )
+				
+				if(retComida>0) {
+					it.retardoComida=retComida
+				}
+				
+			}
+			
+			def dia=it.fecha.toCalendar().get(Calendar.DAY_OF_WEEK)
+			
+			switch (dia){
+				case Calendar.SUNDAY:
+					it.comentrio='DESCANSO'
+					break
+				case Calendar.SATURDAY:
+					if(it.entrada1 || it.salida1 ) {
+						it.comentario='FALTA'
+						asistencia.faltas+=1
+					}
+					break
+				default:
+					if(it.entrada1 || it.salida1 || it.entrada2 || it.salida2) {
+						it.comentario='FALTA'
+						asistencia.faltas+=1
+					}
+					break
+			}
+			
 		}
-    }
+		
+		asistencia.retardoMenor=asistencia.partidas.sum 0,{it.retardoMenor}
+		asistencia.retardoMayor=asistencia.partidas.sum 0,{it.retardoMayor}
+		asistencia.retardoComida=asistencia.partidas.sum 0,{it.retardoComida}
+		
+		return asistencia
+	}
+	
+	
+    
 }

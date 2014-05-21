@@ -70,8 +70,8 @@
 							Operaciones <span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu">
-							<li><g:link controller="procesadorDeNomina"
-									action="generarPlantilla" id="${asistenciaInstance.id}">
+							<li><g:link 
+									action="actualizar" id="${asistenciaInstance.id}">
 									<span class="glyphicon glyphicon-cog"></span> Actualizar
 						</g:link></li>
 							<li><g:link action="delete" id="${asistenciaInstance.id}"
