@@ -55,14 +55,19 @@
 						<ul class="dropdown-menu">
 							<li><g:jasperReport jasper="TarjetaDeAsistencia"
 									format="PDF" name="Tarjeta">
-									<g:hiddenField name="ASISTENCIA_ID"
-										value="${asistenciaInstance.id}" />
+									<g:hiddenField name="ID" value="${asistenciaInstance.id}" />
+									<g:hiddenField name="FECHA_INI" 
+										value="${g.formatDate(date:asistenciaInstance.periodo.fechaInicial,format:'yyyy/MM/dd')}" />
+									<g:hiddenField name="FECHA_FIN" 
+										value="${g.formatDate(date:asistenciaInstance.periodo.fechaFinal,format:'yyyy/MM/dd')}" />
 								</g:jasperReport>
 							</li>
-							<li><g:jasperReport jasper="TarjetaDeAsistencia"
+							<li><g:jasperReport jasper="AsistenciaRH"
 									format="PDF" name="Asistencia RH">
-									<g:hiddenField name="ASISTENCIA_ID"
-										value="${asistenciaInstance.id}" />
+									<g:hiddenField name="SFECHA_INI" 
+										value="${g.formatDate(date:asistenciaInstance.periodo.fechaInicial,format:'dd/MM/yyyy')}" />
+									<g:hiddenField name="SFECHA_FIN" 
+										value="${g.formatDate(date:asistenciaInstance.periodo.fechaFinal,format:'dd/MM/yyyy')}" />
 								</g:jasperReport>
 							</li>
 						</ul>

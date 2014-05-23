@@ -77,4 +77,9 @@ class AsistenciaController {
 		def asistencia=asistenciaService.actualizarAsistencia(id)
 		render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 	}
+	/*
+	def imprimirAsistencia(Asistencia asistencia){
+		$P{SFECHA_INI}
+		new java.text.SimpleDateFormat('yyyy/MM/dd').parse('23/')
+	}*/
 }

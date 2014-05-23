@@ -177,17 +177,17 @@ class AsistenciaService {
 			
 			switch (dia){
 				case Calendar.SUNDAY:
-					it.comentrio='DESCANSO'
+					it.comentario='DESCANSO'
 					break
 				case Calendar.SATURDAY:
 					if(it.entrada1 || it.salida1 ) {
-						it.comentario='FALTA'
+						it.comentario='OK'
 						asistencia.faltas+=1
 					}
 					break
 				default:
 					if(it.entrada1 || it.salida1 || it.entrada2 || it.salida2) {
-						it.comentario='FALTA'
+						it.comentario='OK'
 						asistencia.faltas+=1
 					}
 					break
