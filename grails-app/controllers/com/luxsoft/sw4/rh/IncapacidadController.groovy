@@ -1,12 +1,13 @@
 package com.luxsoft.sw4.rh
 
 import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional;
 import static org.springframework.http.HttpStatus.*
 
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class IncapacidadController {
     
-	static scaffold = true
+	
 	
 	def incapacidadService
 	
@@ -23,8 +24,26 @@ class IncapacidadController {
 	def create() {
 		[incapacidadInstance:new Incapacidad(params)]
 	}
+	
 	def edit(Incapacidad incapacidadInstance) {
+		if(incapacidadInstance==null) {
+			notFound()
+			return
+		}
 		[incapacidadInstance:incapacidadInstance]
+	}
+	
+	def update(Incapacidad incapacidadInstance) {
+		if(incapacidadInstance==null) {
+			notFound()
+			return
+		}
+		if(incapacidadInstance.hasErrors()) {
+			render view:'edit',model:[incapacidadInstance:incapacidadInstance]
+		}
+		incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
+		flash.message="Incapacidad actualizada: "+incapacidadInstance.id
+		redirect action:'index'
 	}
 	
 	def save(Incapacidad incapacidadInstance) {
@@ -33,11 +52,11 @@ class IncapacidadController {
 			return
 		}
 		if(incapacidadInstance.hasErrors()) {
-			respond view:'create',model:[incapacidadInstance:incapacidadInstance]
+			respond incapacidadInstance,[view:'edit']
 		}
 		incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
 		flash.message="Incapacidad $incapacidadInstance.id creada"
-		redirect action:'index'
+		respond incapacidadInstance,[view:'edit']
 	}
 	
 	def agregarFecha(Incapacidad incapacidadInstance) {
@@ -45,10 +64,37 @@ class IncapacidadController {
 			notFound()
 			return
 		}
-		incapacidadInstance.addToPartidas(fecha:params.date('fecha', 'dd/MM/yyyy'))
-		incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
-		flash.message="Fecha agregada"
-		render view:'edit',model:[incapacidadInstance:incapacidadInstance]
+		def dia=params.date('fecha', 'dd/MM/yyyy')
+		if(dia) {
+			incapacidadInstance.addToDias(dia)
+			incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
+			flash.message="Fecha agregada"
+		}
+		respond incapacidadInstance,[view:'edit']
+	}
+	
+	def eliminarFecha(Incapacidad incapacidadInstance) {
+		if(incapacidadInstance==null) {
+			notFound()
+			return
+		}
+		def dia=params.date('fecha', 'dd/MM/yyyy')
+		if(dia) {
+			incapacidadInstance.removeFromDias(dia)
+			incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
+			flash.message="Fecha eliminada"
+		}
+		respond incapacidadInstance,[view:'edit']
+	}
+	
+	def delete(Incapacidad incapacidadInstance) {
+		if(incapacidadInstance==null) {
+			notFound()
+			return
+		}
+		incapacidadService.eliminar(incapacidadInstance)
+		flash.message="Incapacidad $incapacidadInstance.id eliminada"
+		redirect view:'index'
 	}
 	
 	protected void notFound() {

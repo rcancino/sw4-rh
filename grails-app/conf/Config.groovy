@@ -122,6 +122,8 @@ log4j = {
 	info 'grails.app.controllers',
 		 'grails.app.services'
 	
+	info 'grails.plugin.cache'
+	
 }
 
 grails.plugins.twitterbootstrap.fixtaglib = true

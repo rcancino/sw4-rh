@@ -35,5 +35,5 @@
 	</tbody>
 </table>
 <div class="pagination">
-	<g:paginate total="${empleadoInstanceCount ?: 0}" />
+	<g:paginate total="${empleadoInstanceCount ?: 0}" params="[tipo:tipo]"/>
 </div>

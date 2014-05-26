@@ -11,7 +11,19 @@
 		%{-- <g:link action="update" class="btn btn-primary" id="${empleadoInstance.id}">Salvar</g:link> --}%
 		<g:link class="btn btn-default" action="generales" id="${empleadoInstance.id}" params="[edit:'true']">Modificar</g:link>
 	</g:if>
-	
+	<div class="btn-group">
+				<button type="button" name="reportes" class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="menu">Reportes <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li>
+						<g:jasperReport
+          						jasper="CaratulaDeEmpleados"
+          						format="PDF"
+          						name="Carátula">
+    							<g:hiddenField name="ID" value="${empleadoInstance.id}"/>
+ 						</g:jasperReport>
+					</li>
+				</ul>
+				</div>
 </content>
 
 <content tag="content">

@@ -10,5 +10,10 @@ class IncapacidadService {
 		return incapacidad
     }
 	
+	def eliminar(Incapacidad incapacidad) {
+		incapacidad.delete flush:true
+		return true
+	}
+	
 	
 }

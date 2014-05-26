@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh
 
-class BajaDeEmpleado {
+class BajaDeEmpleado implements Serializable{
 	
 	Empleado empleado
 	Date fecha

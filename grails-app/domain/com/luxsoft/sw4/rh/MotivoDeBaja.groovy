@@ -6,7 +6,7 @@ package com.luxsoft.sw4.rh
  * @author rcancino
  *
  */
-class MotivoDeBaja {
+class MotivoDeBaja implements Serializable{
 	
 	String clave
 	String descripcion

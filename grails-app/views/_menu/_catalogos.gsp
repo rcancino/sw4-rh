@@ -20,6 +20,9 @@
 		<li>
 			<g:link controller="calendario" action="index">Calendarios</g:link>
 		</li>
+		<li>
+			<g:link controller="diaFestivo" action="index">Dias Festivos</g:link>
+		</li>
 
 		<li class="divider"></li>
 		<li>

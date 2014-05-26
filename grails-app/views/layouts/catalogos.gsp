@@ -18,6 +18,11 @@
 							</div>
 						</g:if>
 					</div>
+					<g:if test="${pageProperty(name:'page.gridPanel')}">
+						<g:pageProperty name="page.gridPanel"/>
+					</g:if>
+					<g:else>
+					
 					
 					<div class="btn-group">
 						<g:link action="index" class="btn btn-default">
@@ -35,6 +40,7 @@
 							<span class="glyphicon glyphicon-filter"></span> Filtrar
 						</g:link>
 					</div>
+					</g:else>
 					<div class="grid-panel">
 						<g:pageProperty name="page.grid"/>
 					</div>

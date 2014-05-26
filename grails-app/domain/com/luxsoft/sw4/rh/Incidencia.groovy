@@ -1,65 +1,46 @@
 package com.luxsoft.sw4.rh
 
-import com.luxsoft.sw4.Periodo
+import com.luxsoft.sw4.Autorizacion
+import groovy.transform.ToString
+import groovy.transform.EqualsAndHashCode
 
-import groovy.time.TimeCategory
+import org.grails.databinding.BindingFormat
 
-
+@ToString(includes='empleado,fecha,tipo,autorizacion',includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes="empleado,fecha,tipo")
 class Incidencia {
 
+	static searchable = true
 	
 	Empleado empleado
 	
-	Periodo periodo
+	@BindingFormat("dd/MM/yyyy")
+	Date fecha
 	
-	List partidas
+	Autorizacion autorizacion
+	
+	String tipo
 	
 	String comentario
 	
-	int diasDescanso
+	
 
 	Date dateCreated
-	
 	Date lastUpdated
 
-    static constraints = {
-    	comentario nullable:true
-    	
-    }
-
-    static hasMany = [partidas: IncidenciaDet]
-
-    static embedded = ['periodo']
-
-    String toString(){
-    	return "$empleado  $total"
-    }
+	static constraints = {
+		comentario nullable:true,maxSize:250
+		autorizacion nullable:true
+		tipo inList:['FALTA','RETARDO','PERMISO']
+	}
 	
-	private void calcularDescuento(BigDecimal horas) {
+	//static hasMany = [dias:Date]
+	
+	
+	
+	static mapping = {
 		
+		fecha type:'date'
 	}
-
-	public Integer getDias(){
-		use(TimeCategory){
-			def duration= periodo.fechaFinal-periodo.fechaInicial+1.day
-			return duration.days
-		}
-	}
-
-    Incidencia actualizarImportes(){
-		def salario=this.salarioDiario
-		def acumulado=0.0
-		def dias=periodo.dias()
-		partidas?.each{ it ->
-
-			it.actualizar(salario,dias)
-			.actualizarImporteProporcional(salario,dias,diasDescanso)
-			it.total=it.importe+it.importeProporcional
-			acumulado+=it.total
-		}
-		this.total=acumulado
-        this
-    }
-
     
 }

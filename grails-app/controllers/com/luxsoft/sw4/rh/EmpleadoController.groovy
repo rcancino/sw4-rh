@@ -16,7 +16,14 @@ class EmpleadoController {
 		params.max = Math.min(max ?: 50, 100)
 		params.sort=params.sort?:'apellidoPaterno'
 		params.order='asc'
-		[empleadoInstanceList:Empleado.list(params),empleadoInstanceCount:Empleado.count()]
+		def tipo=params.tipo?:'QUINCENAL'
+		def query=Empleado.where{
+			status=='ALTA' && salario.periodicidad==tipo
+		}
+		def list=query.list(params)
+		[empleadoInstanceList:list,
+			empleadoInstanceCount:query.count(),
+			tipo:tipo]
 	}
 	
 	def show(Empleado empleadoInstance){

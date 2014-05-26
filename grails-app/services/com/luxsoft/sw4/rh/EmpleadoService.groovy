@@ -1,5 +1,6 @@
 package com.luxsoft.sw4.rh
 
+import grails.plugin.cache.Cacheable;
 import grails.transaction.Transactional
 import grails.validation.ValidationException
 import groovy.sql.Sql;
@@ -12,6 +13,13 @@ import com.luxsoft.sw4.Periodo;
 class EmpleadoService {
 	
 	def dataSource
+	
+	@Cacheable('catalogoDeEmpleados')
+	def getEmpleados() {
+		return Empleado.findAll{status=='ALTA'}
+	}
+	
+	
 	
 	Empleado save(Empleado empleado) {
 		empleado.status='ALTA'

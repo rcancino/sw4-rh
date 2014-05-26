@@ -1,7 +1,10 @@
 package com.luxsoft.sw4.rh
 
-import com.luxsoft.sw4.Periodo
+
+import java.util.Set;
+
 import com.luxsoft.sw4.rh.sat.SatIncapacidad
+
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes='empleado,referenciaImms')
@@ -17,7 +20,7 @@ class Incapacidad {
 	
 	SatIncapacidad tipo
 	
-	Integer dias
+	Set dias=new HashSet()
 
 	Date dateCreated
 	
@@ -27,13 +30,14 @@ class Incapacidad {
     	
     	comentario nullable:true,maxSize:250
     }
-	
-	static hasMany = [partidas:IncapacidadDet]
 
-    static transients = ['dias']
+	static hasMany = [dias:Date]
 	
 	static mapping = {
-		partidas cascade: "all-delete-orphan"
+		hasMany joinTable: [name: 'incapacidad_dias',
+			key: 'incapacidad_id',
+			column: 'fecha',
+			type: "date"]
 	}
 
     String toString(){

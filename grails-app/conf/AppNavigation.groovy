@@ -24,7 +24,7 @@ navigation={
 				percepciones()
 				deducciones()
 			}
-			
+			diasFestivos(controller:'diasFestivos',action:'index')
             sat(controller:'catalogosDelSat'){
             	bancos()
             	percepciones()
@@ -50,8 +50,8 @@ navigation={
 				asistenciaSemanal(action:'asistenciaSemanal',titleText:'Semanal')
 				lectora()
 				incapacidad(controller:'incapacidad',action:'index',titleText:'Incapacidades')
-				incidencias()
-				vacaciones()
+				incidencias(controller:'incidencia',action:'index')
+				vacaciones(controller:'vacaciones',action:'index')
 				tiempoExtra(controller:'tiempoExtra',action:'index')
 			}
 			aportaciones()

@@ -2,7 +2,7 @@ package com.luxsoft.sw4.rh
 
 import com.luxsoft.sw4.Direccion;
 
-class EmpleadoContacto {
+class EmpleadoContacto implements Serializable{
 	
 	Empleado empleado
 	String nombre
