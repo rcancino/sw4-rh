@@ -63,6 +63,20 @@ class NominaController {
             ,[periodicidad,nominaId])
     }
 	
+	def timbrar(Nomina nominaInstance) {
+		if(nominaInstance==null){
+			notFound()
+			return
+		}
+		try {
+			nominaService.timbrar(nominaInstance.id)
+		}catch(NominaException ne) {
+			flash.message=ne.message
+			log.error ne
+		}
+		redirect action:'show',params:[id:nominaInstance.id]
+	}
+	
 	def importar(ImportacionCmd cmd) {
 		if(request.method=='GET') {
 			render view:'importar',model:[importacionCmd:new ImportacionCmd()]

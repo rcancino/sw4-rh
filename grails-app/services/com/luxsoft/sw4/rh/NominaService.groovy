@@ -9,6 +9,8 @@ import grails.events.Listener
 
 @Transactional
 class NominaService {
+	
+	def cfdiService
 
 	def eliminarNomina(Long id){
 		def nomina=Nomina.get(id)
@@ -106,6 +108,26 @@ class NominaService {
 				throw new NominaException(message:"La nomina ${nomina.id} ya tiene partidas timbradas",nomina:nomina)
 			}
 		}
+	}
+	
+	def timbrar(Long nominaId) {
+		def nomina =Nomina.get(nominaId)
+		if(nomina.status=='CERRADA') {
+			throw new NominaException(message:"Nomina cerrada no se puede timbrar",nomina:nomina)
+		}
+		
+		for(NominaPorEmpleado ne:nomina.partidas){
+			try{
+			  if(ne.cfdi==null){
+				log.info 'Timbrando Ne id:'+ne.id
+				def res=cfdiService.generarComprobante(ne.id)
+			  }  
+			}catch(Exception ex){
+				log.error 'Error timbrando '+ExceptionUtils.getRootCauseMessage(ex)
+				
+			}
+		}
+	  nomina.status='CERRADA'
 	}
 }
 

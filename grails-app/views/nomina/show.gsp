@@ -78,6 +78,11 @@
 							<span class="glyphicon glyphicon-trash"></span> Eliminar
 						</g:link> 
 					</li>
+					<li>
+						<g:link action="timbrar" id="${nominaInstance.id}" onclick="return confirm('Timbrar toda la nomina?');"> 
+							 Timbrar
+						</g:link> 
+					</li>
 				</ul>
 			</div> <!-- Fin .btn-group -->
 			
