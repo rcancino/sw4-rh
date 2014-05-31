@@ -54,6 +54,7 @@ navigation={
 				vacaciones(controller:'vacaciones',action:'index')
 				tiempoExtra(controller:'tiempoExtra',action:'index')
 			}
+			incentivo(controller:'incentivo',action:'index')
 			aportaciones()
 			
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){

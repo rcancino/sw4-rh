@@ -8,6 +8,7 @@ import groovy.transform.EqualsAndHashCode
 @EqualsAndHashCode(includes='folio')
 class CalendarioDet {
 	
+	//static searchable = true
 	
 	Integer folio
 	
@@ -25,6 +26,7 @@ class CalendarioDet {
 
     static constraints = {
 		asistencia nullable:true
+		fechaDePago nullable:true
     }
 	
 	static mapping = {
@@ -32,6 +34,5 @@ class CalendarioDet {
 		fin type:'date'
 		fechaDePago:'date'
 		sort "inicio"
-		
 	}
 }

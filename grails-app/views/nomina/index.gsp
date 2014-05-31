@@ -43,6 +43,10 @@
 							<g:link action="filtrar" class="btn btn-default" >
 								<span class="glyphicon glyphicon-filter"></span> Filtrar
 							</g:link>
+							<g:link action="importar" class="btn btn-default" params="[periodicidad:periodicidad]" 
+								>
+								<span class="glyphicon glyphicon-filter"></span> Importar
+							</g:link>
 							</div>
 						</div>
 				<g:render template="nominaGridPanel"/>

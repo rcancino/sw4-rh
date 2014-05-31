@@ -48,7 +48,7 @@ class Periodo implements Comparable<Periodo>{
 	}
 	
 	String toString(){
-		"${fechaInicial.format(defaultFormat)} - ${fechaFinal.format(defaultFormat)}"
+		"${fechaInicial?.format(defaultFormat)} - ${fechaFinal?.format(defaultFormat)}"
 	}
 	
 	def int dias(){
@@ -73,7 +73,7 @@ class Periodo implements Comparable<Periodo>{
 	@Override
 	public int compareTo(Periodo p2) {
 		// TODO Auto-generated method stub
-		if(fechaInicial.equals(p2-fechaInicial)){
+		if(fechaInicial.equals(p2.fechaInicial)){
 			return fechaFinal.compareTo(p2.fechaFinal);
 		}
 		return fechaInicial.compareTo(p2.fechaInicial);

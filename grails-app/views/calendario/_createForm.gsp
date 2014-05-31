@@ -11,8 +11,7 @@
 				<g:hiddenField name="id" value="${calendarioInstance?.id}"/>
 				<f:field property="ejercicio" input-class="form-control" />
 				<f:field property="tipo" input-class="form-control" />
-				<f:field property="inicio" input-class="form-control" />
-				<f:field property="fin" input-class="form-control"/>
+				
 				
 				<f:field property="comentario" input-class="form-control" />
 			</f:with>

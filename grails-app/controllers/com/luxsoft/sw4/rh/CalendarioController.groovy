@@ -15,6 +15,8 @@ class CalendarioController {
 
     def index(Integer max) { 
 		params.max = Math.min(max ?: 10, 100)
+		params.sort=params.sort?:'ejercicio'
+		params.order='desc'
 		respond Calendario.list(params), model:[calendarioInstanceCount: Calendario.count()]
 	}
 	
@@ -95,6 +97,7 @@ class CalendarioController {
 		try{
 			calendarioInstance=calendarioService.generarPeriodos(calendarioInstance)
 		}catch(Exception ex){
+			println ex
 			flash.message="Error al generar periodo: "+ex.message
 		}
 		params.id=calendarioInstance.id

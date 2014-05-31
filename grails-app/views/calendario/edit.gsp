@@ -19,7 +19,7 @@
 					<g:link action="delete" id="${calendarioInstance.id}" class="list-group-item" onclick="return confirm('¿ Elminar todo el calendario de operaciones?');">
 						<span class="glyphicon glyphicon-trash"></span> Eliminar
 					</g:link>
-					<g:if test="${!calendarioInstance.partidas}">
+					<g:if test="${!calendarioInstance.periodos}">
 						<g:link action="generarPeriodos" id="${calendarioInstance.id}" class="list-group-item" onclick="return confirm('¿ Generar periodos del trabajo para el calendario ?');">
 							<span class="glyphicon glyphicon-cog"></span> Generar Periodos
 						</g:link>
@@ -41,12 +41,12 @@
 		<div class="row">
 			<ul class="nav nav-tabs">
 				<li class="active"><a href="#periodos" data-toggle="tab">Periodos</a></li>
-  				<li><a href="#festivos" data-toggle="tab">Festivos</a></li>
+  				
 			</ul>
 			
 			<div class="tab-content">
   				<div class="tab-pane active" id="periodos"><g:render template="periodosGrid"></g:render></div>
-  				<div class="tab-pane" id="festivos"><h2>PENDIENTE</h2></div>
+  				
 			</div>
 		</div>
 		

@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${calendarioInstance.partidas}" var="row">
+		<g:each in="${calendarioInstance.periodos}" var="row">
 			<tr>
 				<td>${fieldValue(bean:row,field:"calendario.tipo")}</td>
 				<td><g:link action="editPeriodo" id="${row.id}">

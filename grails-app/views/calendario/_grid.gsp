@@ -4,9 +4,8 @@
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="ejercicio" title="Ejercicio"/>
 			<g:sortableColumn property="tipo" title="Tipo"/>
-			<th>Inicio</th>
-			<th>Fin</th>
 			<th>Comentario</th>
+			<th>Creado</th>
 			<th>Modificado</th>
 		</tr>
 	</thead>
@@ -22,9 +21,8 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"tipo")}</td>
-				<td><g:formatDate date="${row.inicio }" format="dd/MM/yyyy"/></td>
-				<td><g:formatDate date="${row.fin }" format="dd/MM/yyyy"/></td>
 				<td>${fieldValue(bean:row,field:"comentario")}</td>
+				<td><g:formatDate date="${row.dateCreated }" format="dd/MM/yyyy hh:mm"/></td>
 				<td><g:formatDate date="${row.lastUpdated }" format="dd/MM/yyyy hh:mm"/></td>
 			</tr>
 		</g:each>
