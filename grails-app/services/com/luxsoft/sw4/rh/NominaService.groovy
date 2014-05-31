@@ -112,6 +112,7 @@ class NominaService {
 	
 	def timbrar(Long nominaId) {
 		def nomina =Nomina.get(nominaId)
+		cfdiService.cfdiTimbrador.timbradoDePrueba=false
 		if(nomina.status=='CERRADA') {
 			throw new NominaException(message:"Nomina cerrada no se puede timbrar",nomina:nomina)
 		}

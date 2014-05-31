@@ -1,6 +1,7 @@
 package com.luxsoft.sw4.rh
 
 import grails.transaction.Transactional
+import com.luxsoft.sw4.Empresa
 
 @Transactional
 class ImportarNominaService {
@@ -27,10 +28,9 @@ class ImportarNominaService {
 					diaDePago:diaPago,
 					formaDePago:'TRANSFERENCIA',
 					periodicidad:'QUINCENAL',
-					total:0.0
-					,status:'PENDIENTE'
+					total:0.0,
+					status:'PENDIENTE'
 			)
-			nomina.save
 		}
 
 		log.info 'Importando nomina: '+ nomina.folio

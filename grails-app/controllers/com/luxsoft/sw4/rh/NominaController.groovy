@@ -99,7 +99,7 @@ class NominaController {
 					redirect action:'index',params:params
 				}else if(cmd.tipo=='SEMANAL') {
 					def file=new ByteArrayInputStream(cmd.archivo)
-					importarNominaService.importarQuincena(file,cmd.folio,periodo,cmd.fechaDePago,cmd.diaDePago)
+					importarNominaService.importarSemana(file,cmd.folio,periodo,cmd.fechaDePago,cmd.diaDePago)
 					params.periodicidad='SEMANAL'
 					redirect action:'index',params:params
 				}
