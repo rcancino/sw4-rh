@@ -7,17 +7,19 @@ import grails.transaction.Transactional
 import groovy.time.TimeCategory
 import grails.events.Listener
 
-@Transactional
+
 class NominaService {
 	
 	def cfdiService
-
+	
+	@Transactional
 	def eliminarNomina(Long id){
 		def nomina=Nomina.get(id)
 		//nominaInstance.attach()
 		nomina.delete()
 	}
-
+	
+	@Transactional
     def generarNominas(String tipo,String periodicidad) {
 		
 		def year=Calendar.getInstance().get(Calendar.YEAR)
@@ -110,7 +112,24 @@ class NominaService {
 		}
 	}
 	
-	def timbrar(Long nominaId) {
+	
+	def timbrar(Long id){
+		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
+		cfdiService.cfdiTimbrador.timbradoDePrueba=false
+		if(ne.cfdi==null && ne.getPercepciones()>0){
+			log.info 'Timbrando Ne id:'+ne.id
+			try{
+				cfdiService.generarComprobante(ne.id)
+			}catch(Exception ex){
+				ex.printStackTrace()
+				log.error ex
+			}
+			return ne
+		}
+		
+	}
+	
+	def timbrar2(Long nominaId) {
 		def nomina =Nomina.get(nominaId)
 		cfdiService.cfdiTimbrador.timbradoDePrueba=false
 		if(nomina.status=='CERRADA') {
@@ -118,15 +137,22 @@ class NominaService {
 		}
 		
 		for(NominaPorEmpleado ne:nomina.partidas){
-			try{
+			
+			if(ne.cfdi==null){
+				log.info 'Timbrando Ne id:'+ne.id
+				def res=cfdiService.generarComprobante(ne.id)
+			}
+			
+		/*	try{
 			  if(ne.cfdi==null){
 				log.info 'Timbrando Ne id:'+ne.id
 				def res=cfdiService.generarComprobante(ne.id)
 			  }  
 			}catch(Exception ex){
-				log.error 'Error timbrando '+ExceptionUtils.getRootCauseMessage(ex)
 				
-			}
+			log.error 'Error timbrando '+ExceptionUtils.getRootCauseMessage(ex)
+				
+			}*/
 		}
 	  nomina.status='CERRADA'
 	}

@@ -68,12 +68,10 @@ class NominaController {
 			notFound()
 			return
 		}
-		try {
-			nominaService.timbrar(nominaInstance.id)
-		}catch(NominaException ne) {
-			flash.message=ne.message
-			log.error ne
+		nominaInstance.partidas.each{
+			nominaService.timbrar(it.id)
 		}
+		
 		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	
