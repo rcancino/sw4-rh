@@ -55,9 +55,16 @@
 			<div class="modal-body">
 				
 				<div class="form-group">
-    				<label for="apellidoPaterno" class="col-sm-2 control-label">Apellido P.</label>
-    				<div class="col-sm-10">
-      					<input type="text" class="form-control" id="apellidoPaterno" placeholder="Apellido" name="apellidoPaterno">
+    				<label for="apellidoPaterno" class="col-sm-3 control-label">Apellido P.</label>
+    				<div class="col-sm-9">
+      					<input type="text" class="form-control" id="apellidoPaterno" placeholder="Apellido paterno" name="apellidoPaterno">
+    				</div>
+  				</div>
+  				
+  				<div class="form-group">
+    				<label for="apellidoPaterno" class="col-sm-3 control-label">Apellido M.</label>
+    				<div class="col-sm-9">
+      					<input type="text" class="form-control" id="apellidoMaterno" placeholder="Apellido materno" name="apellidoMaterno">
     				</div>
   				</div>
   				

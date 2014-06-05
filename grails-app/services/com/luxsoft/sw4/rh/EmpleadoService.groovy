@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh
 
-import grails.plugin.cache.Cacheable;
+//import grails.plugin.cache.Cacheable;
 import grails.transaction.Transactional
 import grails.validation.ValidationException
 import groovy.sql.Sql;
@@ -14,7 +14,7 @@ class EmpleadoService {
 	
 	def dataSource
 	
-	@Cacheable('catalogoDeEmpleados')
+	//@Cacheable('catalogoDeEmpleados')
 	def getEmpleados() {
 		return Empleado.findAll{status=='ALTA'}
 	}
@@ -38,9 +38,30 @@ class EmpleadoService {
 			if(empleado.status!='BAJA'){
 				empleado.baja=null
 			}
-    		empleado.save(failOnError:true)
+			if(empleado.hasErrors()){
+				println 'Errores de empleado: '+empleado.errors
+				
+			}
+			if(empleado.datosPersonales){
+				if(!empleado.datosPersonales.id){
+					empleado.datosPersonales.empleado=empleado
+				}
+				empleado.datosPersonales.validate()
+				println 'Errores en datos personales: '+empleado.datosPersonales.hasErrors()
+				empleado.datosPersonales.errors.each{
+					println 'Error: '+it
+				}
+				if(empleado.datosPersonales.hasErrors()){
+					throw new EmpleadoException(
+						message:'Errores de validacion en los datos personales',
+						empleado:empleado
+						)
+				}
+			}
+    		empleado.save(flush:true)
     		return empleado
     		}catch(Exception ex){
+				ex.printStackTrace()
     			throw new EmpleadoException(
     				message:ExceptionUtils.getRootCauseMessage(ex),
     				empleado:empleado

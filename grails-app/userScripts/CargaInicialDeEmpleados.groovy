@@ -38,7 +38,7 @@ def cargarEmpresa(){
 }
 
 def procesar(Closure task){
-  def file=grailsApplication.mainContext.getResource("/WEB-INF/data/empleados.csv").file
+  def file=grailsApplication.mainContext.getResource("/WEB-INF/data/paper/empleadosPaper.csv").file
   file.eachLine{line,row ->
 	if(row>1){
 		def fields=line.split(",")

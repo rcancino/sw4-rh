@@ -120,7 +120,7 @@ grails.project.dependency.resolution = {
 		compile ":filterpane:2.3.3"
 		compile ':jquery-date-time-picker:0.1.0'
 		
-		compile ":cache-ehcache:1.0.1"
+		//compile ":cache-ehcache:1.0.1"
 		//compile ":export:1.6"
 		
     }

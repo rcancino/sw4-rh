@@ -50,9 +50,9 @@
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
 						
-					<f:field property="curp" input-class="form-control" />	
-					<f:field property="rfc" input-class="form-control" />	
-					<f:field property="clave" input-class="form-control" />	
+					<f:field property="curp" input-class="form-control" input-autocomplete="off"/>	
+					<f:field property="rfc" input-class="form-control" input-autocomplete="off"/>	
+					<f:field property="clave" input-class="form-control" input-autocomplete="off"/>	
 					<f:field property="status" input-class="form-control" />
 					<f:field property="alta" input-class="form-control" />	
 				</f:with>

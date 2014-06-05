@@ -17,9 +17,22 @@
 </content>
 
 <content tag="content">
-	<form  class="form-horizontal" method="post">
+	
+	<g:hasErrors bean="${empleadoInstance?.datosPersonales}">
+		<div class="alert alert-danger alert-dismissable">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<ul>
+				<g:eachError var="err" bean="${empleadoInstance.datosPersonales}">
+					<li><g:message error="${err}"/></li>
+				</g:eachError>
+			</ul>
+		</div>
+	</g:hasErrors>
+	
+	<form  class="form-horizontal" method="post" >
 		<g:hiddenField name="id" value="${empleadoInstance.id}"/>
 		<g:hiddenField name="version" value="${empleadoInstance?.version}" />
+		<g:hiddenField name="view" value="datosPersonales" />
 		
 		<div class="col-md-6">
 		

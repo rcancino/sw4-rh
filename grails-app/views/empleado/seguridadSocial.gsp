@@ -24,8 +24,7 @@
 		
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
-					<f:field property="seguridadSocial.numero" input-class="form-control" />	
-					<f:field property="seguridadSocial.alta" input-class="form-control" />	
+					<f:field property="seguridadSocial.numero" input-class="form-control" />
 					<f:field property="seguridadSocial.turno" input-class="form-control" />	
 					<f:field property="seguridadSocial.unidadMedica" input-class="form-control" />	
 					<f:field property="seguridadSocial.comentario" input-class="form-control" />	

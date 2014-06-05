@@ -30,7 +30,7 @@ class EmpleadoController {
 		redirect action:'generales',params:params
 	}
 	
-	def search(String apellidoPaterno){
+	def search(String apellidoPaterno,String apellidoMaterno){
 		//println 'Buscando empleados: '+apellidoPaterno
 		params.max = 20
 		params.sort='apellidoPaterno'
@@ -85,7 +85,8 @@ class EmpleadoController {
 		//def empleadoInstance=Empleado.get(id)
 		log.info 'Salvando empleado: '+empleadoInstance
 		log.info 'Datos de salario: '+empleadoInstance.salario
-		log.info 'Pamaetros: '+params
+		def v=params.view?:'generales'
+		//log.info 'Pamaetros: '+params
 		//bindData(empleadoInstance.salario, params)
 		
 		if(empleadoInstance==null){
@@ -98,7 +99,7 @@ class EmpleadoController {
 			flash.message="Empleado ${empleadoInstance.clave} actualizado"
 			render view:'generales',model:[empleadoInstance:empleadoInstance,edit:false]
 		}catch(EmpleadoException ex){
-			render view:'generales',model:[empleadoInstance:empleadoInstance,edit:true]
+			render view:v,model:[empleadoInstance:ex.empleado,edit:true]
 		}
 		
 	}
@@ -106,6 +107,11 @@ class EmpleadoController {
 	def perfil(Empleado empleadoInstance){
 		[empleadoInstance:empleadoInstance,edit:params.edit]
 	}
+	
+	def updatePerfile(){
+		
+	}
+	
 	def salario(Empleado empleadoInstance){
 		[empleadoInstance:empleadoInstance,edit:params.edit]
 	}

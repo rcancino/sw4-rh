@@ -14,5 +14,6 @@ class SeguridadSocial implements Serializable{
 		unidadMedica nullable:true
 		comentario nullable:true,maxSize:300
 		numero maxSize:15
+		alta nullable:true
     }
 }

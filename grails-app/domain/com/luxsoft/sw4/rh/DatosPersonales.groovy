@@ -10,7 +10,7 @@ class DatosPersonales implements Serializable{
 	String telefono2
 	String email
 	String tipoDeSangre
-	String estadoCivil
+	String estadoCivil='SOLTERO'
 	String conyuge
 	String nombreDelPader
 	String nombreDeLaMadre
@@ -29,5 +29,6 @@ class DatosPersonales implements Serializable{
 		telefono1 nullable:true
 		telefono2 nullable:true
 		lugarDeNacimiento nullable:true
+		direccion nullable:true
     }
 }
