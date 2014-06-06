@@ -76,5 +76,10 @@
 		</g:form>
 	</content>
 	
+	<r:script>
+		$('#searchForm').on('shown.bs.modal', function () {
+	    	$('#apellidoPaterno').focus();
+		});
+	</r:script>
 </body>
 </html>

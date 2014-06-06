@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	
+	<r:require module="forms"/>
 </head>
 <body>
 
@@ -17,9 +17,22 @@
 </content>
 
 <content tag="content">
+	
+	<g:hasErrors bean="${empleadoInstance?.perfil}">
+		<div class="alert alert-danger alert-dismissable">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<ul>
+				<g:eachError var="err" bean="${empleadoInstance.perfil}">
+					<li><g:message error="${err}"/></li>
+				</g:eachError>
+			</ul>
+		</div>
+	</g:hasErrors>
+	
 	<form class="form-horizontal" method="post">
 		<g:hiddenField name="id" value="${empleadoInstance.id}"/>
 		<g:hiddenField name="version" value="${empleadoInstance?.version}" />
+		<g:hiddenField name="view" value="perfil" />
 		<div class="col-md-6">
 		
 			<fieldset ${!edit?'disabled=""':''}>
@@ -31,6 +44,9 @@
 					<f:field property="perfil.ubicacion" input-class="form-control" />	
 					<f:field property="perfil.tipoDeContrato" input-class="form-control" />	
 					<f:field property="perfil.jornada" input-class="form-control" />	
+					
+					<f:field property="perfil.regimenContratacion" input-class="form-control" />
+					<f:field property="perfil.riesgoPuesto" input-class="form-control" />
 				</f:with>
 			</fieldset>
 		

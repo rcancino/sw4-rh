@@ -75,7 +75,7 @@
 	<div class="form-group">
     	<div class="col-sm-offset-8 col-sm-12">
       		<g:actionSubmit class="btn btn-primary"  value="Actualizar" action="update"/>
-      		<g:link class="btn btn-default" action="salario" id="${empleadoInstance.id}" >Cancelar</g:link>
+      		<g:link class="btn btn-default" action="datosPersonales" id="${empleadoInstance.id}" >Cancelar</g:link>
     	</div>
 	</div>
 	</g:if>

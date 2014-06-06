@@ -20,6 +20,7 @@
 	<form  class="form-horizontal numeric-form" method="post">
 		<g:hiddenField name="id" value="${empleadoInstance.id}"/>
 		<g:hiddenField name="version" value="${empleadoInstance?.version}" />
+		<g:hiddenField name="view" value="salario" />
 		<div class="col-md-6">
 		
 			<fieldset ${!edit?'disabled=""':''}>

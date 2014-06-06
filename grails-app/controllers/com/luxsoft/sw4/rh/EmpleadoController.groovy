@@ -85,6 +85,7 @@ class EmpleadoController {
 		//def empleadoInstance=Empleado.get(id)
 		log.info 'Salvando empleado: '+empleadoInstance
 		log.info 'Datos de salario: '+empleadoInstance.salario
+		println 'Salvando: '+empleadoInstance.perfil
 		def v=params.view?:'generales'
 		//log.info 'Pamaetros: '+params
 		//bindData(empleadoInstance.salario, params)
@@ -97,7 +98,7 @@ class EmpleadoController {
 		try{
 			empleadoInstance=empleadoService.updateEmpleado(empleadoInstance)
 			flash.message="Empleado ${empleadoInstance.clave} actualizado"
-			render view:'generales',model:[empleadoInstance:empleadoInstance,edit:false]
+			render view:v,model:[empleadoInstance:empleadoInstance,edit:false]
 		}catch(EmpleadoException ex){
 			render view:v,model:[empleadoInstance:ex.empleado,edit:true]
 		}

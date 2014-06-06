@@ -7,6 +7,7 @@ import groovy.sql.Sql;
 
 import org.apache.commons.lang.exception.ExceptionUtils
 
+import com.luxsoft.sw4.Empresa;
 import com.luxsoft.sw4.Periodo;
 
 @Transactional
@@ -58,7 +59,30 @@ class EmpleadoService {
 						)
 				}
 			}
-    		empleado.save(flush:true)
+			
+			if(empleado.perfil){
+				
+				if(!empleado.perfil.id){
+					println 'Perfil de empleado: '+empleado.perfil
+					empleado.perfil.empleado=empleado
+					def empresa=Empresa.get(1)
+					println 'Empresa: '+empresa
+					empleado.perfil.empresa=empresa
+				}
+				empleado.perfil.validate()
+				println 'Errores en Perfil: '+empleado.perfil.hasErrors()
+				empleado.perfil.errors.each{
+					println 'Error: '+it
+				}
+				if(empleado.perfil.hasErrors()){
+					throw new EmpleadoException(
+						message:'Errores de validacion pefil de empleado',
+						empleado:empleado
+						)
+				}
+			}
+			
+    		empleado.save(failOnError:true)
     		return empleado
     		}catch(Exception ex){
 				ex.printStackTrace()
@@ -67,6 +91,7 @@ class EmpleadoService {
     				empleado:empleado
     				)
     		}
+			
     }
 	
 	/**

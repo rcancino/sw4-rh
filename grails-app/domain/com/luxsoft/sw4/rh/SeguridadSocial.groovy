@@ -1,5 +1,11 @@
 package com.luxsoft.sw4.rh
 
+/**
+ * 
+ * @author RUBEN
+ * @todo Quitar la propiedad de alta, no parece ser requerida
+ *
+ */
 class SeguridadSocial implements Serializable{
 	
 	Empleado empleado

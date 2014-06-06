@@ -13,7 +13,7 @@ class Direccion implements Serializable{
 	String municipio
 	String codigoPostal
 	String estado
-	String pais
+	String pais='MEXICO'
 
 	
     static constraints = {
