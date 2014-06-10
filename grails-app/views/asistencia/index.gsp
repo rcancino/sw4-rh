@@ -16,7 +16,7 @@
 	<content tag="gridTitle">Lista de asistencia periodo:  ${session?.periodo}  (${tipo})</content>
 	<content tag="gridTasks">
 		<button class="btn btn-default" data-toggle="modal" data-target="#periodoForm">
-			<span class="glyphicon glyphicon-calendar"></span> Periodo
+			<span class="glyphicon glyphicon-calendar"></span> Calendario
 		</button>
 		<g:render template="/_common/periodoForm" model="[action:'cambiarPeriodo',periodo:periodo]"/>
   		<g:link class="btn btn-default" action="actualizarAsistencia">

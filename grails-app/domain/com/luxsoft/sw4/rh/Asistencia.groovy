@@ -15,6 +15,8 @@ class Asistencia {
 	
 	Periodo periodo
 	
+	CalendarioDet calendarioDet
+	
 	String tipo
 	
 	Integer asistencias=0
@@ -62,6 +64,7 @@ class Asistencia {
 		
     	comentario nullable:true
 		tipo inList:['SEMANAL','QUINCENAL']
+		calendarioDet nullable:true
     	
     }
 

@@ -2,7 +2,7 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
-			<g:sortableColumn property="empleado.nombres" title="Empleado"/>
+			<g:sortableColumn property="empleado" title="Empleado"/>
 			<g:sortableColumn property="empleado.perfil.numeroDeTrabajador" title="No"/>
 			<th>Tipo</th>
 			<g:sortableColumn property="periodo.fechaInicial" title="Fecha Ini"/>

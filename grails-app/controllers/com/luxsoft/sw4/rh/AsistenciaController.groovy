@@ -25,9 +25,16 @@ class AsistenciaController {
 	}
 
     def index(Integer max) {
+		
 		params.max = Math.min(max ?: 20, 100)
+		//params.sort=params.sort?:"empleado.apellidoPaterno"
+		//params.order='asc'
 		def tipo=session.periodicidad?:'QUINCENAL'
 		def p=params.periodo?:session.periodo
+		/*
+		def list=Asistencia.findAll ("from Asistencia a where date(a.periodo.fechaInicial)>=? and date(a.periodo.fechaFinal)<=? order by a.empleado.apellidoPaterno asc "
+			,[p.fechaInicial,p.fechaFinal],[max:params.max,offset:params.offset])
+			*/
 		
 		def query=new DetachedCriteria(Asistencia).build{
 			ge 'periodo.fechaInicial',p.fechaInicial
@@ -38,8 +45,9 @@ class AsistenciaController {
 		query=query.build{
 			eq 'tipo',tipo
 		}
+		[asistenciaInstanceList:query.list(params),asistenciaTotalCount:query.count(),periodo:p,tipo:tipo]
 		
-		[asistenciaInstanceList:query.list(params),asistenciaTotalCount:query.count(params),periodo:p,tipo:tipo]
+		//[asistenciaInstanceList:list,asistenciaTotalCount:Asistencia.count(),periodo:p,tipo:tipo]
 	}
 	
 	def show(Asistencia asistencia){

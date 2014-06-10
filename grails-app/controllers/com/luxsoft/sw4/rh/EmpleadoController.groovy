@@ -35,7 +35,7 @@ class EmpleadoController {
 		params.max = 20
 		params.sort='apellidoPaterno'
 		params.order='asc'
-		def query=Empleado.where{apellidoPaterno==~apellidoPaterno}
+		def query=Empleado.where{apellidoPaterno=~apellidoPaterno+"%"}
 		//println 'Encontrados: '+query.list(params).size()
 		def model=[empleadoInstanceList:query.list(params),empleadoInstanceCount:query.count()]
 		render view:'index',model:model
