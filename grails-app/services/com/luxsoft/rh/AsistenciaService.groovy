@@ -144,6 +144,7 @@ class AsistenciaService {
 	}
 	
 	def recalcularRetardos(Asistencia asistencia) {
+		println 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "
 		def retardoMenor=0
 		asistencia.partidas.each{
 			
