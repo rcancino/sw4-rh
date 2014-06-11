@@ -50,7 +50,7 @@ class CalendarioController {
 		println 'Agregando periodo a calendario: '+calendarioInstance
 		CalendarioDet det=new CalendarioDet(params)
 		
-		calendarioInstance.addToPartidas(det)
+		calendarioInstance.addToPeriodos(det)
 		calendarioInstance.save failOnError:true
 		render view:'edit', model:[calendarioInstance:calendarioInstance]
 	}
@@ -58,6 +58,8 @@ class CalendarioController {
 	def editPeriodo(CalendarioDet calendarioDetInstance){
 		[calendarioDetInstance:calendarioDetInstance]
 	}
+	
+	
 	
 	@Transactional
 	def eliminarPeriodo(Long id){
@@ -69,7 +71,7 @@ class CalendarioController {
 		}
 		
 		def calendarioInstance=calendarioDet.calendario
-		calendarioInstance.removeFromPartidas(calendarioDet)
+		calendarioInstance.removeFromPeriodos(calendarioDet)
 		calendarioInstance.save failOnError:true
 		flash.message="Segmento de calendario eliminado"
 		params.id=calendarioInstance.id

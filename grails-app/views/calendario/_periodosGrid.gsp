@@ -16,10 +16,8 @@
 		<g:each in="${calendarioInstance.periodos}" var="row">
 			<tr>
 				<td>${fieldValue(bean:row,field:"calendario.tipo")}</td>
-				<td><g:link action="editPeriodo" id="${row.id}">
-						<g:formatNumber number="${row.folio}" format="######"/>
-					</g:link>
-				</td>
+				<td><g:formatNumber number="${row.folio}" format="######"/>
+					</td>
 				<td><g:formatDate date="${row.inicio }" format="dd/MM/yyyy"/></td>
 				<td><g:formatDate date="${row.fin }" format="dd/MM/yyyy"/></td>
 				<td><g:formatDate date="${row.asistencia.fechaInicial }" format="dd/MM/yyyy"/></td>

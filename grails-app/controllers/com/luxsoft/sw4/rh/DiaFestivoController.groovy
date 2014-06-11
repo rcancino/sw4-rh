@@ -29,7 +29,7 @@ class DiaFestivoController {
 		diaFestivoInstance.save flush:true
 		flash.message="Fecha registrada : "+diaFestivoInstance.id
 		
-		respond diaFestivoInstance,[view:'edit']
+		redirect action:'index'
 	}
 	
 	def edit(DiaFestivo diaFestivoInstance) {
