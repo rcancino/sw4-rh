@@ -19,35 +19,21 @@ class AsistenciaController {
 		redirect action:'index'
 	}
 	
-	def asistenciaQuincenal(){
-		session.periodicidad='QUINCENAL'
-		redirect action:'index'
+	def asistenciaQuincenal(Long calendarioDetId){
+		def tipo='QUINCENA'
+		def periodos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.tipo='QUINCENA'")
+		render  view:'index',model:[periodos:periodos,tipo:tipo]
 	}
 
-    def index(Integer max) {
-		
-		params.max = Math.min(max ?: 20, 100)
-		//params.sort=params.sort?:"empleado.apellidoPaterno"
-		//params.order='asc'
-		def tipo=session.periodicidad?:'QUINCENAL'
-		def p=params.periodo?:session.periodo
-		/*
-		def list=Asistencia.findAll ("from Asistencia a where date(a.periodo.fechaInicial)>=? and date(a.periodo.fechaFinal)<=? order by a.empleado.apellidoPaterno asc "
-			,[p.fechaInicial,p.fechaFinal],[max:params.max,offset:params.offset])
-			*/
-		
-		def query=new DetachedCriteria(Asistencia).build{
-			ge 'periodo.fechaInicial',p.fechaInicial
-		}
-		query=query.build{
-			le 'periodo.fechaFinal',p.fechaFinal
-		}
-		query=query.build{
-			eq 'tipo',tipo
-		}
-		[asistenciaInstanceList:query.list(params),asistenciaTotalCount:query.count(),periodo:p,tipo:tipo]
-		
-		//[asistenciaInstanceList:list,asistenciaTotalCount:Asistencia.count(),periodo:p,tipo:tipo]
+	def cargarAsistencia(Long calendarioDetId){
+		println 'Cargando asistencias para calendario: '+calendarioDetId
+		//def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=?",[calendarioDetId])
+		def list=Asistencia.findAll("from Asistencia a")
+		println 'Asistencias registradas: '+list.size()
+		render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
+	}
+
+    def index() {
 	}
 	
 	def show(Asistencia asistencia){
@@ -71,6 +57,19 @@ class AsistenciaController {
 		asistenciaService.importarLecturas(periodo)
 		session.periodo=periodo
 		redirect action:'lectora',params:params
+	}
+
+	def actualizarListaDeAsistencias(Long calendarioDetId){
+		def calendarioDet=CalendarioDet.get(calendarioDetId)
+		if(calendarioDet){
+			println 'Actualizando lista de asistencias para el periodo: '+calendarioDet.asistencia
+			asistenciaService.actualizarAsistencia(calendarioDet)
+			def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=?",[calendarioDetId])
+			render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
+		}else{
+			println 'Debe seleccionar un periodo...'
+		}
+		
 	}
 	
 	def actualizarAsistencia(){

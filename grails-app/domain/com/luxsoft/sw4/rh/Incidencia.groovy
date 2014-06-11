@@ -15,15 +15,21 @@ class Incidencia {
 	Empleado empleado
 	
 	@BindingFormat("dd/MM/yyyy")
-	Date fecha
+	Date fecha=new Date()
+
+	@BindingFormat("dd/MM/yyyy")
+	Date fechaInicial=new Date()
+
+	@BindingFormat("dd/MM/yyyy")
+	Date fechaFinal=new Date()
 	
 	Autorizacion autorizacion
 	
 	String tipo
 	
 	String comentario
-	
-	
+
+	Boolean pagado=false
 
 	Date dateCreated
 	Date lastUpdated
@@ -31,7 +37,7 @@ class Incidencia {
 	static constraints = {
 		comentario nullable:true,maxSize:250
 		autorizacion nullable:true
-		tipo inList:['FALTA','RETARDO','PERMISO']
+		tipo inList:['FALTA','RETARDO','PERMISO','PATERNIDAD']
 	}
 	
 	//static hasMany = [dias:Date]

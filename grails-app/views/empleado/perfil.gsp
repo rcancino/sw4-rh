@@ -45,8 +45,10 @@
 					<f:field property="perfil.tipoDeContrato" input-class="form-control" />	
 					<f:field property="perfil.jornada" input-class="form-control" />	
 					
-					<f:field property="perfil.regimenContratacion" input-class="form-control" />
-					<f:field property="perfil.riesgoPuesto" input-class="form-control" />
+					<f:field property="perfil.regimenContratacion" input-class="form-control" 
+						value="${value?:com.luxsoft.sw4.rh.sat.SatRegimenContratacion.findByClave(2) }"/>
+					<f:field property="perfil.riesgoPuesto" input-class="form-control"
+						value="${value?:com.luxsoft.sw4.rh.sat.SatRiesgoPuesto.findByClave(3) }" />
 				</f:with>
 			</fieldset>
 		

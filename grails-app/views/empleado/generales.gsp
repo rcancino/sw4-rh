@@ -40,6 +40,7 @@
 					<f:field property="nombres" input-class="form-control" />	
 					<f:field property="fechaDeNacimiento" input-class="form-control" label="F.Nacimiento"/>	
 					<f:field property="sexo" input-class="form-control" />	
+					<f:field property="activo" input-class="form-control" />
 				</f:with>
 			</fieldset>
 		
@@ -54,7 +55,8 @@
 					<f:field property="rfc" input-class="form-control" input-autocomplete="off"/>	
 					<f:field property="clave" input-class="form-control" input-autocomplete="off"/>	
 					<f:field property="status" input-class="form-control" />
-					<f:field property="alta" input-class="form-control" />	
+					<f:field property="alta" input-class="form-control" />
+						
 				</f:with>
 			</fieldset>
 			

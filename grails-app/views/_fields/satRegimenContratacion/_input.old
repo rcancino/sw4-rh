@@ -1,0 +1,12 @@
+<%@page expressionCodec="none" %>
+<%--<g:select name="${property}" from="${bean.tipo=='PERCEPTION'?SatPercepcion.findAll():SatDeduccion.findAll()}"/>--%>
+<g:select class="form-control"  
+	name="${property}" 
+	value="${value?:com.luxsoft.sw4.rh.sat.SatREgimenContratacion.findByClave(2)}"
+	from="${com.luxsoft.sw4.rh.sat.SatREgimenContratacion.findAll()}" 
+	optionKey="clave" optionValue="descripcion"
+	noSelection="['':'Seleccione una clave']"/>
+
+
+
+

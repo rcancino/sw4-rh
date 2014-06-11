@@ -13,12 +13,12 @@ class EmpleadoController {
     def empleadoService
 	
 	def index(Long max) {
-		params.max = Math.min(max ?: 50, 100)
+		//params.max = Math.min(max ?: 50, 100)
 		params.sort=params.sort?:'apellidoPaterno'
 		params.order='asc'
 		def tipo=params.tipo?:'QUINCENAL'
 		def query=Empleado.where{
-			status=='ALTA' && salario.periodicidad==tipo
+			activo==true && salario.periodicidad==tipo
 		}
 		def list=query.list(params)
 		[empleadoInstanceList:list,

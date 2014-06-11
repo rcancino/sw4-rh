@@ -19,7 +19,7 @@ class EmpleadoContacto implements Serializable{
     static constraints = {
 		telefono1 nullable:true
 		telefono2 nullable:true
-		//parentesco inList:['CONYUGE','HIJO','PADRE','HERMANO','FAMILIAR','AMIGO','CONOCIDO']
+		parentesco inList:['PADRE','MADRE,CONYUGE','HIJO','HERMANO','FAMILIAR','AMIGO','CONOCIDO']
 		parentesco maxSize:50
 		comentario nullable:true
 		direccion nullable:true

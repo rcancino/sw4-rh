@@ -46,7 +46,7 @@
 					<f:field property="datosPersonales.estadoCivil" input-class="form-control" />
 					<f:field property="datosPersonales.conyuge" label="Conyuge" input-class="form-control" />
 					
-					<f:field property="datosPersonales.nombreDelPader" input-class="form-control" />
+					<f:field property="datosPersonales.nombreDelPader" input-class="form-control" label="Nombre del padre" />
 					
 					<f:field property="datosPersonales.nombreDeLaMadre" input-class="form-control" />
 						

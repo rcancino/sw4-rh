@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.luxsoft.sw4.rh.sat.SatIncapacidad
 
+import org.grails.databinding.BindingFormat
 import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes='empleado,referenciaImms')
@@ -20,7 +21,11 @@ class Incapacidad {
 	
 	SatIncapacidad tipo
 	
-	Set dias=new HashSet()
+	@BindingFormat("dd/MM/yyyy")
+	Date fechaInicial
+
+	@BindingFormat("dd/MM/yyyy")
+	Date fechaFinal
 
 	Date dateCreated
 	
@@ -34,10 +39,7 @@ class Incapacidad {
 	static hasMany = [dias:Date]
 	
 	static mapping = {
-		hasMany joinTable: [name: 'incapacidad_dias',
-			key: 'incapacidad_id',
-			column: 'fecha',
-			type: "date"]
+		
 	}
 
     String toString(){

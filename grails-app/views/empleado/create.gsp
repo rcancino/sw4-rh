@@ -33,8 +33,8 @@
 					<f:field property="curp" input-class="form-control" />	
 					<f:field property="rfc" input-class="form-control" />	
 					<f:field property="clave" input-class="form-control" />	
-					
 					<f:field property="alta" input-class="form-control" />	
+					<f:field property="activo" input-class="form-control" />
 				</f:with>
 			</fieldset>
 			

@@ -52,7 +52,7 @@ navigation={
 				incapacidad(controller:'incapacidad',action:'index',titleText:'Incapacidades')
 				incidencias(controller:'incidencia',action:'index')
 				vacaciones(controller:'vacaciones',action:'index')
-				tiempoExtra(controller:'tiempoExtra',action:'index')
+				tiempoExtra(controller:'tiempoExtra',action:'index',titleText:'Compensaciones')
 			}
 			incentivo(controller:'incentivo',action:'index')
 			aportaciones()

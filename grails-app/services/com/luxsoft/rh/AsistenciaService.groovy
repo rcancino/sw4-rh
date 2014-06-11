@@ -13,8 +13,9 @@ import com.luxsoft.sw4.rh.Asistencia;
 import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.Checado
 import com.luxsoft.sw4.rh.Empleado
+import com.luxsoft.sw4.rh.CalendarioDet
 
-@Transactional
+
 class AsistenciaService {
 
 	def grailsApplication
@@ -59,8 +60,14 @@ class AsistenciaService {
     	}
     	
     }
+
+    def actualizarAsistencia(CalendarioDet calendarioDet){
+    	assert(calendarioDet)
+    	def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+    	registrarAsistencias(calendarioDet.asistencia,tipo,calendarioDet)
+    }
 	
-	def registrarAsistencias(Periodo periodo,String tipo) {
+	def registrarAsistencias(Periodo periodo,String tipo,CalendarioDet cal) {
 		//numero magico
 		
 		def tolerancia1=(60*1000*10)
@@ -71,6 +78,7 @@ class AsistenciaService {
 		
 		empleados.each{empleado ->
 			log.info "Actualizando asistencias ${empleado} ${periodo}"
+			println "Actualizando asistencias ${empleado} ${periodo}"
 			//Maestro de asistencia
 			def asistencia =Asistencia
 				.find("from Asistencia a where a.empleado=? and a.tipo=? and date(a.periodo.fechaInicial)=? and date(a.periodo.fechaFinal)=?"
@@ -78,7 +86,7 @@ class AsistenciaService {
 			if(asistencia) {
 				asistencia.partidas.clear()
 			}else {
-				asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo)
+				asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
 			}
 			for(date in periodo.fechaInicial..periodo.fechaFinal){
 				def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){numeroDeEmpleado==empleado?.perfil?.numeroDeTrabajador && fecha==date}
@@ -138,6 +146,7 @@ class AsistenciaService {
 		
 	}
 	
+	@Transactional
 	def actualizarAsistencia(Long id) {
 		Asistencia asistencia=Asistencia.get(id)
 		return recalcularRetardos(asistencia)
