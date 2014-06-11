@@ -74,6 +74,9 @@
 		},
 		{
 			"path": "grails-app/migrations"
+		},
+		{
+			"path":"~/.grails/sw4-rh"
 		}
 	],
 	"settings":
