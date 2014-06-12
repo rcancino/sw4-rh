@@ -6,11 +6,11 @@
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
 			<th>Días</th>
-			<th>Comentario</th>
+			<%--<th>Comentario</th>
 			<th>Autorización</th>
 			<th>Creado</th>
 			
-		</tr>
+		--%></tr>
 	</thead>
 	<tbody>
 		<g:each in="${vacacionesList}" var="row">
@@ -26,6 +26,7 @@
 					</g:link>
 				</td>
 				<td><g:formatNumber number="${row.dias.size()}" format="###"/></td>
+				<%-- 
 				<td><g:formatDate date="${row.solicitud}" format="dd/MM/yyyy"/></td>
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 				<td>
@@ -42,6 +43,7 @@
 					
 				</td>
 				<td><g:formatDate date="${row.dateCreated}" format="dd/MM/yyyy"/></td>
+				--%>
 			</tr>
 		</g:each>
 	</tbody>

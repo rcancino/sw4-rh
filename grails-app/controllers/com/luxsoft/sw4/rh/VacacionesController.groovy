@@ -37,7 +37,7 @@ class VacacionesController {
 		vacacionesInstance.save flush:true
 		flash.message="Solicitud generada: "+vacacionesInstance.id
 		//redirect action:'index'
-		respond vacacionesInstance,[view:'edit']
+		respond vacacionesInstance,[view:'edit',tipo:vacacionesInstance.empleado.salario.periodicidad]
 	}
 	
 	def edit(Vacaciones vacacionesInstance) {
