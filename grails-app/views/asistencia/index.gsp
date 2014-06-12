@@ -37,12 +37,12 @@
 				from="${periodos}" 
 				optionKey="id" 
 				optionValue="${{it.calendario.tipo+' '+it.folio}}"
-				noSelection="['':'Seleccione una periodo']"/>
+				/>
 			</div>
 			
 			<g:actionSubmit value="Cargar" action="cargarAsistencia" class="btn btn-default"/>
 			<g:submitToRemote class="btn btn-default" value="Actualizar"
-				url="[action: 'actualizarListaDeAsistencias']" 
+				url="[action: 'actualizarAsistencias']" 
 				update="asistenciaGrid" />
 			
 		</g:formRemote>

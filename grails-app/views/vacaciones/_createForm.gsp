@@ -12,7 +12,6 @@
 					<fieldset>
 						<f:with bean="vacacionesInstance">
 							<f:field property="empleado" input-class="form-control" />
-							<f:field property="solicitud" input-class="form-control" />
 							<f:field property="comentario" input-class="form-control" />
 						</f:with>
 					</fieldset>

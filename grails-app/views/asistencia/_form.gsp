@@ -11,14 +11,6 @@
     			</div>
   			</div>
   			<div class="form-group">
-   				<label class="col-sm-4 control-label">Periodo</label>
-    			<div class="col-sm-8">
-      				<p class="form-control-static">
-      					${asistenciaInstance.periodo} 
-      				</p>
-    			</div>
-  			</div>
-  			<div class="form-group">
    				<label class="col-sm-4 control-label">Tipo</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
@@ -26,6 +18,23 @@
       				</p>
     			</div>
   			</div>
+  			<div class="form-group">
+   				<label class="col-sm-4 control-label">Folio</label>
+    			<div class="col-sm-8">
+      				<p class="form-control-static">
+      					${asistenciaInstance?.calendarioDet?.folio} 
+      				</p>
+    			</div>
+  			</div>
+  			<div class="form-group">
+   				<label class="col-sm-4 control-label">Periodo</label>
+    			<div class="col-sm-8">
+      				<p class="form-control-static">
+      					${asistenciaInstance.periodo} 
+      				</p>
+    			</div>
+  			</div>
+  			
   			
   			
   			
@@ -64,9 +73,18 @@
 	
 	<div class="col-md-4">
 		<g:form class="form-horizontal">
+		
+			<div class="form-group">
+   				<label class="col-sm-4 control-label">Faltas</label>
+    			<div class="col-sm-8">
+      				<p class="form-control-static">
+      					${asistenciaInstance.faltas} 
+      				</p>
+    			</div>
+  			</div>
 			
 			<div class="form-group">
-   				<label class="col-sm-3 control-label">Asistencias</label>
+   				<label class="col-sm-4 control-label">Asistencias</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
       					${asistenciaInstance.asistencias} 
@@ -75,7 +93,7 @@
   			</div>
   			
   			<div class="form-group">
-   				<label class="col-sm-3 control-label">Vacaciones</label>
+   				<label class="col-sm-4 control-label">Vacaciones</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
       					${asistenciaInstance.vacaciones} 
@@ -84,7 +102,7 @@
   			</div>
   			
   			<div class="form-group">
-   				<label class="col-sm-3 control-label">Asistencias</label>
+   				<label class="col-sm-4 control-label">Incapacidades</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
       					${asistenciaInstance.incapacidades} 

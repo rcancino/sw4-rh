@@ -12,8 +12,13 @@ import grails.transaction.Transactional
 class VacacionesController {
 	
 	def index(Integer max) {
+		
 		params.max = Math.min(max ?: 15, 100)
-		[vacacionesList:Vacaciones.list(params), vacacionesTotalCount: Vacaciones.count()]
+		params.sort=params.sort?:'dateCreated'
+		params.order='desc'
+		def tipo=params.tipo?:'QUINCENAL'
+		def list=Vacaciones.findAll("from Vacaciones i where i.empleado.salario.periodicidad=?",[tipo])
+		[vacacionesList:list,vacacinesTotalCount:Vacaciones.count(),tipo:tipo]
 	}
 	
 	def create() {
@@ -40,7 +45,7 @@ class VacacionesController {
 			notFound()
 			return
 		}
-		[vacacionesInstance:vacacionesInstance]
+		[vacacionesInstance:vacacionesInstance,tipo:vacacionesInstance.empleado.salario.periodicidad]
 	}
 	
 	@Transactional
@@ -54,7 +59,7 @@ class VacacionesController {
 		}
 		vacacionesInstance.save flush:true
 		flash.message="Solicitud de vacaciones actualizada: "+vacacionesInstance.id
-		redirect action:'index'
+		redirect action:'index',params:[tipo:vacacionesInstance.empleado.salario.periodicidad]
 	}
 	
 	@Transactional
@@ -70,7 +75,7 @@ class VacacionesController {
 			vacacionesInstance.save flush:true
 			flash.message="Fecha agregada"
 		}
-		respond vacacionesInstance,[view:'edit']
+		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
 	}
 	
 	@Transactional
@@ -81,7 +86,7 @@ class VacacionesController {
 			vacacionesInstance.save flush:true
 			flash.message="Fecha eliminada"
 		}
-		respond vacacionesInstance,[view:'edit']
+		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
 	}
 	
 	@Transactional
@@ -98,7 +103,7 @@ class VacacionesController {
 			vacacionesInstance.autorizacion=aut
 			//vacacionesInstance.save flush:true
 		}
-		respond vacacionesInstance,[view:'edit']
+		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
 	}
 	
 	@Transactional
@@ -113,7 +118,7 @@ class VacacionesController {
 			aut.delete flush:true
 			
 		}
-		respond vacacionesInstance,[view:'edit']
+		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
 	}
 	
 	@Transactional
@@ -124,7 +129,7 @@ class VacacionesController {
 		}
 		vacacionesInstance.delete flush:true
 		flash.message="Solicitud $vacacionesInstance.id eliminada"
-		redirect action:'index'
+		redirect action:'index',params:[tipo:vacacionesInstance.empleado.salario.periodicidad]
 	}
 	protected void notFound() {
 		request.withFormat {

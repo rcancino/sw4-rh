@@ -24,6 +24,8 @@ class Asistencia {
 	Integer vacaciones=0
 	
 	Integer incapacidades=0
+
+	Integer incidencias=0
 	
 	/**
 	 * Numero de faltas acumuladas en el periodo

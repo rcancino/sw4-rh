@@ -9,7 +9,7 @@
 		<div class="row">
 			<ul class="nav nav-tabs">
 				<li>
-					<g:link action="index" class="list-group-item">
+					<g:link action="index" class="list-group-item" params="[tipo:tipo]">
 						<span class="glyphicon glyphicon-list"></span> Incidencias
 					</g:link>
 				</li>

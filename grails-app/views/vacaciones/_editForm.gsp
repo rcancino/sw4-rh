@@ -3,13 +3,13 @@
 <div class="row">
 	<div class="col-md-8">
 		<div class="panel panel-default">
-			<div class="panel-heading"><h3 class="panel-title">Solicitud ${vacacionesInstance.id}</h3></div>
+			<div class="panel-heading"><h3 class="panel-title">Solicitud ${vacacionesInstance.id} (${tipo })</h3></div>
 			<div class="panel-body">
 				<g:form action="update" role="form" class="form-horizontal" >
 					<f:with bean="vacacionesInstance">
 						<g:hiddenField name="id" value="${vacacionesInstance.id}"/>
 						<f:field property="empleado" input-class="form-control" />
-						<f:field property="solicitud" input-class="form-control" />
+<%--						<f:field property="solicitud" input-class="form-control" />--%>
 						<f:field property="comentario" input-class="form-control" />
 					</f:with>
 					<div class="col-sm-offset-3 col-sm-9">

@@ -14,8 +14,7 @@ class Incidencia {
 	
 	Empleado empleado
 	
-	@BindingFormat("dd/MM/yyyy")
-	Date fecha=new Date()
+	
 
 	@BindingFormat("dd/MM/yyyy")
 	Date fechaInicial=new Date()
@@ -46,7 +45,8 @@ class Incidencia {
 	
 	static mapping = {
 		
-		fecha type:'date'
+		fechaInicial type:'date'
+		fechaFinal type:'date'
 	}
     
 }

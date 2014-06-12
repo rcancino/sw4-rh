@@ -15,7 +15,7 @@ class Vacaciones {
 	Empleado empleado
 	
 	@BindingFormat("dd/MM/yyyy")
-	Date solicitud
+	Date solicitud=new Date()
 	
 	Autorizacion autorizacion
 	

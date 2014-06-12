@@ -14,7 +14,11 @@ class IncidenciaController {
 	
 	def index(Long max) {
 		params.max = Math.min(max ?: 15, 100)
-		[incidenciaList:Incidencia.list(params), incidenciaTotalCount: Incidencia.count()]
+		params.sort=params.sort?:'dateCreated'
+		params.order='desc'
+		def tipo=params.tipo?:'QUINCENAL'
+		def list=Incidencia.findAll("from Incidencia i where i.empleado.salario.periodicidad=?",[tipo])
+		[incidenciaList:list,incidenciaTotalCount:Incidencia.count(),tipo:tipo]
 	}
 	
 	def create() {
@@ -33,6 +37,7 @@ class IncidenciaController {
 		incidenciaInstance.save flush:true
 		flash.message="Incidencia generada: "+incidenciaInstance.id
 		respond incidenciaInstance,[view:'edit']
+		redirect action:'index',params:[tipo:incidenciaInstance.empleado.salario.periodicidad]
 	}
 	
 	@Transactional
@@ -41,7 +46,7 @@ class IncidenciaController {
 			notFound()
 			return
 		}
-		[incidenciaInstance:incidenciaInstance]
+		[incidenciaInstance:incidenciaInstance,tipo:incidenciaInstance.empleado.salario.periodicidad]
 	}
 	
 	@Transactional
@@ -71,7 +76,7 @@ class IncidenciaController {
 			aut.save failOnError:true
 			incidenciaInstance.autorizacion=aut
 		}
-		respond incidenciaInstance,[view:'edit']
+		respond incidenciaInstance,[view:'edit',model:[tipo:incidenciaInstance.empleado.salario.periodicidad]]
 	}
 	
 	@Transactional
@@ -86,7 +91,7 @@ class IncidenciaController {
 			aut.delete flush:true
 			
 		}
-		respond incidenciaInstance,[view:'edit']
+		respond incidenciaInstance,[view:'edit',model:[tipo:incidenciaInstance.empleado.salario.periodicidad]]
 	}
 	
 	@Transactional
@@ -97,7 +102,7 @@ class IncidenciaController {
 		}
 		incidenciaInstance.delete flush:true
 		flash.message="Incidencia $incidenciaInstance.id eliminada"
-		redirect action:'index'
+		redirect action:'index',params:[tipo:incidenciaInstance.empleado.salario.periodicidad]
 	}
 	
 	protected void notFound() {

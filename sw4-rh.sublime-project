@@ -76,7 +76,9 @@
 			"path": "grails-app/migrations"
 		},
 		{
-			"path":"~/.grails/sw4-rh"
+			"path":"~/.grails/",
+			"folder_exclude_patterns": ["*"],
+			"file_include_patterns": ["*.groovy"]
 		}
 	],
 	"settings":

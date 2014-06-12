@@ -46,6 +46,8 @@ class AsistenciaDet {
 	Integer retardoComida=0
 	
 	String comentario
+
+	String tipo='FALTA'
 	
 	Date dateCreated
 	Date lastUpdated
@@ -62,6 +64,7 @@ class AsistenciaDet {
 		salida1 nullable:true
 		salida2 nullable:true
 		salida3 nullable:true
+		tipo inList:['ASISTENCIA','FALTA','DESCANSO','DIA_FESTIVO','VACACIONES','INCAPACIDAD','INCIDENCIA']
     }
 	static mapping = {
 		fecha type:'date'

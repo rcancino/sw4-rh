@@ -12,8 +12,10 @@
 					<fieldset>
 						<f:with bean="incidenciaInstance">
 							<f:field property="empleado" input-class="form-control" />
-							<f:field property="fecha" input-class="form-control" />
+							<f:field property="fechaInicial" input-class="form-control" />
+							<f:field property="fechaFinal" input-class="form-control" />
 							<f:field property="tipo" input-class="form-control" />
+							<f:field property="pagado" input-class="form-control" label="Con goce"/>
 							<f:field property="comentario" input-class="form-control" />
 						</f:with>
 					</fieldset>

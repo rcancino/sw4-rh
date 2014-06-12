@@ -46,13 +46,20 @@ class CalendarioController {
 	
 	@Transactional
 	def agregarPeriodo(Calendario calendarioInstance){
-		println 'Parametros: '+params
-		println 'Agregando periodo a calendario: '+calendarioInstance
+		//println 'Parametros: '+params
+		//println 'Agregando periodo a calendario: '+calendarioInstance
+
 		CalendarioDet det=new CalendarioDet(params)
+		if(calendarioInstance.periodos.contains(det)){
+			flash.message="Periodo ya registrado "
+			render view:'edit', model:[calendarioInstance:calendarioInstance]
+
+		}else{
+			calendarioInstance.addToPeriodos(det)
+			calendarioInstance.save failOnError:true
+			render view:'edit', model:[calendarioInstance:calendarioInstance]
+		}
 		
-		calendarioInstance.addToPeriodos(det)
-		calendarioInstance.save failOnError:true
-		render view:'edit', model:[calendarioInstance:calendarioInstance]
 	}
 	
 	def editPeriodo(CalendarioDet calendarioDetInstance){

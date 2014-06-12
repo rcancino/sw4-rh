@@ -5,8 +5,10 @@
 		<tr>
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
-			<th>Fecha</th>
+			<th>F. Inicial</th>
+			<th>F. Final</th>
 			<th>Tipo</th>
+			<th>Con goce</th>
 			<th>Comentario</th>
 			<th>Autorización</th>
 			<th>Creado</th>
@@ -26,8 +28,10 @@
 						<g:fieldValue bean="${row}" field="empleado"/>
 					</g:link>
 				</td>
-				<td><g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/></td>
+				<td><g:formatDate date="${row.fechaInicial}" format="dd/MM/yyyy"/></td>
+				<td><g:formatDate date="${row.fechaFinal}" format="dd/MM/yyyy"/></td>
 				<td><g:fieldValue bean="${row}" field="tipo"/> </td>
+				<td><g:checkBox name="pagado" value="${row.pagado }" readonly="true" disabled="true"/></td>
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 				<td>
 					<g:link action="edit" id="${row.id}">

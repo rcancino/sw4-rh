@@ -5,7 +5,7 @@
 		<tr>
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
-			<th>Solicitud</th>
+			<th>Días</th>
 			<th>Comentario</th>
 			<th>Autorización</th>
 			<th>Creado</th>
@@ -25,6 +25,7 @@
 						<g:fieldValue bean="${row}" field="empleado"/>
 					</g:link>
 				</td>
+				<td><g:formatNumber number="${row.dias.size()}" format="###"/></td>
 				<td><g:formatDate date="${row.solicitud}" format="dd/MM/yyyy"/></td>
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 				<td>

@@ -14,6 +14,8 @@
 							<f:field property="empleado" input-class="form-control" />
 							<f:field property="referenciaImms" input-class="form-control" />
 							<f:field property="tipo" input-class="form-control" />
+							<f:field property="fechaInicial" input-class="form-control" />
+							<f:field property="fechaFinal" input-class="form-control" />
 							<f:field property="comentario" input-class="form-control" />
 						</f:with>
 					</fieldset>

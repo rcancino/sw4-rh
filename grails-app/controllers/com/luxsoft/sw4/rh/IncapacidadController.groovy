@@ -15,9 +15,9 @@ class IncapacidadController {
 		params.max = Math.min(max ?: 15, 100)
 		params.sort=params.sort?:'dateCreated'
 		params.order='desc'
-		def list=Incapacidad.list(params)
-		println 'List: '+list
-		[incapacidadesList:list,incapacidadTotalCount:Incapacidad.count()]
+		def tipo=params.tipo?:'QUINCENAL'
+		def list=Incapacidad.findAll("from Incapacidad i where i.empleado.salario.periodicidad=?",[tipo])
+		[incapacidadesList:list,incapacidadTotalCount:Incapacidad.count(),tipo:tipo]
 		
 	}
 	
@@ -30,7 +30,7 @@ class IncapacidadController {
 			notFound()
 			return
 		}
-		[incapacidadInstance:incapacidadInstance]
+		[incapacidadInstance:incapacidadInstance,tipo:incapacidadInstance.empleado.salario.periodicidad]
 	}
 	
 	def update(Incapacidad incapacidadInstance) {
@@ -43,7 +43,7 @@ class IncapacidadController {
 		}
 		incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
 		flash.message="Incapacidad actualizada: "+incapacidadInstance.id
-		redirect action:'index'
+		redirect action:'index',params:[tipo:incapacidadInstance.empleado.salario.periodicidad]
 	}
 	
 	def save(Incapacidad incapacidadInstance) {
@@ -56,7 +56,7 @@ class IncapacidadController {
 		}
 		incapacidadInstance=incapacidadService.salvar(incapacidadInstance)
 		flash.message="Incapacidad $incapacidadInstance.id creada"
-		respond incapacidadInstance,[view:'edit']
+		redirect action:'index',params:[tipo:incapacidadInstance.empleado.salario.periodicidad]
 	}
 	
 	def agregarFecha(Incapacidad incapacidadInstance) {

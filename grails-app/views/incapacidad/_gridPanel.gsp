@@ -6,7 +6,9 @@
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
 			<th>Tipo</th>
-			<th>Fecha</th>
+			<th>Inicio</th>
+			<th>Fin</th>
+			<th>Días</th>
 			<th>Referencia (IMMSS)</th>
 			<th>Comentario</th>
 		</tr>
@@ -25,8 +27,11 @@
 					</g:link>
 				</td>
 				<td><g:fieldValue bean="${row}" field="tipo"/> </td>
-				<td><g:formatDate date="${row.dateCreated}" format="dd/MM/yyyy"/></td>
+				<td><g:formatDate date="${row.fechaInicial}" format="dd/MM/yyyy"/></td>
+				<td><g:formatDate date="${row.fechaFinal}" format="dd/MM/yyyy"/></td>
+				<td><g:formatNumber number="${row.dias}" format="###"/> </td>
 				<td><g:fieldValue bean="${row}" field="referenciaImms"/> </td>
+				
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 			</tr>
 		</g:each>

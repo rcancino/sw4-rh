@@ -13,7 +13,7 @@
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 	</content>
-	<content tag="gridTitle">Incidencias</content>
+	<content tag="gridTitle">Incidencias (${tipo})</content>
 	
 	<content tag="gridTasks">
 		<g:link action="index" class="btn btn-default">
@@ -28,7 +28,12 @@
 		<button class="btn btn-default" data-toggle="modal" data-target="#filterForm">
 			<span class="glyphicon glyphicon-filter"></span> Filtrar
 		</button>
-		
+		<g:link action="index" class="btn btn-default ${tipo=='QUINCENAL'?'active':''}" params="[tipo:'QUINCENAL']">
+			<span class="glyphicon glyphicon-filter"></span> Quincenal
+		</g:link>
+		<g:link action="index" class="btn btn-default ${tipo=='SEMANAL'?'active':''}" params="[tipo:'SEMANAL']">
+			<span class="glyphicon glyphicon-filter"></span> Semanal
+		</g:link>
 	</content>
 	
 	<content tag="gridPanel">

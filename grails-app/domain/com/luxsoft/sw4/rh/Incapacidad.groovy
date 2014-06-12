@@ -7,6 +7,7 @@ import com.luxsoft.sw4.rh.sat.SatIncapacidad
 
 import org.grails.databinding.BindingFormat
 import groovy.transform.EqualsAndHashCode
+import groovy.time.TimeCategory
 
 @EqualsAndHashCode(includes='empleado,referenciaImms')
 class Incapacidad {
@@ -27,6 +28,8 @@ class Incapacidad {
 	@BindingFormat("dd/MM/yyyy")
 	Date fechaFinal
 
+	Integer dias
+
 	Date dateCreated
 	
 	Date lastUpdated
@@ -36,10 +39,18 @@ class Incapacidad {
     	comentario nullable:true,maxSize:250
     }
 
-	static hasMany = [dias:Date]
+	static transients=['dias']
 	
 	static mapping = {
-		
+		fechaInicial type:'date'
+		fechaFinal type:'date'
+	}
+
+	public Integer getDias(){
+		use(TimeCategory){
+			def duration= fechaFinal-fechaInicial+1.day
+			return duration.days
+		}
 	}
 
     String toString(){

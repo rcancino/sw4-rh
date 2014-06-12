@@ -1,7 +1,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Alta de calendario</title>
+	<title>Calendario ${calendarioInstance.id}</title>
 </head>
 <body>
 	<div class="container">

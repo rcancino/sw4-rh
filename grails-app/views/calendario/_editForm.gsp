@@ -4,7 +4,7 @@
 		<h3 class="panel-title">Calendario ${calendarioInstance.ejercicio} (${calendarioInstance.tipo})</h3>
 	</div>
 	<div class="panel-body">	
-	
+		
 		<g:form action="${actionForm?:'save' }" role="form" class="form-horizontal" method="${actionMethod?:'POST' }">
 			<fieldset>
 			<f:with bean="calendarioInstance">
@@ -22,7 +22,17 @@
 		      		</button>
 		    	</div>
 		  	</div>
+
 		</g:form>
+
+						
+		
+					
 	</div>
 	<div class="panel-footer"></div>
 </div>
+<g:if test="${flash.message}">
+			<div class="alert alert-info">
+				<strong>${flash.message}</strong>
+			</div>
+		</g:if>

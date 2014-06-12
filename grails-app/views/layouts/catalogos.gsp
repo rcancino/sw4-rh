@@ -10,7 +10,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					
-					<div class="alert alert-info">
+					<div class="alert alert-warning">
 						<g:pageProperty name="page.header"/>
 						<g:if test="${flash.message}">
 							<div class="message" role="status">
