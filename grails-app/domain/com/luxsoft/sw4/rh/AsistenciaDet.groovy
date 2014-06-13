@@ -47,7 +47,7 @@ class AsistenciaDet {
 	
 	String comentario
 
-	String tipo='FALTA'
+	String tipo
 	
 	Date dateCreated
 	Date lastUpdated
@@ -67,7 +67,7 @@ class AsistenciaDet {
 		tipo inList:['ASISTENCIA','FALTA','DESCANSO','DIA_FESTIVO','VACACIONES','INCAPACIDAD','INCIDENCIA']
     }
 	static mapping = {
-		fecha type:'date'
+		fecha type:'date',index:'ASISTENCIA_DET_IDX'
 		entrada1 type:'time'
 		entrada2 type:'time'
 		entrada3 type:'time'

@@ -3,7 +3,7 @@ modules = {
         resource url:'js/application.js'
     }
     luxor {
-    	dependsOn 'bootstrap'
+    	dependsOn 'bootstrap,application'
     	resource url:'css/luxor.css'
 
     }

@@ -8,6 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 class AsistenciaController {
 	
 	def asistenciaService
+	def checadoService
 	
 	def cambiarPeriodo(Periodo periodo) {
 		session.periodo=periodo?:Periodo.getCurrentMonth()
@@ -15,8 +16,9 @@ class AsistenciaController {
 	}
 	
 	def asistenciaSemanal(){
-		session.periodicidad='SEMANAL'
-		redirect action:'index'
+		def tipo='SEMANA'
+		def periodos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.tipo=?",[tipo])
+		render  view:'index',model:[periodos:periodos,tipo:tipo]
 	}
 	
 	def asistenciaQuincenal(Long calendarioDetId){
@@ -26,7 +28,7 @@ class AsistenciaController {
 	}
 
 	def cargarAsistencia(Long calendarioDetId){
-		def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=? order by a.empleado.apellidoMaterno desc",[calendarioDetId])
+		def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=? order by a.empleado.apellidoPaterno asc",[calendarioDetId])
 		render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
 	}
 
@@ -40,9 +42,10 @@ class AsistenciaController {
 
 
 
-	def lectora(Integer max){
+	def lectora(Integer max,Periodo periodo){
 		params.max = Math.min(max ?: 50, 100)
-		def periodo=session.periodo
+		if(!periodo)
+			periodo=new Periodo()
 		def query=Checado.where{fecha>=periodo.fechaInicial &&
 			fecha<=periodo.fechaFinal
 		}
@@ -52,7 +55,7 @@ class AsistenciaController {
 	
 	def importarLecturas(Periodo periodo){
 		
-		asistenciaService.importarLecturas(periodo)
+		checadoService.importarLecturas(periodo)
 		session.periodo=periodo
 		redirect action:'lectora',params:params
 	}

@@ -5,6 +5,7 @@ import java.sql.Time;
 import org.apache.commons.io.FileUtils;
 
 import grails.transaction.Transactional
+import grails.transaction.NotTransactional
 import groovy.time.TimeCategory;
 import groovy.time.TimeDuration;
 
@@ -12,61 +13,24 @@ import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.Asistencia;
 import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.Checado
+
 import com.luxsoft.sw4.rh.Empleado
 import com.luxsoft.sw4.rh.CalendarioDet
+
 import org.apache.commons.lang.exception.ExceptionUtils
 
 
+@Transactional
 class AsistenciaService {
 
 	def grailsApplication
+	def incapacidadService
+	def incidenciaService
+	def vacacionesService
 	
-	@Transactional
-	def demo() {}
-
-    def importarLecturas(Periodo periodo){
-		log.info 'Importando lectoras para el periodo: '+periodo
-    	for(date in periodo.fechaInicial..periodo.fechaFinal){
-    		def sdate=date.format('yyyyMMdd')
-    		
-			def rawdata=grailsApplication.config.sw4.rh.asistencia.rawdata
-			File file =new File(rawdata+"/"+sdate+".chk")
-			println 'Importado lecturas con: '+file
-			log.info 'Rawdata: '+file.path+' Exists: '+file.exists()
-    		//File file=grailsApplication.mainContext.getResource("/WEB-INF/data/"+sdate+'.chk').file
-    		if(file.exists()){
-				//FileUtils.copyFileToDirectory(file,new File("c:/basura/rawdata"))
-    			log.info 'Importando lecturas para: '+sdate
-    			log.info 'Importando desde: '+file.name
-    			int lector
-    			def fecha
-    			file.eachLine{line,row ->
-    			  def fields=line.split(',')
-    			  
-    			  if(fields.length==2){
-    				lector=fields[0].toInteger()
-    				println 'Lector: '+lector
-    			  }else if(fields.length==4){
-    				fecha=Date.parse('yyyyMMdd',fields[2])
-    				  println 'Fecha: '+fecha
-    			  }else{
-    				//
-    				def hora=Date.parse('hhmmss',fields[0])
-    				println "registrando evento empleado: ${fields[2]} hora:$hora  Fecha:$fecha"
-    				//def r=Checado.findOrSaveWhere(lector:lector,fecha:fecha,hora:hora,numeroDeEmpleado:fields[2])
-    				def r=new Checado(lector:lector,fecha:fecha,hora:hora,numeroDeEmpleado:fields[2])
-    				r.save(failOnError:true)
-    			  }
-    			 
-    			  
-    			}
-    		}
-    	}
-    	
-    }
-
+	
     
-	
+	@NotTransactional
 	def registrarAsistencias2(Periodo periodo,String tipo,CalendarioDet cal) {
 		//numero magico
 		
@@ -151,6 +115,7 @@ class AsistenciaService {
 
 /*****   LO NUEVO -----------------------------------*/
 	
+	@NotTransactional
     def actualizarAsistencia(Asistencia asistencia){
     	def calendarioDet=asistencia.calendarioDet
     	def empleado=asistencia.empleado
@@ -160,6 +125,7 @@ class AsistenciaService {
     	actualizarAsistencia(empleado,tipo,calendarioDet)
     }
 
+    @NotTransactional
 	def actualizarAsistencia(CalendarioDet calendarioDet){
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
@@ -175,6 +141,7 @@ class AsistenciaService {
 		}
 	}
 	
+	@NotTransactional
 	def actualizarAsistencia(Empleado empleado,String tipo,CalendarioDet cal) {
 		
 		//numero magico
@@ -243,19 +210,22 @@ class AsistenciaService {
 		}
 		
 		recalcularRetardos(asistencia)
-		procesarIncapacidades(asistencia)
-		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'}
-		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'}
-		asistencia.incapacidades=asistencia.partidas.sum 0,{it.tipo=='INCAPACIDAD'}
+		
+		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
+		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
+		incapacidadService.procesar(asistencia)
+		incidenciaService.procesar(asistencia)
+		vacacionesService.procesar(asistencia)
+		/*asistencia.incapacidades=asistencia.partidas.sum 0,{it.tipo=='INCAPACIDAD'}
 		asistencia.incidencias=asistencia.partidas.sum 0,{it.tipo=='INCIDENCIA'}
 		asistencia.vacaciones=asistencia.partidas.sum 0,{it.tipo=='VACACIONES'}
-		asistencia.save failOnError:true
+		*/asistencia.save failOnError:true
 		return asistencia
 		
 	}
 
 	
-	
+	@NotTransactional
 	def recalcularRetardos(Asistencia asistencia) {
 		println 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
 		def retardoMenor=0
@@ -296,7 +266,7 @@ class AsistenciaService {
 					it.tipo='DESCANSO'
 					break
 				case Calendar.SATURDAY:
-					if(it.entrada1 || it.salida1 ) {
+					if(it.entrada1 && it.salida1 ) {
 						it.tipo='ASISTENCIA'
 						it.comentario='ASISTENCIA'
 						
@@ -306,7 +276,7 @@ class AsistenciaService {
 					}
 					break
 				default:
-					if(it.entrada1 || it.salida1 || it.entrada2 || it.salida2) {
+					if(it.entrada1 && it.salida1 && it.entrada2 && it.salida2) {
 						it.comentario='ASISTENCIA'
 						it.tipo='ASISTENCIA'
 					}else{
@@ -327,18 +297,6 @@ class AsistenciaService {
 
 	
 	
-	def procesarIncapacidades(Asistencia asistencia){
-		asistencia.partidas.each{
-			println 'Procesando inacapacidades para: '+it.fecha
-			def found=Incapacidad.find("from Incapacidad i where ? between date(i.fechaInicial) and date(i.fechaFinal)"
-				,[it.fecha])
-			if(found){
-				it.comentario='INCAPACIDAD'
-				it.tipo='INCAPACIDAD'
-			}
-		}
-
-	}
 	
     
 }

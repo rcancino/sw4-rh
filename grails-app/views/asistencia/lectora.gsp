@@ -24,6 +24,11 @@
 			<span class="glyphicon glyphicon-import"></span> Importar
 		</button>
 		<g:render template="/_common/periodoForm" model="[action:'importarLecturas',periodo:periodo]"/>
+		
+		<button class="btn btn-default" data-toggle="modal" data-target="#cargaPeriodoForm">
+			<span class="glyphicon glyphicon-refresh"></span> Cargar
+		</button>
+		
   		<g:link class="btn btn-default" action="eliminarRegistrosLectora">
   			<span class="glyphicon glyphicon-trash"></span> Eliminar
   		</g:link>
@@ -35,6 +40,9 @@
 	</content>
 	
 	
+	
+
+
 	
 </body>
 </html>

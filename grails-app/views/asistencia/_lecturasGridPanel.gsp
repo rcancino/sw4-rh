@@ -7,6 +7,7 @@
 			<g:sortableColumn property="numeroDeEmpleado" title="No Empleado"/>
 			<g:sortableColumn property="fecha" title="Fecha"/>
 			<g:sortableColumn property="hora" title="Hora"/>
+			<th>Modificado</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -19,6 +20,7 @@
 				<td>${fieldValue(bean:row,field:"numeroDeEmpleado")}</td>
 				<td><g:formatDate date="${row.fecha}" format="dd/MMM/yyyy"/></td>
 				<td><g:formatDate date="${row.hora}" format="hh:mm:ss"/></td>
+				<td><g:formatDate date="${row.lastUpdated}" format="dd/MM/yyyy hh:mm:ss"/></td>
 				
 			</tr>
 		</g:each>

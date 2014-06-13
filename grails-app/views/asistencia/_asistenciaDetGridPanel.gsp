@@ -12,7 +12,7 @@
 			<th><g:message code="asistenciaDet.retardoMenor.label" default="Ret men"/></th>
 			<th><g:message code="asistenciaDet.retardoMayor.label" default="Ret may"/></th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Ret com"/></th>
-			<th><g:message code="asistenciaDet.comentario.label" default="Comentario"/></th>
+			<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -31,7 +31,7 @@
 				<td><g:fieldValue bean="${row}" field="retardoMenor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoMayor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
-				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
+				<td><g:fieldValue bean="${row}" field="tipo"/> </td>
 			</tr>
 		</g:each>
 	</tbody>

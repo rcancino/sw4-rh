@@ -47,7 +47,7 @@
    				<label class="col-sm-6 control-label">Retardo menor</label>
     			<div class="col-sm-6">
       				<p class="form-control-static">
-      					<g:link>${asistenciaInstance.retardoMenor}</g:link>
+      					${asistenciaInstance.retardoMenor}
       				</p>
     			</div>
   			</div>
