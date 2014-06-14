@@ -35,4 +35,8 @@ class CalendarioDet {
 		fechaDePago:'date'
 		sort "inicio"
 	}
+
+	def periodo(){
+		return new Periodo(inicio,fin)
+	}
 }

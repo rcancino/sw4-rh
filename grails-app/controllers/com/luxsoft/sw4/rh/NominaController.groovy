@@ -42,9 +42,11 @@ class NominaController {
         redirect view:'agregarPartida', params:params
     }
 	
-	def generar(String periodicidad){
-		nominaService.generarNominas('GENERAL',periodicidad)
-		redirect action:'index' ,params:params
+	
+
+	def generar(Long calendarioDet){
+		def nominaInstance=nominaService.generar(calendarioDet,'GENERAL','TRANSFERENCIA')
+		render view:'show',model:[nominaInstance:nominaInstance]
 	}
 
     def delete(Nomina nominaInstance){

@@ -13,6 +13,7 @@ import com.luxsoft.sw4.Periodo
 class Nomina {
 	
 	Empresa empresa
+	Integer ejercicio
 	Integer folio  //??
 	Periodo periodo
 	Integer diasPagados
@@ -32,6 +33,8 @@ class Nomina {
 	
 	String status
 	Date corte
+
+	CalendarioDet calendarioDet
 	
 	Date dateCreated
 	Date lastUpdated
@@ -42,11 +45,14 @@ class Nomina {
 
     static constraints = {
 		tipo inList:['GENERAL','ESPECIAL','AGINALDO','UTILIDADES']
-		diaDePago inList:['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO']
+		//diaDePago inList:['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO']
+		diaDePago maxSize:20
 		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','ANUAL','ESPECIAL']
 		formaDePago inList:['CHEQUE','TRANSFERENCIA']
 		status inList:['PENDIENTE','REVISION','CERRADA']
 		corte nullable:true
+		calendarioDet nullable:true
+		ejercicio nullable:true
     }
 
     static hasMany = [partidas: NominaPorEmpleado]

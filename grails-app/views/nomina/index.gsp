@@ -22,7 +22,6 @@
 					<li><g:link action="index" params="[periodicidad:'QUINCENAL']">Quincenal</g:link></li>
 					<li><g:link action="index" params="[periodicidad:'SEMANAL']">Semanal</g:link></li>
 					<li><a href="">Especial</a></li>
-					
 				</ul>
 			</div>
 		</div>
@@ -34,9 +33,12 @@
 							<g:link action="index" class="btn btn-default">
 								<span class="glyphicon glyphicon-repeat"></span> Refrescar
 							</g:link>
-							<g:link action="generar" class="btn btn-primary" params="[periodicidad:periodicidad]">
+							<g:link action="" class="btn btn-primary" params="[periodicidad:periodicidad]">
 								 Generar 
 							</g:link>
+							<button class="btn btn-default" data-toggle="modal" data-target="#agregarNominaForm">
+								<span class="glyphicon glyphicon-calendar"></span> Agregar
+							</button>
 							<g:link action="buscar" class="btn btn-default" >
 								<span class="glyphicon glyphicon-search"></span> Buscar
 							</g:link>
@@ -52,6 +54,8 @@
 				<g:render template="nominaGridPanel"/>
 			</div>
 		</div>
+		
+		<g:render template="agregarDialog"/>
 
 	</div>
 	

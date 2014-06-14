@@ -4,11 +4,11 @@
 	<thead>
 		<tr>
 			<g:sortableColumn property="folio" title="Folio"/>
-			<g:sortableColumn property="empresa.clave" title="Empresa"/>
-			<th><g:message code="nomina.periodicidad.label" encodeAs="html"/></th>
+			<th><g:message code="nomina.calendarioDet.label" encodeAs="html" default="Calendario"/></th>
 			<th><g:message code="nomina.tipo.label" default="Tipo" encodeAs="html"/></th>
-			<th><g:message code="periodo.label" encodaAs="html"/></th>
-			<th><g:message code="nomina.corte" default="Corte" encodeAs="html"/></th>
+			<th><g:message code="periodo.fechaInicial" encodaAs="html"/></th>
+			<th><g:message code="periodo.fechaFinal" encodaAs="html"/></th>
+			<th><g:message code="nomina.pago" default="Pago" encodeAs="html"/></th>
 			<th><g:message code="nomina.status" default="Status" encodeAs="html"/></th>
 			
 		</tr>
@@ -21,15 +21,11 @@
 						<g:formatNumber number="${row.folio}" format="######"/>
 					</g:link>
 				</td>
-				<td>${fieldValue(bean:row,field:"empresa.clave")}</td>
-				<td>${fieldValue(bean:row,field:"periodicidad")}</td>
+				<td>${row.calendarioDet?.calendario?.tipo} ${row.calendarioDet?.folio}</td>
 				<td>${fieldValue(bean:row,field:"tipo")}</td>
-				<td>
-					<g:formatDate date="${row.pago}" format="MMM-yyyy"/>
-				</td>
-				<td>
-					<g:formatDate date="${row.corte}" format="dd/MM/yyyy"/>
-				</td>
+				<td><g:formatDate date="${row.periodo.fechaInicial}" format="dd/MM/yyyy"/></td>
+				<td><g:formatDate date="${row.periodo.fechaFinal}" format="dd/MM/yyyy"/></td>
+				<td><g:formatDate date="${row.pago}" format="dd/MM/yyyy"/></td>
 				<td>${fieldValue(bean:row,field:"status")}</td>
 			</tr>
 		</g:each>
