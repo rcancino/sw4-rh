@@ -15,6 +15,8 @@
 					<f:field property="nombres" input-class="form-control"/>
 					<f:field property="curp" input-class="form-control"/>
 					<f:field property="rfc" input-class="form-control"/>
+					<f:field property="activo" input-class="form-control" />
+					<f:field property="controlDeAsistencia" input-class="form-control" />
                                         
                                         
                                         <f:field property="alta" input-class="form-control" input-id="alta"/>

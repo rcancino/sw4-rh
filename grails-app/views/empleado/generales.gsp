@@ -41,6 +41,7 @@
 					<f:field property="fechaDeNacimiento" input-class="form-control" label="F.Nacimiento"/>	
 					<f:field property="sexo" input-class="form-control" />	
 					<f:field property="activo" input-class="form-control" />
+					<f:field property="controlDeAsistencia" input-class="form-control" />
 				</f:with>
 			</fieldset>
 		

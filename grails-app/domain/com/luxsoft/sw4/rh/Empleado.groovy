@@ -25,6 +25,7 @@ class Empleado  implements Serializable{
 	String status
 	Date fechaDeNacimiento
 	Boolean activo
+	Boolean controlDeAsistencia
 	
 	String nombre
 	//List contactos
@@ -64,6 +65,7 @@ class Empleado  implements Serializable{
 		contacto nullable:true
 		baja nullable:true
 		activo nullable:true
+		controlDeAsistencia nullable:true
     }
 	
 	static transients = ['nombre']
