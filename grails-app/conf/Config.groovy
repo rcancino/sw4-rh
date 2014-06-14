@@ -91,11 +91,12 @@ environments {
     development {
         grails.logging.jul.usebridge = true
 		//sw4.rh.asistencia.rawdata="/Users/rcancino/github/Data/rawdata"
-		sw4.rh.asistencia.rawdata="/mtn/RAWDATA/NOMIPLUS/RAWDATA"
+		
+		sw4.rh.asistencia.rawdata="Y://NOMIPLUS//RAWDATA"
     }
     production {
         grails.logging.jul.usebridge = false
-		sw4.rh.asistencia.rawdata="Y://NOMIPLUS//RAWDATA"
+		sw4.rh.asistencia.rawdata="/mtn/RAWDATA/NOMIPLUS/RAWDATA"
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
