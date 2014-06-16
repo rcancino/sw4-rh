@@ -24,97 +24,15 @@ import org.apache.commons.lang.exception.ExceptionUtils
 class AsistenciaService {
 
 	def grailsApplication
+	
 	def incapacidadService
+	
 	def incidenciaService
+	
 	def vacacionesService
 	
-	
-    
-	@NotTransactional
-	def registrarAsistencias2(Periodo periodo,String tipo,CalendarioDet cal) {
-		//numero magico
-		
-		def tolerancia1=(60*1000*10)
-		
-		def empleados=Empleado.findAll{salario.periodicidad==tipo && status=='ALTA'}
-		
-		
-		
-		empleados.each{empleado ->
-			log.info "Actualizando asistencias ${empleado} ${periodo}"
-			println "Actualizando asistencias ${empleado} ${periodo}"
-			//Maestro de asistencia
-			def asistencia =Asistencia
-				.find("from Asistencia a where a.empleado=? and a.tipo=? and date(a.periodo.fechaInicial)=? and date(a.periodo.fechaFinal)=?"
-					,[empleado,tipo,periodo.fechaInicial,periodo.fechaFinal])
-			if(asistencia) {
-				println 'Asistencia ya registrada actualizandola'
-				if(!asistencia.calendarioDet)
-					asistencia.calendarioDet=cal
-				asistencia.partidas.clear()
-			}else {
-				asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
-			}
-			for(date in periodo.fechaInicial..periodo.fechaFinal){
-				def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){numeroDeEmpleado==empleado?.perfil?.numeroDeTrabajador && fecha==date}
-				lecturas.sort(){ c->
-					c.hora
-				}
-				
-				def valid =[]
-				def last=null
-				lecturas.each{ reg->
-					if(last==null){
-						last=reg.hora
-						valid.add(reg)
-					}
-					def dif=reg.hora.time-last.time
-					if(dif>tolerancia1 ){
-						//println "$date  Lectura valida  $reg.hora"
-						last=reg.hora
-						valid.add(reg)
-					}
-				}
-				
-				def asistenciaDet=new AsistenciaDet(fecha:date)
-				
-				
-				for(def i=0;i<valid.size;i++) {
-					def checado=valid[i]
-					def time=new Time(checado.hora.time)
-					
-					switch(i) {
-						case 0:
-							asistenciaDet.entrada1=time
-							break
-						case 1:
-							asistenciaDet.salida1=time
-							break
-						case 2:
-							asistenciaDet.entrada2=time
-							break
-						case 3:
-							asistenciaDet.salida2=time
-							break
-						default:
-							break
-					}
-				}
-				asistencia.addToPartidas(asistenciaDet)
-			}
-			
-			try {
-				recalcularRetardos(asistencia)
-				asistencia.save failOnError:true
-			} catch (Exception e) {
-				e.printStackTrace()
-			}
-		}
-		
-	}
 
-/*****   LO NUEVO -----------------------------------*/
-	
+
 	@NotTransactional
     def actualizarAsistencia(Asistencia asistencia){
     	def calendarioDet=asistencia.calendarioDet
@@ -129,7 +47,7 @@ class AsistenciaService {
 	def actualizarAsistencia(CalendarioDet calendarioDet){
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
-		def empleados=Empleado.findAll{salario.periodicidad==tipo && activo==true}
+		def empleados=Empleado.findAll{salario.periodicidad==tipo && activo==true && controlDeAsistencia==true}
 		empleados.each{ empleado ->
 			try {
 				actualizarAsistencia(empleado,tipo,calendarioDet)
