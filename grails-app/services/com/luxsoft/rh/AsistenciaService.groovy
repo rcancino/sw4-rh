@@ -47,10 +47,11 @@ class AsistenciaService {
 	def actualizarAsistencia(CalendarioDet calendarioDet){
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
-		def empleados=Empleado.findAll{salario.periodicidad==tipo && activo==true && controlDeAsistencia==true}
+		def empleados=Empleado.findAll{salario.periodicidad==tipo && activo==true }
 		empleados.each{ empleado ->
 			try {
-				actualizarAsistencia(empleado,tipo,calendarioDet)
+				if(empleado.controlDeAsistencia)
+					actualizarAsistencia(empleado,tipo,calendarioDet)
 			} catch (Exception ex) {
 				log.error ex
 				def msg=ExceptionUtils.getRootCauseMessage(ex)
