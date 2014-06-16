@@ -47,7 +47,7 @@ class AsistenciaService {
 	def actualizarAsistencia(CalendarioDet calendarioDet){
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
-		def empleados=Empleado.findAll{salario.periodicidad==tipo && activo==true }
+		def empleados=Empleado.findAll{salario.periodicidad==tipo  }
 		empleados.each{ empleado ->
 			try {
 				if(empleado.controlDeAsistencia) {
