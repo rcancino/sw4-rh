@@ -50,8 +50,15 @@ class AsistenciaService {
 		def empleados=Empleado.findAll{salario.periodicidad==tipo && activo==true }
 		empleados.each{ empleado ->
 			try {
-				if(empleado.controlDeAsistencia)
-					actualizarAsistencia(empleado,tipo,calendarioDet)
+				if(empleado.controlDeAsistencia) {
+					if(empleado.baja) {
+						if(empleado.baja.fecha<calendarioDet.asistencia.fechaInicial) {
+							actualizarAsistencia(empleado,tipo,calendarioDet)
+						}
+					}else {
+						actualizarAsistencia(empleado,tipo,calendarioDet)
+					}
+				}
 			} catch (Exception ex) {
 				log.error ex
 				def msg=ExceptionUtils.getRootCauseMessage(ex)

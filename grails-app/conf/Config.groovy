@@ -96,7 +96,7 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-		sw4.rh.asistencia.rawdata="/mtn/RAWDATA/NOMIPLUS/RAWDATA"
+		sw4.rh.asistencia.rawdata="/mnt/RAWDATA/NOMIPLUS/RAWDATA"
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
