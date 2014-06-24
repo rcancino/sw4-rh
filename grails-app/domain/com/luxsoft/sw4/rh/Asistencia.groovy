@@ -24,11 +24,16 @@ class Asistencia {
 	Integer vacaciones=0
 	
 	Integer incapacidades=0
-
-	Integer incidencias=0
 	
 	/**
-	 * Numero de faltas acumuladas en el periodo
+	 * Icidencias no pagadas
+	 */
+	Integer incidencias=0
+	
+	Integer diasTrabajados=0
+	
+	/**
+	 * Numero de faltas ausencias e incidencias_f (no pagadas) en el periodo
 	 */
 	Integer faltas=0
 	

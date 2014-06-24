@@ -48,6 +48,12 @@ class NominaController {
 		def nominaInstance=nominaService.generar(calendarioDet,'GENERAL','TRANSFERENCIA')
 		render view:'show',model:[nominaInstance:nominaInstance]
 	}
+	
+	def actualizarPartidas(Long id) {
+		
+		def nomina=nominaService.actualizarPartidas(Nomina.get(id))
+		render view:'show',model:[nominaInstance:nomina]
+	}
 
     def delete(Nomina nominaInstance){
     	if(nominaInstance==null){

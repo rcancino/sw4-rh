@@ -9,6 +9,7 @@
 			<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 			<th></th>
 			<th></th>
+			<th></th>
 			</g:if>
 		</tr>
 	</thead>
@@ -26,6 +27,17 @@
 				<td class="text-right"><g:formatNumber number="${it.importeGravado}" format="#,###,###.##"/></td>
 				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##"/></td>
 				<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
+				<td>
+					<a  
+						data-popover="true" 
+						data-placement="top" 
+						data-title="Formula"
+						data-url="${g.createLink(action:'informacionDeConcepto',id:it.id)}"
+						data-toggle="popover"
+						>
+  						 <span class="glyphicon glyphicon-info-sign"></span>
+					</a>
+				</td>
 				<td class="text-center">
 					<g:link class="disabled" action="modificarConcepto" id="${it.id}" data-toggle="tooltip"  title="Modificar concepto">
 						<span class="glyphicon glyphicon-pencil"></span>
@@ -53,10 +65,12 @@
 			<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 			<th></th>
 			<th></th>
+			<th></th>
 			</g:if>
 		</tr>
 	</tfoot>
 </table>
+
 
 
 

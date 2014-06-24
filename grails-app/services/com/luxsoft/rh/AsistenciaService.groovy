@@ -202,10 +202,10 @@ class AsistenciaService {
 					}
 					break
 				default:
-					if(it.entrada1 && it.salida1 && it.entrada2 && it.salida2) {
+					if(it.entrada1 || it.salida1 || it.entrada2 || it.salida2) {
 						it.comentario='ASISTENCIA'
 						it.tipo='ASISTENCIA'
-					}else{
+					}else if( !it.entrada1 && !it.salida1 &&  !it.entrada2 && !it.salida2){
 						it.comentario='FALTA'
 						it.tipo='FALTA'
 					}

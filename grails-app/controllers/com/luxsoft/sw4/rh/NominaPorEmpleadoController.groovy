@@ -8,6 +8,8 @@ import grails.plugin.springsecurity.annotation.Secured
 class NominaPorEmpleadoController {
 	
 	def nominaPorEmpleadoService
+	
+	def conceptoDeNominaRuleResolver
 
     def index() { }
 
@@ -84,6 +86,20 @@ class NominaPorEmpleadoController {
 			}
 			'*'{ render status: NOT_FOUND }
 		}
+	}
+	
+	
+	def informacionDeConcepto(Long id) {
+		
+		def  neDet=NominaPorEmpleadoDet.get(id)
+		println 'Localizando informacion para el calculo del concepto: '+neDet.concepto
+		def ruleModel=conceptoDeNominaRuleResolver.getModel(neDet.concepto)
+		if(ruleModel) {
+			render template:ruleModel.getTemplate(),model:ruleModel.getModel(neDet)
+		}else {
+			render {div("PENDIENTE DE IMPLEMENTAR")}
+		}
+		
 	}
 
     

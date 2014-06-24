@@ -3,6 +3,11 @@ import grails.util.Environment
 import com.luxsoft.sw4.cfdi.CfdiCadenaBuilder
 import com.luxsoft.sw4.cfdi.CfdiSellador
 import com.luxsoft.sw4.cfdi.CfdiTimbrador
+import com.luxsoft.sw4.rh.ProcesadorDeISTP
+import com.luxsoft.sw4.rh.ProcesadorDeNomina
+import com.luxsoft.sw4.rh.ProcesadorDeSueldo
+import com.luxsoft.sw4.rh.ProcesadorSeguroSocial
+import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
 
 
 // Place your Spring DSL code here
@@ -31,4 +36,17 @@ beans = {
 	cfdiSellador(CfdiSellador){
 		cadenaBuilder=ref("cfdiCadenaBuilder")
 	}
+	
+	procesadorDeNomina(ProcesadorDeNomina){
+		reglas=[ref('procesadorDeSueldo'),ref('procesadorSeguroSocial'),ref('procesadorDeISTP')]
+	}
+	
+	conceptoDeNominaRuleResolver(ConceptoDeNominaRuleResolver){
+		ruleMap=['P001':ref('procesadorDeSueldo'),
+			'D002':ref('procesadorDeISTP')]
+	}
+	
+	procesadorDeSueldo(ProcesadorDeSueldo){}
+	procesadorDeISTP(ProcesadorDeISTP){}
+	procesadorSeguroSocial(ProcesadorSeguroSocial){}
 }

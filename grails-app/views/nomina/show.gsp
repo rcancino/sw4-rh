@@ -69,8 +69,8 @@
 				<button type="button" name="reportes" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Operaciones <span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li>
-						<g:link controller="procesadorDeNomina" action="generarPlantilla" id="${nominaInstance.id}"> 
-							<span class="glyphicon glyphicon-cog"></span> Generar
+						<g:link  action="actualizarPartidas" id="${nominaInstance.id}"> 
+							<span class="glyphicon glyphicon-cog"></span> Actualizar
 						</g:link> 
 					</li>
 					<li>

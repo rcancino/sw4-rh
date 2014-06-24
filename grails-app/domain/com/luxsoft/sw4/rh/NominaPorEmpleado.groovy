@@ -8,7 +8,7 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode(includes='empleado')
 @ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
-class NominaPorEmpleado {
+class NominaPorEmpleado implements Comparable<NominaPorEmpleado>{
 
 	
 	Empleado empleado 
@@ -30,10 +30,23 @@ class NominaPorEmpleado {
 	String comentario
 	
 	Integer antiguedadEnSemanas
+	
+	Integer diasDelPeriodo=0
+	
 	Integer faltas=0
+	
+	double fraccionDescanso=0.0
+	
+	Integer vacaciones=0
+	
 	Integer incapacidades=0
+	
+	Integer diasTrabajados=0
+	
+	Asistencia asistencia
 
 	Date dateCreated
+	
 	Date lastUpdated
 
     static constraints = {
@@ -42,6 +55,7 @@ class NominaPorEmpleado {
 		cfdi nullable:true 
 		faltas nullable:true
 		incapacidades nullable:true
+		asistencia nullable:true
     }
 	
 	static transients=['antiguedad'
@@ -101,6 +115,13 @@ class NominaPorEmpleado {
 		total=percepciones-deducciones
 		totalGravado=percepcionesGravadas-deduccionesGravadas
 		totalExcento=percepcionesGravadas-percepcionesExcentas
+	}
+
+	@Override
+	public int compareTo(NominaPorEmpleado o) {
+		String a1=empleado.apellidoPaterno?:''
+		String a2=o.empleado.apellidoPaterno?:''
+		return a1.compareTo(a2)
 	}
 	
 	/*

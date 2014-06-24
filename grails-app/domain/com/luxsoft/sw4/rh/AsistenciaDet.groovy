@@ -64,7 +64,14 @@ class AsistenciaDet {
 		salida1 nullable:true
 		salida2 nullable:true
 		salida3 nullable:true
-		tipo inList:['ASISTENCIA','FALTA','DESCANSO','DIA_FESTIVO','VACACIONES','INCAPACIDAD','INCIDENCIA']
+		tipo inList:['ASISTENCIA'
+			,'FALTA'
+			,'DESCANSO'
+			,'DIA_FESTIVO'
+			,'VACACIONES'
+			,'INCAPACIDAD'
+			,'INCIDENCIA'
+			,'INCIDENCIA_F']
     }
 	static mapping = {
 		fecha type:'date',index:'ASISTENCIA_DET_IDX'

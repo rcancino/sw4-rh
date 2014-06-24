@@ -31,7 +31,7 @@ class ProcesadorDeNominaController {
 	private Nomina generarPlantillaGeneralQuincenal(Nomina nomina){
 		//Buscar todos los empleados activos y de periodicidad igual a la nomina
 		log.info 'Generando plantilla de nomina general a: '+nomina
-		def empleados=Empleado.findAll{status=='ALTA' && salario.periodicidad==nomina.periodicidad}
+		def empleados=Empleado.findAll{salario.periodicidad==nomina.periodicidad }
 		log.info 'Empleados a incluir: '+empleados.size()
 		empleados.each{ emp ->
 			NominaPorEmpleado ne=nomina.partidas.find{

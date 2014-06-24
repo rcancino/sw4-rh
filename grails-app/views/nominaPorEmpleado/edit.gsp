@@ -116,7 +116,7 @@
 
 			<div class="col-md-9">
 				<div class="panel panel-default">
-					<div class="panel-heading">Generales y total de la nomina</div>
+					<div class="panel-heading">Asistencia ${ nominaPorEmpleadoInstance?.asistencia?.periodo}</div>
 					<div class="panel-body">
 						<g:render template="form"/>
 					</div>
@@ -163,6 +163,41 @@
 			</div> <!-- moda-content -->
 		</div> <!-- modal-dialog -->
 	</div> <!-- .modal  -->
+	
+	
+	<r:script>
+	
+	var get_data_for_popover=function(){
+		var element=$(this);
+		var url=$(this).attr('data-url');
+		if($(this).attr('data-popover-visible')==="true"){
+			
+			element.popover('hide');
+			element.attr('data-popover-visible',"false");
+			return;
+		}
+		$.ajax({
+			type:'GET',
+			url:url,
+			dataType:'html',
+			success:function(data){
+				element.attr('data-content',data);
+				element.attr('data-popover-visible',"true");
+				element.popover('show');
+			}
+		});
+	}
+	
+	
+	$(function(){
+		$('[data-popover=true]').popover({"trigger":"manual","html":"true"});
+		$('[data-popover=true]').click(get_data_for_popover);
+		
+	});
+	
+	
+	
+</r:script>
 
 </body>
 </html>

@@ -8,9 +8,12 @@ import groovy.time.TimeCategory
 import grails.events.Listener
 
 
+
 class NominaService {
 	
 	def cfdiService
+	
+	def procesadorDeNomina
 	
 	@Transactional
 	def eliminarNomina(Long id){
@@ -19,7 +22,7 @@ class NominaService {
 		nomina.delete()
 	}
 
-	
+	@Transactional
 	def generar(Long calendarioDetId,String tipo,String formaDePago){
 		println 'Generando calendario: '+calendarioDetId
 		def calendarioDet=CalendarioDet.get(calendarioDetId)
@@ -38,15 +41,56 @@ class NominaService {
 			periodo:periodo,
 			calendarioDet:calendarioDet)
 		nomina.pago=calendarioDet.fechaDePago
-		nomina.diaDePago=calendarioDet.fechaDePago.format('ddd')
+		nomina.diaDePago=calendarioDet.fechaDePago.format('EEEE')
 		nomina.formaDePago=formaDePago
 		nomina.empresa=empresa
 		nomina.total=0.0
+		generarPartidas nomina
 		nomina.save(failOnError:true)
 		return nomina
 	}
 	
+	@Transactional
+	def generarPartidas(Nomina nomina) {
+		
+		def tipo=nomina.periodicidad
+		def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo }
+		//println "Generando nomina por empleado $tipo para ${empleados.size()} empleados"
+		for(def empleado:empleados) {
+			if(empleado.baja && empleado.baja.fecha<nomina.calendarioDet.asistencia.fechaInicial) {
+				continue
+			}
+			NominaPorEmpleado ne=nomina.partidas.find{
+				it.empleado.id==empleado.id
+			}
+			if(!ne){
+				ne=new NominaPorEmpleado(
+					empleado:empleado,
+					ubicacion:empleado.perfil.ubicacion,
+					antiguedadEnSemanas:0,
+					nomina:nomina,
+					vacaciones:0,
+					fraccionDescanso:0
+					)
+				ne.antiguedadEnSemanas=ne.getAntiguedad()
+				def res=nomina.addToPartidas(ne)
+				//nomina.save failOnError:true
+			}
+			//Actualizar asistencia
+			def asistencia=Asistencia.find{calendarioDet==nomina.calendarioDet && empleado==ne.empleado}
+			ne.asistencia=asistencia
+		}
+		return nomina
+	}
 	
+	
+	def actualizarPartidas(Nomina nomina) {
+		assert nomina,"Nomina nula no es valido"
+		validarParaModificacion(nomina)
+		generarPartidas(nomina)
+		nomina=procesadorDeNomina.procesar(nomina)
+		return nomina
+	}
 	
 
 	@Listener(namespace='gorm')
@@ -68,7 +112,10 @@ class NominaService {
 	
 	def timbrar(Long id){
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
-		cfdiService.cfdiTimbrador.timbradoDePrueba=false
+		timbrar(ne)
+	}
+	
+	def timbrar(NominaPorEmpleado ne) {
 		if(ne.cfdi==null && ne.getPercepciones()>0){
 			log.info 'Timbrando Ne id:'+ne.id
 			try{
@@ -79,33 +126,13 @@ class NominaService {
 			}
 			return ne
 		}
-		
 	}
 	
-	def timbrar2(Long nominaId) {
+	def timbrarNomina(Long nominaId) {
 		def nomina =Nomina.get(nominaId)
-		cfdiService.cfdiTimbrador.timbradoDePrueba=false
-		if(nomina.status=='CERRADA') {
-			throw new NominaException(message:"Nomina cerrada no se puede timbrar",nomina:nomina)
-		}
-		
+		validarParaModificacion(nomina)
 		for(NominaPorEmpleado ne:nomina.partidas){
-			
-			if(ne.cfdi==null){
-				log.info 'Timbrando Ne id:'+ne.id
-				def res=cfdiService.generarComprobante(ne.id)
-			}
-			
-		/*	try{
-			  if(ne.cfdi==null){
-				log.info 'Timbrando Ne id:'+ne.id
-				def res=cfdiService.generarComprobante(ne.id)
-			  }  
-			}catch(Exception ex){
-				
-			log.error 'Error timbrando '+ExceptionUtils.getRootCauseMessage(ex)
-				
-			}*/
+			timbrar(ne)
 		}
 	  nomina.status='CERRADA'
 	}

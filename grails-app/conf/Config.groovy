@@ -106,7 +106,7 @@ log4j = {
     // Example of changing the log pattern for the default console appender:
     //
     appenders {
-        console name:'stdout', layout:pattern(conversionPattern: '%c{2} %m%n')
+        console name:'stdout', layout:pattern(conversionPattern: '%-5p %c{2} %m%n')
     }
 
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
@@ -122,8 +122,25 @@ log4j = {
            'net.sf.ehcache.hibernate'
 		   
 	info 'grails.app.controllers'
-	
+	info 'grails.app.services.com.luxsoft.*'
 	info 'grails.plugin.cache'
+	
+	
+	environments{
+		
+		development{
+			info 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
+			debug 'com.luxsoft.sw4.rh.ProcesadorDeISTP'
+			debug 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
+		}
+		
+		produccion{
+			info 'grails.app.controllers'
+			info 'grails.app.services.com.luxsoft.*'
+			info 'grails.plugin.cache'
+		}
+		
+	}
 	
 }
 

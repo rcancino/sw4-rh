@@ -5,11 +5,14 @@ import java.util.Map;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import grails.transaction.Transactional
+import grails.transaction.NotTransactional
 
 @Transactional
 class NominaPorEmpleadoService {
 	
 	def static CONCEPTOS_BASICOS=['P001','D001','D002']
+	
+	def procesadorDeNomina
 	
 	def eliminarConcepto(Long id){
 		NominaPorEmpleadoDet det=NominaPorEmpleadoDet.get(id)
@@ -24,13 +27,9 @@ class NominaPorEmpleadoService {
 	@Transactional
 	def actualizarNominaPorEmpleado(Long id) {
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
-		return recalcularConceptos(ne)
+		return procesadorDeNomina.procesar(ne)
 	}
 	
-	@Transactional
-	def actualizarNominaPorEmpleado(NominaPorEmpleado ne) {
-		return recalcularConceptos(ne)
-	}
 	
 	@Transactional
 	def recalcularConceptos(NominaPorEmpleado ne) {

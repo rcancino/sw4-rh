@@ -128,3 +128,9 @@ body{
 .icon-exit{
 	background-image: url('${fam.icon(name: 'door_out')}');
 }
+
+.popover{
+    width:600px;
+    
+    
+}
