@@ -47,12 +47,13 @@ class AsistenciaService {
 	def actualizarAsistencia(CalendarioDet calendarioDet){
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
-		def empleados=Empleado.findAll{salario.periodicidad==tipo  }
+		def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo  }
 		empleados.each{ empleado ->
 			try {
 				if(empleado.controlDeAsistencia) {
+					
 					if(empleado.baja) {
-						if(empleado.baja.fecha<calendarioDet.asistencia.fechaInicial) {
+						if(empleado.baja.fecha>=calendarioDet.asistencia.fechaInicial) {
 							actualizarAsistencia(empleado,tipo,calendarioDet)
 						}
 					}else {
@@ -82,9 +83,10 @@ class AsistenciaService {
 			.find("from Asistencia a where a.empleado=? and a.calendarioDet=?"
 				,[empleado,cal])
 		if(asistencia) {
-			println 'Asistencia ya registrada actualizandola'
+			//println 'Asistencia ya registrada actualizandola'
 			asistencia.partidas.clear()
 		}else {
+			//println 'Generando registro de asistencia para '+empleado+" Periodo: "+cal.asistencia
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
 		}
 		for(date in periodo.fechaInicial..periodo.fechaFinal){

@@ -10,14 +10,6 @@ class VacacionesService {
 	def procesar(Asistencia asistencia){
 		asistencia.vacaciones=0
 		asistencia.partidas.each{
-			println 'Procesando vacaciones para: '+it.fecha
-			/*def found=Vacaciones.withCriteria({
-				eq "empleado",asistencia.empleado
-				dias{
-					eq it.fecha
-				}
-			}).get()
-			*/
 			def found=Vacaciones.find("from Vacaciones v where v.empleado=? and ? in elements(v.dias) ",[asistencia.empleado,it.fecha])
 			if(found){
 				it.comentario='VACACIONES'

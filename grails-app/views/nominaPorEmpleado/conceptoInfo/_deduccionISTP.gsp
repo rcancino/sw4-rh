@@ -14,11 +14,11 @@
 			<td>${diasTrabajados}</td>
 		</tr>
 		<tr>
-			<td>Percepciones</td>
+			<td>Percepcion grav</td>
 			<td><g:formatNumber number="${percepciones}" type="currency"/></td>
 		</tr>
 		<tr>
-			<td>Tarifa</td>
+			<td>Límite inferior Limite superior</td>
 			<td>
 				<g:formatNumber number="${tarifa.limiteInferior}" type="currency"/>
 				<g:formatNumber number="${tarifa.limiteSuperior}" type="currency"/>
@@ -26,15 +26,15 @@
 			
 		</tr>
 		<tr>
-			<td>Base gravable</td>
+			<td>Exced sobre Lim inf</td>
 			<td><g:formatNumber number="${baseGravable}" type="currency"/></td>
 		</tr>
 		<tr>
-			<td>Tarifa %</td>
+			<td>Tasa %</td>
 			<td><g:formatNumber number="${tarifaPorcentaje}" type="percent"/></td>
 		</tr>
 		<tr>
-			<td>Impuesto</td>
+			<td>Impuesto marginal</td>
 			<td><g:formatNumber number="${importeGravado}" type="currency"/></td>
 		</tr>
 		<tr>

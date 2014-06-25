@@ -20,7 +20,7 @@ class IncapacidadService {
 	def procesar(Asistencia asistencia){
 		asistencia.incapacidades=0
 		asistencia.partidas.each{
-			println 'Procesando inacapacidades para: '+it.fecha
+			//println 'Procesando inacapacidades para: '+it.fecha
 			def found=Incapacidad.find("from Incapacidad i where i.empleado=? and ? between date(i.fechaInicial) and date(i.fechaFinal)"
 				,[asistencia.empleado,it.fecha])
 			if(found){

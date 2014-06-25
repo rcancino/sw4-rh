@@ -3,11 +3,13 @@ import grails.util.Environment
 import com.luxsoft.sw4.cfdi.CfdiCadenaBuilder
 import com.luxsoft.sw4.cfdi.CfdiSellador
 import com.luxsoft.sw4.cfdi.CfdiTimbrador
+import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
 import com.luxsoft.sw4.rh.ProcesadorDeISTP
 import com.luxsoft.sw4.rh.ProcesadorDeNomina
 import com.luxsoft.sw4.rh.ProcesadorDeSueldo
 import com.luxsoft.sw4.rh.ProcesadorSeguroSocial
-import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
+import com.luxsoft.sw4.rh.ProcesadorDeIncentivo
+
 
 
 // Place your Spring DSL code here
@@ -38,15 +40,21 @@ beans = {
 	}
 	
 	procesadorDeNomina(ProcesadorDeNomina){
-		reglas=[ref('procesadorDeSueldo'),ref('procesadorSeguroSocial'),ref('procesadorDeISTP')]
+		reglas=[ref('procesadorDeSueldo'),
+			ref('procesadorDeIncentivo'),
+			ref('procesadorSeguroSocial'),
+			ref('procesadorDeISTP')]
 	}
 	
 	conceptoDeNominaRuleResolver(ConceptoDeNominaRuleResolver){
 		ruleMap=['P001':ref('procesadorDeSueldo'),
-			'D002':ref('procesadorDeISTP')]
+				 'D002':ref('procesadorDeISTP'),
+				 'P021':ref('procesadorDeISTP'),
+				 'P010':ref('procesadorDeIncentivo')]
 	}
 	
 	procesadorDeSueldo(ProcesadorDeSueldo){}
 	procesadorDeISTP(ProcesadorDeISTP){}
 	procesadorSeguroSocial(ProcesadorSeguroSocial){}
+	procesadorDeIncentivo(ProcesadorDeIncentivo){}
 }

@@ -30,7 +30,6 @@ class Incentivo {
 	Date lastUpdated
 
     static constraints = {
-		calendarioDet nullable:true
 		autorizacion nullable:true
 		tipo inList:['PUNTUALIDAD','INVENTARIO_FISICO','OTRO']
 		comentario nullable:true

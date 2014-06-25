@@ -64,6 +64,7 @@ class NominaService {
 				it.empleado.id==empleado.id
 			}
 			if(!ne){
+				println 'Agregando empleado: '+empleado
 				ne=new NominaPorEmpleado(
 					empleado:empleado,
 					ubicacion:empleado.perfil.ubicacion,

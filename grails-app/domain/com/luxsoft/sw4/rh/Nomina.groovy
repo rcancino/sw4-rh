@@ -34,7 +34,7 @@ class Nomina {
 	String status
 	Date corte
 	
-	SortedSet partidas
+	//SortedSet partidas
 	CalendarioDet calendarioDet
 	
 	Date dateCreated

@@ -1,9 +1,8 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
-			<g:sortableColumn property="id" title="Id"/>
-			<g:sortableColumn property="empleado" title="Empleado"/>
 			<g:sortableColumn property="empleado.clave" title="Clave"/>
+			<g:sortableColumn property="empleado.apellidoPaterno" title="Nombre"/>
 			<th><g:message code="Empleado.ubicacion.label" default="Ubicación" encodeAs="html"/></th>
 			<th><g:message code="Empleado.percepciones.label" default="Percepciones" encodeAs="html"/></th>
 			<th><g:message code="Empleado.deducciones.label" default="Deducciones" encodeAs="html"/></th>
@@ -13,14 +12,14 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${nominaInstance?.partidas}" var="row">
+		<g:each in="${nominaInstance?.partidas.sort{it.empleado.apellidoPaterno}}" var="row">
 			<tr>
 				<td>
 					<g:link controller="nominaPorEmpleado" action="edit" id="${row.id}">
-						<g:formatNumber number="${row.id}" format="######"/>
+						${fieldValue(bean:row,field:"empleado.clave")}
 					</g:link>
 				</td>
-				<td>${fieldValue(bean:row,field:"empleado.clave")}</td>
+				
 				<td>
 					<g:link controller="nominaPorEmpleado" action="edit" id="${row.id}">
 						${fieldValue(bean:row,field:"empleado.nombre")}
@@ -51,7 +50,7 @@
 	</tbody>
 	<tfoot>
 		<tr>
-			<th></th>
+			
 			<th></th>
 			<th></th>
 			<th>Total </th>

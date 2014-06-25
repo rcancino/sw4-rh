@@ -8,7 +8,7 @@ import groovy.transform.ToString
 
 @EqualsAndHashCode(includes='empleado')
 @ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
-class NominaPorEmpleado implements Comparable<NominaPorEmpleado>{
+class NominaPorEmpleado {
 
 	
 	Empleado empleado 
@@ -41,7 +41,7 @@ class NominaPorEmpleado implements Comparable<NominaPorEmpleado>{
 	
 	Integer incapacidades=0
 	
-	Integer diasTrabajados=0
+	BigDecimal diasTrabajados=0.0
 	
 	Asistencia asistencia
 
@@ -117,12 +117,13 @@ class NominaPorEmpleado implements Comparable<NominaPorEmpleado>{
 		totalExcento=percepcionesGravadas-percepcionesExcentas
 	}
 
+	/*
 	@Override
 	public int compareTo(NominaPorEmpleado o) {
 		String a1=empleado.apellidoPaterno?:''
 		String a2=o.empleado.apellidoPaterno?:''
 		return a1.compareTo(a2)
-	}
+	}*/
 	
 	/*
 	def beforeInsert= {
