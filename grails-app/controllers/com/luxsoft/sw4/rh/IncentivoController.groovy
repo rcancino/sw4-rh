@@ -12,9 +12,37 @@ import grails.transaction.Transactional
 class IncentivoController {
 	
 
-	def index(Integer max) {
-		params.max = Math.min(max ?: 15, 100)
-		[incentivoList:Incentivo.list(params), incentivoTotalCount: Incentivo.count()]
+	def index(Long calendarioDetId) {
+		
+		def periodicidad=params.periodicidad?:'SEMANA'
+		def list=[]
+		def calendario
+		def calendarios=CalendarioDet.findAll("from CalendarioDet d where d.calendario.tipo=?",[periodicidad])
+		
+		if(calendarioDetId){
+			calendario=CalendarioDet.get(calendarioDetId)
+			list=Incentivo.findAll("from Incentivo i where i.calendarioDet=?",[calendario])
+		}
+		[incentivoList:list,calendarios:calendarios,periodicidad:periodicidad,currentCalendario:calendario]
+	}
+	
+	@Transactional
+	def generarIncentivos(Long calendarioDetId){
+		if(calendarioDetId){
+			def cal=CalendarioDet.get(calendarioDetId)
+			println 'Generando incentivos para el periodo: '+cal
+			def asistencias=Asistencia.findAll("from Asistencia a where a.calendarioDet=?",[cal])
+			asistencias.each{ a->
+				//Localizamos la a
+				def incentivo=Incentivo.find{calendarioDet==cal}
+				if(!incentivo){
+					//incentivo=new Incentivo(empleado:a.empleado,calendarioDet:cal,tipo:)
+				}
+				
+			}
+			println 'Asistencias del periodo: '+asistencias.size()
+		}
+		redirect action:'index',params:[calendarioDetId:calendarioDetId]
 	}
 
 	def create() {

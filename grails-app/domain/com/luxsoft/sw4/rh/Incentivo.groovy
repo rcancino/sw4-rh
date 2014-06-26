@@ -7,8 +7,8 @@ class Incentivo {
 	
 	Empleado empleado
 	
-	@BindingFormat("dd/MM/yyyy")
-	Date fecha
+	//@BindingFormat("dd/MM/yyyy")
+	//Date fecha
 	
 	Autorizacion autorizacion
 	
@@ -31,6 +31,7 @@ class Incentivo {
 
     static constraints = {
 		autorizacion nullable:true
+		
 		tipo inList:['PUNTUALIDAD','INVENTARIO_FISICO','OTRO']
 		comentario nullable:true
     }

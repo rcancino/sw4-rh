@@ -11,7 +11,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info">
-					<h3>Incentivos</h3>
+					<h3>Incentivos ${currentCalendario?.calendario?.tipo} ${currentCalendario?.folio}</h3>
 				</div>
 			</div>
 		</div>
@@ -19,8 +19,9 @@
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="nav nav-tabs">
-					<li><g:link action="index" params="[periodicidad:'QUINCENAL']">Quincenal</g:link></li>
-					<li><g:link action="index" params="[periodicidad:'SEMANAL']">Semanal</g:link></li>
+					<li class="${periodicidad=='SEMANA'?'active':''}"><g:link action="index" params="[periodicidad:'SEMANA']">Semana</g:link></li>
+					<li class="${periodicidad=='QUINCENA'?'active':''}"><g:link action="index" params="[periodicidad:'QUINCENA']">Quincena</g:link></li>
+					
 					<li><a href="">Especial</a></li>
 					
 				</ul>
@@ -28,25 +29,34 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-12">
 				<div class="button-panel">
+					
 					<div class="btn-group">
-						<g:link action="index" class="btn btn-default">
-							<span class="glyphicon glyphicon-repeat"></span> Refrescar
-						</g:link>
-						<g:link action="generar" class="btn btn-primary" params="[periodicidad:periodicidad]">
-							Generar 
-						</g:link>
-						<g:link action="buscar" class="btn btn-default" >
-							<span class="glyphicon glyphicon-search"></span> Buscar
-						</g:link>
-						<g:link action="filtrar" class="btn btn-default" >
-							<span class="glyphicon glyphicon-filter"></span> Filtrar
-						</g:link>
+						<g:form action="index" class="form-inline" method="GET">
+							<g:hiddenField name="periodicidad" value="${periodicidad}"/>
+							<div class="form-group">
+								<label for="periodoField" class="sr-only">Periodo</label>
+								<g:select id="periodoField" class="form-control"  
+									name="calendarioDetId" 
+									value="${currentCalendario?.id}"
+									from="${calendarios}" 
+									optionKey="id" 
+									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('yyyy')+ ' ) '}}"
+									
+								/>
+							</div>
+							
+							<g:submitButton name="refresh" value="Refrescar" class="btn btn-default"></g:submitButton>
+							<g:actionSubmit value="Generar" action="generarIncentivos" class="btn btn-default"/>	
+					
+						</g:form>
 					</div>
 				</div>
-				<g:render template="gridPanel"/>
-			</div>
+				
+		</div>
+		
+		<div class="row">
+			<g:render template="gridPanel"/>
 		</div>
 
 	</div>

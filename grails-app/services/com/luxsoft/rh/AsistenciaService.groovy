@@ -47,7 +47,9 @@ class AsistenciaService {
 	def actualizarAsistencia(CalendarioDet calendarioDet){
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		
 		def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo  }
+		
 		empleados.each{ empleado ->
 			try {
 				if(empleado.controlDeAsistencia) {
@@ -61,9 +63,10 @@ class AsistenciaService {
 					}
 				}
 			} catch (Exception ex) {
+			   ex.printStackTrace()
 				log.error ex
 				def msg=ExceptionUtils.getRootCauseMessage(ex)
-				println 'Error actualizando asistencia'
+				println 'Error actualizando asistencia'+msg+ " ${empleado}"
 			}
 		}
 	}
@@ -142,8 +145,8 @@ class AsistenciaService {
 		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
 		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
 		incapacidadService.procesar(asistencia)
-		incidenciaService.procesar(asistencia)
 		vacacionesService.procesar(asistencia)
+		incidenciaService.procesar(asistencia)
 		/*asistencia.incapacidades=asistencia.partidas.sum 0,{it.tipo=='INCAPACIDAD'}
 		asistencia.incidencias=asistencia.partidas.sum 0,{it.tipo=='INCIDENCIA'}
 		asistencia.vacaciones=asistencia.partidas.sum 0,{it.tipo=='VACACIONES'}

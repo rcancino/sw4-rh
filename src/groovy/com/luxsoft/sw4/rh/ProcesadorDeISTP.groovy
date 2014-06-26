@@ -33,6 +33,9 @@ class ProcesadorDeISTP {
 		
 		
 		def percepciones=nominaEmpleado.getPercepcionesGravadas()
+		if(percepciones<=0)
+			return
+			
 		def diasTrabajados=nominaEmpleado.diasTrabajados
 		
 		def tarifa =TarifaIsr.obtenerTabla(diasTrabajados).find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
@@ -67,6 +70,9 @@ class ProcesadorDeISTP {
 		def model=[:]
 		
 		model.percepciones=nominaEmpleado.getPercepcionesGravadas()
+		if(percepciones<=0){
+			return model
+		}
 		model.diasTrabajados=nominaEmpleado.diasTrabajados
 		
 		model.tarifa =TarifaIsr.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}

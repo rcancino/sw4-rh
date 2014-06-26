@@ -15,7 +15,7 @@ class ProcesadorDeIncentivo {
 	private static final log=LogFactory.getLog(this)
 	
 	def procesar(NominaPorEmpleado nominaEmpleado) {
-		
+		/*
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
@@ -35,7 +35,7 @@ class ProcesadorDeIncentivo {
 		nominaPorEmpleadoDet.importeGravado=50
 		nominaPorEmpleadoDet.importeExcento=0
 		nominaEmpleado.actualizar()
-		
+		*/
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

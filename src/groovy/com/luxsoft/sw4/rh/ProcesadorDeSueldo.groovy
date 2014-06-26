@@ -32,7 +32,7 @@ class ProcesadorDeSueldo {
 		
 		//Buscamos las faltas en el subsitema de control de asistencia
 		def asistencia=ne.asistencia
-		assert asistencia,"Debe existir el registro de asistencia para el calendario: ${calendario}"
+		assert asistencia,"Debe existir el registro de asistencia para el calendario: ${calendario} empleado ${empleado}"
 		
 		
 		def salarioDiario=empleado?.salario?.salarioDiario?:0

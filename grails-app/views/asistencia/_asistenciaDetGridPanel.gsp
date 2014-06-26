@@ -31,7 +31,7 @@
 				<td><g:fieldValue bean="${row}" field="retardoMenor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoMayor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
-				<td><g:fieldValue bean="${row}" field="tipo"/> </td>
+				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 			</tr>
 		</g:each>
 	</tbody>
