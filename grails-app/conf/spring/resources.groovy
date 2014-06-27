@@ -6,7 +6,9 @@ import com.luxsoft.sw4.cfdi.CfdiTimbrador
 import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
 import com.luxsoft.sw4.rh.ProcesadorDeISTP
 import com.luxsoft.sw4.rh.ProcesadorDeNomina
+import com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional;
 import com.luxsoft.sw4.rh.ProcesadorDeSueldo
+import com.luxsoft.sw4.rh.ProcesadorDeVacaciones
 import com.luxsoft.sw4.rh.ProcesadorSeguroSocial
 import com.luxsoft.sw4.rh.ProcesadorDeIncentivo
 
@@ -41,20 +43,28 @@ beans = {
 	
 	procesadorDeNomina(ProcesadorDeNomina){
 		reglas=[ref('procesadorDeSueldo'),
+			ref('procesadorDeVacaciones'),
+			ref('procesadorDePrimaVacacional'),
 			ref('procesadorDeIncentivo'),
 			ref('procesadorSeguroSocial'),
-			ref('procesadorDeISTP')]
+			ref('procesadorDeISTP')
+			]
 	}
 	
 	conceptoDeNominaRuleResolver(ConceptoDeNominaRuleResolver){
 		ruleMap=['P001':ref('procesadorDeSueldo'),
 				 'D002':ref('procesadorDeISTP'),
 				 'P021':ref('procesadorDeISTP'),
-				 'P010':ref('procesadorDeIncentivo')]
+				 'P010':ref('procesadorDeIncentivo'),
+				 'P025':ref('procesadorDeVacaciones'),
+				 'P024':ref('procesadorDePrimaVacacional')
+				 ]
 	}
 	
 	procesadorDeSueldo(ProcesadorDeSueldo){}
 	procesadorDeISTP(ProcesadorDeISTP){}
 	procesadorSeguroSocial(ProcesadorSeguroSocial){}
 	procesadorDeIncentivo(ProcesadorDeIncentivo){}
+	procesadorDeVacaciones(ProcesadorDeVacaciones){}
+	procesadorDePrimaVacacional(ProcesadorDePrimaVacacional){}
 }

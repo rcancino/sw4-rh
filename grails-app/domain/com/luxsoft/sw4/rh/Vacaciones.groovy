@@ -21,6 +21,8 @@ class Vacaciones {
 	
 	String comentario
 	
+	boolean pg=false
+	
 	Set dias=new HashSet()
 
 	Date dateCreated

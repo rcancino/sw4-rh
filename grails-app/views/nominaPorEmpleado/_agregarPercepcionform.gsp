@@ -14,10 +14,11 @@
 					from="${conceptosList}" 
 					optionKey="id" 
 					optionValue="${ { it.clave+' '+it.descripcion }}"
-					noSelection="[null:'Seleccione un concepto']"
+					noSelection="[null:'Seleccione una peercepción']"
 				/>
 			</f:field>
-			<f:field property="importeGravado" input-class="form-control" label="Importe"/>
+			<f:field property="importeGravado" input-class="form-control" label="Importe gravado"/>
+			<f:field property="importeExcento" input-class="form-control" label="Importe excento"/>
 			<f:field property="comentario" input-class="form-control"/>
 		</f:with>
 	</div>

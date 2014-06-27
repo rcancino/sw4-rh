@@ -9,6 +9,8 @@ class NominaPorEmpleadoController {
 	
 	def nominaPorEmpleadoService
 	
+	def nominaService 
+	
 	def conceptoDeNominaRuleResolver
 
     def index() { }
@@ -36,11 +38,12 @@ class NominaPorEmpleadoController {
 
 	@Transactional
     def agregarConcepto(Long id,String tipo){
-    	
+		println 'Localizando conceptos para: '+tipo
     	request.withFormat{
     		html {
+				
 				def conceptos=ConceptoDeNomina.findAll{tipo==tipo}
-    			render (template:'agregarConceptoform'
+    			render (template:'agregarPercepcionform'
     			,model:[nominaEmpleadoId:id,
     				nominaPorEmpleadoDetInstance:new NominaPorEmpleadoDet(),
     				conceptosList:conceptos
@@ -85,6 +88,14 @@ class NominaPorEmpleadoController {
 				redirect action: "index", method: "GET"
 			}
 			'*'{ render status: NOT_FOUND }
+		}
+	}
+	
+	def timbrar(Long id){
+		def ne=NominaPorEmpleado.get(id)
+		if(ne){
+			//ne=nominaService.timbrar(ne)
+			redirect action:'edit',params:[id:id]
 		}
 	}
 	

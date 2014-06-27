@@ -7,22 +7,28 @@ class Incentivo {
 	
 	Empleado empleado
 	
-	//@BindingFormat("dd/MM/yyyy")
-	//Date fecha
-	
-	Autorizacion autorizacion
-	
-	CalendarioDet calendarioDet
-	
 	String tipo
 	
-	BigDecimal sueldoBase=0
+	Ubicacion ubicacion
 	
-	BigDecimal bono1=0.5
-	BigDecimal importeBono1=0.0
+	CalendarioDet calendarioInicial
 	
-	BigDecimal bono2=0.5
-	BigDecimal importeBono2=0.0
+	CalendarioDet calendarioFinal
+	
+	Boolean otorgado=true
+	
+	Integer faltas
+	
+	Integer retardoMenor
+	Integer retardoMayor
+	Integer retardoComida
+	Integer retardoTotal
+	
+	double tasaBono1=0
+	double tasaBono2=0
+	
+	BigDecimal ingresoBase=0.0
+	BigDecimal incentivo=0.0
 	
 	String comentario
 	
@@ -30,9 +36,7 @@ class Incentivo {
 	Date lastUpdated
 
     static constraints = {
-		autorizacion nullable:true
-		
-		tipo inList:['PUNTUALIDAD','INVENTARIO_FISICO','OTRO']
+		tipo inList:['QUINCENAL','MENSUAL']
 		comentario nullable:true
     }
 }

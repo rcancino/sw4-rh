@@ -70,7 +70,7 @@ class ProcesadorDeISTP {
 		def model=[:]
 		
 		model.percepciones=nominaEmpleado.getPercepcionesGravadas()
-		if(percepciones<=0){
+		if(model.percepciones<=0){
 			return model
 		}
 		model.diasTrabajados=nominaEmpleado.diasTrabajados

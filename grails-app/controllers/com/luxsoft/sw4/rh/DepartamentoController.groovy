@@ -14,7 +14,8 @@ class DepartamentoController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 15, 100)
-        respond Departamento.list(params), model:[departamentoInstanceCount: Departamento.count()]
+        //respond Departamento.list(params), model:[departamentoInstanceCount: Departamento.count()]
+		[departamentoInstanceList:Departamento.list(params),departamentoInstanceCount: Departamento.count()]
     }
 
     def show(Departamento departamentoInstance) {

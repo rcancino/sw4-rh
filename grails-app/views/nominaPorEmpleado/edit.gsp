@@ -46,7 +46,7 @@
 							id="${nominaPorEmpleadoInstance.id}" 
 							class="list-group-item" 
 							data-toggle="modal"
-							data-target="#percepcionModal">
+							data-target="#deduccionModal">
 							<span class="glyphicon glyphicon-plus"></span> Agregar Deducción
 						</g:link>
 						
@@ -94,7 +94,7 @@
 								<span class="glyphicon glyphicon-ban-circle"></span> Cancelar
 							</g:link>
 
-							<g:link class="list-group-item" action="todo">
+							<g:link class="list-group-item" action="timbrar">
 								<span class="glyphicon glyphicon-print"></span> Imprimir
 							</g:link>
 							<g:link class="list-group-item" action="todo">
@@ -164,6 +164,13 @@
 		</div> <!-- modal-dialog -->
 	</div> <!-- .modal  -->
 	
+	<div class="modal fade" id="deduccionModal" tabindex="-1" >
+		<div class="modal-dialog">
+			<div class="modal-content">
+				
+			</div> <!-- moda-content -->
+		</div> <!-- modal-dialog -->
+	</div> <!-- .modal  -->
 	
 	<r:script>
 	

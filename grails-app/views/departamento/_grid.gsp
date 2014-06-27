@@ -1,26 +1,22 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
-			<g:sortableColumn property="ejercicio" title="Ejercicio"/>
-			<g:sortableColumn property="tipo" title="Tipo"/>
-			<th>Inicio</th>
-			<th>Fin</th>
+			<th>Clave</th>
+			<th>Descripción</th>
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${calendarioInstanceList}" var="row">
+		<g:each in="${departamentoInstanceList}" var="row">
 			<tr>
 				<td><g:link action="edit" id="${row.id}">
-						<g:formatNumber number="${row.id}" format="######"/>
+						${fieldValue(bean:row,field:"clave")}
 					</g:link>
 				</td>
-				<td>${fieldValue(bean:row,field:"tipo")}</td>
-				<td><g:formatDate date="${row.inicio }" format="dd/MM/yyyy"/></td>
-				<td><g:formatDate date="${row.fin }" format="dd/MM/yyyy"/></td>
+				<td>${fieldValue(bean:row,field:"descripcion")}</td>
 			</tr>
 		</g:each>
 	</tbody>
 </table>
 <div class="pagination">
-	<g:paginate total="${calendarioInstanceCount ?: 0}" />
+	<g:paginate total="${departamentoInstanceCount ?: 0}" />
 </div>

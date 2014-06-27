@@ -3,6 +3,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import com.luxsoft.sec.Role
 import com.luxsoft.sec.User
 import com.luxsoft.sec.UserRole
+import com.luxsoft.sw4.rh.tablas.ZonaEconomica;
 
 class BootStrap {
 
@@ -34,6 +35,11 @@ class BootStrap {
 		}
 		java.security.Security.addProvider(new BouncyCastleProvider())
 		
+		//Zonas economicas por defecto
+		def zonaA=ZonaEconomica.findOrSaveWhere(clave:'A')
+		def zonaB=ZonaEconomica.findOrSaveWhere(clave:'B')
+		def zonaC=ZonaEconomica.findOrSaveWhere(clave:'C')
+		def zonaD=ZonaEconomica.findOrSaveWhere(clave:'D')
 		
     }
     def destroy = {

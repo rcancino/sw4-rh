@@ -34,10 +34,7 @@ class IncentivoController {
 			def asistencias=Asistencia.findAll("from Asistencia a where a.calendarioDet=?",[cal])
 			asistencias.each{ a->
 				//Localizamos la a
-				def incentivo=Incentivo.find{calendarioDet==cal}
-				if(!incentivo){
-					//incentivo=new Incentivo(empleado:a.empleado,calendarioDet:cal,tipo:)
-				}
+				
 				
 			}
 			println 'Asistencias del periodo: '+asistencias.size()

@@ -12,9 +12,14 @@ class VacacionesService {
 		asistencia.partidas.each{
 			def found=Vacaciones.find("from Vacaciones v where v.empleado=? and ? in elements(v.dias) ",[asistencia.empleado,it.fecha])
 			if(found){
-				it.comentario='VACACIONES'
-				it.tipo='VACACIONES'
-				asistencia.vacaciones++
+				if(found.pg){
+					asistencia.vacacionesp++
+				}else{
+					it.comentario='VACACIONES'
+					it.tipo='VACACIONES'
+					asistencia.vacaciones++
+				}
+				
 			}
 		}
 		

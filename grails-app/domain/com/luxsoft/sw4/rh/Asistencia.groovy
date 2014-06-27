@@ -23,6 +23,8 @@ class Asistencia {
 	
 	Integer vacaciones=0
 	
+	Integer vacacionesp=0
+	
 	Integer incapacidades=0
 	
 	/**

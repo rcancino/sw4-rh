@@ -24,6 +24,12 @@ class NominaPorEmpleadoService {
 		return recalcularConceptos(ne)
 	}
 	
+	
+	@Transactional
+	def actualizarNominaPorEmpleado(NominaPorEmpleado ne) {
+		return procesadorDeNomina.procesar(ne)
+	}
+	
 	@Transactional
 	def actualizarNominaPorEmpleado(Long id) {
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)

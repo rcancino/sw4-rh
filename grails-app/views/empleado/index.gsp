@@ -3,7 +3,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="layout" content="catalogos"/>
+	<meta name="layout" content="catalogos-fluid"/>
 	<title>Empleados</title>
 	
 </head>
