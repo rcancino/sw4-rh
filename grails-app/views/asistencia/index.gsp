@@ -44,10 +44,17 @@
 					<g:submitToRemote class="btn btn-default" value="Actualizar"
 						url="[action: 'actualizarAsistencias']" 
 						update="asistenciaGrid" />
-					
+				</g:formRemote>
+				
+			</div>
+			<div class="col-md-3">
+				<g:formRemote name="searchForm" url="[controller: 'asistencia', action: 'cargarAsistencia']" update="asistenciaGrid" class="form-inline">
+					<input param="sucursal" class="form-control" type="text" autofocus="autofocus" placeholder="Sucursal"/>
+					<g:hiddenField name="id" value="${currentPeriodo?.id}"/>
+					<g:actionSubmit value="Filtrar" action="cargarAsistencia" class="btn btn-default"/>
 				</g:formRemote>
 			</div>
-			<div class="col-md-7">
+			<div class="col-md-4">
 				<div class="btn-group">
 					<button type="button" name="reportes"
 						class="btn btn-default dropdown-toggle" data-toggle="dropdown"

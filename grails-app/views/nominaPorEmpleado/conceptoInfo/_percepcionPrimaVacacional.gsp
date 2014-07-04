@@ -25,13 +25,11 @@
 			<td class="text-right">${dias}</td>
 		</tr>
 		<tr>
-			<td>Tope</td>
-			<td class="text-right"><g:formatNumber number="${topeSalarial}" type="currency"/></td>
-		</tr>
-		<tr>
-			<td>Imp vacaciones</td>
+			<td>Importe vac</td>
 			<td class="text-right"><g:formatNumber number="${importeDeVacaciones}" type="currency"/></td>
 		</tr>
+		
+		
 		
 		<tr>
 			<td>Tasa</td>
@@ -40,6 +38,14 @@
 		<tr>
 			<td>Prima</td>
 			<td class="text-right"><g:formatNumber number="${prima}" type="currency"/></td>
+		</tr>
+		<tr>
+			<td>Tope</td>
+			<td class="text-right"><g:formatNumber number="${topeSalarial}" type="currency"/></td>
+		</tr>
+		<tr>
+			<td>Acumulado Ex</td>
+			<td class="text-right"><g:formatNumber number="${acumuladoExcento}" type="currency"/></td>
 		</tr>
 		<tr>
 			<td>Gravado</td>

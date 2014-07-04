@@ -10,7 +10,7 @@ class Puesto implements Serializable{
 	Date lastUpdated
 
     static constraints = {
-    	clave blank:false,maxSize:20,unique:true
+    	clave blank:false,maxSize:100,unique:true
     	descripcion size:1..300
     }
 

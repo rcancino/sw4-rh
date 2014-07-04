@@ -28,7 +28,7 @@ class AsistenciaController {
 	}
 
 	def cargarAsistencia(Long calendarioDetId){
-		def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=? order by a.empleado.apellidoPaterno asc",[calendarioDetId])
+		def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=? order by a.empleado.perfil.ubicacion.clave asc",[calendarioDetId])
 		render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
 	}
 

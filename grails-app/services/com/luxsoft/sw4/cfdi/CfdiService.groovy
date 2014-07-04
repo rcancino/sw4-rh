@@ -48,8 +48,8 @@ class CfdiService {
 	
 	Cfdi generarComprobante(def nominaEmpleadoId) {
 		
-		def fecha=new Date()
-		//def fecha=Date.parse('dd/MM/yyy hh:mm:ss','31/0/2014 23:'+new Date().format('mm:ss'))
+		//def fecha=new Date()
+		def fecha=Date.parse('dd/MM/yyy hh:mm:ss','30/06/2014 19:'+new Date().format('mm:ss'))
 		def nominaEmpleado=NominaPorEmpleado.get(nominaEmpleadoId)
 		assert nominaEmpleado,'No existe la nomina empleado: '+nominaEmpleadoId
 		assert nominaEmpleado.cfdi==null,'Ya esta timbrada la nomina para el empleado: '+nominaEmpleado

@@ -22,6 +22,8 @@ class VacacionesService {
 				
 			}
 		}
+		def res=asistencia.faltas-asistencia.vacaciones
+		asistencia.faltas=res>0?res:0
 		
 	}
 }

@@ -60,6 +60,14 @@ class Asistencia {
 	 */
 	Integer retardoComida=0
 	
+	/**
+	 * El total de minutos no laborados, esto al compara las checadas con los horarios establecidos 
+	 *
+	 */
+	Integer minutosNoLaborados=0
+	
+	BigDecimal horasTrabajadas
+	
 	List partidas
 	
 	static hasMany = [partidas:AsistenciaDet]
@@ -74,7 +82,7 @@ class Asistencia {
     	comentario nullable:true
 		tipo inList:['SEMANAL','QUINCENAL']
 		calendarioDet nullable:true
-    	
+    	horasTrabajadas nullable:true
     }
 
 	static mapping = {

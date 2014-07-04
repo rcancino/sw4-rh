@@ -2,6 +2,7 @@ package com.luxsoft.sw4.rh
 
 import org.apache.commons.logging.LogFactory
 
+import com.luxsoft.sw4.rh.acu.AcumuladoPorConcepto;
 import com.luxsoft.sw4.rh.tablas.ZonaEconomica
 
 
@@ -32,10 +33,13 @@ class ProcesadorDePrimaVacacional {
 		}
 		def asistencia=ne.asistencia
 		def vacaciones=asistencia.vacaciones+asistencia.vacacionesp
-		
+		def calendarioDet=asistencia.calendarioDet
 		if(vacaciones){
 			
 			def empleado=ne.empleado
+			
+			def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
+			assert acumulado,'Debe existir el registro de acumulados para prima vacional'
 			
 			def salarioDiario=ne.salarioDiarioBase
 			
@@ -47,11 +51,17 @@ class ProcesadorDePrimaVacacional {
 			
 			//Posteriormente la tasa se debe sacar de una tabla (Contemplar la antiguedad del empleado)
 			def tasa=0.25
-			def prima=importeDeVacaciones*tasa
 			
-			def dif=prima-topeSalarial
-			def gravado=dif>0?dif:0.0
-			def excento=dif<0?prima:topeSalarial
+			def prima=importeDeVacaciones*tasa
+			def acuExcento=acumulado.acumuladoExcento
+			def disponibleExcento=(topeSalarial-acuExcento)
+			
+			
+			def gravado=disponibleExcento>prima?0.0:prima-disponibleExcento
+			def excento=disponibleExcento<prima?disponibleExcento:prima
+			
+			println "Acumulabe  excento:${acuExcento} disponible excento:${disponibleExcento}"
+			println "Prima: ${prima} Excento:${excento} Gravado:${gravado}"
 			
 			nominaPorEmpleadoDet.importeGravado=gravado
 			nominaPorEmpleadoDet.importeExcento=excento
@@ -71,6 +81,8 @@ class ProcesadorDePrimaVacacional {
 		if(vacaciones){
 			
 			def empleado=ne.empleado
+			def calendarioDet=asistencia.calendarioDet
+			def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
 			
 			def salarioDiario=ne.salarioDiarioBase
 			
@@ -88,9 +100,10 @@ class ProcesadorDePrimaVacacional {
 			def gravado=dif>0?dif:0.0
 			def excento=dif<0?prima:topeSalarial
 			
+			model.acumuladoExcento=acumulado.acumuladoExcento
 			model.salarioDiario=salarioDiario
 			model.sm=sm
-			model.dias=diasSalarioMinimo
+			model.dias=vacaciones
 			model.topeSalarial=topeSalarial
 			model.importeDeVacaciones=importeDeVacaciones
 			model.tasa=tasa

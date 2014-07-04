@@ -39,6 +39,7 @@ class ProcesadorDeSueldo {
 		
 		//Actualizamos datos desde asistencia
 		ne.salarioDiarioBase=salarioDiario
+		ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
 		ne.diasDelPeriodo=ne.nomina.getDiasPagados()
 		ne.faltas=asistencia.faltas
 		ne.incapacidades=asistencia.incapacidades

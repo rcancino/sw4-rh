@@ -3,6 +3,9 @@ package com.luxsoft.sw4.rh
 import com.luxsoft.sw4.Empresa
 import grails.transaction.Transactional
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 @Transactional(readOnly = true)
 class PrestamoController {
 
@@ -18,7 +21,7 @@ class PrestamoController {
 	
 	@Transactional
 	def save(Prestamo prestamoInstance) {
-		if(!prestamoInstance){
+		if(!prestamoInstance){ 
 			notFound()
 			return
 		}

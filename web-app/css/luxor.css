@@ -6,7 +6,9 @@ body{
 .navbar{
 	margin-bottom: 10px;
 }
-
+.form-group{
+	margin-bottom: 1px
+}
 .button-panel{
     
     /*margin-bottom: 10px;*/

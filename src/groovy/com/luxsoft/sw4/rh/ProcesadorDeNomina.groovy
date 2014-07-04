@@ -20,6 +20,7 @@ class ProcesadorDeNomina {
 			try {
 				p.procesar(ne)
 			}catch(Exception ex) {
+				ex.printStackTrace()
 				String msg="Error en regla: ${p} Causa: "+ExceptionUtils.getRootCauseMessage(ex)
 				throw new ProcesadorDeNominaException(message:msg,nominaPorEmpleado:ne)
 			}

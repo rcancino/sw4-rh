@@ -67,7 +67,22 @@
       				</p>
     			</div>
   			</div>
-  			
+  			<div class="form-group">
+   				<label class="col-sm-6 control-label">Minutos no laborados</label>
+    			<div class="col-sm-6">
+      				<p class="form-control-static">
+      					${asistenciaInstance.minutosNoLaborados}
+      				</p>
+    			</div>
+  			</div>
+  			<div class="form-group">
+   				<label class="col-sm-6 control-label">Horas laboradas</label>
+    			<div class="col-sm-6">
+      				<p class="form-control-static">
+      					${asistenciaInstance.horasTrabajadas}
+      				</p>
+    			</div>
+  			</div>
 		</g:form>
 	</div>
 	

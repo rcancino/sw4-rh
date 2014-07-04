@@ -5,7 +5,7 @@ import java.util.Date
 
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
-
+import com.luxsoft.sw4.rh.Ubicacion
 import org.grails.databinding.BindingFormat
 
 @ToString(includes='fecha,entrada1,salida1,entrada2,salida2',includeNames=true,includePackage=false)
@@ -45,6 +45,16 @@ class AsistenciaDet {
 	 */
 	Integer retardoComida=0
 	
+	/**
+	 * El total de minutos no laborados, esto al compara las checadas con los horarios establecidos
+	 *
+	 */
+	Integer minutosNoLaborados=0
+	
+	BigDecimal horasTrabajadas=0
+	
+	Ubicacion ubicacion 
+	
 	String comentario
 
 	String tipo
@@ -57,13 +67,7 @@ class AsistenciaDet {
 	//static embedded = ['periodo']
 
     static constraints = {
-		comentario nullable:true
-		entrada1 nullable:true
-		entrada2 nullable:true
-		entrada3 nullable:true
-		salida1 nullable:true
-		salida2 nullable:true
-		salida3 nullable:true
+		
 		tipo inList:['ASISTENCIA'
 			,'FALTA'
 			,'DESCANSO'
@@ -72,7 +76,17 @@ class AsistenciaDet {
 			,'INCAPACIDAD'
 			,'INCIDENCIA'
 			,'INCIDENCIA_F']
+		entrada1 nullable:true
+		entrada2 nullable:true
+		entrada3 nullable:true
+		salida1 nullable:true
+		salida2 nullable:true
+		salida3 nullable:true
+		ubicacion nullable:true
+		comentario nullable:true
+		horasTrabajadas nullable:true
     }
+	
 	static mapping = {
 		fecha type:'date',index:'ASISTENCIA_DET_IDX'
 		entrada1 type:'time'

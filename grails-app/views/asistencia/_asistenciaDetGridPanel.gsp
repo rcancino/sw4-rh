@@ -12,6 +12,8 @@
 			<th><g:message code="asistenciaDet.retardoMenor.label" default="Ret men"/></th>
 			<th><g:message code="asistenciaDet.retardoMayor.label" default="Ret may"/></th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Ret com"/></th>
+			<th><g:message code="asistenciaDet.retardoComida.label" default="Min NL"/></th>
+			<th><g:message code="asistenciaDet.retardoComida.label" default="Hrs Tr"/></th>
 			<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
 		</tr>
 	</thead>
@@ -19,7 +21,7 @@
 		<g:each in="${asistenciaDetList}" var="row">
 			<tr>
 				<td>
-					<g:link action="show" id="${row.id}">
+					<g:link controller="asistenciaDet" action="edit" id="${row.id}">
 						<g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/>
 					</g:link>
 				</td>
@@ -31,6 +33,8 @@
 				<td><g:fieldValue bean="${row}" field="retardoMenor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoMayor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
+				<td><g:fieldValue bean="${row}" field="minutosNoLaborados"/> </td>
+				<td><g:fieldValue bean="${row}" field="horasTrabajadas"/> </td>
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 			</tr>
 		</g:each>

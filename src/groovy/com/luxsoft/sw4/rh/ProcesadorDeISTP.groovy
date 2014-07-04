@@ -38,7 +38,11 @@ class ProcesadorDeISTP {
 			
 		def diasTrabajados=nominaEmpleado.diasTrabajados
 		
+		if(diasTrabajados<=0)
+			return
+		
 		def tarifa =TarifaIsr.obtenerTabla(diasTrabajados).find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
+		assert tarifa,"No encontro TarifaIsr para los parametros: Dias: ${diasTrabajados} Perc:${percepciones} Empleado: ${nominaEmpleado.empleado}"
 		def subsidio=Subsidio.obtenerTabla(diasTrabajados).find(){(percepciones>it.desde && percepciones<=it.hasta)}
 		
 		def importeGravado=percepciones-tarifa.limiteInferior

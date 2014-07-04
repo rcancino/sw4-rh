@@ -18,6 +18,7 @@ import com.luxsoft.sw4.rh.Empleado
 import com.luxsoft.sw4.rh.CalendarioDet
 
 import org.apache.commons.lang.exception.ExceptionUtils
+import org.apache.commons.lang.time.DateUtils;
 
 
 @Transactional
@@ -54,7 +55,7 @@ class AsistenciaService {
 			try {
 				if(empleado.controlDeAsistencia) {
 					
-					if(empleado.baja) {
+					if(empleado.baja && empleado.status=='BAJA') {
 						if(empleado.baja.fecha>=calendarioDet.asistencia.fechaInicial) {
 							actualizarAsistencia(empleado,tipo,calendarioDet)
 						}
@@ -80,7 +81,6 @@ class AsistenciaService {
 
 		
 		log.info "Actualizando asistencias ${empleado} ${periodo}"
-		println "Actualizando asistencias ${empleado} ${periodo}"
 		//Maestro de asistencia
 		def asistencia =Asistencia
 			.find("from Asistencia a where a.empleado=? and a.calendarioDet=?"
@@ -88,6 +88,7 @@ class AsistenciaService {
 		if(asistencia) {
 			//println 'Asistencia ya registrada actualizandola'
 			asistencia.partidas.clear()
+			asistencia.save flush:true
 		}else {
 			//println 'Generando registro de asistencia para '+empleado+" Periodo: "+cal.asistencia
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
@@ -113,7 +114,7 @@ class AsistenciaService {
 				}
 			}
 			
-			def asistenciaDet=new AsistenciaDet(fecha:date)
+			def asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion)
 			
 			
 			for(def i=0;i<valid.size;i++) {
@@ -142,15 +143,35 @@ class AsistenciaService {
 		
 		recalcularRetardos(asistencia)
 		
-		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
-		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
+		
 		incapacidadService.procesar(asistencia)
 		vacacionesService.procesar(asistencia)
 		incidenciaService.procesar(asistencia)
-		/*asistencia.incapacidades=asistencia.partidas.sum 0,{it.tipo=='INCAPACIDAD'}
-		asistencia.incidencias=asistencia.partidas.sum 0,{it.tipo=='INCIDENCIA'}
-		asistencia.vacaciones=asistencia.partidas.sum 0,{it.tipo=='VACACIONES'}
-		*/asistencia.save failOnError:true
+		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
+		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
+		//Calcular horas trabajadas
+		asistencia.horasTrabajadas=0
+		asistencia.partidas.each{
+			
+			if(it.tipo=='ASISTENCIA'){
+				def dia=it.fecha.toCalendar().get(Calendar.DAY_OF_WEEK)
+				switch (dia){
+					case Calendar.SUNDAY:
+						it.horasTrabajadas=0.0
+						break
+					case Calendar.SATURDAY:
+						it.horasTrabajadas=5.0
+						break
+					default:
+					it.horasTrabajadas=9.5
+						break
+				}
+				asistencia.horasTrabajadas+=it.horasTrabajadas
+			}
+		}
+		
+		
+		asistencia.save failOnError:true
 		return asistencia
 		
 	}
@@ -166,6 +187,7 @@ class AsistenciaService {
 			it.retardoMenor=0
 			it.retardoMayor=0
 			it.retardoComida=0
+			it.minutosNoLaborados=0
 			
 			if(it.entrada1) {
 				def entrada=Time.valueOf('09:00:00')
@@ -189,7 +211,11 @@ class AsistenciaService {
 				
 			}
 			
+			
 			def dia=it.fecha.toCalendar().get(Calendar.DAY_OF_WEEK)
+			
+			def salidaOficial=Time.valueOf('18:30:00')
+			
 			
 			switch (dia){
 				case Calendar.SUNDAY:
@@ -197,10 +223,10 @@ class AsistenciaService {
 					it.tipo='DESCANSO'
 					break
 				case Calendar.SATURDAY:
-					if(it.entrada1 && it.salida1 ) {
+					if(it.entrada1 || it.salida1 ) {
 						it.tipo='ASISTENCIA'
 						it.comentario='ASISTENCIA'
-						
+						salidaOficial=Time.valueOf('14:00:00')
 					}else{
 						it.tipo='FALTA'
 						it.comentario='FALTA'
@@ -217,12 +243,27 @@ class AsistenciaService {
 					break
 			}
 			
+			//Calcular los minutos no laborados
+			
+			if(it.salida2){
+				def ultimaSalida=DateUtils.truncate(it.salida2, Calendar.MINUTE)
+				 
+				//TimeDuration duration=TimeCategory.minus(salidaOficial,it.salida2)
+				def salidaAnticipada=(salidaOficial.getTime()-ultimaSalida.getTime())/1000/60	
+				
+				if(salidaAnticipada>0){
+					//println 'Salida anticipada: '+salidaAnticipada
+					it.minutosNoLaborados+=salidaAnticipada
+				}
+			}
+			it.minutosNoLaborados+=it.retardoMayor
+			
 		}
 		
 		asistencia.retardoMenor=asistencia.partidas.sum 0,{it.retardoMenor}
 		asistencia.retardoMayor=asistencia.partidas.sum 0,{it.retardoMayor}
 		asistencia.retardoComida=asistencia.partidas.sum 0,{it.retardoComida}
-		
+		asistencia.minutosNoLaborados=asistencia.partidas.sum 0,{it.minutosNoLaborados}
 		return asistencia
 	}
 

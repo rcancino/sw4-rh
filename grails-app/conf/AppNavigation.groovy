@@ -77,6 +77,7 @@ navigation={
 		procesos(){
 			empleados()
 			salarioDiarioIntegrado()
+			acumulados(controller:'acumuladoPorConcepto',action:'index')
 		}
 		configuracion(){
 			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){

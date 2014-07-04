@@ -8,10 +8,10 @@ import com.luxsoft.sw4.rh.sat.*
 import org.apache.commons.lang.exception.ExceptionUtils
 
 def cargarEmpresa(){
-	def empresa=Empresa.findWhere(clave:'PAPEL')
+	def empresa=Empresa.findWhere(clave:'PAPER')
 	if(!empresa){
-		empresa=new Empresa(clave:'PAPEL',nombre:'PAPEL SA DE CV',rfc:'PAP830101CR3',regimen:'REGIMEN GENERAL DE LEY PERSONAS MORALE'
-			,registroPatronal:'01070619109')
+		empresa=new Empresa(clave:'PAPER',nombre:'PAPER IMPORTS S.A. DE C.V ',rfc:'PIM050124GY7',regimen:'REGIMEN GENERAL DE LEY PERSONAS MORALE'
+			,registroPatronal:'Y6871898109')
 		empresa.direccion=new Direccion(
 			calle:'BIOLOGO MAXIMINO MARTINEZ',
 			numeroExterior:'3902',
@@ -28,13 +28,13 @@ def cargarEmpresa(){
       println "Empresa $empresa ya generada .."
     }
   
-	empresa.numeroDeCertificado='00001000000202171318'
+	empresa.numeroDeCertificado='00001000000202323757'
 	empresa.certificadoDigital=grailsApplication.mainContext
-  		.getResource("/WEB-INF/data/sat/00001000000202171318.cer").file.readBytes()
+  		.getResource("/WEB-INF/data/paper/pim050124gy7_1211121031s.cer").file.readBytes()
   	empresa.certificadoDigitalPfx=grailsApplication.mainContext
-  		.getResource("/WEB-INF/data/sat/PAPEL_CFDI_CERT.pfx").file.readBytes()	
+  		.getResource("/WEB-INF/data/paper/certificadopaper.pfx").file.readBytes()	
   	empresa.llavePrivada=grailsApplication.mainContext
-  		.getResource("/WEB-INF/data/sat/PAPEL_CFD.key").file.readBytes()	
+  		.getResource("/WEB-INF/data/paper/paper2012.key").file.readBytes()	
 }
 
 def procesar(Closure task){
@@ -176,12 +176,13 @@ def conceptos(){
 		concepto.save(failOnError:true)
 	}
 }
-cargarEmpresa()
-catalogos()
-empleados()
-bajas()
-perfiles()
-salarios()
-securoSocial()
-conceptos()
+
+//cargarEmpresa()
+//catalogos()
+//empleados()
+//bajas()
+//perfiles()
+//salarios()
+//securoSocial()
+//conceptos()
  
