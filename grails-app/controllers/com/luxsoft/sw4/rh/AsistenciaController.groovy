@@ -78,12 +78,40 @@ class AsistenciaController {
 	
 	
 	def actualizar(Long id) {
+		
 		def asistencia=Asistencia.get(id)
+		def d=params.double('diasTrabajados')
+		if(d>0.0){
+			log.debug "Actualizando dias trabajados "+d
+			asistencia.diasTrabajados=d
+			asistencia=asistencia.save flush:true
+			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+		}
+		
 		if(asistencia){
 			asistencia=asistenciaService.actualizarAsistencia(asistencia)
 			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 		}
+	}
+	
+	def next(Long id,Long calendarioDetId){
+		def found=Asistencia.findAll(
+			"from Asistencia a where a.calendarioDet.id=? and a.id>? order by a.empleado.perfil.ubicacion.clave asc",
+			[calendarioDetId,id]
+			,[max:1])
+		//def found=Asistencia.findAll("from Asistencia a where id>? order by a.empleado.perfil.ubicacion.clave asc",[id],[max:1])
+		//def found=Asistencia.findAll(sort:'empleado',order:'asc',max:1){id>id}
+		def next=found?found.get(0):Asistencia.get(id)
+		redirect action:'show',params:[id:next.id]
+		//respond next,[view:'show']
+	}
+	
+	def previous(Long id){
 		
+		def found=Asistencia.findAll{id<id}
+		def next=found?found.get(0):Asistencia.get(id)
+		//redirect action:'show',params:[id:next.id]
+		respond next,[view:'show']
 	}
 	
 }

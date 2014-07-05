@@ -47,7 +47,11 @@ class ProcesadorDeSueldo {
 		ne.fraccionDescanso=(1/6*ne.faltas)
 		
 		//Calculo de dias trabajados y sueldo
-		ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades
+		if(asistencia.diasTrabajados>0.0){
+			ne.diasTrabajados=asistencia.diasTrabajados
+		}else{
+			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades
+		}
 		def sueldo=salarioDiario*ne.diasTrabajados
 
 		nominaPorEmpleadoDet.importeGravado=sueldo

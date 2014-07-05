@@ -62,16 +62,18 @@
 						Reportes <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-						<li><g:jasperReport jasper="TarjetaDeAsistencia"
-								format="PDF" name="Pendiente">
-								
-							</g:jasperReport>
-						</li>
-						<li><g:jasperReport jasper="AsistenciaRH"
-								format="PDF" name="Pendiente">
-								
-							</g:jasperReport>
-						</li>
+						<li>
+							<g:if test="currentPeriodo">
+							<g:jasperReport jasper="AsistenciaRH"
+									format="PDF" name="Asistencia RH">
+									<g:hiddenField name="SFECHA_INI" 
+										value="${g.formatDate(date:currentPeriodo?.asistencia?.fechaInicial,format:'dd/MM/yyyy')}" />
+									<g:hiddenField name="SFECHA_FIN" 
+										value="${g.formatDate(date:currentPeriodo?.asistencia?.fechaFinal,format:'dd/MM/yyyy')}" />
+								</g:jasperReport>
+							</g:if>
+							
+							</li>
 					</ul>
 				</div>
 			</div>

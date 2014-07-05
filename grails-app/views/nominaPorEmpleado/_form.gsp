@@ -2,24 +2,32 @@
 <div class="row">
 	<div class="col-md-7">
 		<g:form class="form-horizontal">
-			<f:with bean="${nominaPorEmpleadoInstance}">
-				<g:hiddenField name="id" value="${nominaPorEmpleadoInstance?.id }"/>
-				<f:field property="salarioDiarioBase" label="S. Base" input-class="form-control" input-disabled=""/>
-				<f:field property="salarioDiarioIntegrado" label="SDI" input-class="form-control"/>
-				<f:field property="faltas" input-class="form-control"/>
-				<f:field property="incapacidades" input-class="form-control" label="Inc"/>
-				<%-- 
-				<f:field property="incapacidades" input-class="form-control" label="Inca"/>
-				<f:field property="comentario" input-class="form-control"/>
-				--%>
-				
-			</f:with>
+			
+			<div class="form-group">
+   				<label class="col-sm-6 control-label">Salario Diario</label>
+    			<div class="col-sm-6">
+      				<p class="form-control-static">
+      					<g:formatNumber number="${nominaPorEmpleadoInstance?.salarioDiarioBase}" format="###.##" type="currency"/>
+      				</p>
+    			</div>
+  			</div>
+  			
+  			<div class="form-group">
+   				<label class="col-sm-6 control-label">Salario Diario Integrado</label>
+    			<div class="col-sm-6">
+      				<p class="form-control-static">
+      					<g:formatNumber number="${nominaPorEmpleadoInstance?.salarioDiarioIntegrado}" format="###.##" type="currency"/>
+      				</p>
+    			</div>
+  			</div>
+		
+			
       <g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 			<div class="form-group">
-    			<div class="col-sm-offset-8 col-sm-12">
+    			<%--<div class="col-sm-offset-8 col-sm-12">
       				<g:actionSubmit class="btn btn-primary"  value="Actualizar" action="update"/>
     			</div>
-			</div>
+			--%></div>
       </g:if>
 		</g:form>
 

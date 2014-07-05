@@ -1,5 +1,6 @@
 package com.luxsoft.sw4.rh
 
+import java.math.BigDecimal;
 import java.sql.Time
 
 import com.luxsoft.sw4.Periodo
@@ -32,7 +33,7 @@ class Asistencia {
 	 */
 	Integer incidencias=0
 	
-	Integer diasTrabajados=0
+	BigDecimal diasTrabajados=0.0
 	
 	/**
 	 * Numero de faltas ausencias e incidencias_f (no pagadas) en el periodo
@@ -67,6 +68,8 @@ class Asistencia {
 	Integer minutosNoLaborados=0
 	
 	BigDecimal horasTrabajadas
+	
+	
 	
 	List partidas
 	

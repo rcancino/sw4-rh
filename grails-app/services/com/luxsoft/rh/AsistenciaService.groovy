@@ -13,6 +13,7 @@ import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.Asistencia;
 import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.Checado
+import com.luxsoft.sw4.rh.Nomina;
 
 import com.luxsoft.sw4.rh.Empleado
 import com.luxsoft.sw4.rh.CalendarioDet
@@ -20,6 +21,7 @@ import com.luxsoft.sw4.rh.CalendarioDet
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.apache.commons.lang.time.DateUtils;
 
+import grails.events.Listener
 
 @Transactional
 class AsistenciaService {
@@ -87,8 +89,8 @@ class AsistenciaService {
 				,[empleado,cal])
 		if(asistencia) {
 			//println 'Asistencia ya registrada actualizandola'
-			asistencia.partidas.clear()
-			asistencia.save flush:true
+			//asistencia.partidas.clear()
+			//asistencia.save flush:true
 		}else {
 			//println 'Generando registro de asistencia para '+empleado+" Periodo: "+cal.asistencia
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
@@ -113,32 +115,48 @@ class AsistenciaService {
 					valid.add(reg)
 				}
 			}
+			def asistenciaDet=asistencia.partidas.find(){det->
+				//det.fecha.clearTime()==date.
+				DateUtils.isSameDay(det.fecha, date)
+			}
+			if(!asistenciaDet){
+				println 'Asistencia nueva dando de alta'
+				asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion)
+			}else{
+				println 'Asistencia ya generada tipo:  '+asistenciaDet.manual
+			}
 			
-			def asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion)
-			
-			
-			for(def i=0;i<valid.size;i++) {
-				def checado=valid[i]
-				def time=new Time(checado.hora.time)
+			if(!asistenciaDet.manual){
 				
-				switch(i) {
-					case 0:
-						asistenciaDet.entrada1=time
-						break
-					case 1:
-						asistenciaDet.salida1=time
-						break
-					case 2:
-						asistenciaDet.entrada2=time
-						break
-					case 3:
-						asistenciaDet.salida2=time
-						break
-					default:
-						break
+				asistenciaDet.entrada1=null
+				asistenciaDet.salida1=null
+				asistenciaDet.entrada2=null
+				asistenciaDet.salida2=null
+				
+				for(def i=0;i<valid.size;i++) {
+					def checado=valid[i]
+					def time=new Time(checado.hora.time)
+					
+					switch(i) {
+						case 0:
+							asistenciaDet.entrada1=time
+							break
+						case 1:
+							asistenciaDet.salida1=time
+							break
+						case 2:
+							asistenciaDet.entrada2=time
+							break
+						case 3:
+							asistenciaDet.salida2=time
+							break
+						default:
+							break
+					}
 				}
 			}
-			asistencia.addToPartidas(asistenciaDet)
+			if(!asistenciaDet.asistencia)
+				asistencia.addToPartidas(asistenciaDet)
 		}
 		
 		recalcularRetardos(asistencia)
@@ -168,6 +186,10 @@ class AsistenciaService {
 				}
 				asistencia.horasTrabajadas+=it.horasTrabajadas
 			}
+			if(it.tipo!='ASISTENCIA'){
+				it.horasTrabajadas=0.0
+			}
+			
 		}
 		
 		
@@ -267,8 +289,15 @@ class AsistenciaService {
 		return asistencia
 	}
 
-	
-	
+	@NotTransactional
+	@Listener(namespace='gorm')
+	def afterUpdate(AsistenciaDet det){
+		println 'Modificacion manual en asistencia det: '+det
+		println 'Actualizando.....'
+		def calendarioDet=det.asistencia.calendarioDet
+		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		actualizarAsistencia(det.asistencia.empleado,tipo,calendarioDet)
+	}
 	
     
 }

@@ -1,6 +1,7 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
+			<th>Id</th>
 			<g:sortableColumn property="empleado.clave" title="Clave"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Nombre"/>
 			<th><g:message code="Empleado.ubicacion.label" default="Ubicación" encodeAs="html"/></th>
@@ -12,8 +13,9 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${nominaInstance?.partidas.sort{it.empleado.apellidoPaterno}}" var="row">
+		<g:each in="${nominaInstance?.partidas.sort{it.empleado.perfil.ubicacion.clave}}" var="row">
 			<tr>
+				<td>${fieldValue(bean:row,field:"id")}</td>
 				<td>
 					<g:link controller="nominaPorEmpleado" action="edit" id="${row.id}">
 						${fieldValue(bean:row,field:"empleado.clave")}

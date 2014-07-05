@@ -34,7 +34,15 @@ class ProcesadorDePrimaVacacional {
 		def asistencia=ne.asistencia
 		def vacaciones=asistencia.vacaciones+asistencia.vacacionesp
 		def calendarioDet=asistencia.calendarioDet
-		if(vacaciones){
+		log.debug "El empleado ${ne.empleado.clave} tiene ${vacaciones} en el periodo:${calendarioDet.asistencia}"
+		if(vacaciones<=0){
+			if(nominaPorEmpleadoDet){
+				ne.removeFromConceptos(nominaPorEmpleadoDet)
+				log.debug "No hay vacaciones registradas eliminando la partida de percepcion prima vacacional"
+				return
+			}
+		}
+		if(vacaciones>0){
 			
 			def empleado=ne.empleado
 			
@@ -60,8 +68,8 @@ class ProcesadorDePrimaVacacional {
 			def gravado=disponibleExcento>prima?0.0:prima-disponibleExcento
 			def excento=disponibleExcento<prima?disponibleExcento:prima
 			
-			println "Acumulabe  excento:${acuExcento} disponible excento:${disponibleExcento}"
-			println "Prima: ${prima} Excento:${excento} Gravado:${gravado}"
+			log.info "Acumulabe  excento:${acuExcento} disponible excento:${disponibleExcento}"
+			log.info "Prima: ${prima} Excento:${excento} Gravado:${gravado}"
 			
 			nominaPorEmpleadoDet.importeGravado=gravado
 			nominaPorEmpleadoDet.importeExcento=excento

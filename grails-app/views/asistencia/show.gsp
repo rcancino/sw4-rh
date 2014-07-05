@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<%-- <meta name="layout" content="dashboard_1"/>--%>
 	<title>Asistencia</title>
+	<r:require module="forms"/>
 </head>
 <body>
 
@@ -12,12 +13,13 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<div class="page-header">
-					<h3>
+				<div class="page-header well">
+					<h4>
 						Control de asistencia:
 						${asistenciaInstance.empleado} (${asistenciaInstance.empleado.perfil.numeroDeTrabajador})
+						- ${asistenciaInstance.tipo} ${asistenciaInstance?.calendarioDet?.folio} ${asistenciaInstance.empleado.perfil.ubicacion.clave}
 						
-					</h3>
+					</h4>
 					<g:if test="${ flash.message }">
 						<span class="label label-warning text-center"> ${flash.message}
 						</span>
@@ -33,6 +35,18 @@
 			<div class="col-md-12">
 				<div class="button-panel">
 					
+					<div class="btn-group">
+						<g:link class="btn btn-default" action="previous" id="${asistenciaInstance.id}"> 
+							<span class="glyphicon glyphicon-arrow-left"></span> Anterior 
+						</g:link>
+						<g:link class="btn btn-default" action="next" id="${asistenciaInstance.id}"> 
+							<span class="glyphicon glyphicon-arrow-right"></span> Siguiente 
+						</g:link>
+						<g:link class="btn btn-default" action="index" id="${asistenciaInstance.id}" 
+							params="[calendario:asistenciaInstance?.calendarioDet?.id]"> 
+							<span class="glyphicon glyphicon-list"></span> Asistencias 
+						</g:link>
+					</div>
 
 					<div class="btn-group">
 						<button type="button" name="reportes"
@@ -79,6 +93,22 @@
 						</g:link></li>
 						</ul>
 					</div>
+					<div class="btn-group">
+						
+						<g:form class="form-inline" role="form" 
+							controller="asistencia" 
+							action="actualizar" id="${asistenciaInstance.id}">
+							<label class="" for="diasTrabajadosField">Dias trabajados</label>
+  							<div class="form-group">
+    							<input type="text"
+    								name="diasTrabajados" 
+    								class="form-control decimalField" 
+    								id="diasTrabajadosField" 
+    								value="${asistenciaInstance.diasTrabajados}">
+  							</div>
+  						</g:form>
+					</div>
+					
 					<!-- Fin .btn-group -->
 
 				</div>
@@ -98,7 +128,13 @@
 	
 	
 
+<r:script>
+	$(function(){
+		$(".decimalField").attr("type",'text');
+		$(".decimalField").autoNumeric({vMin:'0.00',wEmpty:'zero',mDec:'4'});
 	
+	});
+</r:script>
 	
 
 	

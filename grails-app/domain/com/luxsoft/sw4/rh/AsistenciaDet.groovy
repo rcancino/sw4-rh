@@ -59,6 +59,8 @@ class AsistenciaDet {
 
 	String tipo
 	
+	Boolean manual=false
+	
 	Date dateCreated
 	Date lastUpdated
 	
@@ -85,6 +87,7 @@ class AsistenciaDet {
 		ubicacion nullable:true
 		comentario nullable:true
 		horasTrabajadas nullable:true
+		manual nullable:true
     }
 	
 	static mapping = {

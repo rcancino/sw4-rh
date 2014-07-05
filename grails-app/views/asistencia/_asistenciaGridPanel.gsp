@@ -2,6 +2,7 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
+			<th>Id</th>
 			<g:sortableColumn property="empleado" title="Empleado"/>
 			<g:sortableColumn property="empleado.perfil.ubicacion.clave" title="Sucursal"/>
 			
@@ -17,7 +18,12 @@
 		<g:each in="${asistenciaInstanceList}" var="row">
 			<tr>
 				<td>
-					<g:link action="show" id="${row.id}">
+					<g:link action="show" id="${row.id}" target="_blank">
+						${fieldValue(bean:row,field:"empleado.id")}
+					</g:link>
+				</td>
+				<td>
+					<g:link action="show" id="${row.id}" target="_blank">
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>

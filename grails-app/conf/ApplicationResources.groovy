@@ -16,6 +16,10 @@ modules = {
         dependsOn 'jquery-ui'
         resource url:'js/jquery.ui.datepicker-es.js'  
     }
+	mask{
+		dependsOn 'jquery'
+		resource url: 'js/jquery.mask.min.js'
+	}
 	/*
     overrides {
         'bootstrap-css' {

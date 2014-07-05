@@ -34,8 +34,14 @@
       				</p>
     			</div>
   			</div>
-  			
-  			
+  			<div class="form-group">
+   				<label class="col-sm-4 control-label">Id</label>
+    			<div class="col-sm-8">
+      				<p class="form-control-static">
+      					${asistenciaInstance.id} 
+      				</p>
+    			</div>
+  			</div>
   			
   			
 		</g:form>

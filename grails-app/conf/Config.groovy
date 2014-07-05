@@ -129,9 +129,11 @@ log4j = {
 	environments{
 		
 		development{
+			info 'com.luxsoft.sw4.rh'
 			info 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
-			debug 'com.luxsoft.sw4.rh.ProcesadorDeISTP'
-			debug 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
+			debug 'com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional'
+			
+			
 		}
 		
 		produccion{

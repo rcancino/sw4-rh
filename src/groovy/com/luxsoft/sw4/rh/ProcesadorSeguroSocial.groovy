@@ -34,11 +34,11 @@ class ProcesadorSeguroSocial {
 	
 		def faltas=nominaPorEmpleado.faltas
 		faltas=faltas+(faltas*factorDescanso)
-		println 'Faltas: '+faltas
+		log.debug 'Faltas: '+faltas
 	
 		def diasTrabajados=nominaPorEmpleado.diasTrabajados
 		def diasDelPeriodo=nominaPorEmpleado.diasDelPeriodo
-		println 'Dias trabajados: '+diasTrabajados
+		log.debug 'Dias trabajados: '+diasTrabajados
 	
 		def prima=0.5 //Numer magico por el momento
 	
@@ -61,7 +61,7 @@ class ProcesadorSeguroSocial {
 		}
 		emd=(emd*0.40*diasDelPeriodo)/100
 		emd=emd.setScale(2,RoundingMode.HALF_EVEN)
-		println 'EyM sobre dif. entre SBC y 3 SMGDF: '+emd
+		log.debug 'EyM sobre dif. entre SBC y 3 SMGDF: '+emd
 		aporacionAsegurado+=emd
 	
 		'Prestaciones en dinero EyM sobre SBC'
@@ -76,38 +76,38 @@ class ProcesadorSeguroSocial {
 		def pd=((val3*0.25)*diasDelPeriodo)/100
 		pd=pd.setScale(2,RoundingMode.HALF_EVEN)
 		aporacionAsegurado+=pd
-		println 'Prestaciones en dinero EyM sobre SBC: '+pd
+		log.debug 'Prestaciones en dinero EyM sobre SBC: '+pd
 	
 		def gmp=((val3*0.375)*diasDelPeriodo)/100
 		gmp=gmp.setScale(2,RoundingMode.HALF_EVEN)
 		aporacionAsegurado+=gmp
-		println 'Gastos mdicos pensionado sobre SBC: '+gmp
+		log.debug 'Gastos mdicos pensionado sobre SBC: '+gmp
 	
 		def iv=((val3*0.625)*diasTrabajados)/100
 		iv=iv.setScale(2,RoundingMode.HALF_EVEN)
 		aporacionAsegurado+=iv
-		println 'Invalidez y Vida sobre SBC: '+iv
+		log.debug 'Invalidez y Vida sobre SBC: '+iv
 	
 		def sr=0
 		aporacionAsegurado+=sr
-		println 'Seguro de Retiro: '+sr
+		log.debug 'Seguro de Retiro: '+sr
 	
 		def cv=((val3*1.125)*diasTrabajados)/100
 		cv=cv.setScale(2,RoundingMode.HALF_EVEN)
 		aporacionAsegurado+=cv
-		println 'Cesanta edad avanzada y vejez sobre SBC: '+cv
+		log.debug 'Cesanta edad avanzada y vejez sobre SBC: '+cv
 	
 		def sg=0
 		aporacionAsegurado+=sg
-		println 'Seguro de Guarderas sobre SBC: '+sg
+		log.debug 'Seguro de Guarderas sobre SBC: '+sg
 	
 		def rt=0
 		aporacionAsegurado+=rt
-		println 'Riesgos de trabajo: '+rt
+		log.debug 'Riesgos de trabajo: '+rt
 	
 		def inf=0
 		aporacionAsegurado+=inf
-		println 'Infonavit: '+inf
+		log.debug 'Infonavit: '+inf
 	
 		nominaPorEmpleadoDet.importeGravado=aporacionAsegurado
 		
