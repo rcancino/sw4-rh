@@ -4,6 +4,7 @@ navigation={
 		
 		catalogos(){
 			calendario()
+			turnos(controller:'turno',action:'index')
 			puesto(controller:'puesto',action:'index')
 			empleado(controller:'empleado',action:'index'){
 				catalogo(controller:'empleado',action:'index')

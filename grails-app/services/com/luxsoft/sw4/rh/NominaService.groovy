@@ -54,7 +54,9 @@ class NominaService {
 	def generarPartidas(Nomina nomina) {
 		
 		def tipo=nomina.periodicidad
-		def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo }
+		//def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo }
+		def empleados=Empleado.findAll(
+			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
 		//println "Generando nomina por empleado $tipo para ${empleados.size()} empleados"
 		for(def empleado:empleados) {
 			if(empleado.baja && empleado.baja.fecha<nomina.calendarioDet.asistencia.fechaInicial) {

@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${nominaInstance?.partidas.sort{it.empleado.perfil.ubicacion.clave}}" var="row">
+		<g:each in="${nominaInstance?.partidas}" var="row">
 			<tr>
 				<td>${fieldValue(bean:row,field:"id")}</td>
 				<td>

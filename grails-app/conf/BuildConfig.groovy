@@ -41,10 +41,11 @@ grails.project.dependency.resolution = {
         grailsCentral()
         mavenCentral()
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
-        //mavenRepo "http://repository.codehaus.org"
-        mavenRepo "http://download.java.net/maven/2/"
-        //mavenRepo "http://repository.jboss.com/maven2/"
-		mavenRepo "http://repo.grails.org/grails/core"
+        mavenRepo "http://repository.codehaus.org"
+        
+        mavenRepo "http://repository.jboss.com/maven2/"
+		mavenRepo "http://download.java.net/maven/2/"
+        mavenRepo "http://repo.grails.org/grails/core"
 		mavenRepo "http://repo.spring.io/milestone/"
 		
 		mavenRepo "http://repo.grails.org/grails/libs-releases/"
@@ -66,6 +67,8 @@ grails.project.dependency.resolution = {
 		compile 'net.glxn:qrgen:1.2'
 		compile 'org.bouncycastle:bcprov-jdk14:1.45'
 		compile 'nomina:nomina:1.0'
+        compile "org.jadira.usertype:usertype.jodatime:1.9"
+
     }
 
     plugins {
@@ -120,6 +123,14 @@ grails.project.dependency.resolution = {
         //compile ":less-resources:1.3.3.2"
 		compile ":filterpane:2.3.3"
 		compile ':jquery-date-time-picker:0.1.0'
+        compile ":joda-time:1.5"
+        /*
+        compile ":joda-time:1.4"
+        compile("joda-time:joda-time-hibernate:1.3") {
+            excludes "joda-time", "hibernate"
+        }
+        */
+        //compile "org.jadira.usertype:usertype.jodatime:1.9"
 		
 		//compile ":cache-ehcache:1.0.1"
 		//compile ":export:1.6"
