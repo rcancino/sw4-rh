@@ -6,23 +6,26 @@ import org.jadira.usertype.dateandtime.joda.*
 class Turno {
 
 	String descripcion
-	Map dias
+	
 	LocalTime inicioDeDia
 	
 	LocalTime horaLimiteDeTrabajo
 	boolean horaLimiteSiguienteDia
 	LocalTime inicioDeTiempoExtra
+
+	List dias
 	
 
 	Date dateCreated
 	Date lastUpdated
 
-	Map diasDeDescanso
+	
 
 	static hasMany = [dias: TurnoDet]
 
     static constraints = {
     	descripcion blank:false
+    	inicioDeTiempoExtra nullable:true
     }
 
     static mapping = {

@@ -28,12 +28,12 @@
 					
 					<div class="list-group">
 						
-						<g:link controller="nomina" action="edit" id="${nextItem}"
+						<g:link controller="nominaPorEmpleado" action="edit" id="${nextItem}"
 							class="list-group-item" >
 							<span class="glyphicon glyphicon-arrow-right"></span> Siguiente 
 						</g:link>
 						
-						<g:link controller="nomina" action="edit" id="${prevItem}"
+						<g:link controller="nominaPorEmpleado" action="edit" id="${prevItem}"
 							class="list-group-item" >
 							<span class="glyphicon glyphicon-arrow-left"></span> Regresar 
 						</g:link>

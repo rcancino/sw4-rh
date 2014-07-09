@@ -45,6 +45,8 @@ class NominaPorEmpleado {
 	
 	Asistencia asistencia
 
+	Integer orden
+
 	Date dateCreated
 	
 	Date lastUpdated
@@ -56,6 +58,7 @@ class NominaPorEmpleado {
 		faltas nullable:true
 		incapacidades nullable:true
 		asistencia nullable:true
+		orden nullable:true
     }
 	
 	static transients=['antiguedad'

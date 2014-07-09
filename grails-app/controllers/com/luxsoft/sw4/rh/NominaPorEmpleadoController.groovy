@@ -23,7 +23,8 @@ class NominaPorEmpleadoController {
 
     def edit(Long id){
     	def ne=NominaPorEmpleado.get(id)
-    	[nominaPorEmpleadoInstance:ne,nextItem:getNext(ne),prevItem:getPrev(ne)]
+    	def partidas=ne.nomina.partidas.sort{it.orden}
+    	[nominaPorEmpleadoInstance:ne,nextItem:getNext(ne,partidas),prevItem:getPrev(ne,partidas)]
     }
 	
 	@Transactional
@@ -113,31 +114,21 @@ class NominaPorEmpleadoController {
 		
 	}
 
-	private Long getNext(NominaPorEmpleado ne){
-		def nomina=ne.nomina
-		def list=nomina.partidas.collect {it.id}
+	private Long getNext(NominaPorEmpleado ne,def partidas){
 		
-		def index=list.indexOf(ne.id)
-		
-		if(index<list.size()){
-			def next=list[index+1]
-			return next
-		}
-		return list[0]
+		def next=ne.orden+1
+		if(next>partidas.size())
+			next=1
+		def found=partidas.find{it.orden==next}
+		return found?found.id:0
 	}
 	
-	private Long getPrev(NominaPorEmpleado ne){
-		def nomina=ne.nomina
-		def list=nomina.partidas.collect {it.id}
-		println 'Partidas:'+ list
-		def index=list.indexOf(ne.id)
-		println 'Found: '+index
-		if(index>0){
-			def next=list[index-1]
-			println 'Siguiente: '+next
-			return next
-		}
-		return list[0]
+	private Long getPrev(NominaPorEmpleado ne,def partidas){
+		def prev=ne.orden-1
+		if(prev<1)
+			prev=partidas.size()
+		def found=partidas.find{it.orden==prev}
+		return found?found.id:0
 	}
     
 }

@@ -10,7 +10,9 @@ import grails.plugin.springsecurity.annotation.Secured
 class PrestamoController {
 
     def index(Integer max) { 
-		params.max = Math.min(max ?: 10, 100)
+		params.max = Math.min(max ?: 15, 100)
+		params.sort='empleado.apellidoPaterno'
+		params.order='asc'
 		[prestamoInstanceList:Prestamo.list(params),prestamoInstanceCount:Prestamo.count()]
     }
 
@@ -30,6 +32,9 @@ class PrestamoController {
 		if(prestamoInstance.hasErrors()) {
 			flash.message="Prestamo invalido"
 			render view:'create',model:[prestamoInstance:prestamoInstance]
+		}
+		prestamo.dias.each{
+			println ' Dia : '+it
 		}		
 		prestamoInstance.save(failOnError:true)
 		flash.message="Prestamo generado: "+prestamoInstance.id

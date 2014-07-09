@@ -10,7 +10,7 @@
 
 	<content tag="header">
 		<h3 class="text-left">Prestamo: ${prestamoInstance.id}  ${prestamoInstance.empleado} 
-			Saldo:   <strong><g:formatNumber number="${prestamoInstance.saldo}"   type="currency" currencyCode="MXN" /></strong>
+			Saldo:   <strong><g:formatNumber number="${prestamoInstance.saldo}"   type="number"/></strong>
 		</h3>
 	</content>
 	
@@ -27,6 +27,14 @@
 					<span class="glyphicon glyphicon-plus"></span> Agregar Abono
 				</g:link>
   			</li>
+  			<li>
+				<g:jasperReport
+          			jasper="PrestamosEstadoDeCuenta"
+          			format="PDF"
+          			name="Estado de Cuenta">
+          			<g:hiddenField name="NOMINA" value="${prestamoInstance.id}"/>
+ 				</g:jasperReport>
+			</li>
 		</ul>
 		
 	</content>

@@ -58,6 +58,7 @@ class NominaService {
 		def empleados=Empleado.findAll(
 			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
 		//println "Generando nomina por empleado $tipo para ${empleados.size()} empleados"
+		int orden=1
 		for(def empleado:empleados) {
 			if(empleado.baja && empleado.baja.fecha<nomina.calendarioDet.asistencia.fechaInicial) {
 				continue
@@ -73,7 +74,8 @@ class NominaService {
 					antiguedadEnSemanas:0,
 					nomina:nomina,
 					vacaciones:0,
-					fraccionDescanso:0
+					fraccionDescanso:0,
+					orden:orden++
 					)
 				ne.antiguedadEnSemanas=ne.getAntiguedad()
 				def res=nomina.addToPartidas(ne)

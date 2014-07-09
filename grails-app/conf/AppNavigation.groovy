@@ -61,7 +61,7 @@ navigation={
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
 				vigentes()
 				pagados()
-				reportes()
+				
 
 			}
 			
@@ -79,6 +79,7 @@ navigation={
 			empleados()
 			salarioDiarioIntegrado()
 			acumulados(controller:'acumuladoPorConcepto',action:'index')
+			modificacionSalarial(controller:'modificacionSalarial',action:'index')
 		}
 		configuracion(){
 			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){

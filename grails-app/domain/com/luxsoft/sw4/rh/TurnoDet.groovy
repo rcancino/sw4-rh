@@ -17,8 +17,13 @@ class TurnoDet {
 	static belongsTo = [turno: Turno]
 
     static constraints = {
-    	dia inList:['LUNES','MARTES','MIERCOLES','JUEVES','SABADO','DOMINGO','LUNES']
+    	//dia inList:['LUNES','MARTES','MIERCOLES','JUEVES','SABADO','DOMINGO','LUNES']
+        entrada1 nullable:true
+        salida1 nullable:true
+        entrada2 nullable:true
+        salida2 nullable:true
     }
+
     static mapping = {
     	entrada1 type: PersistentLocalTime
     	salida1 type: PersistentLocalTime

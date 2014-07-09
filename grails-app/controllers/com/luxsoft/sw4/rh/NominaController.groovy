@@ -30,8 +30,8 @@ class NominaController {
 
     def show(Long id) {
 		def nominaInstance=Nomina.get(id)
-		
-		[nominaInstance:nominaInstance]
+		Map partidasMap=nominaInstance.partidas.groupBy([{it.ubicacion.clave}])
+		[nominaInstance:nominaInstance,partidasMap:partidasMap]
 		        
     }
 

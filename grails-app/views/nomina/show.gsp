@@ -22,12 +22,7 @@
 				<span class="glyphicon glyphicon-repeat"></span> Refrescar
 			</g:link>
 			
-			<g:link action="create" class="btn btn-default">
-				<span class="glyphicon glyphicon-search"></span> Buscar
-			</g:link>
-			<g:link action="create" class="btn btn-default">
-				<span class="glyphicon glyphicon-filter"></span> Filtrar
-			</g:link>
+			
 			</div>
 			
 			<div class="btn-group">
@@ -90,7 +85,40 @@
 		
 	</content>
 	<content tag="grid">
-		<g:render template="nominaDetGridPanel"/>
+		
+		<ul class="nav nav-tabs" role="tablist">
+		  <li class="active"><a href="#andrade" role="tab" data-toggle="tab">Andrade</a></li>
+		  <li><a href="#bolivar" role="tab" data-toggle="tab">Bolivar</a></li>
+		  <li><a href="#calle4" role="tab" data-toggle="tab">Calle 4</a></li>
+		  <li><a href="#cf5febrero" role="tab" data-toggle="tab">5 de Febrero</a></li>
+		  <li><a href="#tacuba" role="tab" data-toggle="tab">Tacuba</a></li>
+		  <li><a href="#oficinas" role="tab" data-toggle="tab">Oficinas</a></li>
+		  <li><a href="#ventas" role="tab" data-toggle="tab">Ventas</a></li>
+		</ul>
+
+		<div class="tab-content">
+	  		<div class="tab-pane active" id="andrade">
+				<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap.ANDRADE]"/>
+	  		</div>
+	  		<div class="tab-pane" id="bolivar">
+	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['BOLIVAR']]"/>
+	  		</div>
+	  		<div class="tab-pane" id="calle4">
+	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['CALLE4']]"/>
+	  		</div>
+	  		<div class="tab-pane" id="cf5febrero">
+	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['CF5FEBRERO']]"/>
+	  		</div>
+	  		<div class="tab-pane" id="tacuba">
+	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['TACUBA']]"/>
+	  		</div>
+	  		<div class="tab-pane" id="oficinas">
+	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['OFICINAS']]"/>
+	  		</div>
+	  		<div class="tab-pane" id="ventas">
+	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['VENTAS']]"/>
+	  		</div>
+		</div>
 	</content>
 
 	
