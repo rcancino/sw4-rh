@@ -36,9 +36,7 @@ class PrestamoController {
 			flash.message="Prestamo invalido"
 			render view:'create',model:[prestamoInstance:prestamoInstance]
 		}
-		prestamo.dias.each{
-			println ' Dia : '+it
-		}		
+				
 		prestamoInstance.save(failOnError:true)
 		flash.message="Prestamo generado: "+prestamoInstance.id
 		redirect action:'index'
