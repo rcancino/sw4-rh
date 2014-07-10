@@ -1,5 +1,7 @@
 <%@ page import="com.luxsoft.sw4.rh.Asistencia" %>
-<table class="table table-striped table-bordered table-condensed">
+%{-- <r:require module="datatables"/> --}%
+
+<table id="" class="table table-striped table-bordered table-condensed asistenciaTable">
 	<thead>
 		<tr>
 			<th>Id</th>
@@ -15,7 +17,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${asistenciaInstanceList}" var="row">
+		<g:each in="${partidasList}" var="row">
 			<tr>
 				<td>
 					<g:link action="show" id="${row.id}" target="_blank">
@@ -40,6 +42,6 @@
 		</g:each>
 	</tbody>
 </table>
-<div class="pagination">
-	<g:paginate total="${asistenciaTotalCount ?: 0}" />
-</div>
+<r:script>
+	
+</r:script>

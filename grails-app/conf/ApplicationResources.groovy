@@ -20,6 +20,10 @@ modules = {
 		dependsOn 'jquery'
 		resource url: 'js/jquery.mask.min.js'
 	}
+    datatables{
+        dependsOn 'jquery'
+        resource url:'js/datatables/jquery.dataTables.min.js'
+    }
 	/*
     overrides {
         'bootstrap-css' {

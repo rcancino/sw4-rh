@@ -10,10 +10,13 @@ import grails.plugin.springsecurity.annotation.Secured
 class PrestamoController {
 
     def index(Integer max) { 
-		params.max = Math.min(max ?: 15, 100)
+		params.max = Math.min(max ?: 500, 1000)
 		params.sort='empleado.apellidoPaterno'
 		params.order='asc'
-		[prestamoInstanceList:Prestamo.list(params),prestamoInstanceCount:Prestamo.count()]
+
+		def mapList=Prestamo.list(params).groupBy([{it.empleado.salario.periodicidad}])
+		[mapList:mapList
+		,prestamoInstanceCount:Prestamo.count()]
     }
 
     def create(){

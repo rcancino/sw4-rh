@@ -10,22 +10,6 @@ class AsistenciaController {
 	def asistenciaService
 	def checadoService
 	
-	def cambiarPeriodo(Periodo periodo) {
-		session.periodo=periodo?:Periodo.getCurrentMonth()
-		redirect action:'index'
-	}
-	
-	def asistenciaSemanal(){
-		def tipo='SEMANA'
-		def periodos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.tipo=?",[tipo])
-		render  view:'index',model:[periodos:periodos,tipo:tipo]
-	}
-	
-	def asistenciaQuincenal(Long calendarioDetId){
-		def tipo='QUINCENA'
-		def periodos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.tipo='QUINCENA'")
-		render  view:'index',model:[periodos:periodos,tipo:tipo]
-	}
 
 	def cargarAsistencia(Long calendarioDetId){
 		def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=? order by a.empleado.perfil.ubicacion.clave asc",[calendarioDetId])
@@ -33,7 +17,38 @@ class AsistenciaController {
 	}
 
     def index() {
-    	redirect action:'asistenciaQuincenal'
+    	def tipo=params.tipo?:'SEMANA'
+    	def calendarioDet
+    	if(tipo=='SEMANA'){
+    		calendarioDet=session.calendarioSemana
+    		
+    	}else if(tipo=='QUINCENA'){
+    		calendarioDet=session.calendarioQuincena
+    	}
+    	
+    	def partidasMap=[]
+    	if(calendarioDet){
+    		def list=Asistencia.findAll{calendarioDet==calendarioDet}
+    		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
+    	}
+    	def periodos=CalendarioDet.findAll{calendario.ejercicio==2014 && calendario.tipo==tipo}
+    	
+    	[calendarioDet:calendarioDet,partidasMap:partidasMap,tipo:tipo,periodos:periodos]
+    	//redirect action:'asistenciaQuincenal'
+	}
+
+	def cambiarCalendario(Long calendarioDetId){
+		def cal=CalendarioDet.get(calendarioDetId)
+		def tipo='SEMANA'
+		if(cal){
+			if(cal.calendario.tipo=='SEMANA'){
+				session.calendarioSemana=cal
+			}else if(cal.calendario.tipo=='QUINCENA'){
+				session.calendarioQuincena=cal
+				tipo='QUINCENA'
+			}
+		}
+		redirect action:'index',parans:[tipo:tipo]
 	}
 	
 	def show(Asistencia asistencia){
@@ -60,19 +75,17 @@ class AsistenciaController {
 		redirect action:'lectora',params:params
 	}
 
-	def actualizarAsistencias(Long calendarioDetId){
-		def calendarioDet=CalendarioDet.get(calendarioDetId)
+	def actualizarAsistencias(Long id){
+		def calendarioDet=CalendarioDet.get(id)
+		
 		if(calendarioDet){
-			println 'Actualizando lista de asistencias para el periodo: '+calendarioDet.asistencia
+			log.info 'Actualizando lista de asistencias para el periodo: '+calendarioDet.asistencia
 			asistenciaService.actualizarAsistencia(calendarioDet)
-			def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=?",[calendarioDetId])
-			render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
-		}else{
-			
-			render {
-    			div(class:"", id: "myDiv", "Debe seleccionar un periodo...")
-			}
+			//def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=?",[calendarioDetId])
+			//render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
+
 		}
+		redirect action:'index',model:[tipo:calendarioDet.calendario.tipo]
 		
 	}
 	

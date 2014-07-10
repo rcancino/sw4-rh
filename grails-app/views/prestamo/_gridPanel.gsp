@@ -12,7 +12,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${prestamoInstanceList}" var="row">
+		<g:each in="${partidasList?.sort{it.id}}" var="row">
 			<tr>
 				<td>
 					<g:link action="edit" id="${row.id}">

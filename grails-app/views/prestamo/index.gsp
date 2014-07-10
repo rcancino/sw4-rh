@@ -15,6 +15,7 @@
 	</content>
 	<content tag="gridTitle">Lista de prestamos</content>
 	<content tag="gridTasks">
+
   		<div class="btn-group">
 			<g:link action="index" class="btn btn-default">
 				<span class="glyphicon glyphicon-repeat"></span> Todos
@@ -62,7 +63,22 @@
 			</div> <!-- Fin .btn-group -->
 	</content>
 	<content tag="gridPanel">
-		<g:render template="gridPanel"/>
+		<ul class="nav nav-tabs" role="tablist">
+		  <li class="active">
+		  	<a href="#semanal" role="tab" data-toggle="tab">Semanal</a>
+		  </li>
+		  <li >
+		  	<a href="#quincenal" role="tab" data-toggle="tab">Quincenal</a>
+		  </li>
+		</ul>
+		<div class="tab-content">
+	  		<div class="tab-pane active" id="semanal">
+				<g:render template="gridPanel" model="['partidasList':mapList.SEMANAL]"/>
+	  		</div>
+	  		<div class="tab-pane" id="quincenal">
+				<g:render template="gridPanel" model="['partidasList':mapList.QUINCENAL]"/>
+	  		</div>
+		</div>
 	</content>
 	
 </body>

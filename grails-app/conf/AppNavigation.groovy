@@ -47,8 +47,7 @@ navigation={
 			recibos(controller:'reciboDeNomina',action:'index',titleText:'Recibos (Quincenal)')
 			recibosSemanal(controller:'reciboDeNomina',action:'semanal',titleText:'Recibos (Semanal)')
 			asistencia(controller:'asistencia',action:'index',titleText:'Control de asistencia'){
-				asistenciaQuincenal(action:'asistenciaQuincenal',titleText:'Quincenal')
-				asistenciaSemanal(action:'asistenciaSemanal',titleText:'Semanal')
+				asistencia(action:'index',titleText:'Asistencia')
 				lectora()
 				incapacidad(controller:'incapacidad',action:'index',titleText:'Incapacidades')
 				incidencias(controller:'incidencia',action:'index')

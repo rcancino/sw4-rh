@@ -201,3 +201,5 @@ grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYears, class: org.joda.time.Years
 }
 jodatime.format.html5 = true
+
+grails.i18n.cache.seconds=-1

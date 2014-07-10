@@ -121,10 +121,10 @@ class AsistenciaService {
 				DateUtils.isSameDay(det.fecha, date)
 			}
 			if(!asistenciaDet){
-				println 'Asistencia nueva dando de alta'
+				log.debug 'Asistencia nueva dando de alta'
 				asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion)
 			}else{
-				println 'Asistencia ya generada tipo:  '+asistenciaDet.manual
+				log.debug 'Asistencia ya generada tipo:  '+asistenciaDet.manual
 			}
 			
 			if(!asistenciaDet.manual){
@@ -202,7 +202,7 @@ class AsistenciaService {
 	
 	@NotTransactional
 	def recalcularRetardos(Asistencia asistencia) {
-		println 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
+		log.info 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
 		def retardoMenor=0
 		asistencia.faltas=0
 		asistencia.partidas.each{
@@ -293,8 +293,7 @@ class AsistenciaService {
 	@NotTransactional
 	@Listener(namespace='gorm')
 	def afterUpdate(AsistenciaDet det){
-		println 'Modificacion manual en asistencia det: '+det
-		println 'Actualizando.....'
+		log.info 'Modificacion manual en asistencia det: '+det
 		def calendarioDet=det.asistencia.calendarioDet
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		actualizarAsistencia(det.asistencia.empleado,tipo,calendarioDet)
