@@ -27,7 +27,16 @@
 					<span class="glyphicon glyphicon-plus"></span> Agregar Abono
 				</g:link>
   			</li>
-  			<li>
+  			
+			<li>
+				<g:link action="delete" id="${prestamoInstance.id}" 
+					class="list-group-item"
+					onclick="return confirm('Eliminar prestamo?')"> 
+					<span class="glyphicon glyphicon-trash"></span> Eliminar
+				</g:link>
+			</li>
+
+			<li>
 				<g:jasperReport
           			jasper="PrestamosEstadoDeCuenta"
           			format="PDF"
@@ -35,6 +44,7 @@
           			<g:hiddenField name="NOMINA" value="${prestamoInstance.id}"/>
  				</g:jasperReport>
 			</li>
+
 		</ul>
 		
 	</content>

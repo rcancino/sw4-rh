@@ -65,6 +65,13 @@ class PrestamoController {
 		prestamo.save(flush:true)
 		redirect action:'edit',params:[id:prestamo.id]
 	}
+
+	@Transactional
+	def delete(Long id){
+		def prestamo=Prestamo.get(id)
+		prestamo.delete flush:true
+		redirect action:'index'
+	}	
 	
 	
 	def agregarAbono(Prestamo prestamoInstance){
