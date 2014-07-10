@@ -13,8 +13,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		%{-- <g:each in="${nominaInstance?.partidas.sort{it.orden} }" var="row"> --}%
-		<g:each in="${partidasList.sort{it.orden}}" var="row">
+		
+		<g:each in="${partidasList?.sort{it.orden}}" var="row">
 			<tr>
 				<td>${fieldValue(bean:row,field:"orden")}</td>
 				<td>

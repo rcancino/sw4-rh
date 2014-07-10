@@ -87,17 +87,17 @@
 	<content tag="grid">
 		
 		<ul class="nav nav-tabs" role="tablist">
-		  <li class="active"><a href="#andrade" role="tab" data-toggle="tab">Andrade</a></li>
+		  <li class="${nominaInstance.periodicidad=='SEMANAL'?'active':''}"><a href="#andrade" role="tab" data-toggle="tab">Andrade</a></li>
 		  <li><a href="#bolivar" role="tab" data-toggle="tab">Bolivar</a></li>
 		  <li><a href="#calle4" role="tab" data-toggle="tab">Calle 4</a></li>
 		  <li><a href="#cf5febrero" role="tab" data-toggle="tab">5 de Febrero</a></li>
 		  <li><a href="#tacuba" role="tab" data-toggle="tab">Tacuba</a></li>
-		  <li><a href="#oficinas" role="tab" data-toggle="tab">Oficinas</a></li>
+		  <li class="${nominaInstance.periodicidad=='QUINCENAL'?'active':''}"><a href="#oficinas" role="tab" data-toggle="tab">Oficinas</a></li>
 		  <li><a href="#ventas" role="tab" data-toggle="tab">Ventas</a></li>
 		</ul>
 
 		<div class="tab-content">
-	  		<div class="tab-pane active" id="andrade">
+	  		<div class="tab-pane ${nominaInstance.periodicidad=='SEMANAL'?'active':''}" id="andrade">
 				<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap.ANDRADE]"/>
 	  		</div>
 	  		<div class="tab-pane" id="bolivar">
@@ -112,7 +112,7 @@
 	  		<div class="tab-pane" id="tacuba">
 	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['TACUBA']]"/>
 	  		</div>
-	  		<div class="tab-pane" id="oficinas">
+	  		<div class="tab-pane ${nominaInstance.periodicidad=='QUINCENAL'?'active':''}" id="oficinas">
 	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['OFICINAS']]"/>
 	  		</div>
 	  		<div class="tab-pane" id="ventas">

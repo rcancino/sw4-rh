@@ -53,7 +53,7 @@ class AsistenciaService {
 		
 		//def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo  }
 		def empleados=Empleado.findAll(
-			"from Empleado e where e.perfil.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
+			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
 		empleados.each{ empleado ->
 			try {
 				if(empleado.controlDeAsistencia) {

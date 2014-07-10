@@ -1,5 +1,6 @@
 <fieldset>
-<g:form class="form-horizontal" action="update">
+<r:require module="forms"/>
+<g:form class="form-horizontal numeric-form" action="update">
 	<g:hiddenField name="id" value="${prestamoInstance.id}" />
 	
 	<f:with bean="${prestamoInstance }">
@@ -8,9 +9,9 @@
 		<f:field property="fechaDeAutorizacion" input-class="form-control"
 			label="Autorización" />
 		<f:field property="autorizo" input-class="form-control" />
-		<f:field property="importe" input-class="form-control" />
+		<f:field property="importe" input-class="form-control moneda-field" />
 		<f:field property="tipo" input-class="form-control" />
-		<f:field property="tasaDescuento" input-class="form-control" />
+		<f:field property="tasaDescuento" input-class="form-control numeric-field" input-type="text"/>
 		<f:field property="comentario" input-class="form-control" />
 	</f:with>
 	
