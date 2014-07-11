@@ -55,6 +55,28 @@
 				<input id="searchField" class="form-control" type="text" placeholder="Empleado" autofocus="autofocus">
 			</div>
 
+			<div class="btn-group">
+				<button type="button" name="reportes"
+					class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+					role="menu">
+					Reportes <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li>
+						
+						<g:jasperReport jasper="AsistenciaRH"
+								format="PDF" name="Asistencia RH">
+							<g:hiddenField name="SFECHA_INI" 
+									value="${g.formatDate(date:calendarioDet?.asistencia?.fechaInicial,format:'dd/MM/yyyy')}" />
+							<g:hiddenField name="SFECHA_FIN" 
+									value="${g.formatDate(date:calendarioDet?.asistencia?.fechaFinal,format:'dd/MM/yyyy')}" />
+						</g:jasperReport>
+						
+						
+					</li>
+				</ul>
+			</div>
+
 		</div>	
   		
   		
