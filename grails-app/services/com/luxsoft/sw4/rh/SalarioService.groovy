@@ -61,5 +61,11 @@ class SalarioService {
 	GROUP BY X.ID
 	"""
 
+	String bimestreSql="""
+		SELECT MIN(INICIO) AS INI,MAX(FIN) AS FIN
+		FROM calendario_det D JOIN calendario C ON(C.ID=D.CALENDARIO_ID)
+		WHERE C.EJERCICIO=2014 AND BIMESTRE=4
+	"""
+
 }
 

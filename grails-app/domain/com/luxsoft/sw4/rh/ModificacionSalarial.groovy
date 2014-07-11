@@ -13,13 +13,14 @@ class ModificacionSalarial {
 
 	String tipo 
 
-
+	Integer bimestre
 
 	BigDecimal salarioAnterior
 
 	BigDecimal salarioNuevo
 
 	BigDecimal sdiAnterior
+
 	BigDecimal sdiNuevo
 	
 	String comentario
@@ -30,6 +31,7 @@ class ModificacionSalarial {
     static constraints = {
     	tipo inList:['CALCULO_SDI','AUMENTO']
     	comentario nullable:true
+    	bimestre nullable:true
     }
 
     static mapping = {
