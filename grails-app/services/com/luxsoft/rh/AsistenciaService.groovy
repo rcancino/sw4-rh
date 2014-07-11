@@ -117,7 +117,7 @@ class AsistenciaService {
 				}
 			}
 			def asistenciaDet=asistencia.partidas.find(){det->
-				//det.fecha.clearTime()==date.
+				
 				DateUtils.isSameDay(det.fecha, date)
 			}
 			if(!asistenciaDet){

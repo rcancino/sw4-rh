@@ -53,4 +53,7 @@ class Prestamo {
     def afterUpdate() {
     	actualizarSaldo()
     }
+	String toString() {
+		"Prestamo:${id} ${empleado} ${saldo}"
+	}
 }
