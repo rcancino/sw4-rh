@@ -37,6 +37,6 @@ class PerfilDeEmpleado implements Serializable{
 		ubicacion()
 		tipoDeContrato inList:['BASE','EVENTUAL','CONFIANZA','SINDICALIZADO','A PRUEBA']
 		jornada inList:['MEDIA','COMPLETA','DIURNA','NOCTURAN','MIXTA','POR HORA','REDUCIDA','CONTINUADA','POR TURNOS']
-    	tunro nullable:true
+    	turno nullable:true
     }
 }
