@@ -183,6 +183,9 @@ class AsistenciaService {
 								println 'Evaluando entrada 0':time
 								def turnoDet=turno.dias[6]
 								println 'Comparando con '+turnoDet
+								if(time>turnoDet.salida1 && time<=turnoDet.salida2){
+									
+								}
 							}else if(i==1){
 								
 							}
