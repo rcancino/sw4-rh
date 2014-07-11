@@ -47,7 +47,7 @@ class ChecadoService {
 				  println 'Fecha: '+fecha
 			  }else{
 				//
-				def hora=Date.parse('hhmmss',fields[0])
+				def hora=Date.parse('HHmmss',fields[0])
 				println "registrando evento empleado: ${fields[2]} hora:$hora  Fecha:$fecha"
 				def r=Checado.findOrSaveWhere(lector:lector,fecha:fecha,hora:hora,numeroDeEmpleado:fields[2])
 				//def r=new Checado(lector:lector,fecha:fecha,hora:hora,numeroDeEmpleado:fields[2])
