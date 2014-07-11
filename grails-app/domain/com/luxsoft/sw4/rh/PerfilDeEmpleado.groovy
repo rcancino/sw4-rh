@@ -18,7 +18,7 @@ class PerfilDeEmpleado implements Serializable{
 	String tipoDeContrato
 	String jornada
 
-	Turno tuno
+	Turno turno
 	
 	
 	SatRegimenContratacion regimenContratacion
