@@ -122,13 +122,13 @@ log4j = {
            'net.sf.ehcache.hibernate'
 		   
 	info 'grails.app.controllers'
-	info 'grails.app.services.com.luxsoft.*'
 	info 'grails.plugin.cache'
 	
 	
 	environments{
 		
 		development{
+			info 'grails.app.services.com.luxsoft.sw4'
 			info 'com.luxsoft.sw4.rh'
 			info 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
 			debug 'com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional'
@@ -138,8 +138,8 @@ log4j = {
 		
 		produccion{
 			info 'grails.app.controllers'
-			info 'grails.app.services.com.luxsoft.*'
-			info 'grails.plugin.cache'
+			error 'grails.app.services.com.luxsoft.sw4'
+			error 'grails.plugin.cache'
 		}
 		
 	}

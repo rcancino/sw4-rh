@@ -28,8 +28,16 @@ class ModificacionSalarialController {
     		render view:'create',model:[modificacionInstance:modificacionInstance]
     	}
     	modificacionInstance.save failOnError:true
-    	redirect action:'index'
+    	redirect action:'show',params:[id:modificacionInstance.id]
 
+    }
+    
+    @Transactional
+    def delete(Long id){
+        def modificacion=ModificacionSalarial.get(id)
+        modificacion.delete(flush:true)
+        flash.message="Modificacion salarial ${id} eliminada"
+        redirect action:'index'
     }
 
     def show(Long id){

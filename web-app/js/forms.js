@@ -10,8 +10,9 @@ if (typeof jQuery !== 'undefined') {
 */
 $(function(){
 	$(".moneda-field").attr("type",'text');
-	//$(".moneda-field").autoNumeric({vMin:'0.00',wEmpty:'zero',mRound:'B', mDec: '2'});
-	$(".moneda-field").autoNumeric({vMin:'0.00',wEmpty:'zero',mRound:'B',aSign: '$',mDec:'2'});
+	
+	//$(".moneda-field").autoNumeric({vMin:'0.00',wEmpty:'zero',mRound:'B',aSign: '$',mDec:'2'});
+	$(".moneda-field").autoNumeric({wEmpty:'zero',mRound:'B',aSign: '$'});
 	//$(".numeric-field").attr("type",'text');
 	//$(".numeric-field").autoNumeric({vMin:'0.00',wEmpty:'zero',mDec:'2'});
 	//$(".numeric-field-4").attr("type",'text');

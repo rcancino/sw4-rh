@@ -16,6 +16,9 @@
 						id="${modificacionInstance.id}">
 						<span class="glyphicon glyphicon-trash"></span> Eliminar
 					</g:link>
+					<g:link action="create" class="list-group-item">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
+					</g:link>
 				</div>
 			</div>
 			<div class="col-md-9">
