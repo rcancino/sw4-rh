@@ -20,6 +20,8 @@ class CalendarioDet {
 	
 	Periodo asistencia
 	
+	Integer bimestre=0
+	
 	static embedded = ['asistencia']
 	
 	static belongsTo =[calendario:Calendario]
@@ -27,6 +29,7 @@ class CalendarioDet {
     static constraints = {
 		asistencia nullable:true
 		fechaDePago nullable:true
+		bimestre nullable:true
     }
 	
 	static mapping = {

@@ -8,6 +8,7 @@
 			<th>Asist Ini</th>
 			<th>Asist Fin</th>
 			<th>Pago</th>
+			<th>Bimestre</th>
 			<th>Eliminar</th>
 			
 		</tr>
@@ -23,6 +24,7 @@
 				<td><g:formatDate date="${row.asistencia.fechaInicial }" format="dd/MM/yyyy"/></td>
 				<td><g:formatDate date="${row.asistencia.fechaFinal }" format="dd/MM/yyyy"/></td>
 				<td><g:formatDate date="${row.fechaDePago }" format="dd/MM/yyyy"/></td>
+				<td><g:formatNumber number="${row.bimestre}" format="#"/>
 				<td>
 					<g:link action="eliminarPeriodo" id="${row.id}" onclick="return confirm('Elminar periodo de operación');">
 						<span class="glyphicon glyphicon-trash"></span>

@@ -148,6 +148,11 @@ JOIN salario S ON(S.EMPLEADO_ID=X.ID)
 WHERE date(n.periodo_fecha_inicial)>='@FECHA_INI' and date(n.periodo_fecha_final)<='@FECHA_FIN'  AND X.ALTA=X.ALTA
 GROUP BY X.ID
 	"""
+	
+	
+	String sdiPorEmpleado="""
+
+"""
 
 }
 
