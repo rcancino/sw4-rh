@@ -127,6 +127,12 @@ class AsistenciaService {
 				log.debug 'Asistencia ya generada tipo:  '+asistenciaDet.manual
 			}
 			
+			def turno=empleado.perfil.turno
+			
+			def dia=date.toCalendar().getAt(Calendar.DAY_OF_WEEK)
+			
+			println 'Estamos en el dia: '+dia+ date+ " Turno:"+turno
+			
 			if(!asistenciaDet.manual){
 				
 				asistenciaDet.entrada1=null
@@ -134,12 +140,16 @@ class AsistenciaService {
 				asistenciaDet.entrada2=null
 				asistenciaDet.salida2=null
 				
+				
 				for(def i=0;i<valid.size;i++) {
 					def checado=valid[i]
 					def time=new Time(checado.hora.time)
 					
+					
+					
 					switch(i) {
 						case 0:
+								
 							asistenciaDet.entrada1=time
 							break
 						case 1:
@@ -154,6 +164,34 @@ class AsistenciaService {
 						default:
 							break
 					}
+					
+					switch(dia){
+						case 1:
+							break
+						case 2:
+							break
+						case 3:
+							break
+						case 4:
+							break
+						case 5:
+							break
+						case 6:
+							break
+						case 7:
+							if(i==0){
+								println 'Evaluando entrada 0':time
+								def turnoDet=turno.dias[6]
+								println 'Comparando con '+turnoDet
+							}else if(i==1){
+								
+							}
+							
+						default:
+						break
+					}
+					
+					
 				}
 			}
 			if(!asistenciaDet.asistencia)
