@@ -6,12 +6,13 @@ import com.luxsoft.sw4.cfdi.CfdiTimbrador
 import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
 import com.luxsoft.sw4.rh.ProcesadorDeISTP
 import com.luxsoft.sw4.rh.ProcesadorDeNomina
-import com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales;
-import com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional;
+import com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales
+import com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional
 import com.luxsoft.sw4.rh.ProcesadorDeSueldo
 import com.luxsoft.sw4.rh.ProcesadorDeVacaciones
 import com.luxsoft.sw4.rh.ProcesadorSeguroSocial
 import com.luxsoft.sw4.rh.ProcesadorDeIncentivo
+import com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas
 
 
 
@@ -71,4 +72,6 @@ beans = {
 	procesadorDeVacaciones(ProcesadorDeVacaciones){}
 	procesadorDePrimaVacacional(ProcesadorDePrimaVacacional){}
 	procesadorDePrestamosPersonales(ProcesadorDePrestamosPersonales){}
+	
+	procesadorDeChecadas(ProcesadorDeChecadas){}
 }

@@ -28,6 +28,8 @@ class AsistenciaService {
 
 	def grailsApplication
 	
+	def procesadorDeChecadas
+	
 	def incapacidadService
 	
 	def incidenciaService
@@ -78,132 +80,38 @@ class AsistenciaService {
 	@NotTransactional
 	def actualizarAsistencia(Empleado empleado,String tipo,CalendarioDet cal) {
 		
-		//numero magico
-		def tolerancia1=(60*1000*10)
 		def periodo=cal.asistencia
-
+		log.debug "Actualizando asistencias ${empleado} ${periodo}"
 		
-		log.info "Actualizando asistencias ${empleado} ${periodo}"
-		//Maestro de asistencia
-		def asistencia =Asistencia
-			.find("from Asistencia a where a.empleado=? and a.calendarioDet=?"
+		def asistencia =Asistencia.find(
+				"from Asistencia a where a.empleado=? and a.calendarioDet=?"
 				,[empleado,cal])
-		if(asistencia) {
-			//println 'Asistencia ya registrada actualizandola'
-			//asistencia.partidas.clear()
-			//asistencia.save flush:true
-		}else {
-			//println 'Generando registro de asistencia para '+empleado+" Periodo: "+cal.asistencia
+
+		if(!asistencia) {
+			log.debug 'Generando registro nuevo de asistencia para '+empleado+" Periodo: "+cal.asistencia
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
 		}
+		
 		for(date in periodo.fechaInicial..periodo.fechaFinal){
-			def lecturas=Checado.findAll(sort:"numeroDeEmpleado"){numeroDeEmpleado==empleado?.perfil?.numeroDeTrabajador && fecha==date}
-			lecturas.sort(){ c->
-				c.hora
-			}
 			
-			def valid =[]
-			def last=null
-			lecturas.each{ reg->
-				if(last==null){
-					last=reg.hora
-					valid.add(reg)
-				}
-				def dif=reg.hora.time-last.time
-				if(dif>tolerancia1 ){
-					//println "$date  Lectura valida  $reg.hora"
-					last=reg.hora
-					valid.add(reg)
-				}
-			}
 			def asistenciaDet=asistencia.partidas.find(){det->
-				
 				DateUtils.isSameDay(det.fecha, date)
 			}
 			if(!asistenciaDet){
 				log.debug 'Asistencia nueva dando de alta'
 				asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion)
-			}else{
-				log.debug 'Asistencia ya generada tipo:  '+asistenciaDet.manual
-			}
-			
-			def turno=empleado.perfil.turno
-			
-			def dia=date.toCalendar().getAt(Calendar.DAY_OF_WEEK)
-			
-			println 'Estamos en el dia: '+dia+ date+ " Turno:"+turno
-			
-			if(!asistenciaDet.manual){
-				
-				asistenciaDet.entrada1=null
-				asistenciaDet.salida1=null
-				asistenciaDet.entrada2=null
-				asistenciaDet.salida2=null
-				
-				
-				for(def i=0;i<valid.size;i++) {
-					def checado=valid[i]
-					def time=new Time(checado.hora.time)
-					
-					
-					
-					switch(i) {
-						case 0:
-								
-							asistenciaDet.entrada1=time
-							break
-						case 1:
-							asistenciaDet.salida1=time
-							break
-						case 2:
-							asistenciaDet.entrada2=time
-							break
-						case 3:
-							asistenciaDet.salida2=time
-							break
-						default:
-							break
-					}
-					
-					switch(dia){
-						case 1:
-							break
-						case 2:
-							break
-						case 3:
-							break
-						case 4:
-							break
-						case 5:
-							break
-						case 6:
-							break
-						case 7:
-							if(i==0){
-								println 'Evaluando entrada 0':time
-								def turnoDet=turno.dias[6]
-								println 'Comparando con '+turnoDet
-								if(time>turnoDet.salida1 && time<=turnoDet.salida2){
-									
-								}
-							}else if(i==1){
-								
-							}
-							
-						default:
-						break
-					}
-					
-					
+				asistencia.addToPartidas(asistenciaDet)
+			}else {
+				if(!asistenciaDet.manual){
+					asistenciaDet.entrada1=null
+					asistenciaDet.salida1=null
+					asistenciaDet.entrada2=null
+					asistenciaDet.salida2=null
 				}
 			}
-			if(!asistenciaDet.asistencia)
-				asistencia.addToPartidas(asistenciaDet)
 		}
-		
+		procesadorDeChecadas.registrarChecadas(asistencia)
 		recalcularRetardos(asistencia)
-		
-		
 		incapacidadService.procesar(asistencia)
 		vacacionesService.procesar(asistencia)
 		incidenciaService.procesar(asistencia)
@@ -211,6 +119,8 @@ class AsistenciaService {
 		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
 		//Calcular horas trabajadas
 		asistencia.horasTrabajadas=0
+		
+		//Calculo de horas trabajadas
 		asistencia.partidas.each{
 			
 			if(it.tipo=='ASISTENCIA'){
@@ -231,7 +141,6 @@ class AsistenciaService {
 			if(it.tipo!='ASISTENCIA'){
 				it.horasTrabajadas=0.0
 			}
-			
 		}
 		
 		
@@ -339,6 +248,8 @@ class AsistenciaService {
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		actualizarAsistencia(det.asistencia.empleado,tipo,calendarioDet)
 	}
+
+	
 	
     
 }

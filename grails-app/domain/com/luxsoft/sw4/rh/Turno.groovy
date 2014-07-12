@@ -32,4 +32,11 @@ class Turno {
     	dias cascade: "all-delete-orphan"
     	//inicioDeDia type: PersistentLocalTime
     }
+	
+	Map toDiasMap() {
+		return dias.collectEntries{item->
+			[(item.dia):item]
+		}
+		
+	}
 }
