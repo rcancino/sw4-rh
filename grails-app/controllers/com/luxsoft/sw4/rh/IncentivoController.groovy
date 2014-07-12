@@ -11,56 +11,90 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class IncentivoController {
 	
+	def incentivoService
 
-	def index(Long calendarioDetId) {
-		
-		def periodicidad=params.periodicidad?:'SEMANA'
-		def list=[]
-		def calendario
-		def calendarios=CalendarioDet.findAll("from CalendarioDet d where d.calendario.tipo=?",[periodicidad])
-		
-		if(calendarioDetId){
-			calendario=CalendarioDet.get(calendarioDetId)
-			list=Incentivo.findAll("from Incentivo i where i.calendarioDet=?",[calendario])
+	def index() {
+
+		def calendarioDet
+    	def calendarioDet2
+		def tipo=params.tipo?:'QUINCENA'
+
+		if(tipo=='SEMANA'){
+			calendarioDet=session.calendarioSemana
+			calendarioDet2=session.calendarioSemana2
+
+		}else{
+			calendarioDet=session.calendarioQuincena
+			calendarioDet2=calendarioDet
 		}
-		[incentivoList:list,calendarios:calendarios,periodicidad:periodicidad,currentCalendario:calendario]
+		calendarioDet.attach()
+		calendarioDet2.attach()
+    	
+    	
+    	def partidasMap=[]
+    	if(calendarioDet){
+    		def list=Incentivo.findAll("from Incentivo i where i.calendarioIni=? and i.calendarioFin=?"
+    			,[calendarioDet,calendarioDet2])
+
+    		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
+    	}
+    	def ejercicio=calendarioDet?calendarioDet.calendario.ejercicio:2014
+    	def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
+    	
+    	[calendarioDet:calendarioDet,calendarioDet2:calendarioDet2
+    	,partidasMap:partidasMap,tipo:tipo
+    	,periodos:periodos
+    	,ejercicio:ejercicio]
+	}
+
+	def actualizarPeriodo(){
+		Long calendarioDetId=params.long('calendarioDetId')
+		CalendarioDet ini=CalendarioDet.get(calendarioDetId)
+		String tipo=params.tipo
+
+		if(tipo=='SEMANA'){
+			Long calendarioDetId2=params.long('calendarioDetId2')
+			CalendarioDet fin=CalendarioDet.get(calendarioDetId2)
+			if(ini && fin){
+				session.calendarioSemana=ini
+				session.calendarioSemana2=fin
+			}
+
+		}else{
+			if(ini){
+				session.calendarioQuincena=ini
+			}
+		}
+		redirect action:'index' ,params:[tipo:tipo]
 	}
 	
 	@Transactional
-	def generarIncentivos(Long calendarioDetId){
-		if(calendarioDetId){
-			def cal=CalendarioDet.get(calendarioDetId)
-			println 'Generando incentivos para el periodo: '+cal
-			def asistencias=Asistencia.findAll("from Asistencia a where a.calendarioDet=?",[cal])
-			asistencias.each{ a->
-				//Localizamos la a
-				
-				
-			}
-			println 'Asistencias del periodo: '+asistencias.size()
+	def actualizarIncentivos(){
+		def calendarioDet
+    	def calendarioDet2
+		def tipo=params.tipo
+		assert tipo,'Se debe definir el tipo de actualiacion SEMANAl o QUINCENL'
+		if(tipo=='SEMANA'){
+			calendarioDet=session.calendarioSemana
+			calendarioDet2=session.calendarioSemana2
+
+		}else {
+			calendarioDet=session.calendarioQuincena
+			calendarioDet2=calendarioDet
 		}
-		redirect action:'index',params:[calendarioDetId:calendarioDetId]
+		calendarioDet.attach()
+		calendarioDet2.attach()
+		
+		incentivoService.generarIncentivos(calendarioDet,calendarioDet2)
+		redirect action:'index'
 	}
 
 	def create() {
 		[incentivoInstance:new Incentivo(fecha:new Date())]
 	}
 
+	
 	@Transactional
-	def save(Incentivo incentivoInstance) {
-		if(incentivoInstance==null) {
-			notFound()
-			return
-		}
-		if(incentivoInstance.hasErrors()) {
-			render view:'create',model:[incentivoInstance:incentivoInstance]
-		}
-		incentivoInstance.save flush:true
-		flash.message="Solicitud generada: "+incentivoInstance.id
-		//redirect action:'index'
-		respond incentivoInstance,[view:'edit']
-	}
-
 	def edit(Incentivo incentivoInstance) {
 		if(incentivoInstance==null) {
 			notFound()

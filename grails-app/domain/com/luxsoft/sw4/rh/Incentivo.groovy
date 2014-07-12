@@ -7,28 +7,37 @@ class Incentivo {
 	
 	Empleado empleado
 	
+	Integer ejercicio
+	
 	String tipo
 	
 	Ubicacion ubicacion
 	
-	CalendarioDet calendarioInicial
+	CalendarioDet calendarioIni
 	
-	CalendarioDet calendarioFinal
+	CalendarioDet calendarioFin
 	
 	Boolean otorgado=true
 	
-	Integer faltas
+	Integer faltas=0
 	
-	Integer retardoMenor
-	Integer retardoMayor
-	Integer retardoComida
-	Integer retardoTotal
+	Integer retardoMenor=0
+	
+	Integer retardoMayor=0
+	
+	Integer retardoComida=0
+	
+	Integer retardoTotal=0
 	
 	double tasaBono1=0
+	
 	double tasaBono2=0
 	
 	BigDecimal ingresoBase=0.0
+	
 	BigDecimal incentivo=0.0
+	
+	String status='PENDIENTE'
 	
 	String comentario
 	
@@ -36,7 +45,12 @@ class Incentivo {
 	Date lastUpdated
 
     static constraints = {
-		tipo inList:['QUINCENAL','MENSUAL']
+		tipo inList:['QUINCENAL','SEMANAL']
+		status inList:['PENDIENTE','CERRADO']
 		comentario nullable:true
     }
+	
+	String toString() {
+		"${empleado} ${tipo} ${calendarioIni.folio} al ${calendarioFin.folio}"
+	}
 }

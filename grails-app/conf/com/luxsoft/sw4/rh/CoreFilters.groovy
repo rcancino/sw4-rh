@@ -5,6 +5,9 @@ class CoreFilters {
     def filters = {
         all(controller:'*', action:'*') {
             before = {
+            	if(!session.ejercicion){
+            		session.ejercicio=2014
+            	}
 				if(!session.calendarioSemana) {
 					
 					def list=CalendarioDet
@@ -23,6 +26,15 @@ class CoreFilters {
             afterView = { Exception e ->
 
             }
+        }
+        incentivoFilter(controller:'incentivo',action:'*'){
+        	before={
+        		if(!session.calendarioSemana2){
+        			session.calendarioSemana2=session.calendarioSemana
+        			//println 'Fijando el calendario final para semana... al: '+session.calendarioSemana
+
+        		}
+        	}
         }
     }
 }

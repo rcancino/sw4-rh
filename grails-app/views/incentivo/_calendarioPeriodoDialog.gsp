@@ -5,13 +5,13 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Selección de Calendario</h4>
+				<h4 class="modal-title" id="myModalLabel">Periodo</h4>
 			</div>
-			<g:form action="${action?:'cambiarCalendario'}" class="form-horizontal">
-				
+			<g:form action="actualizarPeriodo" class="form-horizontal">
+				<g:hiddenField name="tipo" value="${tipo}"/>
 				<div class="modal-body">
 					<div class="form-group">
-    					<label for="calendarioIni" class="col-sm-3">Calendario</label>
+    					<label for="calendarioIni" class="col-sm-3">Calendario Inicial</label>
     					<div class="col-sm-9">
     						<g:select id="calendarioField" class="form-control"  
 								name="calendarioDetId" 
@@ -20,8 +20,25 @@
 								optionKey="id" 
 								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
 								/>
+								
     					</div>
   					</div>
+					<g:if test="${tipo=='SEMANA'}">
+						<div class="form-group">
+	    					<label for="calendarioIni" class="col-sm-3">Calendario Final</label>
+	    					<div class="col-sm-9">
+	    						<g:select id="calendarioField" class="form-control"  
+									name="calendarioDetId2" 
+									value="${calendarioDet2}"
+									from="${periodos}" 
+									optionKey="id" 
+									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
+									/>
+									
+	    					</div>
+	  					</div>
+					</g:if>
+					
   					
 				</div>
 				
