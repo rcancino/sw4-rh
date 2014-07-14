@@ -7,7 +7,7 @@ body{
 	margin-bottom: 10px;
 }
 .form-group{
-	margin-bottom: 1px
+	margin-bottom: 2px
 }
 .button-panel{
     
@@ -17,9 +17,7 @@ body{
     padding-left: 2px;
 
 }
-.form-group{
-	margin-bottom: 7px;
-}
+
 
 .navbar-inverse {
   background-color: #033c73;

@@ -23,10 +23,12 @@ class IncentivoService {
 							calendarioFin:fin,
 							empleado:empleado,
 							ubicacion:empleado.perfil.ubicacion,
-							otorgato:false,
+							
 							ejercicio:ini.calendario.ejercicio
 						)
 					calcular(inc)
+					if(tipo=='QUINCENAL')
+						inc=aplicarBonoQuincenal(inc)
 					inc.save failOnError:true
 
 
@@ -35,7 +37,22 @@ class IncentivoService {
     	}
     }
 
-    def calcular(Incentivo bono){
-    	log.info 'Calculando incentivo '+bono
+    
+
+    def Incentivo aplicarQuncenal(Incentivo bono){
+    	log.debug 'Calculando bono quincenal '+bono
+    	def asistencia=Asistencia.findByCalendarioDet(bono.calendarioIno)
+    	if(asistencia==null){
+    		bono.comentario='No hay registros de asistencia'
+    		return bono
+    	}
+    	//Aplicando reglas
+    	bono.otorgado=true
+    	bono.falstas=asistencia.faltas
+    	bono.retardoMayor=asistencia.retardoMayor
+    	bono.retardoMenor=asistencia.retardoMenor
+    	bono.retardoComida=asistencia.retardoComida
+    	bono.retardoTotal=asistencia
     }
+
 }
