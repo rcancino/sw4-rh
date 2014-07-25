@@ -8,7 +8,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['ROLE_ADMIN','RH_USER'])
 class EmpleadoRestController {
 	
-	def salarioSerice
+	def salarioService
 	
 	//@Cacheable('catalogoDeEmpleados')
 	def getEmpleados() {
@@ -57,9 +57,10 @@ class EmpleadoRestController {
 	def calcularSdi() {
 		
 		def empleadoId=params.empleadoId
-		def sdi=0
-		if(empleadoId) {
-			sdi=500
+		Empleado e=Empleado.get(empleadoId)
+		def sdi=0.0
+		if(e) {
+			sdi=salarioService.calcularSalarioDiarioIntegrado(e)
 		}
 		def res=[sdi:sdi] as JSON
 		log.info 'res: '+res+ " Em.id"+empleadoId+ " params: "+params
