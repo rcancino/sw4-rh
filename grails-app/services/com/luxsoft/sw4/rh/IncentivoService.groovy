@@ -26,9 +26,11 @@ class IncentivoService {
 							
 							ejercicio:ini.calendario.ejercicio
 						)
-					calcular(inc)
+					//calcular(inc)
 					if(tipo=='QUINCENAL')
-						inc=aplicarBonoQuincenal(inc)
+						inc=aplicarBonoQuncenal(inc)
+					if(tipo=='SEMANAL')
+						inc=aplicarBonoSemanal(inc)
 					inc.save failOnError:true
 
 
@@ -39,20 +41,40 @@ class IncentivoService {
 
     
 
-    def Incentivo aplicarQuncenal(Incentivo bono){
+    def Incentivo aplicarBonoQuncenal(Incentivo bono){
     	log.debug 'Calculando bono quincenal '+bono
-    	def asistencia=Asistencia.findByCalendarioDet(bono.calendarioIno)
+    	def asistencia=Asistencia.findByCalendarioDet(bono.calendarioIni)
     	if(asistencia==null){
     		bono.comentario='No hay registros de asistencia'
     		return bono
     	}
     	//Aplicando reglas
     	bono.otorgado=true
-    	bono.falstas=asistencia.faltas
+    	bono.faltas=asistencia.faltas
     	bono.retardoMayor=asistencia.retardoMayor
     	bono.retardoMenor=asistencia.retardoMenor
     	bono.retardoComida=asistencia.retardoComida
     	bono.retardoTotal=asistencia
     }
+	
+	def Incentivo aplicarBonoSemanal(Incentivo bono){
+		log.debug 'Calculando bono quincenal '+bono
+		def asistencia=Asistencia.findByCalendarioDet(bono.calendarioFin)
+		if(asistencia==null){
+			bono.comentario='No hay registros de asistencia'
+			return bono
+		}
+		return bono
+		//Aplicando reglas
+		/*
+		bono.otorgado=true
+		bono.faltas=asistencia.faltas
+		bono.retardoMayor=asistencia.retardoMayor
+		bono.retardoMenor=asistencia.retardoMenor
+		bono.retardoComida=asistencia.retardoComida
+		//bono.retardoTotal=asistencia.retardoMayor+asistencia.retardoMenor+asistencia.retardoComida
+		 * */
+		 
+	}
 
 }

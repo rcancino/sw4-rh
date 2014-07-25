@@ -12,7 +12,7 @@ class AsistenciaDetController {
 	def asistenciaService
 	
 	def update(Long id){
-		println 'Actualizando asistenciaDet: '+params
+		
 		def det=AsistenciaDet.get(id)
 		
 		det.entrada1=getDateTime(params.entrada1,det.fecha)
@@ -30,12 +30,15 @@ class AsistenciaDetController {
 	}
 	
 	private getDateTime(String val,Date date){
+		log.info "Calculando Time para : ${val} de fecha: ${date}"
 		def fecha=date.format('dd/MM/yyyy')
 		if(val){
 			try{
 				def time=fecha+" "+val
 				def res=Date.parse("dd/MM/yyyy hh:mm",time)
-				return new Time(res.getTime())
+				def newTime= new Time(res.getTime())
+				log.info 'Time calculado: '+newTime
+				return newTime
 			}catch(Exception ex){
 				log.error ex
 				return null

@@ -35,7 +35,12 @@
 						
 						<g:link controller="nominaPorEmpleado" action="edit" id="${prevItem}"
 							class="list-group-item" >
-							<span class="glyphicon glyphicon-arrow-left"></span> Regresar 
+							<span class="glyphicon glyphicon-arrow-left"></span> Anterior 
+						</g:link>
+						
+						<g:link controller="nomina" action="show" id="${nominaPorEmpleadoInstance.nomina.id}"
+							class="list-group-item" >
+							<span class="glyphicon glyphicon-list-alt"></span> Regresar a nómina:${nominaPorEmpleadoInstance.nomina.folio}
 						</g:link>
 						
 						<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
@@ -64,10 +69,11 @@
 							<span class="glyphicon glyphicon-refresh"></span> Re-Calcular
 						</g:link>
 						
-						<g:link class="list-group-item" action="todo">
-							<span class="glyphicon glyphicon-pencil"></span> Modificar </g:link>
+						<g:link class="list-group-item" action="show" controller="asistencia" id="${nominaPorEmpleadoInstance?.asistencia?.id }">
+							<span class="glyphicon glyphicon-pencil"></span> Asistencia </g:link>
 						
-						<g:link class="list-group-item" action="todo" onClick="return confirm('Eliminar registro de nómina?');">
+						<g:link class="list-group-item" action="delete" onClick="return confirm('Eliminar registro de nómina?');"
+							id="${nominaPorEmpleadoInstance.id }" >
 							<span class="glyphicon glyphicon-remove-circle"></span> Eliminar 
 						</g:link>
 

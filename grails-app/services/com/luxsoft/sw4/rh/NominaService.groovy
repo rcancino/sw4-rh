@@ -56,34 +56,41 @@ class NominaService {
 		def tipo=nomina.periodicidad
 		//def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo }
 		def empleados=Empleado.findAll(
-			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
-		//println "Generando nomina por empleado $tipo para ${empleados.size()} empleados"
+			"from Empleado e where e.salario.periodicidad=?  order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
+		
 		int orden=1
 		for(def empleado:empleados) {
-			if(empleado.baja && empleado.baja.fecha<nomina.calendarioDet.asistencia.fechaInicial) {
+			
+			
+			
+			if(empleado.baja && empleado.status=='BAJA' && empleado.baja.fecha<=nomina.calendarioDet.asistencia.fechaFinal) {
 				continue
 			}
+			
 			NominaPorEmpleado ne=nomina.partidas.find{
 				it.empleado.id==empleado.id
 			}
 			if(!ne){
-				println 'Agregando empleado: '+empleado
-				ne=new NominaPorEmpleado(
-					empleado:empleado,
-					ubicacion:empleado.perfil.ubicacion,
-					antiguedadEnSemanas:0,
-					nomina:nomina,
-					vacaciones:0,
-					fraccionDescanso:0,
-					orden:orden++
-					)
-				ne.antiguedadEnSemanas=ne.getAntiguedad()
-				def res=nomina.addToPartidas(ne)
-				//nomina.save failOnError:true
+				
+				//Actualizar asistencia
+				def asistencia=Asistencia.find{calendarioDet==nomina.calendarioDet && empleado==empleado}
+				if(asistencia!=null){
+					log.info 'Agregando empleado: '+empleado
+					ne=new NominaPorEmpleado(
+						empleado:empleado,
+						ubicacion:empleado.perfil.ubicacion,
+						antiguedadEnSemanas:0,
+						nomina:nomina,
+						vacaciones:0,
+						fraccionDescanso:0,
+						orden:orden++
+						)
+					ne.antiguedadEnSemanas=ne.getAntiguedad()
+					ne.asistencia=asistencia
+					nomina.addToPartidas(ne)
+				}
+				
 			}
-			//Actualizar asistencia
-			def asistencia=Asistencia.find{calendarioDet==nomina.calendarioDet && empleado==ne.empleado}
-			ne.asistencia=asistencia
 		}
 		return nomina
 	}

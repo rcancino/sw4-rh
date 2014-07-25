@@ -1,12 +1,12 @@
 <%@page expressionCodec="none" %>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<g:form class="form-horizontal">
 			<div class="form-group">
-   				<label class="col-sm-4 control-label">Departamento: </label>
+   				<label class="col-sm-4 control-label">Puesto: </label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
-      					${asistenciaInstance.empleado.perfil.departamento.clave}
+      					${asistenciaInstance.empleado.perfil.puesto.clave}
       				</p>
     			</div>
   			</div>
@@ -35,10 +35,13 @@
     			</div>
   			</div>
   			<div class="form-group">
-   				<label class="col-sm-4 control-label">Id</label>
+   				<label class="col-sm-4 control-label">Turno</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
-      					${asistenciaInstance.id} 
+      				
+      					<g:link controller="turno" action="show" id="${asistenciaInstance.empleado.perfil.turno.id}"> 
+      						${asistenciaInstance.empleado.perfil.turno.descripcion}
+      					</g:link> 
       				</p>
     			</div>
   			</div>
@@ -47,52 +50,66 @@
 		</g:form>
 	</div>
 	
-	<div class="col-md-4">
+	<div class="col-md-6">
 		<g:form class="form-horizontal">
 			<div class="form-group">
-   				<label class="col-sm-6 control-label">Retardo menor</label>
-    			<div class="col-sm-6">
+   				<label class="col-sm-3 control-label">Retardo menor</label>
+    			<div class="col-sm-3">
+      				<p class="form-control-static ">
+      					<strong>${asistenciaInstance.retardoMenor}</strong>
+      					<%--<span class="label ${asistenciaInstance.retardoComida>0?'label-warning':''}">
+      					</span>
+      				--%></p>
+    			</div>
+    			<label class="col-sm-3 control-label">Retardo mayor</label>
+    			<div class="col-sm-3">
       				<p class="form-control-static">
-      					${asistenciaInstance.retardoMenor}
+      					<strong>${asistenciaInstance.retardoMayor}</strong>
+<%--      					<span class="label ${asistenciaInstance.retardoComida>0?'label-danger':''}">${asistenciaInstance.retardoMayor}</span>--%>
       				</p>
     			</div>
   			</div>
   			<div class="form-group">
-   				<label class="col-sm-6 control-label">Retardo mayor</label>
-    			<div class="col-sm-6">
-      				<p class="form-control-static">
-      					${asistenciaInstance.retardoMayor}
+   				
+  			</div>
+  			<div class="form-group">
+   				<label class="col-sm-3 control-label">Ret men com</label>
+    			<div class="col-sm-3">
+    				<p class="form-control-static">
+    					<strong>${asistenciaInstance.retardoMenorComida}</strong>
+      					<%--<span class="label label-warning"></span>
+      				--%></p>
+    			</div>
+    			<label class="col-sm-3 control-label">Ret may com</label>
+    			<div class="col-sm-3">
+    				<p class="form-control-static">
+    					<strong>${asistenciaInstance.retardoComida}</strong>
+<%--      					<span class="label ${asistenciaInstance.retardoComida>0?'label-danger':''}">${asistenciaInstance.retardoComida}</span>--%>
       				</p>
+      				
     			</div>
   			</div>
   			<div class="form-group">
-   				<label class="col-sm-6 control-label">Retardo comida</label>
-    			<div class="col-sm-6">
-      				<p class="form-control-static">
-      					${asistenciaInstance.retardoComida}
-      				</p>
-    			</div>
-  			</div>
-  			<div class="form-group">
-   				<label class="col-sm-6 control-label">Minutos no laborados</label>
-    			<div class="col-sm-6">
+   				<label class="col-sm-3 control-label">Minutos no laborados</label>
+    			<div class="col-sm-3">
       				<p class="form-control-static">
       					${asistenciaInstance.minutosNoLaborados}
       				</p>
     			</div>
-  			</div>
-  			<div class="form-group">
-   				<label class="col-sm-6 control-label">Horas laboradas</label>
-    			<div class="col-sm-6">
+    			<label class="col-sm-3 control-label">Horas laboradas</label>
+    			<div class="col-sm-3">
       				<p class="form-control-static">
       					${asistenciaInstance.horasTrabajadas}
       				</p>
     			</div>
   			</div>
+  			<div class="form-group">
+   				
+  			</div>
 		</g:form>
 	</div>
 	
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<g:form class="form-horizontal">
 		
 			<div class="form-group">

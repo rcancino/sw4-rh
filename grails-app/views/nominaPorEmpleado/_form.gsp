@@ -20,6 +20,15 @@
       				</p>
     			</div>
   			</div>
+  			
+  			<div class="form-group">
+   				<label class="col-sm-6 control-label">Subsidio aplicado</label>
+    			<div class="col-sm-6">
+      				<p class="form-control-static">
+      					<g:formatNumber number="${nominaPorEmpleadoInstance?.subsidioEmpleoAplicado}" format="###.##" type="currency"/>
+      				</p>
+    			</div>
+  			</div>
 		
 			
       <g:if test="${!nominaPorEmpleadoInstance.cfdi}">
@@ -61,7 +70,7 @@
     			</div>
   			</div>
   			
-  			<div class="form-group">
+  			<%--<div class="form-group">
    				<label class="col-sm-4 control-label">Subsidio</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
@@ -70,7 +79,7 @@
     			</div>
   			</div>
   			
-  			<div class="form-group">
+  			--%><div class="form-group">
    				<label class="col-sm-4 control-label">Antiguedad</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">

@@ -6,8 +6,8 @@ import groovy.transform.EqualsAndHashCode
 class NominaPorEmpleadoDet {
 
 	ConceptoDeNomina concepto
-	BigDecimal importeGravado=0.0
-	BigDecimal importeExcento=0.0
+	BigDecimal importeGravado=0.00
+	BigDecimal importeExcento=0.00
 	String comentario
 
 	Date dateCreated

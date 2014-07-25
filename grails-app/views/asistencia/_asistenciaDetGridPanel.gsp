@@ -11,7 +11,8 @@
 			<th><g:message code="asistenciaDet.salida2.label" default="Sal 2"/></th>
 			<th><g:message code="asistenciaDet.retardoMenor.label" default="Ret men"/></th>
 			<th><g:message code="asistenciaDet.retardoMayor.label" default="Ret may"/></th>
-			<th><g:message code="asistenciaDet.retardoComida.label" default="Ret com"/></th>
+			<th>RMen(Com)</th>
+			<th>RMay(Com)</th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Min NL"/></th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Hrs Tr"/></th>
 			<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
@@ -33,6 +34,7 @@
 				<td><g:formatDate date="${row.salida2}" format="HH:mm"/></td>
 				<td><g:fieldValue bean="${row}" field="retardoMenor"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoMayor"/> </td>
+				<td><g:fieldValue bean="${row}" field="retardoMenorComida"/> </td>
 				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
 				<td><g:fieldValue bean="${row}" field="minutosNoLaborados"/> </td>
 				<td><g:fieldValue bean="${row}" field="horasTrabajadas"/> </td>

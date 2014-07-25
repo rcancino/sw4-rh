@@ -24,8 +24,8 @@
 				<td>
 					${fieldValue(bean:it,field:"concepto.descripcion")}
 				</td>
-				<td class="text-right"><g:formatNumber number="${it.importeGravado}" format="#,###,###.##"/></td>
-				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##"/></td>
+				<td class="text-right"><g:formatNumber number="${it.importeGravado}" format="#,###,###.##" minFractionDigits="2"/></td>
+				<td class="text-right"><g:formatNumber number="${it.importeExcento}" format="#,###,###.##" minFractionDigits="2"/></td>
 				<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 				<td>
 					<a  

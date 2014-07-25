@@ -46,6 +46,11 @@
 							params="[calendario:asistenciaInstance?.calendarioDet?.id]"> 
 							<span class="glyphicon glyphicon-list"></span> Asistencias 
 						</g:link>
+						
+						<g:link class="btn btn-default" action="nomina" id="${asistenciaInstance.id}"> 
+							<span class="glyphicon glyphicon-usd"></span> Nómina 
+						</g:link>
+						
 					</div>
 
 					<div class="btn-group">
@@ -57,20 +62,21 @@
 						<ul class="dropdown-menu">
 							<li><g:jasperReport jasper="TarjetaDeAsistencia"
 									format="PDF" name="Tarjeta">
-									<g:hiddenField name="ID" value="${asistenciaInstance.id}" />
-									<g:hiddenField name="FECHA_INI" 
-										value="${g.formatDate(date:asistenciaInstance.periodo.fechaInicial,format:'yyyy/MM/dd')}" />
-									<g:hiddenField name="FECHA_FIN" 
-										value="${g.formatDate(date:asistenciaInstance.periodo.fechaFinal,format:'yyyy/MM/dd')}" />
+									<g:hiddenField name="ID" value="${asistenciaInstance.empleado.id}" />
+									<g:hiddenField name="CALENDARIO_ID" 
+										value="${asistenciaInstance.calendarioDet.id}" />
+									
 								</g:jasperReport>
 							</li>
-							<li><g:jasperReport jasper="AsistenciaRH"
-									format="PDF" name="Asistencia RH">
-									<g:hiddenField name="SFECHA_INI" 
-										value="${g.formatDate(date:asistenciaInstance.periodo.fechaInicial,format:'dd/MM/yyyy')}" />
-									<g:hiddenField name="SFECHA_FIN" 
-										value="${g.formatDate(date:asistenciaInstance.periodo.fechaFinal,format:'dd/MM/yyyy')}" />
+							<li><g:jasperReport jasper="RetardoMensualPorEmpleado"
+									format="PDF" name="Retardo mensual">
+									<g:hiddenField name="ID" 
+										value="${asistenciaInstance.empleado.id}" />
+									
 								</g:jasperReport>
+							</li>
+							<li>
+								<button class="btn btn-default" data-toggle="modal" data-target="#calendarioForm"> Mensual X Empleado</button>
 							</li>
 						</ul>
 					</div>
@@ -98,14 +104,26 @@
 						<g:form class="form-inline" role="form" 
 							controller="asistencia" 
 							action="actualizar" id="${asistenciaInstance.id}">
-							<label class="" for="diasTrabajadosField">Dias trabajados</label>
+							<label class="" for="diasTrabajadosField">Dias </label>
   							<div class="form-group">
     							<input type="text"
     								name="diasTrabajados" 
-    								class="form-control decimalField" 
+    								class="form-control" 
     								id="diasTrabajadosField" 
     								value="${asistenciaInstance.diasTrabajados}">
   							</div>
+  							<div class="form-group">
+  								<label class="" for="diasTrabajadosField">Min a desc </label>
+    							<input type="text"
+    								name="minutosPorDescontar" 
+    								class="form-control " 
+    								id="minutosPorDescontarField" 
+    								value="${asistenciaInstance.minutosPorDescontar}">
+    							<button type="submit" class="btn btn-default">
+									<span class="glyphicon glyphicon-ok"></span> 
+								</button>
+  							</div>
+  							
   						</g:form>
 					</div>
 					
@@ -136,7 +154,7 @@
 	});
 </r:script>
 	
-
+<g:render template="calendarioPeriodoDialog" model="[periodos:periodos]"/>
 	
 
 </body>

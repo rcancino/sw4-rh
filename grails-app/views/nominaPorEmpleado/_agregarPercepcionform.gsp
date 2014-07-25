@@ -4,7 +4,7 @@
 		aria-hidden="true">&times;</button>
 	<h4 class="modal-title" id="myModalLabel">Percepción</h4>
 </div>
-<g:form action="agregarConcepto" id="${nominaEmpleadoId}" class="form-horizontal" >
+<g:form action="agregarConcepto" id="${nominaEmpleadoId}" class="form-horizontal numeric-form" >
 	<div class="modal-body">
 		<f:with bean="${nominaPorEmpleadoDetInstance}">
 			<f:field property="concepto">
@@ -17,8 +17,8 @@
 					noSelection="[null:'Seleccione una peercepción']"
 				/>
 			</f:field>
-			<f:field property="importeGravado" input-class="form-control" label="Importe gravado"/>
-			<f:field property="importeExcento" input-class="form-control" label="Importe excento"/>
+			<f:field property="importeGravado" input-class="form-control  moneda-field" label="Importe gravado" input-type="text"/>
+			<f:field property="importeExcento" input-class="form-control moneda-field" label="Importe excento" input-type="text"/>
 			<f:field property="comentario" input-class="form-control"/>
 		</f:with>
 	</div>

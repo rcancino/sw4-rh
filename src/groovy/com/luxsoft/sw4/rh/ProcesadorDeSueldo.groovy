@@ -11,17 +11,20 @@ class ProcesadorDeSueldo {
 	private static final log=LogFactory.getLog(this)
 	
 	def procesar(NominaPorEmpleado ne) {
+		if(ne.asistencia==null)
+			return
 		
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
-		log.info "Procesando saladio para ${ne.empleado}"
+		log.info "Procesando sueldo para ${ne.empleado}"
 		//Localizar el concepto
 		def nominaPorEmpleadoDet=ne.conceptos.find(){ 
 			it.concepto==concepto
 		}
 		
 		if(!nominaPorEmpleadoDet){
+			log.info 'NominaPorEmpleadoDet nueva no localizo alguna existente...'
 			nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			ne.addToConceptos(nominaPorEmpleadoDet)
 		}
@@ -41,7 +44,7 @@ class ProcesadorDeSueldo {
 		ne.salarioDiarioBase=salarioDiario
 		ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
 		ne.diasDelPeriodo=ne.nomina.getDiasPagados()
-		ne.faltas=asistencia.faltas
+		ne.faltas=asistencia.faltas+asistencia.incidencias
 		ne.incapacidades=asistencia.incapacidades
 		ne.vacaciones=asistencia.vacaciones
 		ne.fraccionDescanso=(1/6*ne.faltas)
@@ -52,10 +55,13 @@ class ProcesadorDeSueldo {
 		}else{
 			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades
 		}
+		
 		def sueldo=salarioDiario*ne.diasTrabajados
-
-		nominaPorEmpleadoDet.importeGravado=sueldo
-		nominaPorEmpleadoDet.importeExcento=0
+		if(sueldo>0){
+			nominaPorEmpleadoDet.importeGravado=sueldo
+			nominaPorEmpleadoDet.importeExcento=0
+			
+		}		
 		
 	}
 	

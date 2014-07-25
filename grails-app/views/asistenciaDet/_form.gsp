@@ -20,6 +20,7 @@
 				<input class="time" type="text" name="salida2" value="${g.formatDate(date:asistenciaDetInstance.salida2,format:'hh:mm') }">
 			</f:field>
 			<f:field property="manual"/>
+			<f:field property="cancelarIncentivo"/>
 		</f:with>
 </div>
 </div>	

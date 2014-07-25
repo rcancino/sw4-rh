@@ -29,9 +29,9 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"ubicacion.clave")}</td>
-				<td class="text-right"><g:formatNumber number="${row.percepciones}" format="#,###,###.##"/></td>
-				<td class="text-right"><g:formatNumber number="${row.deducciones}" format="#,###,###.##"/></td>
-				<td class="text-right"><g:formatNumber number="${row.total}" format="#,###,###.##"/></td>
+				<td class="text-right"><g:formatNumber number="${row?.percepciones}" format="#,###,###.##"/></td>
+				<td class="text-right"><g:formatNumber number="${row?.deducciones}" format="#,###,###.##"/></td>
+				<td class="text-right"><g:formatNumber number="${row?.total}" format="#,###,###.##"/></td>
 				<td><g:if test="${row.cfdi}">
 						<g:jasperReport
 							controller="reciboDeNomina"

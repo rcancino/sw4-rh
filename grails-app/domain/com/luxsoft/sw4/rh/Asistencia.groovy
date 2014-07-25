@@ -61,11 +61,15 @@ class Asistencia {
 	 */
 	Integer retardoComida=0
 	
+	Integer retardoMenorComida=0
+	
 	/**
 	 * El total de minutos no laborados, esto al compara las checadas con los horarios establecidos 
 	 *
 	 */
 	Integer minutosNoLaborados=0
+	
+	Integer minutosPorDescontar=0
 	
 	BigDecimal horasTrabajadas
 	

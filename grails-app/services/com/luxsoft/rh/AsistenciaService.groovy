@@ -20,6 +20,7 @@ import com.luxsoft.sw4.rh.CalendarioDet
 
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.apache.commons.lang.time.DateUtils;
+import org.joda.time.LocalTime
 
 import grails.events.Listener
 
@@ -53,9 +54,11 @@ class AsistenciaService {
 		assert(calendarioDet)
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		
-		//def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo  }
+		
 		def empleados=Empleado.findAll(
 			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
+		//def empleados=Empleado.findAll("from Empleado e where e.id=48")
+		
 		empleados.each{ empleado ->
 			try {
 				if(empleado.controlDeAsistencia) {
@@ -81,7 +84,9 @@ class AsistenciaService {
 	def actualizarAsistencia(Empleado empleado,String tipo,CalendarioDet cal) {
 		
 		def periodo=cal.asistencia
-		log.debug "Actualizando asistencias ${empleado} ${periodo}"
+		//def periodo=new Periodo("07/07/2014","13/07/2014")
+		
+		log.info "Actualizando asistencias ${empleado} ${periodo}"
 		
 		def asistencia =Asistencia.find(
 				"from Asistencia a where a.empleado=? and a.calendarioDet=?"
@@ -92,14 +97,17 @@ class AsistenciaService {
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
 		}
 		
-		for(date in periodo.fechaInicial..periodo.fechaFinal){
-			
+		//for(date in periodo.fechaInicial..periodo.fechaFinal){
+		List dias=periodo.getListaDeDias()
+		
+		dias.each{ date->
+			//log.info 'Genrando asistencia det para: '+date
+			//println 'Agregando asistenciadet para: '+date
 			def asistenciaDet=asistencia.partidas.find(){det->
 				DateUtils.isSameDay(det.fecha, date)
 			}
 			if(!asistenciaDet){
-				log.debug 'Asistencia nueva dando de alta'
-				asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion)
+				asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion,tipo:'ASISTENCIA')
 				asistencia.addToPartidas(asistenciaDet)
 			}else {
 				if(!asistenciaDet.manual){
@@ -110,39 +118,28 @@ class AsistenciaService {
 				}
 			}
 		}
+		
 		procesadorDeChecadas.registrarChecadas(asistencia)
+		
 		recalcularRetardos(asistencia)
 		incapacidadService.procesar(asistencia)
 		vacacionesService.procesar(asistencia)
 		incidenciaService.procesar(asistencia)
+		
 		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
 		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
-		//Calcular horas trabajadas
-		asistencia.horasTrabajadas=0
 		
-		//Calculo de horas trabajadas
-		asistencia.partidas.each{
-			
-			if(it.tipo=='ASISTENCIA'){
-				def dia=it.fecha.toCalendar().get(Calendar.DAY_OF_WEEK)
-				switch (dia){
-					case Calendar.SUNDAY:
-						it.horasTrabajadas=0.0
-						break
-					case Calendar.SATURDAY:
-						it.horasTrabajadas=5.0
-						break
-					default:
-					it.horasTrabajadas=9.5
-						break
-				}
-				asistencia.horasTrabajadas+=it.horasTrabajadas
-			}
+		
+		
+		//Actualizar horas trabajadas (Horas de trabajo)
+		asistencia.horasTrabajadas=0
+		asistencia.partidas.each{ it->
 			if(it.tipo!='ASISTENCIA'){
 				it.horasTrabajadas=0.0
+			}else{
+				asistencia.horasTrabajadas+=it.horasTrabajadas
 			}
 		}
-		
 		
 		asistencia.save failOnError:true
 		return asistencia
@@ -155,31 +152,54 @@ class AsistenciaService {
 		log.info 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
 		def retardoMenor=0
 		asistencia.faltas=0
-		asistencia.partidas.each{
+		asistencia.partidas.each{ it->
 			
 			it.retardoMenor=0
 			it.retardoMayor=0
 			it.retardoComida=0
+			it.retardoMenorComida=0
 			it.minutosNoLaborados=0
+			def turnoDet=it.turnoDet
 			
 			if(it.entrada1) {
-				def entrada=Time.valueOf('09:00:00')
-				TimeDuration duration=TimeCategory.minus(it.entrada1,entrada)
-				def retraso=duration.getMinutes()
-				if(retraso>0 && retraso<=10) {
-					//println 'Entrada: '+it.entrada1+ "  Retraso: "+duration.getMinutes()
-					it.retardoMenor=retraso
-				}
-				if(retraso>10) {
-					it.retardoMayor=retraso
+				LocalTime inicio=it.turnoDet.entrada1
+				LocalTime entrada=LocalTime.fromDateFields(it.entrada1)
+				
+				//def retraso=(entrada.getLocalMillis()-inicio.getLocalMillis())/(1000*60) 
+				def retraso=(((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour())-((inicio.getHourOfDay()*60)+inicio.getMinuteOfHour()))
+				
+			//	def retraso=(entrada.getMinuteOfHour()-inicio.getMinuteOfHour())
+				
+				if(retraso>0){
+					
+					if(retraso>0 && retraso<=10) {
+						it.retardoMenor=retraso
+					}
+					if(retraso>10) {
+						it.retardoMayor=retraso
+					}
 				}
 			}
-			if(it.salida1 && it.entrada2) {
-				TimeDuration comida=TimeCategory.minus(it.entrada2,it.salida1)
-				def retComida=( (comida.getHours()-1)*60 + comida.getMinutes() )
+			
+			if(turnoDet.salida1 && turnoDet.entrada2) {
+			//if(it.salida1 && it.entrada2) {
+				if(it.salida1 && it.entrada2) {
+					LocalTime salida=LocalTime.fromDateFields(it.salida1)
+					LocalTime entrada=LocalTime.fromDateFields(it.entrada2)
+					//TimeDuration comida=TimeCategory.minus(it.entrada2,it.salida1)
+					//def retardoComida=( (comida.getHours()-1)*60 + comida.getMinutes() )
+					//def retardoComida=(entrada.getMinuteOfHour()-salida.getMinuteOfHour())
+					def tiempoDeComida=( ((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour()) - ((salida.getHourOfDay()*60)+salida.getMinuteOfHour()) )
+					def retardoComida=tiempoDeComida-60
+					//log.info 'Retardo comida: '+retardoComida
+					//def retardoComida=( (comida.getHours()-1)*60 + comida.getMinutes() )
 				
-				if(retComida>0) {
-					it.retardoComida=retComida
+					if(retardoComida>0) {
+						if(retardoComida<=10){
+							it.retardoMenorComida=retardoComida
+						}else
+							it.retardoComida=retardoComida
+					}
 				}
 				
 			}
@@ -187,55 +207,61 @@ class AsistenciaService {
 			
 			def dia=it.fecha.toCalendar().get(Calendar.DAY_OF_WEEK)
 			
-			def salidaOficial=Time.valueOf('18:30:00')
-			
-			
-			switch (dia){
-				case Calendar.SUNDAY:
-					it.comentario='DESCANSO'
-					it.tipo='DESCANSO'
-					break
-				case Calendar.SATURDAY:
-					if(it.entrada1 || it.salida1 ) {
-						it.tipo='ASISTENCIA'
-						it.comentario='ASISTENCIA'
-						salidaOficial=Time.valueOf('14:00:00')
-					}else{
-						it.tipo='FALTA'
-						it.comentario='FALTA'
-					}
-					break
-				default:
-					if(it.entrada1 || it.salida1 || it.entrada2 || it.salida2) {
-						it.comentario='ASISTENCIA'
-						it.tipo='ASISTENCIA'
-					}else if( !it.entrada1 && !it.salida1 &&  !it.entrada2 && !it.salida2){
-						it.comentario='FALTA'
-						it.tipo='FALTA'
-					}
-					break
+			if(turnoDet.entrada1==null){
+				it.comentario='DESCANSO'
+				it.tipo='DESCANSO'
 			}
-			
-			//Calcular los minutos no laborados
-			
-			if(it.salida2){
-				def ultimaSalida=DateUtils.truncate(it.salida2, Calendar.MINUTE)
-				 
-				//TimeDuration duration=TimeCategory.minus(salidaOficial,it.salida2)
-				def salidaAnticipada=(salidaOficial.getTime()-ultimaSalida.getTime())/1000/60	
-				
-				if(salidaAnticipada>0){
-					//println 'Salida anticipada: '+salidaAnticipada
-					it.minutosNoLaborados+=salidaAnticipada
+			else if(turnoDet.entrada1 && turnoDet.salida2){  //Turno completo
+				if(it.entrada1 || it.salida1 || it.entrada2 || it.salida2) {
+					it.comentario='ASISTENCIA'
+					it.tipo='ASISTENCIA'
+				}else if( !it.entrada1 && !it.salida1 &&  !it.entrada2 && !it.salida2){
+					it.comentario='FALTA'
+					it.tipo='FALTA'
 				}
 			}
-			it.minutosNoLaborados+=it.retardoMayor
+			
+			else if(turnoDet.entrada1 && (turnoDet.entrada2==null)){  //Turno medio
+				if(it.entrada1 || it.salida1) {
+					it.comentario='ASISTENCIA'
+					it.tipo='ASISTENCIA'
+				}else if( !it.entrada1 && !it.salida1 ){
+					it.comentario='FALTA'
+					it.tipo='FALTA'
+				}
+			}
+			
+			
+			
+			LocalTime salidaOficial=turnoDet.salida2?:turnoDet.salida1
+			
+			if(salidaOficial){
+				
+				def salidaRegistrada=turnoDet.salida2?it.salida2:it.salida1
+				
+				if(salidaRegistrada){
+					
+					LocalTime salida=LocalTime.fromDateFields(salidaRegistrada)
+					def horas=salidaOficial.getHourOfDay()- salida.getHourOfDay()
+					def minutos=salidaOficial.getMinuteOfHour() - salida.getMinuteOfHour()
+					//log.info 'Horas: '+horas+ 'Minutos: '+minutos
+					//def salidaAnticipada=salidaOficial.getLocalMillis()/(1000*60)-salida.getLocalMillis()/(1000*60)
+					def salidaAnticipada=horas*60+minutos
+					
+					if(salidaAnticipada>0){
+						//log.info 'Salida anticipada: '+salidaAnticipada
+						it.minutosNoLaborados+=salidaAnticipada
+					}
+				}
+				//it.minutosNoLaborados+=it.retardoMayor
+			}
 			
 		}
 		
 		asistencia.retardoMenor=asistencia.partidas.sum 0,{it.retardoMenor}
 		asistencia.retardoMayor=asistencia.partidas.sum 0,{it.retardoMayor}
 		asistencia.retardoComida=asistencia.partidas.sum 0,{it.retardoComida}
+		asistencia.retardoMenorComida=asistencia.partidas.sum 0,{it.retardoMenorComida}
 		asistencia.minutosNoLaborados=asistencia.partidas.sum 0,{it.minutosNoLaborados}
 		return asistencia
 	}
@@ -250,6 +276,23 @@ class AsistenciaService {
 	}
 
 	
-	
+	def delete(Asistencia asistencia){
+		log.info 'Eliminando asistencia: '+asistencia
+		try{
+			asistencia.delete flush:true
+			return "Asistencia eliminada: "+asistencia.id
+		}catch(Exception ex){
+			def msg="Error al intentar eliminar asistencia causa: " +ExceptionUtils.getRootCauseMessage(ex)
+			//throw new AsistenciaException(message:msg,asistencia:asistencia)
+			log.error ex
+			return msg
+		}
+		return asistencia
+	}
     
+}
+
+class AsistenciaException extends RuntimeException{
+	String message
+	Asistencia asistencia
 }

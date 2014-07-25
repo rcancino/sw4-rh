@@ -1,5 +1,8 @@
 package com.luxsoft.sw4.rh
 
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+
 import com.luxsoft.sw4.Periodo
 import grails.gorm.DetachedCriteria
 import grails.plugin.springsecurity.annotation.Secured
@@ -52,10 +55,19 @@ class AsistenciaController {
 	}
 	
 	def show(Asistencia asistencia){
-		[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+		def tipo=asistencia.calendarioDet.calendario.tipo
+		log.info 'Cargando calendarios para: '+tipo
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==2014 && calendario.tipo==tipo}
+		[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha},periodos:periodos]
 	}
 
-
+	def delete(Asistencia asistencia){
+		def res=asistenciaService.delete(asistencia)
+		log.info res
+		flash.message=res
+		def tipo=asistencia.calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		redirect view:'index', model:[tipo:tipo]
+	}
 
 	def lectora(Integer max,Periodo periodo){
 		params.max = Math.min(max ?: 50, 100)
@@ -94,8 +106,9 @@ class AsistenciaController {
 		
 		def asistencia=Asistencia.get(id)
 		def d=params.double('diasTrabajados')
+		bindData(asistencia, params, [include: ['minutosPorDescontar']])
 		if(d>0.0){
-			log.debug "Actualizando dias trabajados "+d
+			log.info "Actualizando dias trabajados "+d
 			asistencia.diasTrabajados=d
 			asistencia=asistencia.save flush:true
 			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
@@ -125,6 +138,29 @@ class AsistenciaController {
 		def next=found?found.get(0):Asistencia.get(id)
 		//redirect action:'show',params:[id:next.id]
 		respond next,[view:'show']
+	}
+	
+	def nomina(Long id){
+		def asistencia=Asistencia.get(id)
+		def ne=NominaPorEmpleado.findByAsistencia(asistencia)
+		if(ne){
+			redirect controller:'nominaPorEmpleado',action:'edit',params:[id:ne.id]
+		}else{
+			redirect action:'show',params:[id:id]
+		}
+		
+	}
+	
+	def jasperService
+	
+	def reporteMensual(){
+		println "Repote mensual: CalIni:${params.CAL_ID_INI} CalFin:${params.CAL_ID_FIN} empleado:${params.ID}"
+		def reportDef = new JasperReportDef(
+			name:'RetardoMensualPorEmpleado',
+			fileFormat:JasperExportFormat.PDF_FORMAT,
+			parameters:params
+			)
+		//jasperService
 	}
 	
 }

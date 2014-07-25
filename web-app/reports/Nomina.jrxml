@@ -27,9 +27,10 @@
 		<defaultValueExpression ><![CDATA["BIOLOGO MAXIMINO MARTINEZ No. 3902 COL. SAN SALVADOR XOCHIMANCA DELEG. AZCAPOTZALCO MEXICO, D.F. C.P. 02870  TEL/FAX: 5342-7166 "]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NOMINA" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="UBICACION" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL,'BANAMEX' AS BANCO,N.FORMA_DE_PAGO
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
-,X.ID,X.CLAVE AS CLAVE_E,CONCAT(X.apellido_paterno," ",X.apellido_materno," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
+,X.ID,X.CLAVE AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
 ,E.FALTAS,E.INCAPACIDADES,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) - (E.FALTAS+(0.167*E.FALTAS)) - E.INCAPACIDADES AS DIAS_TRAB,E.subsidio_empleo_aplicado AS SUBS_APLIC
 ,ifnull((SELECT ifnull(z.importe_gravado,0) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id and X.clave='P001'),0) as sueldo
@@ -53,7 +54,7 @@ JOIN nomina_por_empleado E ON(E.nomina_id=N.ID)
 JOIN empleado X ON(X.ID=E.empleado_id)
 LEFT JOIN nomina_por_empleado_det D ON(E.ID=D.parent_id)
 LEFT JOIN concepto_de_nomina C ON(C.ID=D.concepto_id)
-WHERE N.ID=$P{NOMINA}]]></queryString>
+WHERE N.ID=$P{NOMINA} and E.ubicacion_id like $P{UBICACION}]]></queryString>
 
 	<field name="EMPRESA" class="java.lang.String"/>
 	<field name="RFC" class="java.lang.String"/>
@@ -132,15 +133,19 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 		<group  name="GRUPO1" >
 			<groupExpression><![CDATA[$F{CLAVE_E}]]></groupExpression>
 			<groupHeader>
-			<band height="13"  isSplitAllowed="true" >
+			<band height="15"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="4"
-						y="1"
+						y="3"
 						width="47"
 						height="12"
 						key="textField-166"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false"/>
@@ -150,11 +155,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="74"
-						y="1"
+						y="3"
 						width="132"
 						height="12"
 						key="textField-168"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
@@ -164,11 +173,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="51"
-						y="1"
+						y="3"
 						width="23"
 						height="12"
 						key="textField-169"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
@@ -178,11 +191,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="286"
-						y="1"
+						y="3"
 						width="22"
 						height="12"
 						key="textField-172"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false"/>
@@ -192,11 +209,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="308"
-						y="1"
+						y="3"
 						width="58"
 						height="12"
 						key="textField-173"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
@@ -206,11 +227,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="366"
-						y="1"
+						y="3"
 						width="26"
 						height="12"
 						key="textField-174"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false"/>
@@ -220,11 +245,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="392"
-						y="1"
+						y="3"
 						width="83"
 						height="12"
 						key="textField-175"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
@@ -234,11 +263,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="206"
-						y="1"
+						y="3"
 						width="21"
 						height="12"
 						key="textField-176"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false"/>
@@ -248,11 +281,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="227"
-						y="1"
+						y="3"
 						width="59"
 						height="12"
 						key="textField-177"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
@@ -262,11 +299,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="525"
-						y="1"
+						y="3"
 						width="48"
 						height="12"
 						key="textField-178"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
@@ -276,11 +317,15 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="475"
-						y="1"
+						y="3"
 						width="50"
 						height="12"
 						key="textField-179"/>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false"/>
@@ -300,7 +345,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						key="textField-132"/>
 					<box>					<topPen lineWidth="0.0"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{percpExc}]]></textFieldExpression>
@@ -314,7 +359,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						key="textField-136"/>
 					<box>					<topPen lineWidth="0.0"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{percpGrv}]]></textFieldExpression>
@@ -417,7 +462,11 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						key="textField-182">
 							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
 						</reportElement>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
@@ -1013,6 +1062,41 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					</textElement>
 				<text><![CDATA[DEDUCCIONES]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						x="4"
+						y="130"
+						width="52"
+						height="14"
+						key="staticText-190"/>
+					<box>					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[UBICACION : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="55"
+						y="130"
+						width="77"
+						height="14"
+						forecolor="#000000"
+						backcolor="#000000"
+						key="textField-189"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{UBICACION}.equals( "%" ) ? "GENERAL" : $F{SUCURSAL}]]></textFieldExpression>
+				</textField>
 			</band>
 		</columnHeader>
 		<detail>
@@ -1227,6 +1311,17 @@ $F{IMPORTE_GRAVADO}.doubleValue()!=0.0 && $F{CONCEPTO}.equals( "P" )
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{salario_diario_integrado}]]></textFieldExpression>
 				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="141"
+						y="0"
+						width="347"
+						height="1"
+						forecolor="#CCCCCC"
+						backcolor="#CCCCCC"
+						key="line-16"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
 			</band>
 		</detail>
 		<columnFooter>

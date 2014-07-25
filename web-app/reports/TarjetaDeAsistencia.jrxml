@@ -26,41 +26,40 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA_INI" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="FECHA_FIN" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT E.id,E.clave,CONCAT(E.apellido_paterno," ",E.apellido_materno," ",E.nombres) AS nombre,
-P.numero_de_trabajador,P.jornada
+	<parameter name="CALENDARIO_ID" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,P.jornada
+,C.folio,C.id,a.tipo as tipoPrdo
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS ubicacion
 ,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS depto
 ,A.ID,A.periodo_fecha_inicial,A.periodo_fecha_final,A.incapacidades,A.vacaciones
-,A.retardo_menor,A.retardo_mayor,A.retardo_comida
+,A.retardo_menor as ret_,A.retardo_mayor,A.retardo_comida
 ,(case when dayofweek(fecha)=1 then 'DOM' when dayofweek(fecha)=2 then 'LUN' when dayofweek(fecha)=3 then 'MAR' when dayofweek(fecha)=4 then 'MIE' when dayofweek(fecha)=5 then 'JUE' when dayofweek(fecha)=6 then 'VIE' when dayofweek(fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 ,D.id,d.fecha,D.entrada1,d.salida1,d.entrada2,d.salida2,d.entrada3,d.salida3,d.comentario
-,ifnull(((TIME_TO_SEC((CASE WHEN D.SALIDA2 IS NULL THEN SEC_TO_TIME((TIME_TO_SEC(d.salida1)-TIME_TO_SEC(d.entrada1))) ELSE SEC_TO_TIME((TIME_TO_SEC(d.salida2)-TIME_TO_SEC(d.entrada1))) END)))/60)/60,0) AS hrsTrab
-,ifnull(((TIME_TO_SEC((case when d.salida2 is null then d.salida1 else d.salida2 end))-TIME_TO_SEC((case when d.salida2 is null then '14:00:00' else '18:30:00' end)))/60),0) AS tpoExc
-,(CASE WHEN ifnull(((TIME_TO_SEC(d.entrada1)-TIME_TO_SEC('09:00:00'))/60),0)<0 THEN 0 WHEN ifnull(((TIME_TO_SEC(d.entrada1)-TIME_TO_SEC('09:00:00'))/60),0)<=10 THEN ifnull(((TIME_TO_SEC(d.entrada1)-TIME_TO_SEC('09:00:00'))/60),0) ELSE 0 END) AS retMn
-,(CASE WHEN ifnull(((TIME_TO_SEC(d.entrada1)-TIME_TO_SEC('09:00:00'))/60),0)>10 THEN ifnull(((TIME_TO_SEC(d.entrada1)-TIME_TO_SEC('09:00:00'))/60),0) ELSE 0 END) AS retMy
-,(CASE WHEN (ifnull(((TIME_TO_SEC(d.entrada2)-TIME_TO_SEC(d.salida1))/60),0)-60)<0 THEN 0 ELSE (ifnull(((TIME_TO_SEC(d.entrada2)-TIME_TO_SEC(d.salida1))/60),0)-60) END) AS retCm
-FROM asistencia A 
-JOIN perfil_de_empleado P ON(a.empleado_id=P.empleado_id)
-JOIN empleado E ON(A.empleado_id=E.ID)
-JOIN asistencia_det D ON(A.ID=D.asistencia_id)
-WHERE A.ID=$P{ID}  
- ]]></queryString>
+,((CASE WHEN d.tipo='FALTA' AND A.dias_trabajados>0  THEN '' 	WHEN d.tipo='FALTA' THEN 'FLT' WHEN d.tipo='DESCANSO' THEN 'DSC' WHEN d.tipo='DIA_FESTIVO' THEN 'FES' WHEN d.tipo='VACACIONES' THEN 'VAC' WHEN d.tipo='INCAPACIDAD' THEN 'INC'
+		WHEN d.tipo='INCIDENCIA' THEN 'PCG' WHEN d.tipo='INCIDENCIA_F' THEN 'PSG' WHEN d.tipo='ASISTENCIA' THEN 'AST' ELSE 'NDT' END)) as tipoReg
+,a.horas_trabajadas,d.horas_trabajadas as hrsTrab
+,ifnull(((TIME_TO_SEC((CASE WHEN D.SALIDA2 IS NULL THEN SEC_TO_TIME((TIME_TO_SEC(d.salida1)-TIME_TO_SEC(d.entrada1))) ELSE SEC_TO_TIME((TIME_TO_SEC(d.salida2)-TIME_TO_SEC(d.entrada1))) END)))/60)/60,0) AS hrsTrabReal
+,d.retardo_menor as retMn,d.retardo_mayor as retMy,d.retardo_comida as retCm
+,A.dias_trabajados,(case when d.manual is true then '*' else '' end) as manual
+FROM EMPLEADO E JOIN perfil_de_empleado P ON(E.ID=P.empleado_id) JOIN asistencia A ON(A.empleado_id=E.ID) JOIN asistencia_det D ON(A.ID=D.asistencia_id)
+JOIN calendario_det C ON(C.id=A.calendario_det_id)
+WHERE E.ID=$P{ID} AND C.ID=$P{CALENDARIO_ID} AND E.ID NOT IN(SELECT B.EMPLEADO_ID FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID and (b.fecha<C.asistencia_fecha_inicial OR B.FECHA<E.ALTA))]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="numero_de_trabajador" class="java.lang.String"/>
 	<field name="jornada" class="java.lang.String"/>
+	<field name="folio" class="java.lang.Integer"/>
+	<field name="tipoPrdo" class="java.lang.String"/>
 	<field name="ubicacion" class="java.lang.String"/>
 	<field name="depto" class="java.lang.String"/>
 	<field name="periodo_fecha_inicial" class="java.sql.Timestamp"/>
 	<field name="periodo_fecha_final" class="java.sql.Timestamp"/>
 	<field name="incapacidades" class="java.lang.Integer"/>
 	<field name="vacaciones" class="java.lang.Integer"/>
-	<field name="retardo_menor" class="java.lang.Integer"/>
+	<field name="ret_" class="java.lang.Integer"/>
 	<field name="retardo_mayor" class="java.lang.Integer"/>
 	<field name="retardo_comida" class="java.lang.Integer"/>
 	<field name="diaSem" class="java.lang.String"/>
@@ -72,27 +71,28 @@ WHERE A.ID=$P{ID}
 	<field name="entrada3" class="java.sql.Time"/>
 	<field name="salida3" class="java.sql.Time"/>
 	<field name="comentario" class="java.lang.String"/>
+	<field name="tipoReg" class="java.lang.String"/>
+	<field name="horas_trabajadas" class="java.math.BigDecimal"/>
 	<field name="hrsTrab" class="java.math.BigDecimal"/>
-	<field name="tpoExc" class="java.math.BigDecimal"/>
-	<field name="retMn" class="java.math.BigDecimal"/>
-	<field name="retMy" class="java.math.BigDecimal"/>
-	<field name="retCm" class="java.math.BigDecimal"/>
+	<field name="hrsTrabReal" class="java.math.BigDecimal"/>
+	<field name="retMn" class="java.lang.Integer"/>
+	<field name="retMy" class="java.lang.Integer"/>
+	<field name="retCm" class="java.lang.Integer"/>
+	<field name="dias_trabajados" class="java.math.BigDecimal"/>
+	<field name="manual" class="java.lang.String"/>
 
 	<sortField name="fecha" />
 
-	<variable name="RET_MAY" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="RET_MAY" class="java.lang.Integer" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{retMy}]]></variableExpression>
 	</variable>
-	<variable name="RET_MIN" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="RET_MIN" class="java.lang.Integer" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{retMn}]]></variableExpression>
 	</variable>
 	<variable name="HRS_TRAB" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{hrsTrab}]]></variableExpression>
 	</variable>
-	<variable name="EXCEDENTE" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{tpoExc}]]></variableExpression>
-	</variable>
-	<variable name="RET_COM" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
+	<variable name="RET_COM" class="java.lang.Integer" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{retCm}]]></variableExpression>
 	</variable>
 		<background>
@@ -104,7 +104,7 @@ WHERE A.ID=$P{ID}
 			</band>
 		</title>
 		<pageHeader>
-			<band height="97"  isSplitAllowed="true" >
+			<band height="85"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="264"
@@ -143,7 +143,7 @@ WHERE A.ID=$P{ID}
 					<reportElement
 						mode="Opaque"
 						x="10"
-						y="53"
+						y="59"
 						width="64"
 						height="11"
 						forecolor="#000000"
@@ -162,7 +162,7 @@ WHERE A.ID=$P{ID}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="74"
-						y="53"
+						y="59"
 						width="232"
 						height="11"
 						key="textField-27"/>
@@ -180,7 +180,7 @@ WHERE A.ID=$P{ID}
 					<reportElement
 						mode="Opaque"
 						x="10"
-						y="40"
+						y="46"
 						width="64"
 						height="11"
 						forecolor="#000000"
@@ -199,7 +199,7 @@ WHERE A.ID=$P{ID}
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="74"
-						y="40"
+						y="46"
 						width="27"
 						height="11"
 						key="textField-28"/>
@@ -216,102 +216,8 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="10"
-						y="64"
-						width="296"
-						height="32"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-58"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Justified" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Hago constar que la presente tarjeta checadora ha sido registrada personalmente por mi, a las horas de entrada y salida marcadas, por lo tanto, corresponde al registro de mi asistencia durante el periodo ]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="167"
-						y="85"
-						width="17"
-						height="11"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-59"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[del ]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="184"
-						y="85"
-						width="53"
-						height="11"
-						key="textField-43"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="237"
-						y="85"
-						width="16"
-						height="11"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-60"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[al]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="253"
-						y="85"
-						width="53"
-						height="11"
-						key="textField-44"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="389"
-						y="59"
+						x="381"
+						y="46"
 						width="75"
 						height="11"
 						forecolor="#000000"
@@ -329,8 +235,8 @@ WHERE A.ID=$P{ID}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="464"
-						y="59"
+						x="456"
+						y="46"
 						width="114"
 						height="11"
 						key="textField-45"/>
@@ -347,8 +253,8 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="389"
-						y="72"
+						x="381"
+						y="59"
 						width="75"
 						height="11"
 						forecolor="#000000"
@@ -366,8 +272,8 @@ WHERE A.ID=$P{ID}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="464"
-						y="72"
+						x="456"
+						y="59"
 						width="114"
 						height="11"
 						key="textField-46"/>
@@ -384,8 +290,8 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="389"
-						y="85"
+						x="381"
+						y="72"
 						width="75"
 						height="11"
 						forecolor="#000000"
@@ -403,8 +309,8 @@ WHERE A.ID=$P{ID}
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="464"
-						y="85"
+						x="456"
+						y="72"
 						width="114"
 						height="11"
 						key="textField-47"/>
@@ -458,6 +364,80 @@ WHERE A.ID=$P{ID}
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="75"
+						y="72"
+						width="42"
+						height="11"
+						key="textField-51"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{tipoPrdo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="117"
+						y="72"
+						width="10"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-77"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[-]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="127"
+						y="72"
+						width="16"
+						height="11"
+						key="textField-52"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{folio}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="10"
+						y="72"
+						width="64"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-78"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PERIODICIDAD : ]]></text>
+				</staticText>
 			</band>
 		</pageHeader>
 		<columnHeader>
@@ -465,26 +445,7 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="46"
-						y="3"
-						width="17"
-						height="22"
-						key="staticText-13"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[DIA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="63"
+						x="154"
 						y="14"
 						width="43"
 						height="11"
@@ -499,25 +460,6 @@ WHERE A.ID=$P{ID}
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[ENTRADA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="1"
-						y="3"
-						width="45"
-						height="22"
-						key="staticText-22"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FECHA]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
@@ -544,7 +486,7 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="106"
+						x="197"
 						y="14"
 						width="43"
 						height="11"
@@ -563,7 +505,7 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="149"
+						x="240"
 						y="14"
 						width="43"
 						height="11"
@@ -582,7 +524,7 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="192"
+						x="283"
 						y="14"
 						width="43"
 						height="11"
@@ -601,7 +543,7 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="235"
+						x="326"
 						y="14"
 						width="43"
 						height="11"
@@ -620,7 +562,7 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="278"
+						x="369"
 						y="14"
 						width="43"
 						height="11"
@@ -639,9 +581,9 @@ WHERE A.ID=$P{ID}
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="459"
+						x="439"
 						y="14"
-						width="43"
+						width="32"
 						height="11"
 						key="staticText-51"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -653,88 +595,12 @@ WHERE A.ID=$P{ID}
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[HR. TRAB]]></text>
+				<text><![CDATA[TRAB.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="502"
-						y="14"
-						width="37"
-						height="11"
-						key="staticText-52"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[EXTRA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="321"
-						y="14"
-						width="37"
-						height="11"
-						key="staticText-53"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[MINIMO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="358"
-						y="14"
-						width="37"
-						height="11"
-						key="staticText-54"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[MAYOR]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="395"
-						y="14"
-						width="37"
-						height="11"
-						key="staticText-55"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[COMIDA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="432"
+						x="412"
 						y="3"
 						width="27"
 						height="22"
@@ -748,13 +614,12 @@ WHERE A.ID=$P{ID}
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[AUSEN
-CIA]]></text>
+				<text><![CDATA[TIPO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="63"
+						x="154"
 						y="3"
 						width="86"
 						height="11"
@@ -773,7 +638,7 @@ CIA]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="149"
+						x="240"
 						y="3"
 						width="86"
 						height="11"
@@ -792,7 +657,7 @@ CIA]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="235"
+						x="326"
 						y="3"
 						width="86"
 						height="11"
@@ -811,9 +676,9 @@ CIA]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="459"
+						x="439"
 						y="3"
-						width="80"
+						width="32"
 						height="11"
 						key="staticText-67"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -825,33 +690,14 @@ CIA]]></text>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[TIEMPO]]></text>
+				<text><![CDATA[HORAS]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="321"
+						x="471"
 						y="3"
 						width="111"
-						height="11"
-						key="staticText-68"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[RETARDO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="539"
-						y="3"
-						width="43"
 						height="22"
 						key="staticText-70"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
@@ -865,17 +711,78 @@ CIA]]></text>
 					</textElement>
 				<text><![CDATA[]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="1"
+						y="3"
+						width="91"
+						height="22"
+						key="staticText-71"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="137"
+						y="3"
+						width="17"
+						height="22"
+						key="staticText-72"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="92"
+						y="3"
+						width="45"
+						height="22"
+						key="staticText-73"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FECHA]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
 			<band height="10"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="46"
+						x="137"
 						y="1"
 						width="17"
 						height="9"
-						key="textField"/>
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -888,11 +795,15 @@ CIA]]></text>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="1"
+						x="92"
 						y="1"
 						width="45"
 						height="9"
-						key="textField"/>
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -903,13 +814,17 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm.ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="63"
+						x="154"
 						y="1"
 						width="43"
 						height="9"
-						key="textField"/>
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -920,13 +835,17 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{entrada1}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm.ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="106"
+						x="197"
 						y="1"
 						width="43"
 						height="9"
-						key="textField-29"/>
+						key="textField-29">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -937,13 +856,17 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{salida1}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm.ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="192"
+						x="283"
 						y="1"
 						width="43"
 						height="9"
-						key="textField-30"/>
+						key="textField-30">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -954,13 +877,17 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{salida2}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm.ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="149"
+						x="240"
 						y="1"
 						width="43"
 						height="9"
-						key="textField-31"/>
+						key="textField-31">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -971,13 +898,17 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{entrada2}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm.ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="278"
+						x="369"
 						y="1"
 						width="43"
 						height="9"
-						key="textField-32"/>
+						key="textField-32">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -988,13 +919,17 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{salida3}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH.mm.ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="235"
+						x="326"
 						y="1"
 						width="43"
 						height="9"
-						key="textField-33"/>
+						key="textField-33">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -1007,11 +942,15 @@ CIA]]></text>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="459"
+						x="439"
 						y="1"
-						width="43"
+						width="32"
 						height="9"
-						key="textField-34"/>
+						key="textField-34">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
 					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
@@ -1022,77 +961,9 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{hrsTrab}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="502"
-						y="1"
-						width="37"
-						height="9"
-						key="textField-35"/>
-					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{tpoExc}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="321"
-						y="1"
-						width="37"
-						height="9"
-						key="textField-36"/>
-					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{retMn}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="358"
-						y="1"
-						width="37"
-						height="9"
-						key="textField-37"/>
-					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{retMy}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="395"
-						y="1"
-						width="37"
-						height="9"
-						key="textField-38"/>
-					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica" size="7" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{retCm}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
+						x="412"
 						y="1"
 						width="27"
 						height="9"
@@ -1105,7 +976,28 @@ CIA]]></text>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica" size="7" isBold="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{comentario}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{tipoReg}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="83"
+						y="1"
+						width="9"
+						height="9"
+						key="textField-53">
+							<printWhenExpression><![CDATA[new Boolean( 
+!$F{tipoReg}.equals( "" )
+)]]></printWhenExpression>
+						</reportElement>
+					<box>					<topPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{manual}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -1118,31 +1010,13 @@ CIA]]></text>
 			</band>
 		</pageFooter>
 		<summary>
-			<band height="63"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="358"
-						y="0"
-						width="37"
-						height="18"
-						key="textField"/>
-					<box>					<pen lineWidth="0.0" lineColor="#333333"/>
-					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="2.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{RET_MAY}]]></textFieldExpression>
-				</textField>
+			<band height="76"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="2"
 						y="0"
-						width="319"
+						width="410"
 						height="18"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1156,32 +1030,14 @@ CIA]]></text>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="8" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[TOTALES  : ]]></text>
+				<text><![CDATA[TOTAL  : ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="321"
-						y="0"
-						width="37"
-						height="18"
-						key="textField-13"/>
-					<box>					<pen lineWidth="0.0" lineColor="#333333"/>
-					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="2.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{RET_MIN}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="539"
+						x="471"
 						y="0"
-						width="43"
+						width="111"
 						height="18"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -1199,9 +1055,9 @@ CIA]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="459"
+						x="439"
 						y="0"
-						width="43"
+						width="32"
 						height="18"
 						key="textField-39"/>
 					<box>					<pen lineWidth="0.0" lineColor="#333333"/>
@@ -1215,47 +1071,11 @@ CIA]]></text>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{HRS_TRAB}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="502"
-						y="0"
-						width="37"
-						height="18"
-						key="textField-40"/>
-					<box>					<pen lineWidth="0.0" lineColor="#333333"/>
-					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="2.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{EXCEDENTE}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="395"
-						y="0"
-						width="37"
-						height="18"
-						key="textField-41"/>
-					<box>					<pen lineWidth="0.0" lineColor="#333333"/>
-					<topPen lineWidth="1.0" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="2.0" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font pdfFontName="Helvetica-Bold" size="8" isBold="true"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{RET_COM}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="168"
-						y="48"
+						y="63"
 						width="277"
 						height="13"
 						forecolor="#000000"
@@ -1274,7 +1094,7 @@ CIA]]></text>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="432"
+						x="412"
 						y="0"
 						width="27"
 						height="18"
@@ -1292,6 +1112,100 @@ CIA]]></text>
 					</textElement>
 				<text><![CDATA[]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="1"
+						y="19"
+						width="499"
+						height="19"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-74"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Justified" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[Hago constar que la presente tarjeta checadora ha sido registrada personalmente por mi, a las horas de entrada y salida marcadas, por lo tanto, corresponde al registro de mi asistencia durante el periodo ]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="237"
+						y="26"
+						width="17"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-75"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[del ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="254"
+						y="26"
+						width="53"
+						height="11"
+						key="textField-49"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{periodo_fecha_inicial}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="307"
+						y="26"
+						width="16"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-76"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[al]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="323"
+						y="26"
+						width="53"
+						height="11"
+						key="textField-50"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{periodo_fecha_final}]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>

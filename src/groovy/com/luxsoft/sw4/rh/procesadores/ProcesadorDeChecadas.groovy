@@ -9,6 +9,7 @@ import com.luxsoft.sw4.rh.TurnoDet
 
 import java.sql.Time
 
+import org.joda.time.Duration;
 import org.joda.time.LocalTime;
 
 class ProcesadorDeChecadas {
@@ -18,6 +19,7 @@ class ProcesadorDeChecadas {
 	
 	
 	def registrarChecadas(Asistencia asistencia) {
+		
 		def empleado=asistencia.empleado
 		def turno=empleado.perfil.turno
 		assert turno,"El empleado ${empleado} debe tener un turno asignado"
@@ -28,15 +30,30 @@ class ProcesadorDeChecadas {
 			def sdia=Dias.toNombre(it.fecha)
 			TurnoDet turnoDet=turnosMap[sdia]
 			assert turnoDet,"Se requiere turno para ${sdia}"
+			
+			it.turnoDet=turnoDet
+			if(turnoDet.entrada1){
+				LocalTime ini=turnoDet.entrada1
+				LocalTime fin=turnoDet.salida2?:turnoDet.salida1
+				def res=fin.getLocalMillis()-ini.getLocalMillis()
+				
+				//Duration duration=new Duration(turnoDet.entrada1.get)
+				it.horasTrabajadas=(res/(1000*60*60) as BigDecimal)
+				
+			}
+			
 			def lecturas=buscarLecturas(empleado,it.fecha)
+			def row=1
+			log.debug "Lecturas detectadas ${lecturas.size()} para empleado: ${empleado} fecha:${it.fecha}"
 			lecturas.each{lec->
-				resolverChecada(turnoDet,it,lec)
+				if(!it.manual)
+					resolverChecada(turnoDet,it,lec,row++)
 			}
 		}
 		
 	}
 	
-	def resolverChecada(TurnoDet t,AsistenciaDet ad,Checado chk) {
+	def resolverChecada(TurnoDet t,AsistenciaDet ad,Checado chk,int row) {
 		
 		
 		
@@ -67,7 +84,7 @@ class ProcesadorDeChecadas {
 			ad.entrada1=time
 			return
 		}
-		if(lectura>=t.salida2) {
+		if(lectura>=t.salida2 || (row==4)) {
 			ad.salida2=time
 			return
 		}

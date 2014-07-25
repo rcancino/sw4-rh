@@ -19,9 +19,11 @@ class ProcesadorDeISTP {
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
-		log.debug "Procesando ISTP para ${nominaEmpleado.empleado}"
+		
+		log.info "Procesando ISTP para ${nominaEmpleado.empleado}"
 		
 		//Localizar el concepto
+		/*
 		def nominaPorEmpleadoDet=nominaEmpleado.conceptos.find(){ 
 			it.concepto==concepto
 		}
@@ -30,13 +32,13 @@ class ProcesadorDeISTP {
 			nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			nominaEmpleado.addToConceptos(nominaPorEmpleadoDet)
 		}
-		
+		*/
 		
 		def percepciones=nominaEmpleado.getPercepcionesGravadas()
 		if(percepciones<=0)
 			return
 			
-		def diasTrabajados=nominaEmpleado.diasTrabajados
+		def diasTrabajados=nominaEmpleado.diasDelPeriodo
 		
 		if(diasTrabajados<=0)
 			return
@@ -55,14 +57,43 @@ class ProcesadorDeISTP {
 		nominaEmpleado.subsidioEmpleoAplicado=subsidio.subsidio
 		
 		if(sub<0){
-			 sub=sub.abs()
-			 nominaPorEmpleadoDet.concepto=ConceptoDeNomina.findByClave('P021')
-			 nominaPorEmpleadoDet.importeGravado=0.0
-			 nominaPorEmpleadoDet.importeExcento=sub
+			
+			log.info 'Subsidio: '+sub
+			
+			ConceptoDeNomina subc=ConceptoDeNomina.findByClave('P021')
+			//buscar uno existente en el sistena
+			def ne2=nominaEmpleado.conceptos.find(){ 
+				it.concepto==subc
+			}
+			if(ne2){
+				ne2.concepto=subc
+				ne2.importeGravado=0.0
+				ne2.importeExcento=sub.abs()
+			}else{
+				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				nominaPorEmpleadoDet.concepto=subc
+				nominaPorEmpleadoDet.importeGravado=0.0
+				nominaPorEmpleadoDet.importeExcento=sub.abs()
+				nominaEmpleado.addToConceptos(nominaPorEmpleadoDet)
+			} 
+			
 		}else{
-			 nominaPorEmpleadoDet.importeGravado=importeGravado
-			 nominaPorEmpleadoDet.importeExcento=0.0
+		
+			
+			def nominaPorEmpleadoDet=nominaEmpleado.conceptos.find(){
+				it.concepto==concepto
+			}
+			if(!nominaPorEmpleadoDet){
+				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				nominaEmpleado.addToConceptos(nominaPorEmpleadoDet)
+			}
+			log.info 'ISTP : '+importeGravado+ '- Subsidio: '+subsidio.subsidio
+			nominaPorEmpleadoDet.importeExcento=importeGravado-subsidio.subsidio
+			nominaPorEmpleadoDet.importeGravado=0.0
 		}
+		
+		
+		
 		nominaEmpleado.actualizar()
 		
 		
@@ -77,7 +108,7 @@ class ProcesadorDeISTP {
 		if(model.percepciones<=0){
 			return model
 		}
-		model.diasTrabajados=nominaEmpleado.diasTrabajados
+		model.diasTrabajados=nominaEmpleado.diasDelPeriodo
 		
 		model.tarifa =TarifaIsr.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
 		model.subsidio=Subsidio.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}

@@ -98,7 +98,7 @@
 
 		<div class="tab-content">
 	  		<div class="tab-pane ${nominaInstance.periodicidad=='SEMANAL'?'active':''}" id="andrade">
-				<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap.ANDRADE]"/>
+				<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['ANDRADE']]"/>
 	  		</div>
 	  		<div class="tab-pane" id="bolivar">
 	  			<g:render template="nominaDetGridPanel" model="['partidasList':partidasMap['BOLIVAR']]"/>

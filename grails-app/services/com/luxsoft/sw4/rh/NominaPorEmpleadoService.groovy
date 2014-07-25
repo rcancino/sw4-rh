@@ -14,14 +14,26 @@ class NominaPorEmpleadoService {
 	
 	def procesadorDeNomina
 	
+	@Transactional
+	def eliminar(Long id){
+		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
+		log.info 'Eliminar nomina por empleado: '+ne
+		def nomina=ne.nomina
+		nomina.removeFromPartidas(ne)
+		nomina.save flush:true		
+		return nomina
+	}
+	
+	@Transactional
 	def eliminarConcepto(Long id){
 		NominaPorEmpleadoDet det=NominaPorEmpleadoDet.get(id)
-		println 'Eliminando concepto: '+det
+		log.debug 'Eliminando concepto: '+det
 		def ne=det.parent
 		def target=ne.conceptos.find(){it.id==id}
-		println 'Found: '+target
+		log.debug 'Found: '+target
 		ne.removeFromConceptos(target)
-		return recalcularConceptos(ne)
+		ne.save()
+		return ne
 	}
 	
 	
@@ -38,11 +50,11 @@ class NominaPorEmpleadoService {
 	
 	
 	@Transactional
-	def recalcularConceptos(NominaPorEmpleado ne) {
+	def recalcularConceptosOld(NominaPorEmpleado ne) {
 		log.info 'Actualizando nomina de: '+ne
-		ne.salarioDiarioBase=ne.empleado.salario.salarioDiario
-		ne.salarioDiarioIntegrado=ne.empleado.salario.salarioDiarioIntegrado
-		ne.antiguedadEnSemanas=ne.getAntiguedad()
+		//ne.salarioDiarioBase=ne.empleado.salario.salarioDiario
+		//ne.salarioDiarioIntegrado=ne.empleado.salario.salarioDiarioIntegrado
+		//ne.antiguedadEnSemanas=ne.getAntiguedad()
 		//Pasamos por cada concepto
 		
 		//Conceptos basicos

@@ -89,8 +89,10 @@ grails.hibernate.cache.queries = false
 
 environments {
     development {
-        grails.logging.jul.usebridge = true
+        grails.logging.jul.usebridge = false
+		grails.plugin.springsecurity.debug.useFilter = false
 		//sw4.rh.asistencia.rawdata="/Users/rcancino/github/Data/rawdata"
+		grails.plugin.springsecurity.active = false
 		
 		sw4.rh.asistencia.rawdata="Y://NOMIPLUS//RAWDATA"
     }
@@ -129,9 +131,13 @@ log4j = {
 		
 		development{
 			info 'grails.app.services.com.luxsoft.sw4'
-			info 'com.luxsoft.sw4.rh'
-			info 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
-			debug 'com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional'
+			info 'grails.app.services.com.luxsoft.rh'
+			debug 'grails.app.services.com.luxsoft.rh.AsistenciaService'
+			off 'com.luxsoft.sw4.rh'
+			off 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
+			off 'com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas'
+			debug 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
+			off 'com.luxsoft.sw4.rh.ProcesadorDeISTP'
 			
 			
 		}

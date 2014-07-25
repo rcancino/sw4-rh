@@ -15,12 +15,13 @@ class ProcesadorDeIncentivo {
 	private static final log=LogFactory.getLog(this)
 	
 	def procesar(NominaPorEmpleado nominaEmpleado) {
+		log.info "Procesando Incentivo para ${nominaEmpleado.empleado}"
 		/*
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
 		assert concepto,"Se debe de dar de alta el concepto de nomina: $conceptoClave"
-		log.debug "Procesando Incentivo para ${nominaEmpleado.empleado}"
+		
 		
 		//Localizar el concepto
 		def nominaPorEmpleadoDet=nominaEmpleado.conceptos.find(){ 

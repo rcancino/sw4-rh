@@ -39,4 +39,8 @@ class Turno {
 		}
 		
 	}
+	
+	String toString(){
+		return descripcion
+	}
 }

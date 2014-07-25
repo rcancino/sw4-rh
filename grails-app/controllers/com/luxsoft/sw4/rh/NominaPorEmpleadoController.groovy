@@ -60,9 +60,13 @@ class NominaPorEmpleadoController {
 					det.importeExcento=det.importeGravado
 					det.importeGravado=0.0
 				}
+				if(det.comentario==null){
+					det.comentario=" "
+				}
 				ne.addToConceptos(det)
-				//ne.save(failOnError:true)
-				ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne)
+				ne.actualizar()
+				ne.save(failOnError:true)
+				//ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne)
 				redirect action:'edit',params:[id:ne.id]
 			}    	
     	}
@@ -72,6 +76,7 @@ class NominaPorEmpleadoController {
 	
 	@Transactional
 	def eliminarConcepto(Long id){
+		println 'Eliminando nedet: '+id
 		def ne=nominaPorEmpleadoService.eliminarConcepto(id)
 		redirect action:'edit',params:[id:ne.id]
 	}
@@ -129,6 +134,12 @@ class NominaPorEmpleadoController {
 			prev=partidas.size()
 		def found=partidas.find{it.orden==prev}
 		return found?found.id:0
+	}
+	
+	def delete(Long id){
+		def nomina=nominaPorEmpleadoService.eliminar(id)
+		flash.message="Nomina por empleado eliminada: {$id}"
+		redirect controller:'nomina',action:'show',params:[id:nomina.id]
 	}
     
 }

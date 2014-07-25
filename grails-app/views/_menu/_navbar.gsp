@@ -23,6 +23,21 @@
 			</ul>
 		</div>
 		</sec:ifLoggedIn>
+		<g:if test="${grailsApplication.config.grails.plugin.springsecurity.active == false}">
+		<div class="collapse navbar-collapse" id="mainMenu">
+			<ul class="nav navbar-nav">
+				<g:render template="/_menu/catalogos"/>
+				<g:render template="/_menu/operaciones"/>
+				<g:render template="/_menu/procesos"/>
+				<li><a href="#">Reportes</a></li>
+				<g:render template="/_menu/configuracion"/>
+			</ul>
+				
+			<ul class="nav navbar-nav navbar-right">
+				<g:render template="/_menu/user"/>
+			</ul>
+		</div>
+		</g:if>
 	</div>
 	
 </nav>

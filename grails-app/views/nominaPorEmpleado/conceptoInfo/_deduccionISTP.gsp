@@ -1,6 +1,6 @@
 <%@page expressionCodec="none" %>
 
-<table class="table table-striped table-bordered ">
+<table class="table table-striped table-bordered popup-table">
 	<thead >
 		<tr >
 			<th class="text-center">Variable</th>
@@ -26,7 +26,7 @@
 			
 		</tr>
 		<tr>
-			<td>Exced sobre Lim inf</td>
+			<td>Exced s/Lim inf</td>
 			<td><g:formatNumber number="${baseGravable}" type="currency"/></td>
 		</tr>
 		<tr>

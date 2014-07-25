@@ -45,6 +45,8 @@ class AsistenciaDet {
 	 */
 	Integer retardoComida=0
 	
+	Integer retardoMenorComida=0
+	
 	/**
 	 * El total de minutos no laborados, esto al compara las checadas con los horarios establecidos
 	 *
@@ -60,6 +62,10 @@ class AsistenciaDet {
 	String tipo
 	
 	Boolean manual=false
+	
+	Boolean cancelarIncentivo=false
+	
+	TurnoDet turnoDet
 	
 	Date dateCreated
 	Date lastUpdated
@@ -88,6 +94,7 @@ class AsistenciaDet {
 		comentario nullable:true
 		horasTrabajadas nullable:true
 		manual nullable:true
+		turnoDet nullable:true
     }
 	
 	static mapping = {

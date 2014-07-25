@@ -27,6 +27,7 @@ class ProcesadorSeguroSocial {
 			nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			nominaPorEmpleado.addToConceptos(nominaPorEmpleadoDet)
 		}
+		
 		def empleado=nominaPorEmpleado.empleado
 		def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
 		def sdi=empleado.salario.salarioDiarioIntegrado
@@ -36,8 +37,11 @@ class ProcesadorSeguroSocial {
 		faltas=faltas+(faltas*factorDescanso)
 		log.debug 'Faltas: '+faltas
 	
-		def diasTrabajados=nominaPorEmpleado.diasTrabajados
-		def diasDelPeriodo=nominaPorEmpleado.diasDelPeriodo
+		def diasTrabajados=nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones
+		def diasDelPeriodo=nominaPorEmpleado.diasDelPeriodo-nominaPorEmpleado.incapacidades
+		if(nominaPorEmpleado.asistencia.diasTrabajados>0){
+			diasDelPeriodo=nominaPorEmpleado.asistencia.diasTrabajados
+		}
 		log.debug 'Dias trabajados: '+diasTrabajados
 	
 		def prima=0.5 //Numer magico por el momento
@@ -108,8 +112,14 @@ class ProcesadorSeguroSocial {
 		def inf=0
 		aporacionAsegurado+=inf
 		log.debug 'Infonavit: '+inf
-	
-		nominaPorEmpleadoDet.importeGravado=aporacionAsegurado
+			
+		if(aporacionAsegurado>0){
+			nominaPorEmpleadoDet.importeExcento=aporacionAsegurado
+			nominaPorEmpleadoDet.importeGravado=0.0
+			if(diasTrabajados<=0){
+				nominaPorEmpleadoDet.importeExcento=0.0
+			}
+		}
 		
 		
 	}

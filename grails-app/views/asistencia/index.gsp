@@ -54,7 +54,7 @@
 			<div class="col-md-4 form-group">
 				<input id="searchField" class="form-control" type="text" placeholder="Empleado" autofocus="autofocus">
 			</div>
-
+			
 			<div class="btn-group">
 				<button type="button" name="reportes"
 					class="btn btn-default dropdown-toggle" data-toggle="dropdown"
@@ -64,18 +64,44 @@
 				<ul class="dropdown-menu">
 					<li>
 						
-						<g:jasperReport jasper="AsistenciaRH"
-								format="PDF" name="Asistencia RH">
-							<g:hiddenField name="SFECHA_INI" 
-									value="${g.formatDate(date:calendarioDet?.asistencia?.fechaInicial,format:'dd/MM/yyyy')}" />
-							<g:hiddenField name="SFECHA_FIN" 
-									value="${g.formatDate(date:calendarioDet?.asistencia?.fechaFinal,format:'dd/MM/yyyy')}" />
+						<g:jasperReport jasper="Ausentismo"
+								format="PDF" name="Ausentismo">
+							<g:hiddenField name="CALENDARIODET" 
+									value="${calendarioDet.id}" />
+							
+							
 						</g:jasperReport>
 						
+						<g:jasperReport jasper="RetardoComida"
+								format="PDF" name="Ret Comida">
+							<g:hiddenField name="CALENDARIODET" 
+									value="${calendarioDet.id}" />
+							
+							
+						</g:jasperReport>
+						
+						<g:jasperReport jasper="RetardoMenor"
+								format="PDF" name="Ret Menor">
+							<g:hiddenField name="CALENDARIODET" 
+									value="${calendarioDet.id}" />
+						</g:jasperReport>
+						
+						<g:jasperReport jasper="RetardoMayor"
+								format="PDF" name="Ret Mayor">
+							<g:hiddenField name="CALENDARIODET" 
+									value="${calendarioDet.id}" />
+						</g:jasperReport>
+						
+						<g:jasperReport jasper="ChecadasFaltantes"
+								format="PDF" name="Cheq Falt.">
+							<g:hiddenField name="CALENDARIODET" 
+									value="${calendarioDet.id}" />
+						</g:jasperReport>
 						
 					</li>
 				</ul>
 			</div>
+			
 
 		</div>	
   		
@@ -120,7 +146,7 @@
 	  			<g:render template="asistenciaGridPanel" model="['partidasList':partidasMap['VENTAS']]"/>
 	  		</div>
 		</div>
-		<g:render template="/_common/calendarioForm"/>
+		<g:render template="/_common/selectorDeAsistencia"/>
 	</content>
 </body>
 </html>

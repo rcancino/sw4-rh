@@ -1,8 +1,10 @@
 package com.luxsoft.sw4.rh
 
 
+//import groovy.time.Duration
 import org.joda.time.LocalTime
 import org.jadira.usertype.dateandtime.joda.*
+
 
 class TurnoDet {
 
@@ -13,6 +15,9 @@ class TurnoDet {
 	
 	LocalTime entrada2
 	LocalTime salida2
+	
+	BigDecimal horasDeTrabajo
+	
 
 	static belongsTo = [turno: Turno]
 
@@ -30,4 +35,17 @@ class TurnoDet {
     	entrada2 type: PersistentLocalTime
     	salida2 type: PersistentLocalTime
     }
+	
+	static transients = ['horasDeTrabajo']
+	
+	BigDecimal getHorasDeTrabajo(){
+		if(horasDeTrabajo==null){
+			def ini=entrada1
+			def fin=salida2?:salida1
+			def res=fin.getLocalMillis()-ini.getLocalMillis()
+			horasDeTrabajo=(res/(1000*60*60) as BigDecimal)
+		}
+		return horasDeTrabajo
+	}
+	
 }

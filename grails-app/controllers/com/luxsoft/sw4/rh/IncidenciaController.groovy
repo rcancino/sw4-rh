@@ -13,7 +13,7 @@ class IncidenciaController {
     
 	
 	def index(Long max) {
-		params.max = Math.min(max ?: 15, 100)
+		params.max = Math.min(max ?: 50, 100)
 		params.sort=params.sort?:'dateCreated'
 		params.order='desc'
 		def tipo=params.tipo?:'QUINCENAL'

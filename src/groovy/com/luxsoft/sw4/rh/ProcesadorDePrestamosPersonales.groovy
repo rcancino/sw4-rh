@@ -21,33 +21,58 @@ class ProcesadorDePrestamosPersonales {
 			assert concepto,"Se debe de dar de alta el concepto de nomina: $conceptoClave"
 		}
 		
-		//Localizar el concepto
-		def neDet=ne.conceptos.find(){
-			it.concepto==concepto
-		}
-		
 		//Buscando un prestamo vigente
 		def prestamo=buscarPrestamo(ne)
 		if(prestamo) {
 			
-			log.debug "Aplicando decucccon para prestamo vigente: ${prestamo}"
+			log.info "Aplicando decucccon para prestamo vigente: ${prestamo}"
 			
-			def importeExcento=deduccion(prestamo, ne)
+			def percepciones=getPercepciones(ne)
 			
-			if(!neDet){
-				neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(nominaPorEmpleadoDet)
+			def deducciones=0
+			["D002","D001","D013","D007","D006","D012"].each{ clave->
+				def c=ne.conceptos.find {it.concepto.clave==clave}
+				if(c){
+					log.info 'Deduccion previa: '+c
+					deducciones+=c.getTotal()
+				}
 			}
-			log.debug "Deduccion generada de: ${importeExcento}"
-			neDet.importeGravado=0
-			neDet.importeExcento=importeExcento
-			neDet.actualizar()
+			def retMaxima=(percepciones-deducciones)*0.3
 			
-		}else {
-			if(neDet) {
-				def nomina=ne.nomina
-				nomina.removeFromConcepto(neDet)
+			log.info 'Deducciones calculadas: '+deducciones
+			log.info 'Percepcion maxima calculada: '+retMaxima
+			
+			def otrasDeducciones=ne.conceptos.find {it.concepto.clave=="D005"}
+			if(otrasDeducciones){
+				retMaxima-=otrasDeducciones.getTotal()
+				if(retMaxima<0)
+					retMaxima=0
 			}
+			
+			if(retMaxima){
+				def saldo=prestamo.saldo
+				def importeExcento=retMaxima<=saldo?retMaxima:saldo
+				//Localizar el concepto
+				def neDet=ne.conceptos.find(){
+					it.concepto==concepto
+				}
+				
+				if(!neDet){
+					neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+					ne.addToConceptos(neDet)
+				}
+				log.info "Deduccion calculada de: ${importeExcento}"
+				neDet.importeGravado=0
+				neDet.importeExcento=importeExcento.setScale(0,RoundingMode.HALF_EVEN)
+				ne.actualizar()
+			}
+			
+			
+			
+			/*def importeExcento=deduccion(prestamo, ne)
+			
+			*/
+			
 		}
 		
 		
@@ -59,16 +84,22 @@ class ProcesadorDePrestamosPersonales {
 		return prestamos?prestamos[0]:null
 	}
 	
-	private BigDecimal deduccion(Prestamo prestamo,NominaPorEmpleado ne) {
-		def saldo=prestamo.saldo
-		def percepciones=ne.getPercepciones()-getRetencionesPrecedentes(ne)
-		def abonoTentativo=percepciones*prestamo.tasaDescuento
-		def importeExcento=abonoTentativo<=saldo?abonoTentativo:saldo
-		return importeExcento
+	private BigDecimal getPercepciones(NominaPorEmpleado ne){
+		return ne.getPercepciones()
+	}
+	private BigDecimal getDeducciones(){
+		
 	}
 	
 	private BigDecimal getRetencionesPrecedentes(NominaPorEmpleado ne) {
-		return 0.0;
+		
+		def acu=0.0
+		ne.conceptos.each{
+			if(it.concepto.clave=='D006'){
+				acu+=it.getTotal()
+			}
+		}
+		return acu;
 	}
 	
 	
@@ -76,13 +107,33 @@ class ProcesadorDePrestamosPersonales {
 	def getModel(NominaPorEmpleadoDet det) {
 		def ne=det.parent
 		def prestamo=buscarPrestamo(ne)
-		def deduccion=deduccion(prestamo,ne)
-		def model=[prestamo:prestamo,deduccion:deduccion]
+		
+		def model=[prestamo:prestamo
+			,percepcion:getPercepciones(ne)
+			]
+		
+		def deducciones=[]
+		["D002","D001","D013","D007","D006","D012"].each{ clave->
+			def c=ne.conceptos.find {it.concepto.clave==clave}
+			if(c){
+				//deducciones+=c.getTotal()
+				deducciones.add(c)
+			}
+		}
+		def otrasDeducciones=ne.conceptos.find {it.concepto.clave=="D005"}
+		if(otrasDeducciones){
+			deducciones.add(otrasDeducciones)
+		}
+		model.deducciones=deducciones
+		
+		def abono=ne.conceptos.find {it.concepto.clave=="D004"}
+		
+		model.total=abono.getTotal()
 		return model
 	}
 	
 	def getTemplate() {
-		return "/nominaPorEmpleado/conceptoInfo/deduccionPrestamo"
+		return "/nominaPorEmpleado/conceptoInfo/deduccionPrestamoPersonal"
 	}
 	
 	String toString() {

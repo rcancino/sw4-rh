@@ -60,10 +60,8 @@ navigation={
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
 				vigentes()
 				pagados()
-				
-
 			}
-			
+			infonavit(controller:'infonavit',action:'index')
 			
 			bonos(){
 				productividad()

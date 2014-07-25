@@ -16,11 +16,11 @@ class ProcesadorDePrimaVacacional {
 	private static final log=LogFactory.getLog(this)
 	
 	def procesar(NominaPorEmpleado ne) {
-		
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
 		log.info "Procesando prima vacacional para ${ne.empleado}"
+		
 		
 		//Localizar el concepto
 		def nominaPorEmpleadoDet=ne.conceptos.find(){
