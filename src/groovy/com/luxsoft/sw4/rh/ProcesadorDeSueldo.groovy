@@ -53,7 +53,7 @@ class ProcesadorDeSueldo {
 		if(asistencia.diasTrabajados>0.0){
 			ne.diasTrabajados=asistencia.diasTrabajados
 		}else{
-			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades
+			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades-asistencia.paternidad
 		}
 		
 		def sueldo=salarioDiario*ne.diasTrabajados

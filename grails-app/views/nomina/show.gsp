@@ -41,7 +41,8 @@
           						jasper="Nomina"
           						format="PDF"
           						name="Detalle">
-    							<g:hiddenField name="NOMINA" value="${nominaInstance.id}"/>
+    							
+    							<g:hiddenField name="UBICACION" value="BOLIVAR"/>
  						</g:jasperReport>
 					</li>
 					<g:if test="${['QUINCENAL','SEMANAL'].contains(nominaInstance.periodicidad) }">
@@ -57,6 +58,9 @@
 						</li>
 						
 					</g:if>
+					<li>
+							<button class="btn btn-default" data-toggle="modal" data-target="#detalleDeNominaForm"> Detalle</button>
+					</li>
 				</ul>
 			</div> <!-- Fin .btn-group -->
 			
@@ -82,7 +86,7 @@
 			</div> <!-- Fin .btn-group -->
 			
 		</div>
-		
+		<g:render template="reporteDetalleDeNominaDialog"/>
 	</content>
 	<content tag="grid">
 		
@@ -121,7 +125,7 @@
 		</div>
 	</content>
 
-	
+
 
 </body>
 </html>

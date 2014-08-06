@@ -38,14 +38,14 @@
 ,(SELECT max(c.asistencia_fecha_final)  FROM calendario_det c where c.id BETWEEN $P{CAL_ID_INI} and $P{CAL_ID_FIN} ) as periodo_fecha_final
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS ubicacion
 ,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS depto
-,D.id,d.fecha,D.entrada1,d.salida1,d.entrada2,d.salida2,d.entrada3,d.salida3,d.comentario
-,d.retardo_menor,(case when d.retardo_menor>0 then 1 else 0 end) as regs_ret_min
-,d.retardo_menor_comida as ret_men_com,(case when d.retardo_Menor_comida>0 then 1 else 0 end) as regs_ret_men_com
+,sum(d.retardo_menor) as retardo_menor,sum(case when d.retardo_menor>0 then 1 else 0 end) as regs_ret_min
+,sum(d.retardo_menor_comida) as ret_men_com,sum(case when d.retardo_Menor_comida>0 then 1 else 0 end) as regs_ret_men_com
 FROM EMPLEADO E 
 JOIN perfil_de_empleado P ON(E.ID=P.empleado_id)
 JOIN asistencia A ON(A.empleado_id=E.ID)
 JOIN asistencia_det D ON(A.ID=D.asistencia_id)
-WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $P{CAL_ID_FIN}]]></queryString>
+WHERE A.empleado_id LIKE $P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $P{CAL_ID_FIN}
+group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
@@ -59,47 +59,24 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 	<field name="periodo_fecha_final" class="java.sql.Timestamp"/>
 	<field name="ubicacion" class="java.lang.String"/>
 	<field name="depto" class="java.lang.String"/>
-	<field name="fecha" class="java.sql.Date"/>
-	<field name="entrada1" class="java.sql.Time"/>
-	<field name="salida1" class="java.sql.Time"/>
-	<field name="entrada2" class="java.sql.Time"/>
-	<field name="salida2" class="java.sql.Time"/>
-	<field name="entrada3" class="java.sql.Time"/>
-	<field name="salida3" class="java.sql.Time"/>
-	<field name="comentario" class="java.lang.String"/>
-	<field name="retardo_menor" class="java.lang.Integer"/>
-	<field name="regs_ret_min" class="java.lang.Long"/>
-	<field name="ret_men_com" class="java.lang.Integer"/>
-	<field name="regs_ret_men_com" class="java.lang.Long"/>
+	<field name="retardo_menor" class="java.math.BigDecimal"/>
+	<field name="regs_ret_min" class="java.math.BigDecimal"/>
+	<field name="ret_men_com" class="java.math.BigDecimal"/>
+	<field name="regs_ret_men_com" class="java.math.BigDecimal"/>
 
-	<sortField name="fecha" />
+	<sortField name="tipoPrdo" />
+	<sortField name="ubicacion" />
+	<sortField name="clave" />
 
-	<variable name="RET_MIN" class="java.lang.Integer" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{retardo_menor}]]></variableExpression>
-	</variable>
-	<variable name="RET_MEN_COM" class="java.lang.Integer" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{ret_men_com}]]></variableExpression>
-	</variable>
-	<variable name="REGS_RET_MEN_COM" class="java.lang.Long" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{regs_ret_men_com}]]></variableExpression>
-	</variable>
-	<variable name="REGS_RET_MIN" class="java.lang.Long" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{regs_ret_min}]]></variableExpression>
-	</variable>
-		<background>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</background>
-		<title>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</title>
-		<pageHeader>
-			<band height="144"  isSplitAllowed="true" >
+
+		<group  name="EMPLEADO" isStartNewPage="true" >
+			<groupExpression><![CDATA[$F{id}]]></groupExpression>
+			<groupHeader>
+			<band height="172"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="264"
-						y="22"
+						y="24"
 						width="313"
 						height="18"
 						key="staticText-1"/>
@@ -116,7 +93,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="264"
-						y="-1"
+						y="1"
 						width="313"
 						height="22"
 						key="textField-1"/>
@@ -134,7 +111,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="10"
-						y="83"
+						y="85"
 						width="127"
 						height="11"
 						forecolor="#000000"
@@ -153,7 +130,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="137"
-						y="83"
+						y="85"
 						width="53"
 						height="11"
 						key="textField-43"/>
@@ -171,7 +148,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="190"
-						y="83"
+						y="85"
 						width="16"
 						height="11"
 						forecolor="#000000"
@@ -190,7 +167,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="206"
-						y="83"
+						y="85"
 						width="53"
 						height="11"
 						key="textField-44"/>
@@ -208,7 +185,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="389"
-						y="83"
+						y="85"
 						width="75"
 						height="11"
 						forecolor="#000000"
@@ -227,7 +204,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="464"
-						y="83"
+						y="85"
 						width="114"
 						height="11"
 						key="textField-45"/>
@@ -245,7 +222,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="389"
-						y="96"
+						y="98"
 						width="75"
 						height="11"
 						forecolor="#000000"
@@ -264,7 +241,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="464"
-						y="96"
+						y="98"
 						width="114"
 						height="11"
 						key="textField-46"/>
@@ -282,7 +259,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="389"
-						y="109"
+						y="111"
 						width="75"
 						height="11"
 						forecolor="#000000"
@@ -301,7 +278,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="464"
-						y="109"
+						y="111"
 						width="114"
 						height="11"
 						key="textField-47"/>
@@ -319,7 +296,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="1"
-						y="1"
+						y="3"
 						width="76"
 						height="11"
 						forecolor="#999999"
@@ -339,7 +316,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Transparent"
 						x="77"
-						y="1"
+						y="3"
 						width="83"
 						height="11"
 						forecolor="#999999"
@@ -359,7 +336,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="10"
-						y="96"
+						y="98"
 						width="337"
 						height="11"
 						forecolor="#000000"
@@ -379,7 +356,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="10"
-						y="109"
+						y="111"
 						width="221"
 						height="11"
 						forecolor="#000000"
@@ -398,7 +375,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="231"
-						y="109"
+						y="111"
 						width="50"
 						height="11"
 						key="textField-54"/>
@@ -416,7 +393,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="281"
-						y="109"
+						y="111"
 						width="16"
 						height="11"
 						forecolor="#000000"
@@ -435,7 +412,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="297"
-						y="109"
+						y="111"
 						width="50"
 						height="11"
 						key="textField-55"/>
@@ -452,7 +429,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="77"
-						y="61"
+						y="63"
 						width="42"
 						height="11"
 						key="textField-60"/>
@@ -470,7 +447,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="119"
-						y="61"
+						y="63"
 						width="10"
 						height="11"
 						forecolor="#000000"
@@ -489,7 +466,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="129"
-						y="61"
+						y="63"
 						width="16"
 						height="11"
 						key="textField-61"/>
@@ -507,7 +484,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="12"
-						y="61"
+						y="63"
 						width="64"
 						height="11"
 						forecolor="#000000"
@@ -527,7 +504,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="145"
-						y="61"
+						y="63"
 						width="16"
 						height="11"
 						forecolor="#000000"
@@ -546,7 +523,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="160"
-						y="61"
+						y="63"
 						width="16"
 						height="11"
 						key="textField-62"/>
@@ -560,14 +537,10 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{folio_fin}]]></textFieldExpression>
 				</textField>
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="27"  isSplitAllowed="true" >
 				<line direction="TopDown">
 					<reportElement
 						x="0"
-						y="26"
+						y="171"
 						width="582"
 						height="0"
 						forecolor="#CCCCCC"
@@ -577,7 +550,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<line direction="TopDown">
 					<reportElement
 						x="0"
-						y="2"
+						y="147"
 						width="582"
 						height="0"
 						forecolor="#CCCCCC"
@@ -590,7 +563,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="479"
-						y="14"
+						y="159"
 						width="37"
 						height="11"
 						key="staticText-51"/>
@@ -609,7 +582,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="268"
-						y="14"
+						y="159"
 						width="38"
 						height="11"
 						key="staticText-53"/>
@@ -628,7 +601,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="393"
-						y="14"
+						y="159"
 						width="49"
 						height="11"
 						key="staticText-55"/>
@@ -647,7 +620,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="268"
-						y="3"
+						y="148"
 						width="87"
 						height="11"
 						key="staticText-68"/>
@@ -666,7 +639,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="516"
-						y="3"
+						y="148"
 						width="66"
 						height="22"
 						key="staticText-70"/>
@@ -685,7 +658,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="1"
-						y="3"
+						y="148"
 						width="267"
 						height="22"
 						key="staticText-71"/>
@@ -704,7 +677,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="442"
-						y="14"
+						y="159"
 						width="37"
 						height="11"
 						key="staticText-73"/>
@@ -723,7 +696,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="306"
-						y="14"
+						y="159"
 						width="49"
 						height="11"
 						key="staticText-74"/>
@@ -742,7 +715,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="355"
-						y="14"
+						y="159"
 						width="38"
 						height="11"
 						key="staticText-79"/>
@@ -761,7 +734,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="355"
-						y="3"
+						y="148"
 						width="87"
 						height="11"
 						key="staticText-80"/>
@@ -780,7 +753,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<reportElement
 						mode="Opaque"
 						x="442"
-						y="3"
+						y="148"
 						width="74"
 						height="11"
 						key="staticText-81"/>
@@ -796,26 +769,14 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<text><![CDATA[TOTAL MINUTOS]]></text>
 				</staticText>
 			</band>
-		</columnHeader>
-		<detail>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</detail>
-		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</columnFooter>
-		<pageFooter>
-			<band height="0"  isSplitAllowed="true" >
-			</band>
-		</pageFooter>
-		<summary>
-			<band height="139"  isSplitAllowed="true" >
+			</groupHeader>
+			<groupFooter>
+			<band height="141"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="10"
-						y="124"
+						y="125"
 						width="298"
 						height="11"
 						forecolor="#000000"
@@ -834,7 +795,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="268"
-						y="0"
+						y="1"
 						width="38"
 						height="18"
 						key="textField-13"/>
@@ -847,13 +808,13 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{REGS_RET_MIN}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{regs_ret_min}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="516"
-						y="0"
+						y="1"
 						width="66"
 						height="18"
 						forecolor="#000000"
@@ -873,7 +834,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="479"
-						y="0"
+						y="1"
 						width="37"
 						height="18"
 						key="textField-39"/>
@@ -886,12 +847,12 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(($V{RET_MIN}.doubleValue()+$V{RET_MEN_COM}.doubleValue())*2)]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{retardo_menor}.doubleValue()+$F{ret_men_com}.doubleValue()*2)]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="393"
-						y="0"
+						y="1"
 						width="49"
 						height="18"
 						key="textField-41"/>
@@ -904,13 +865,13 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{RET_MEN_COM}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{ret_men_com}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="168"
-						y="85"
+						y="86"
 						width="277"
 						height="13"
 						forecolor="#000000"
@@ -929,7 +890,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="1"
-						y="0"
+						y="1"
 						width="267"
 						height="18"
 						forecolor="#000000"
@@ -949,7 +910,7 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 				<textField isStretchWithOverflow="false" pattern="##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="442"
-						y="0"
+						y="1"
 						width="37"
 						height="18"
 						key="textField-52"/>
@@ -962,12 +923,12 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{RET_MIN}.doubleValue()+$V{RET_MEN_COM}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{retardo_menor}.doubleValue()+$F{ret_men_com}.doubleValue())]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="306"
-						y="0"
+						y="1"
 						width="49"
 						height="18"
 						key="textField-53"/>
@@ -980,12 +941,12 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{RET_MIN}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{retardo_menor}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="355"
-						y="0"
+						y="1"
 						width="38"
 						height="18"
 						key="textField-57"/>
@@ -998,8 +959,41 @@ WHERE A.empleado_id =$P{ID} AND a.calendario_det_id between $P{CAL_ID_INI} and $
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{REGS_RET_MEN_COM}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{regs_ret_men_com}]]></textFieldExpression>
 				</textField>
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>

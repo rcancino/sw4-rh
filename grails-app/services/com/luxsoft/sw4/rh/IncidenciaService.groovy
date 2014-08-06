@@ -11,24 +11,35 @@ class IncidenciaService {
 		asistencia.incidencias=0
 		def pagadas=0
 		def noPagadas=0
+		def paternidad=0
 		asistencia.partidas.each{
 			def found=Incidencia.find("from Incidencia i where i.empleado=? and ? between date(i.fechaInicial) and date(i.fechaFinal)"
 				,[asistencia.empleado,it.fecha])
 			if(found){
-				if(found.pagado){
+				if(found.pagado && found.tipo=='INCIDENCIA'){
 					it.comentario='INCIDENCIA '+found.tipo
 					it.tipo='INCIDENCIA'
 					pagadas++
-				}else{
+				}
+				if(!found.pagado)	{
 					it.comentario='INCIDENCIA '+found.tipo
 					it.tipo='INCIDENCIA_F'
 					noPagadas++
 				}
 				
+				if(found.tipo=='PATERNIDAD')
+				it.comentario='INCIDENCIA '+found.tipo
+				it.tipo='INCIDENCIA'
+					paternidad++
+				
 			}
+			
+			
 		}
-		def res=asistencia.faltas-pagadas
+		//println' Incidencias pagadas:'+pagadas+ ' paternidad: '+paternidad+' no pagadas'+noPagadas
+		def res=asistencia.faltas
 		asistencia.faltas=res>0?res:0
 		asistencia.incidencias=noPagadas
+		asistencia.paternidad=paternidad
 	}
 }

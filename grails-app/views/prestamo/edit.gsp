@@ -38,10 +38,10 @@
 
 			<li>
 				<g:jasperReport
-          			jasper="PrestamosEstadoDeCuenta"
+          			jasper="EstadoDeCuentaPrestamo"
           			format="PDF"
           			name="Estado de Cuenta">
-          			<g:hiddenField name="NOMINA" value="${prestamoInstance.id}"/>
+          			<g:hiddenField name="PRESTAMO_ID" value="${prestamoInstance.id}"/>
  				</g:jasperReport>
 			</li>
 

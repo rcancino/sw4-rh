@@ -81,6 +81,8 @@ class Asistencia {
 	
 	String comentario
 	
+	Integer paternidad=0
+	
 	Date dateCreated
 	Date lastUpdated
 
@@ -90,6 +92,7 @@ class Asistencia {
 		tipo inList:['SEMANAL','QUINCENAL']
 		calendarioDet nullable:true
     	horasTrabajadas nullable:true
+		paternidad nullable:true
     }
 
 	static mapping = {

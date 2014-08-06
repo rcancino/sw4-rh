@@ -99,11 +99,14 @@
 						</g:jasperReport>
 						
 					</li>
+					<li>
+						<a href="#"> Retardo mensual</a>
+					</li>
 				</ul>
 			</div>
-			
-
-		</div>	
+		</div>
+		
+<%--		<g:render template="calendarioPeriodoDialog"/>--%>
   		
   		
 	</content><!-- end .gridTask -->

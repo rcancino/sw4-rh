@@ -154,7 +154,8 @@ class AsistenciaController {
 	def jasperService
 	
 	def reporteMensual(){
-		println "Repote mensual: CalIni:${params.CAL_ID_INI} CalFin:${params.CAL_ID_FIN} empleado:${params.ID}"
+		println 'Ejecutando reporte mensual '+params
+		//println "Repote mensual: CalIni:${params.CAL_ID_INI} CalFin:${params.CAL_ID_FIN} empleado:${params.ID}"
 		def reportDef = new JasperReportDef(
 			name:'RetardoMensualPorEmpleado',
 			fileFormat:JasperExportFormat.PDF_FORMAT,

@@ -27,6 +27,7 @@ class CfdiTimbrador {
 			byte[] zipFile=zipUtils.comprimeArchivo(nombre, xml)
 			//byte[] res=cfdiClient.getCfdiTest(user, password, zipFile)
 			byte[] res
+			//timbradoDePrueba=null
 			if(timbradoDePrueba){
 				println 'Timbrando de prueba: '+cfdi
 				res=cfdiClient.getCfdiTest(user, password, zipFile)
