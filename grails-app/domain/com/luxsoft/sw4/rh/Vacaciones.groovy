@@ -10,7 +10,7 @@ import org.grails.databinding.BindingFormat
 @EqualsAndHashCode(includes="empleado,fecha")
 class Vacaciones {
 	
-	static searchable = true
+	//static searchable = true
 	
 	Empleado empleado
 	
