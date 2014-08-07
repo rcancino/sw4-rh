@@ -70,6 +70,7 @@ navigation={
 				incentivo()
 				compensaciones()
 			}
+			vacaciones(controller:'controlDeVacaciones',action:'index')
 			solicitudes()
 		}
 		procesos(){

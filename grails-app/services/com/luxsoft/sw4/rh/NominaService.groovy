@@ -1,7 +1,8 @@
 package com.luxsoft.sw4.rh
 
-import com.luxsoft.sw4.Empresa;
-import com.luxsoft.sw4.Periodo;
+import com.luxsoft.sw4.Empresa
+import com.luxsoft.sw4.Periodo
+import com.luxsoft.sw4.rh.acu.AcumuladoPorConcepto
 
 import grails.transaction.Transactional
 import groovy.time.TimeCategory
@@ -121,6 +122,11 @@ class NominaService {
 		}
 	}
 	
+	/*
+	def actualizarAcumulados(int ejercicio,ConceptoDeNomina concepto,Empleado empleado){
+		def acu=AumuladoPorConcepto.find{ejercicio==ejercicio && concepto==concepto && empleado==empleado}
+	}
+	*/
 	
 	def timbrar(Long id){
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)

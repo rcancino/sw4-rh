@@ -6,11 +6,15 @@ class ControlDeVacaciones {
 	
 	Long ejercicio
 
-	BigDecimal acumuladoExcenta
+	BigDecimal acumuladoExcento
 
-	BigDecimal acumuladaGravada
+	BigDecimal acumuladoGravado
+	
+	int antiguedadDias
+	
+	int antiguedadYears
 
-	int diasCorrespondientes
+	int diasVacaciones
 
 	int diasTomados
 
@@ -22,16 +26,20 @@ class ControlDeVacaciones {
 
 
     static constraints = {
-
+		empleado unique:['ejercicio']
     }
 
     static transients = ['diasDisponibles']
 
     int getDiasDisponibles(){
-    	return diasCorrespondientes-diasTomados
+    	return diasVacaciones-diasTomados
     }
 
     String toString(){
     	"$ejercicio $empleado $diasDisponibles"
     }
+	
+	static mapping = {
+		
+	}
 }
