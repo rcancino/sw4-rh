@@ -12,6 +12,7 @@ class NominaPorEmpleadoController {
 	def nominaService 
 	
 	def conceptoDeNominaRuleResolver
+	
 
     def index() { }
 
@@ -76,13 +77,13 @@ class NominaPorEmpleadoController {
 	
 	@Transactional
 	def eliminarConcepto(Long id){
-		println 'Eliminando nedet: '+id
 		def ne=nominaPorEmpleadoService.eliminarConcepto(id)
 		redirect action:'edit',params:[id:ne.id]
 	}
 	
 	def actualizarNominaPorEmpleado(Long id){
 		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+		//event("ActualizacionDeNominaDet")
 		redirect action:'edit',params:[id:ne.id]
 	}
 	

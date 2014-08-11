@@ -22,7 +22,7 @@ class ProcesadorDeVacaciones {
 		def asistencia=ne.asistencia
 		def salarioDiario=ne.salarioDiarioBase
 		
-		if(asistencia.vacaciones){
+		if(asistencia.vacaciones>0){
 			
 			//Localizar el concepto
 			def nominaPorEmpleadoDet=ne.conceptos.find(){
@@ -41,8 +41,9 @@ class ProcesadorDeVacaciones {
 			
 		}
 		
-		if(asistencia.vacacionesp){
+		if(asistencia.vacacionesp>0){
 			//Localizar el concepto
+			log.debug 'Procesando vacaciones pagadas: '+asistencia.vacacionesp
 			def conceptoPag=ConceptoDeNomina.findByClave('P031')
 			
 			def nominaPorEmpleadoDet=ne.conceptos.find(){
@@ -50,7 +51,7 @@ class ProcesadorDeVacaciones {
 			}
 			
 			if(!nominaPorEmpleadoDet){
-				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:conceptoPag,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				ne.addToConceptos(nominaPorEmpleadoDet)
 			}
 			

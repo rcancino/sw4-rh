@@ -92,9 +92,8 @@ class AsistenciaController {
 		
 		if(calendarioDet){
 			log.info 'Actualizando lista de asistencias para el periodo: '+calendarioDet.asistencia
-			asistenciaService.actualizarAsistencia(calendarioDet)
-			//def list=Asistencia.findAll("from Asistencia a where a.calendarioDet.id=?",[calendarioDetId])
-			//render template:'asistenciaGridPanel',model:[asistenciaInstanceList:list]
+			//asistenciaService.actualizarAsistencia(calendarioDet)
+			asistenciaService.depurar(calendarioDet)
 
 		}
 		redirect action:'index',model:[tipo:calendarioDet.calendario.tipo]

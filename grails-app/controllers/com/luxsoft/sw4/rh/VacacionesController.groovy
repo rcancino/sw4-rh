@@ -73,6 +73,7 @@ class VacacionesController {
 		if(dia) {
 			vacacionesInstance.addToDias(dia)
 			vacacionesInstance.save flush:true
+			event('VacacionesTopic',vacacionesInstance.empleado.id)
 			flash.message="Fecha agregada"
 		}
 		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
@@ -84,6 +85,7 @@ class VacacionesController {
 		if(dia) {
 			vacacionesInstance.removeFromDias(dia)
 			vacacionesInstance.save flush:true
+			event('VacacionesTopic',vacacionesInstance.empleado.id)
 			flash.message="Fecha eliminada"
 		}
 		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]

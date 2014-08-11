@@ -1,5 +1,9 @@
 package com.luxsoft.sw4.rh
 
+import groovy.transform.EqualsAndHashCode
+
+
+@EqualsAndHashCode(includes='nominaPorEmpleadoDet,fecha,importe')
 class PrestamoAbono {
 
 	Date fecha
@@ -8,6 +12,8 @@ class PrestamoAbono {
 	
 	BigDecimal saldoAnterior=0.0
 	
+	NominaPorEmpleadoDet nominaPorEmpleadoDet
+	
 	BigDecimal saldo=0.0
 
 	Date dateCreated
@@ -15,6 +21,7 @@ class PrestamoAbono {
 
     static constraints = {
     	comentario nullable:true
+		nominaPorEmpleadoDet nullable:true
 		
     }
 

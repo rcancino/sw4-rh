@@ -3,6 +3,7 @@ package com.luxsoft.sw4.rh
 import grails.transaction.Transactional
 import grails.transaction.NotTransactional
 import groovy.sql.Sql
+import grails.events.Listener
 
 import com.luxsoft.sw4.Periodo
 
@@ -17,9 +18,11 @@ class VacacionesService {
 		asistencia.partidas.each{
 			def found=Vacaciones.find("from Vacaciones v where v.empleado=? and ? in elements(v.dias) ",[asistencia.empleado,it.fecha])
 			if(found){
-				if(found.pg){
-					asistencia.vacacionesp++
-				}else{
+				if(found.pg && !found.acreditada){
+					//asistencia.vacacionesp++
+					asistencia.vacacionesp=found.dias.size()
+					found.acreditada=true
+				}else if(!found.pg){
 					it.comentario='VACACIONES'
 					it.tipo='VACACIONES'
 					asistencia.vacaciones++
@@ -49,7 +52,8 @@ class VacacionesService {
 					antiguedadDias:row.antiguedadDias,
 					antiguedadYears:row.years,
 					diasVacaciones:row.diasVacaciones,
-					diasTomados:row.tomados)
+					diasTomados:row.tomados,
+					aniversario:row.aniversario)
 			ca.save failOnError:true
 		}
 		
@@ -57,15 +61,53 @@ class VacacionesService {
 	}
 	
 	
+	@grails.events.Listener(topic='VacacionesTopic')
+	def actualizarControl(Long id) {
+		def empleado=Empleado.get(id)
+		if(empleado){
+			log.info 'Actualizando control de asistencia para: '+empleado
+			def found=Vacaciones.executeQuery("select size(d) from Vacaciones v join v.dias d where v.empleado=?",[empleado])
+			log.info "Dias registrados: "+ found
+			def control=ControlDeVacaciones.findByEmpleadoAndEjercicio(empleado,2014)
+			print 'Control detectado:'+control
+			if(control){
+				control.diasTomados=found[0]
+				log.info "Dias registrados OK: "+ control.diasTomados
+			}
+			
+		}
+	}
+	
+	@Listener(namespace='gorm')
+	def afterInsert(Empleado e){
+		log.info 'Nuevo empleado: '+e
+	}
+	
+	/*
+	@Listener(topic = 'afterUpdate', namespace='gorm')
+	def afterUdate(Vacaciones vacaciones){
+		log.info 'Modificacion de vacaciones: '+vacaciones
+		def found=ControlDeVacaciones.findByEmpleadoAndEjercicio(vacaciones.empleado,2014)
+		if(found){
+			log.info 'Actualizando control de vacaciones..'
+			found.diasTomados=vacaciones.dias.size()
+			//found.save()
+		}
+	}
+	*/
+	
 	String controlAltaSql="""
-		SELECT YEAR('@FECHA_INI') AS ejercicio,e.alta,month(e.alta) as mes,E.id,E.clave,P.numero_de_trabajador,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.nombres) AS NOMBRE,P.jornada,s.periodicidad
+		SELECT YEAR('@FECHA_INI') AS ejercicio,e.alta,e.status,E.id,E.clave,P.numero_de_trabajador,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.nombres) AS NOMBRE,P.jornada,s.periodicidad
+,date(concat(YEAR('2014/01/01'),'-',month(e.alta),'-',day(e.alta))) as aniversario
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS ubicacion
 ,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS departamento
-,ROUND((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24)/365,0)  AS years
+,(floor(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24)/365))+1) AS years
 ,ROUND(-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24,0)  AS antiguedadDias
-,(SELECT MIN(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE ROUND(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24)/365),0) BETWEEN F.YEAR_DE AND F.YEAR_HASTA ) AS diasVacaciones
+,(SELECT MIN(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE 
+	(floor(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24)/365))+1) 
+	BETWEEN F.YEAR_DE AND F.YEAR_HASTA ) AS diasVacaciones
 ,(SELECT count(*) FROM vacaciones v join vacaciones_dias d on(d.vacaciones_id=v.id) where v.empleado_id=e.id) as tomados
-,(SELECT MIN(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE ROUND(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24)/365),0) BETWEEN F.YEAR_DE AND F.YEAR_HASTA ) -
+,(SELECT MIN(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE (floor(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN YEAR(E.ALTA)=YEAR('@FECHA_INI') THEN E.ALTA ELSE '@FECHA_INI' END )),E.ALTA)/60)/24)/365))+1) BETWEEN F.YEAR_DE AND F.YEAR_HASTA ) -
 	(SELECT count(*) FROM vacaciones v join vacaciones_dias d on(d.vacaciones_id=v.id) where v.empleado_id=e.id) as xtomar
 FROM empleado E 
 JOIN perfil_de_empleado P ON(P.empleado_id=E.ID)
@@ -73,5 +115,6 @@ JOIN salario S ON(S.empleado_id=E.id)
 LEFT JOIN baja_de_empleado B ON(E.ID=B.empleado_id)
 WHERE YEAR(E.ALTA)<YEAR('@FECHA_INI') and (B.ID IS NULL OR YEAR(B.FECHA)>=YEAR('@FECHA_INI') )
 GROUP BY E.ID
+order by (SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id),e.clave
 	"""
 }

@@ -1,5 +1,10 @@
 package com.luxsoft.sw4.rh
 
+
+import grails.plugin.springsecurity.annotation.Secured;
+
+@Secured(['ROLE_ADMIN','RH_USER'])
+//@Transactional(readOnly = true)
 class ControlDeVacacionesController {
     static scaffold = true
 	

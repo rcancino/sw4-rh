@@ -12,6 +12,7 @@ import groovy.time.TimeDuration;
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.Asistencia;
 import com.luxsoft.sw4.rh.AsistenciaDet
+import com.luxsoft.sw4.rh.BajaDeEmpleado;
 import com.luxsoft.sw4.rh.Checado
 import com.luxsoft.sw4.rh.Nomina;
 
@@ -274,6 +275,48 @@ class AsistenciaService {
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		actualizarAsistencia(det.asistencia.empleado,tipo,calendarioDet)
 	}
+	
+	@Listener(namespace='gorm')
+	def afterInsert(Empleado emp){
+		//Buscar la posible existencia de asistencia
+	}
+	
+	@NotTransactional
+	def depurar(CalendarioDet calendarioDet){
+		log.info 'Depurando asistencias para: '+calendarioDet
+		def asistencias=Asistencia.findAll{calendarioDet==calendarioDet}
+		def delete=[]
+		asistencias.each{ a->
+			def emp=a.empleado
+			if(emp.baja){
+				if(emp.alta<emp.baja.fecha){
+					
+				}
+				if(emp.baja.fecha<a.periodo.fechaInicial){
+					log.debug 'baja:'+emp+ ' Fecha de baja: '+emp.baja.fecha
+					//log.debug 'Fecha baja:'+emp.baja.fecha + " Periodo: "+a.periodo
+					
+				}
+			}
+			
+		}
+	}
+	
+	/*
+	@Listener(namespace='gorm')
+	def afterInsert(BajaDeEmpleado baja){
+		log.debug 'Localizando la asistencia para el empleado: '+baja
+		def emp=baja.empleado
+		def fecha=baja.fecha
+		def found=Asistencia.executeQuery(
+			"from Asistencia det where det.empleado=? and date(?) between det.periodo.fechaInicial and det.periodo.fechaFinal"
+			,[emp,fecha])
+		if(found){
+			def asistencia=found.get(0)
+			log.debug 'Eliminar la asistencia: '+asistencia
+		}
+	}
+	*/
 
 	
 	def delete(Asistencia asistencia){

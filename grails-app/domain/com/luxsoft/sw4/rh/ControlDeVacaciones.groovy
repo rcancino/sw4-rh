@@ -1,8 +1,12 @@
 package com.luxsoft.sw4.rh
 
+import org.apache.commons.lang.time.DateUtils;
+
 class ControlDeVacaciones {
 
 	Empleado empleado
+	
+	Date aniversario
 	
 	Long ejercicio
 
@@ -15,6 +19,8 @@ class ControlDeVacaciones {
 	int antiguedadYears
 
 	int diasVacaciones
+	
+	int diasTrasladados=0
 
 	int diasTomados
 
@@ -29,10 +35,10 @@ class ControlDeVacaciones {
 		empleado unique:['ejercicio']
     }
 
-    static transients = ['diasDisponibles']
+    static transients = ['diasDisponibles','vigencia']
 
     int getDiasDisponibles(){
-    	return diasVacaciones-diasTomados
+    	return diasVacaciones+diasTrasladados-diasTomados
     }
 
     String toString(){
@@ -40,6 +46,13 @@ class ControlDeVacaciones {
     }
 	
 	static mapping = {
-		
+		aniversario type:'date'
 	}
+	
+	Date getVigencia(){
+		if(aniversario)
+			return DateUtils.addMonths(aniversario, 6)
+		return null
+	}
+	
 }

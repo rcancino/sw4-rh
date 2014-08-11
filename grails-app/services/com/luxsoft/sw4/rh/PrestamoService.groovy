@@ -7,24 +7,65 @@ import grails.events.Listener
 class PrestamoService {
 	
 	
+	static String CONCEPTO='D004'
 	
-	 @Transactional(readOnly=true)
-	 //@grails.events.Listener(namespace='gorm')
-	 def onSaveOrUpdate(Prestamo prestamo) {
-		 log.info 'Procesando reglas de negocios para nomina: '+prestamo
-		 //Se aplican los procesadores para cada
-		 println 'Message: sveOrUpdate prestamo: '+prestamo
+	def beforeDelete(NominaPorEmpleado ne){
+		log.debug 'Evaluando la eliminacion de nomina por empleado: '+ne
+		ne.conceptos.each{
+			beforeDelete(it)
+		}
+	}
+	
+	//@Listener(namespace='gorm')
+	def beforeDelete(NominaPorEmpleadoDet neDet){
+		log.debug 'Evaluando la eliminacion de CONCEPTO DE nomina por empleado: '+neDet
+		if(neDet.concepto.clave==CONCEPTO){
+			log.debug 'Cancelando abono en prestamo'
+			def abono=PrestamoAbono.findByNominaPorEmpleadoDet(neDet)
+			if(abono){
+				
+				def prestamo=abono.prestamo
+				log.debug 'Eliminando abono de prestamo existente '+prestamo
+				prestamo.removeFromAbonos(abono)
+				
+				
+			}
+		}
+	}
+	
+	/*
+	
+	 @Listener(namespace='gorm')
+	 def afterUpdate(NominaPorEmpleado ne){
+		 log.debug 'UPDATE Evaluando nomina por empleado: '+ne
 	 }
 	 
+	 @Listener(namespace='gorm')
+	 def afterInsert(NominaPorEmpleado ne){
+		 log.debug 'INSERT Evaluando nomina por empleado: '+ne
+	 }
 	 
+	
+	 
+	 @Listener(namespace='gorm')
+	 def afterUpdate(NominaPorEmpleadoDet neDet){
+		 log.info 'UPDATE Evaluando nomina por empleado: '+neDet
+		 
+	 }
+	 
+	 */
+	 
+	  /*
 	 @Listener(namespace='gorm')
 	 def afterInsert(NominaPorEmpleado ne){
 		 log.info 'Insertando nomina por empleado  procesando prestamos: '+ne
 	 }
 	 
+	
 	 @Listener(namespace='gorm')
 	 def afterUpdate(NominaPorEmpleado ne){
 		 log.info 'Actualizando nomina por empleado  procesando prestamos: '+ne
+		 /*
 		 ne.conceptos.each{ it->
 			 
 			 if(it.clave=='D004'){
@@ -46,13 +87,14 @@ class PrestamoService {
 		 
 	 }
 	 
+	 
 	 @Listener(namespace='gorm')
 	 def afterDelete(NominaPorEmpleado ne){
 		 log.info 'Eliminando nomina por empleado procesando prestamos'+ne
 	 }
 	 
 	 
-	
+	*/
 
 	
 }

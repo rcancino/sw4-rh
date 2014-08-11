@@ -65,6 +65,23 @@ class ProcesadorDePrestamosPersonales {
 				neDet.importeGravado=0
 				neDet.importeExcento=importeExcento.setScale(0,RoundingMode.HALF_EVEN)
 				ne.actualizar()
+				
+				
+				//Actualizar el saldo del prestamo
+				def abono=prestamo.abonos.find({it.nominaPorEmpleadoDet==neDet})
+				if(abono){
+					log.debug 'Actualizando abono a prestamo'
+					abono.importe=neDet.importeExcento
+				}else{
+					log.debug 'Aaplicando abono nuevo a prestamo'
+					abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
+							,importe:neDet.importeExcento
+							,nominaPorEmpleadoDet:neDet)
+					prestamo.addToAbonos(abono)
+						//prestamo.save()
+				}
+				
+				
 			}
 			
 			

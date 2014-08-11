@@ -7,6 +7,7 @@
 			<th>Gravado</th>
 			<th>Ant Dias</th>
 			<th>Ant Años</th>
+			<th>Trasladados</th>
 			<th>Corresponden</th>
 			<th>Tomados</th>
 			<th>Disponibles</th>
@@ -17,12 +18,12 @@
 		<g:each in="${partidasList}" var="row">
 			<tr>
 				<td>
-					<g:link action="show" id="${row.id}" target="_blank">
+					<g:link action="show" id="${row.id}" >
 						${row.id}
 					</g:link>
 				</td>
 				<td>
-					<g:link action="show" id="${row.id}" target="_blank">
+					<g:link action="show" id="${row.id}" >
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>
@@ -30,6 +31,7 @@
 				<td><g:formatNumber number="${row.acumuladoGravado}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.antiguedadDias }" format="###"/></td>
 				<td><g:formatNumber number="${row.antiguedadYears }" format="###"/></td>
+				<td><g:formatNumber number="${row.diasTrasladados }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasVacaciones }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasTomados }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasDisponibles }" format="###"/></td>

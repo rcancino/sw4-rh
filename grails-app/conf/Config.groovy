@@ -133,11 +133,15 @@ log4j = {
 			info 'grails.app.services.com.luxsoft.sw4'
 			info 'grails.app.services.com.luxsoft.rh'
 			debug 'grails.app.services.com.luxsoft.rh.AsistenciaService'
+			debug 'grails.app.services.com.luxsoft.rh.PrestamoService'
 			off 'com.luxsoft.sw4.rh'
 			off 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
 			off 'com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas'
-			debug 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
+			off 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
 			off 'com.luxsoft.sw4.rh.ProcesadorDeISTP'
+			debug 'com.luxsoft.sw4.rh.ProcesadorDeVacaciones'
+			debug 'com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales'
+			
 			
 			
 		}

@@ -9,7 +9,7 @@
 		<f:field property="fechaDeAutorizacion" input-class="form-control"
 			label="Autorización" />
 		<f:field property="autorizo" input-class="form-control" />
-		<f:field property="importe" input-class="form-control moneda-field" />
+		<f:field property="importe" input-class="form-control " input-type="text" />
 		<f:field property="tipo" input-class="form-control" />
 		<f:field property="tasaDescuento" input-class="form-control numeric-field" input-type="text"/>
 		<f:field property="comentario" input-class="form-control" />

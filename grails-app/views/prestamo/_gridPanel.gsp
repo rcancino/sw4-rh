@@ -5,6 +5,7 @@
 		<tr>
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.nombre" title="Empleado"/>
+			<th><g:message code="prestamo.alta.label" default="Ubicación" encodeAs="html"/></th>
 			<th><g:message code="prestamo.alta.label" default="Alta" encodeAs="html"/></th>
 			<th><g:message code="prestamo.importe.label" default="Importe" encodeAs="html"/></th>
 			<th><g:message code="prestamo.saldo.label" default="Saldo" encodeAs="html"/></th>
@@ -20,6 +21,7 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.nombre")}</td>
+				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion")}</td>
 				<td><g:formatDate date="${row.alta}" format="dd/MM/yyyy"/></td>
 				<td>
 					<g:formatNumber number="${row.importe}" format="#,###.##"/>

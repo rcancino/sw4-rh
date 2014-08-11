@@ -59,10 +59,12 @@ class PrestamoController {
 	}
 	
 	@Transactional
-	def eliminarPartida(PrestamoAbono abono){
+	def eliminarPartida(Long id){
+		println 'Eliminando abono: '+id
+		def abono=PrestamoAbono.get(id)
 		def prestamo=abono.prestamo
 		prestamo.removeFromAbonos(abono)
-		prestamo.save(flush:true)
+		prestamo.save failOnError:true
 		redirect action:'edit',params:[id:prestamo.id]
 	}
 

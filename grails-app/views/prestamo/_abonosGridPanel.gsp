@@ -5,7 +5,6 @@
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="fecha" title="Fecha"/>
 			<th><g:message code="prestamoAbono.importe.label" default="Importe" encodeAs="html"/></th>
-			<th><g:message code="prestamoAbono.saldo.label" default="Saldo" encodeAs="html"/></th>
 			<th><g:message code="prestamoAbono.comentario.label" default="Comentario" encodeAs="html"/></th>
 			<th><g:message code="prestamoAbono.nomina.label" default="Nomina" encodeAs="html"/></th>
 			<th></th>
@@ -23,12 +22,12 @@
 				<td>
 					<g:formatNumber number="${row.importe}" format="#,###.##"/>
 				</td>
-				<td>
-					<g:formatNumber number="${row.saldo}" format="#,###.##"/>
-				</td>
+				
 				<td>${fieldValue(bean:row,field:"comentario")}</td>
 				<td>
-					<g:if test="${row instanceof com.luxsoft.sw4.rh.PrestamoAbonoPorNomina}">${fieldValue(bean:row,field:"nominaPorEmpleado?.nomina?.folio")}</g:if>
+					<g:link controller="nominaPorEmpleado" action="edit" id="${row?.nominaPorEmpleadoDet?.parent?.id}">
+						<g:formatNumber number="${row?.nominaPorEmpleadoDet?.parent?.id}" format="######"/>
+					</g:link>
 				</td>
 				<td>	
 					<g:link action="eliminarPartida" id="${row.id }" onClick="return confirm('Seguro que desea eliminar el abono?')"><span class="glyphicon glyphicon-trash"></span></g:link>

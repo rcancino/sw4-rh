@@ -27,7 +27,8 @@
 							input-id="salarioAnteriorField"
 							input-type="text"/>
 
-					<f:field property="salarioNuevo" 
+					<f:field input-id="salarioNuevo" 
+							property="salarioNuevo" 
 							input-class="form-control numerico" 
 							input-type="text"
 							input-autocomplete="off"/>
@@ -70,13 +71,13 @@ $(function(){
 	$("#salarioNuevo").blur(function(){
 		var sdi=$(this).val();
 		var empleadoId=$("#empleadoId").val();
-		
-		if(empleadoId!==""){
+		var salarioNuevo=$("#salarioNuevo").autoNumeric('get');
+		if(empleadoId!=="" && salarioNuevo!==null){
 			console.log('Nuevo salario: '+sdi);
 			$('#submitBtn').attr('disabled', 'disabled');
 			jQuery.getJSON(
 				'<g:createLink controller="empleadoRest" action="calcularSdi"/>',
-				{empleadoId:empleadoId},function(data){
+				{empleadoId:empleadoId,fecha:'04/08/2014',salarioNuevo:salarioNuevo},function(data){
 
 				}
 			).done(function(data){

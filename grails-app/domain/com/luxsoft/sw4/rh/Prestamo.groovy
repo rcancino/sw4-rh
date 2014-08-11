@@ -32,6 +32,10 @@ class Prestamo {
     static hasMany = [abonos: PrestamoAbono]
 
     static transients=['totalAbonos']
+	
+	static mapping = {
+		abonos cascade: "all-delete-orphan"
+	}
 
     BigDecimal getTotalAbonos(){
     	def totalAbono=abonos?.sum 0.0,{

@@ -11,6 +11,7 @@
 						<f:field property="empleado" input-class="form-control" />
 <%--						<f:field property="solicitud" input-class="form-control" />--%>
 						<f:field property="comentario" input-class="form-control" />
+						<f:field property="pg" input-class="form-control" label="Pagadas"/>
 					</f:with>
 					<div class="col-sm-offset-3 col-sm-9">
 						<g:if test="${!vacacionesInstance.autorizacion }">

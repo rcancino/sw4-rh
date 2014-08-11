@@ -14,6 +14,8 @@ class Vacaciones {
 	
 	Empleado empleado
 	
+	ControlDeVacaciones control
+	
 	@BindingFormat("dd/MM/yyyy")
 	Date solicitud=new Date()
 	
@@ -23,14 +25,18 @@ class Vacaciones {
 	
 	boolean pg=false
 	
+	boolean acreditada=false
+	
 	Set dias=new HashSet()
 
 	Date dateCreated
 	Date lastUpdated
 
 	static constraints = {
+		control nullable:true
 		comentario nullable:true,maxSize:250
 		autorizacion nullable:true
+		acreditada nullable:true
 	}
 	
 	static hasMany = [dias:Date]

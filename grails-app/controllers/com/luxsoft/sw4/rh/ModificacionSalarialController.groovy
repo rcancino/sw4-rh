@@ -21,12 +21,13 @@ class ModificacionSalarialController {
 
     @Transactional
     def save(ModificacionSalarial modificacionInstance){
-    	modificacionInstance.sdiNuevo=0.0
+    	//modificacionInstance.sdiNuevo=0.0
     	modificacionInstance.validate()
     	if(modificacionInstance.hasErrors()){
     		flash.message="Errores de validacion en modificacion salarial"
     		render view:'create',model:[modificacionInstance:modificacionInstance]
     	}
+		
     	modificacionInstance.save failOnError:true
     	redirect action:'show',params:[id:modificacionInstance.id]
 

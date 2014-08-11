@@ -102,21 +102,32 @@
 								</g:link>
 							</g:if>
 
-							<g:link class="list-group-item" action="cancelar" onclick="return confirm('Cancelar CFDI?');">
+							
+							<g:if test="${nominaPorEmpleadoInstance.cfdi}">
+								<g:jasperReport
+									controller="reciboDeNomina"
+									action="imprimirCfdi"
+									jasper="CFDI" 
+									format="PDF" 
+									name="Imprimir">
+								<g:hiddenField name="id" value="${nominaPorEmpleadoInstance.id}"/>
+								</g:jasperReport>
+								<g:link class="list-group-item" action="cancelar" onclick="return confirm('Cancelar CFDI?');">
 								<span class="glyphicon glyphicon-ban-circle"></span> Cancelar
 							</g:link>
-
-							<g:link class="list-group-item" action="timbrar">
-								<span class="glyphicon glyphicon-print"></span> Imprimir
-							</g:link>
-							<g:link class="list-group-item" action="todo">
+								<g:link class="list-group-item" action="todo">
 								<span class="glyphicon glyphicon-picture"></span> Mostrar
 							</g:link>
-							<g:link class="list-group-item" action="todo">
+							<a: href="#" class="list-group-item">
+								<span class="glyphicon glyphicon-envelope"></span> Enviar mail
+							</a:>
+							</g:if>
+							
+							<%--<g:link class="list-group-item" action="todo">
 								<span class="glyphicon glyphicon-envelope"></span> Enviar mail 
 							</g:link>
 											
-						</div>
+						--%></div>
 				    </div>
 				  </div>
 				  
