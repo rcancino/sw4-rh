@@ -14,6 +14,7 @@ navigation={
 				salario()
 				seguridadSocial()
 				contactos()
+				pension(controller:'pensionAlimenticia',action:'edit')
 				documentos()
 				asistencia()
 				reportes()

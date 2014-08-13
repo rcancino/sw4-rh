@@ -29,7 +29,7 @@ class ModificacionSalarial {
 	Date lastUpdated
 
     static constraints = {
-    	tipo inList:['CALCULO_SDI','AUMENTO']
+    	tipo inList:['CALCULO_SDI','AUMENTO','ALTA']
     	comentario nullable:true
     	bimestre nullable:true
     }

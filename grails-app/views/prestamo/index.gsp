@@ -40,25 +40,12 @@
 					</li>
 					<li>
 						<g:jasperReport
-          						jasper="PrestamosDetalle"
-          						format="PDF"
-          						name="Detalle">
+          					jasper="HistoricoDePrestamos"
+          					format="PDF"
+          					name="Histórico">
  						</g:jasperReport>
 					</li>
-					<li>
-						<g:jasperReport
-          						jasper="PrestamoHistorico"
-          						format="PDF"
-          						name="Histórico">
- 						</g:jasperReport>
-					</li>
-					<li>
-						<g:jasperReport
-          						jasper="PrestamoAntiguedad"
-          						format="PDF"
-          						name="Antigüedad">
- 						</g:jasperReport>
-					</li>
+
 				</ul>
 			</div> <!-- Fin .btn-group -->
 	</content>

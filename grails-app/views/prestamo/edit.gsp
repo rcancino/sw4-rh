@@ -44,6 +44,7 @@
           			<g:hiddenField name="PRESTAMO_ID" value="${prestamoInstance.id}"/>
  				</g:jasperReport>
 			</li>
+			
 
 		</ul>
 		

@@ -16,21 +16,23 @@ class IncidenciaService {
 			def found=Incidencia.find("from Incidencia i where i.empleado=? and ? between date(i.fechaInicial) and date(i.fechaFinal)"
 				,[asistencia.empleado,it.fecha])
 			if(found){
-				if(found.pagado && found.tipo=='INCIDENCIA'){
+				println 'Incedencia localizada: '+found
+				if(found.pagado && found.tipo=='PERMISO'){
 					it.comentario='INCIDENCIA '+found.tipo
 					it.tipo='INCIDENCIA'
 					pagadas++
 				}
-				if(!found.pagado)	{
+				if(!found.pagado && found.tipo=='PERMISO')	{
 					it.comentario='INCIDENCIA '+found.tipo
 					it.tipo='INCIDENCIA_F'
 					noPagadas++
 				}
 				
-				if(found.tipo=='PATERNIDAD')
-				it.comentario='INCIDENCIA '+found.tipo
-				it.tipo='INCIDENCIA'
+				if(found.tipo=='PATERNIDAD'){
+					it.comentario='INCIDENCIA '+found.tipo
+					it.tipo='INCIDENCIA'
 					paternidad++
+				}
 				
 			}
 			

@@ -7,6 +7,7 @@ import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
 import com.luxsoft.sw4.rh.ProcesadorDeISTP
 import com.luxsoft.sw4.rh.ProcesadorDeInfonavit;
 import com.luxsoft.sw4.rh.ProcesadorDeNomina
+import com.luxsoft.sw4.rh.ProcesadorDePensionAlimenticia;
 import com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales
 import com.luxsoft.sw4.rh.ProcesadorDePrimaVacacional
 import com.luxsoft.sw4.rh.ProcesadorDeSueldo
@@ -57,6 +58,7 @@ beans = {
 			ref('procesadorDeISTP'),
 			ref('procesadorDeInfonavit'),
 			ref('procesadorRetardoPermiso'),
+			ref('prcoesadorDePensionAlimenticia'),
 			ref('procesadorDePrestamosPersonales')
 			]
 	}
@@ -70,7 +72,8 @@ beans = {
 				 'P024':ref('procesadorDePrimaVacacional'),
 				 'D004':ref('procesadorDePrestamosPersonales'),
 				 'D012':ref('procesadorRetardoPermiso'),
-				 'P032':ref('procesadorDePaternidad')
+				 'P032':ref('procesadorDePaternidad'),
+				 'D006':ref('prcoesadorDePensionAlimenticia')
 				 ]
 	}
 	
@@ -86,4 +89,5 @@ beans = {
 	procesadorDePaternidad(ProcesadorDePaternidad)
 	
 	procesadorDeChecadas(ProcesadorDeChecadas){}
+	prcoesadorDePensionAlimenticia(ProcesadorDePensionAlimenticia){}
 }

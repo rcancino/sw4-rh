@@ -14,7 +14,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${calendarioInstance.periodos}" var="row">
+		<g:each in="${calendarioInstance.periodos.sort{it.folio}}" var="row">
 			<tr>
 				<td>${fieldValue(bean:row,field:"calendario.tipo")}</td>
 				<td><g:formatNumber number="${row.folio}" format="######"/>

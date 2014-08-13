@@ -4,7 +4,7 @@ import com.luxsoft.sw4.rh.*
   def acu=AcumuladoPorConcepto.list()
   def concepto=ConceptoDeNomina.findByClave('P024')
   println concepto
- def file=grailsApplication.mainContext.getResource("/WEB-INF/data/PRIMAVACEXENTAJUN2014.csv").file
+ def file=grailsApplication.mainContext.getResource("/WEB-INF/data/PRIMAVACEXENTAAGO2014.csv").file
  file.eachLine{line,row ->
 	if(row>1){
 		def fields=line.split(",")

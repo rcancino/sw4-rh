@@ -26,7 +26,7 @@
 				<td>${fieldValue(bean:row,field:"comentario")}</td>
 				<td>
 					<g:link controller="nominaPorEmpleado" action="edit" id="${row?.nominaPorEmpleadoDet?.parent?.id}">
-						<g:formatNumber number="${row?.nominaPorEmpleadoDet?.parent?.id}" format="######"/>
+						<g:formatNumber number="${row?.nominaPorEmpleadoDet?.parent?.nomina?.folio}" format="######"/>
 					</g:link>
 				</td>
 				<td>	

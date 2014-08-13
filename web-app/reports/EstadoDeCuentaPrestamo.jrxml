@@ -32,11 +32,12 @@
 	<parameter name="PRESTAMO_ID" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT U.CLAVE AS SUCURSAL,e.id,p.id,E.CLAVE,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.NOMBRES) as nombre,P.importe,A.FECHA,IFNULL(A.importe,0) AS ABONO
 ,p.importe-(SELECT IFNULL(SUM(IMPORTE),0) FROM prestamo_abono X WHERE X.prestamo_id=P.ID) as saldo
-,CASE WHEN A.nomina_por_empleado_id IS NULL THEN 'ABONO' ELSE 'ABONO POR NOMINA' END AS TIPO_ABONO,m.folio,m.periodicidad,m.pago,m.tipo
+,CASE WHEN A.nomina_por_empleado_det_id IS NULL THEN 'ABONO' ELSE 'ABONO POR NOMINA' END AS TIPO_ABONO,m.folio,m.periodicidad,m.pago,m.tipo
 ,P.ALTA,P.autorizo,P.tasa_descuento,P.comentario
 FROM 
 prestamo p join empleado e on (e.id=p.empleado_id) left join prestamo_abono a on (p.id=a.prestamo_id) JOIN perfil_de_empleado R ON (R.empleado_id=E.ID) JOIN UBICACION U ON (U.ID=R.UBICACION_ID)
-left join nomina_por_empleado n on (n.id=a.nomina_por_empleado_id) left join nomina m on (m.id=n.nomina_id )
+left join nomina_por_empleado_det o on (a.nomina_por_empleado_det_id=o.id)
+left join nomina_por_empleado n on (n.id=o.parent_id) left join nomina m on (m.id=n.nomina_id )
 WHERE
 P.IMPORTE-(SELECT IFNULL(SUM(IMPORTE),0) FROM prestamo_abono X WHERE X.prestamo_id=P.ID)>0
 and P.id=$P{PRESTAMO_ID}]]></queryString>

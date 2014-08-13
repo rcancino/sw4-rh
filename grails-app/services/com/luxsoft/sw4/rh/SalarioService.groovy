@@ -34,11 +34,13 @@ class SalarioService {
 		
 		def val=CalendarioDet.executeQuery("select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin",[fecha])
 		
-		def bimestre=val.get(0)
-		def ini=CalendarioDet.executeQuery("select min(d.inicio) from CalendarioDet d where d.bimestre=?",[bimestre])
-		def inicio=ini.get(0)
-		def fin=fecha-1
+		def bimestre=val.get(0)-1
+		def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=?",[bimestre])
+		
+		def inicio=res.get(0)[0]
+		def fin=res.get(0)[1]
 		log.info "Periodo: $inicio al $fin"
+		
 		def query=sdiPorEmpleado.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
 			.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
 			.replaceAll('@TIPO', empleado.salario.periodicidad)

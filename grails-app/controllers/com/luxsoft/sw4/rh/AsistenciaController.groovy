@@ -92,8 +92,8 @@ class AsistenciaController {
 		
 		if(calendarioDet){
 			log.info 'Actualizando lista de asistencias para el periodo: '+calendarioDet.asistencia
-			//asistenciaService.actualizarAsistencia(calendarioDet)
-			asistenciaService.depurar(calendarioDet)
+			asistenciaService.actualizarAsistencia(calendarioDet)
+			//asistenciaService.depurar(calendarioDet)
 
 		}
 		redirect action:'index',model:[tipo:calendarioDet.calendario.tipo]
