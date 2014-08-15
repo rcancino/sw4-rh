@@ -51,12 +51,15 @@ class ProcesadorDeIncentivo {
 			importeGravado=salario.total*(bono)
 		}
 		
+		if(importeGravado>0){
+			nominaPorEmpleadoDet.importeGravado=importeGravado
+			nominaPorEmpleadoDet.importeExcento=0
+			nominaEmpleado.actualizar()
+		}else{
+			nominaEmpleado.removeFromConceptos(nominaEmpleado)
+		}
 		
 		
-		
-		nominaPorEmpleadoDet.importeGravado=importeGravado
-		nominaPorEmpleadoDet.importeExcento=0
-		nominaEmpleado.actualizar()
 		
 	}
 	

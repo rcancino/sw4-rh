@@ -78,9 +78,9 @@ class AsistenciaService {
 				*/
 			} catch (Exception ex) {
 			   ex.printStackTrace()
-				log.error ex
+				
 				def msg=ExceptionUtils.getRootCauseMessage(ex)
-				println 'Error actualizando asistencia'+msg+ " ${empleado}"
+				log.error "Error actualizando asistencia $msg  $empleado"
 			}
 		}
 	}
