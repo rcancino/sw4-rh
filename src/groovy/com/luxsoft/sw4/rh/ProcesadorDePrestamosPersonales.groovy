@@ -49,6 +49,10 @@ class ProcesadorDePrestamosPersonales {
 					retMaxima=0
 			}
 			
+			if(ne.empleado.id==271){
+				retMaxima=2500.00
+			}
+			
 			if(retMaxima){
 				def saldo=prestamo.saldo
 				def importeExcento=retMaxima<=saldo?retMaxima:saldo

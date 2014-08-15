@@ -74,8 +74,12 @@ class IncentivoService {
 				
 			}
 		}
+		
 		if(bono.retardoComida==0){
-			bono.tasaBono2=0.05
+			def incapacidades=asistencia.incapacidades
+			if(bono.faltas+incapacidades==0){
+				bono.tasaBono2=0.05
+			}
 		}
 		
 		
