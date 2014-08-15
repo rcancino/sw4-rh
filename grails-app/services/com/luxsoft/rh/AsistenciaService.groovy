@@ -15,6 +15,8 @@ import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.BajaDeEmpleado;
 import com.luxsoft.sw4.rh.Checado
 import com.luxsoft.sw4.rh.Nomina;
+import com.luxsoft.sw4.rh.NominaPorEmpleado
+import com.luxsoft.sw4.rh.NominaPorEmpleadoDet
 
 import com.luxsoft.sw4.rh.Empleado
 import com.luxsoft.sw4.rh.CalendarioDet
@@ -58,20 +60,22 @@ class AsistenciaService {
 		
 		def empleados=Empleado.findAll(
 			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
-		//def empleados=Empleado.findAll("from Empleado e where e.id=48")
+		
 		
 		empleados.each{ empleado ->
 			try {
-				if(empleado.controlDeAsistencia) {
-					
-					if(empleado.baja && empleado.status=='BAJA') {
-						if(empleado.baja.fecha>=calendarioDet.asistencia.fechaInicial) {
-							actualizarAsistencia(empleado,tipo,calendarioDet)
-						}
-					}else {
+				actualizarAsistencia(empleado,tipo,calendarioDet)
+				
+				
+				/*
+				if(empleado.baja && empleado.status=='BAJA') {
+					if(empleado.baja.fecha>=calendarioDet.asistencia.fechaInicial) {
 						actualizarAsistencia(empleado,tipo,calendarioDet)
 					}
+				}else {
+					actualizarAsistencia(empleado,tipo,calendarioDet)
 				}
+				*/
 			} catch (Exception ex) {
 			   ex.printStackTrace()
 				log.error ex
@@ -92,6 +96,12 @@ class AsistenciaService {
 		def asistencia =Asistencia.find(
 				"from Asistencia a where a.empleado=? and a.calendarioDet=?"
 				,[empleado,cal])
+		
+		boolean valid=validarEmpleado(empleado,cal,asistencia)
+		if(!valid){
+			log.debug 'Empleado no valido para control de asistencias '+empleado
+			return
+		}
 
 		if(!asistencia) {
 			log.debug 'Generando registro nuevo de asistencia para '+empleado+" Periodo: "+cal.asistencia
@@ -119,13 +129,26 @@ class AsistenciaService {
 				}
 			}
 		}
-		
+		if(!empleado.controlDeAsistencia){
+			def periodoPago=new Periodo(cal.inicio,cal.fin)
+			def diasPagados=periodoPago.getListaDeDias().size()
+			asistencia.diasTrabajados=diasPagados
+		}
 		procesadorDeChecadas.registrarChecadas(asistencia)
 		
 		recalcularRetardos(asistencia)
 		incapacidadService.procesar(asistencia)
 		vacacionesService.procesar(asistencia)
 		incidenciaService.procesar(asistencia)
+		
+		if(!empleado.controlDeAsistencia){
+			asistencia.partidas.each{
+				if(it.tipo=='FALTA'){
+					
+					it.tipo=='ASISTENCIA'
+				}
+			}
+		}
 		
 		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
 		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
@@ -145,6 +168,34 @@ class AsistenciaService {
 		asistencia.save failOnError:true
 		return asistencia
 		
+	}
+	
+	def boolean validarEmpleado(Empleado empleado,CalendarioDet calendarioDet,Asistencia asistencia){
+		
+		def asistenciaInicial=calendarioDet.asistencia.fechaInicial
+		
+		
+		if(empleado.baja){
+			if(empleado.baja.fecha<empleado.alta){ // Re ingreso
+				return true
+			} else if(asistenciaInicial<=empleado.baja.fecha){ // Trabajo algunos dias
+				return true
+			} else{  // No es valido y de existir eliminamos la asistencia
+				if(asistencia){
+					
+					NominaPorEmpleado ne=NominaPorEmpleado.findByAsistencia(asistencia)
+					if(ne){
+						ne.delete flush:true
+						log.debug 'NominaPorEmpleado eliminada: '+ne
+					}
+					asistencia.delete flush:true
+					log.debug 'Asistencia invalida  eliminada '+asistencia
+				}
+				return false
+			}
+		}else{
+			 return true
+		}
 	}
 
 	

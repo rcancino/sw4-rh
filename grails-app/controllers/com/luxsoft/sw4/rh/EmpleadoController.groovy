@@ -104,6 +104,21 @@ class EmpleadoController {
 		}
 		
 	}
+	
+	def updateSalario(Empleado empleadoInstance){
+		
+		def v=params.view?:'salario'
+		log.info "Actualizando salario para $empleadoInstance salario: $empleadoInstance.salario.salarioDiario SDI: $empleadoInstance.salario.salarioDiarioIntegrado "
+		
+		try{
+			empleadoInstance=empleadoService.updateSalario(empleadoInstance)
+			flash.message="Salario actualizado  ${empleadoInstance.clave}  SDI: ${empleadoInstance.salario.salarioDiarioIntegrado}"
+			render view:v,model:[empleadoInstance:empleadoInstance,edit:false]
+		}catch(EmpleadoException ex){
+			render view:v,model:[empleadoInstance:ex.empleado,edit:true]
+		}
+		
+	}
 
 	def perfil(Empleado empleadoInstance){
 		[empleadoInstance:empleadoInstance,edit:params.edit]

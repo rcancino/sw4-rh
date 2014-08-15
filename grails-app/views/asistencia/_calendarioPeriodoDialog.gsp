@@ -18,7 +18,7 @@
          						 
          						 class="form-horizontal">
 				<g:hiddenField name="tipo" value="${tipo}"/>
-				<g:hiddenField name="ID" value="${asistenciaInstance.empleado.id}"/>
+				<g:hiddenField name="ID" value="${asistenciaInstance?.empleado?.id?:'%'}"/>
 				<div class="modal-body">
 					<div class="form-group">
     					<label for="calendarioIni" class="col-sm-3">Calendario Inicial</label>

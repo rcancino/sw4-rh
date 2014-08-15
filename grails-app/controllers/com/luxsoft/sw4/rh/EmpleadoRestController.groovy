@@ -68,5 +68,21 @@ class EmpleadoRestController {
 		log.info 'res: '+res+ " Em.id"+empleadoId+ " params: "+params
 		render res 
 	}
+	
+	
+	def calcularSdiNuevo() {
+		
+		def empleadoId=params.empleadoId
+		def salarioNuevo=params.salarioNuevo as BigDecimal
+		def fecha=new Date()
+		Empleado e=Empleado.get(empleadoId)
+		def sdi=0.0
+		if(e) {
+			sdi=salarioService.calcularSalarioDiarioIntegradoNuevo(e,salarioNuevo)
+		}
+		def res=[sdi:sdi.SDI_NVO] as JSON
+		log.info 'res: '+res+ " Em.id"+empleadoId+ " params: "+params
+		render res
+	}
 
 }

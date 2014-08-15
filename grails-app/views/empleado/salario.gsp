@@ -17,7 +17,7 @@
 </content>
 
 <content tag="content">
-	<form  class="form-horizontal numeric-form" method="post">
+	<form  class="form-horizontal " method="post">
 		<g:hiddenField name="id" value="${empleadoInstance.id}"/>
 		<g:hiddenField name="version" value="${empleadoInstance?.version}" />
 		<g:hiddenField name="view" value="salario" />
@@ -25,9 +25,19 @@
 		
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
-					
-					<f:field property="salario.salarioDiario" input-class="form-control moneda-field" />	
-					<f:field property="salario.salarioDiarioIntegrado" input-class="form-control moneda-field" />	
+					<g:if test="${empleadoInstance?.salario?.salarioDiario}">
+						<f:field property="salario.salarioDiario" input-id="salarioNuevo"
+							input-class="form-control"  input-readonly="true"/>	
+					</g:if>
+						
+					<g:else>
+						<f:field property="salario.salarioDiario" input-id="salarioNuevo"
+							input-class="form-control numeric" />	
+					</g:else>
+					<f:field property="salario.salarioDiarioIntegrado" input-id="sdiNuevo"
+						input-class="form-control " input-type="text" 
+						input-readonly="true"
+						/>	
 					<f:field property="salario.formaDePago" input-class="form-control " />	
 					<f:field property="salario.clabe" input-class="form-control" input-autocomplete="off"/>	
 					<f:field property="salario.periodicidad" input-class="form-control" />	
@@ -50,7 +60,7 @@
 	<g:if test="${edit}">
 	<div class="form-group">
     	<div class="col-sm-offset-8 col-sm-12">
-      		<g:actionSubmit class="btn btn-primary"  value="Actualizar" action="update"/>
+      		<g:actionSubmit class="btn btn-primary"  value="Actualizar" action="updateSalario"/>
       		<g:link class="btn btn-default" action="salario" id="${empleadoInstance.id}" >Cancelar</g:link>
     	</div>
 	</div>
@@ -59,6 +69,28 @@
 	
 
 	</form>
+	
+	<r:script>
+		$(function(){
+			$(".numeric").attr("type",'text');
+			$(".numeric").autoNumeric();
+			
+			$("#salarioNuevo").blur(function(){
+				var salario=$(this).val();
+				console.log('Calculando SDI para salario:'+salario);
+				jQuery.getJSON(
+						'<g:createLink controller="empleadoRest" action="calcularSdiNuevo"/>',
+						{empleadoId:${empleadoInstance.id},salarioNuevo:salario}
+						,function(data){
+
+						}).done(function(data){
+							$('#sdiNuevo').val(data.sdi);
+						});
+			});
+			
+			
+		});
+	</r:script>
 
 </content>
 		

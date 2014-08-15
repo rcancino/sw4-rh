@@ -141,6 +141,7 @@ log4j = {
 			off 'com.luxsoft.sw4.rh.ProcesadorDeISTP'
 			debug 'com.luxsoft.sw4.rh.ProcesadorDeVacaciones'
 			debug 'com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales'
+			debug 'com.luxsoft.sw4.rh.ProcesadorDeIncentivo'
 			
 			
 			

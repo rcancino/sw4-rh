@@ -31,6 +31,8 @@ class EmpleadoService {
 		empleado.save failOnError:true
 		return empleado
 	}
+	
+	
 
     Empleado updateEmpleado(Empleado empleado) {
     	
@@ -94,6 +96,36 @@ class EmpleadoService {
 			
     }
 	
+	Empleado updateSalario(Empleado empleado) {
+		
+		//Salvando empleado
+		try{
+			empleado.save(failOnError:true)
+			altaSalarial(empleado)
+			return empleado
+			}catch(Exception ex){
+				ex.printStackTrace()
+				throw new EmpleadoException(
+					message:ExceptionUtils.getRootCauseMessage(ex),
+					empleado:empleado
+					)
+			}
+			
+	}
+	
+	def altaSalarial(Empleado empleado){
+		def found=ModificacionSalarial.findByEmpleadoAndTipo(empleado,'ALTA')
+		if(!found){
+			def ms=new ModificacionSalarial(empleado:empleado,tipo:'ALTA')
+			ms.salarioAnterior=0.0
+			ms.salarioNuevo=empleado.salario.salarioDiario
+			ms.sdiNuevo=empleado.salario.salarioDiarioIntegrado
+			ms.sdiAnterior=0.0
+			ms.fecha=empleado.alta
+			ms.save failOnError:true
+		}
+	}
+	
 	/**
 	 * Proceso para actualizar el salario diario integrado
 	 * 
@@ -117,12 +149,25 @@ class EmpleadoService {
 			def empleado=Empleado.findByClave(row.CLAVE)
 			if(empleado){
 				def old=empleado.salario.salarioDiarioIntegrado
-				empleado.salario.salarioDiarioIntegrado=row.SDI_NVO
-				empleado.save(flush:true)
+				
+				//empleado.salario.salarioDiarioIntegrado=row.SDI_NVO
+				//empleado.save(flush:true)
+				//Los listeners de modificacion salarial se encargan de actualizar el salario del empleado
+				def ms=new ModificacionSalarial(empleado:empleado,tipo:'CALCULO_SDI')
+				
+				ms.salarioAnterior=empleado.salario.salarioDiario // Esto no cambia
+				ms.salarioNuevo=empleado.salario.salarioDiario // Esto no cambia
+				
+				ms.sdiAnterior=old
+				ms.sdiNuevo=empleado.salario.salarioDiarioIntegrado
+				ms.fecha=new Date()
+				ms.save failOnError:true
+				
 				res.add(empleado)
 				log.info "SDI actuaizado para ${empleado} SDI anterior: ${old} SDI nvo: ${empleado.salario.salarioDiarioIntegrado}"
 			}
 		}
+		return res
 	}
 	
 	String sdiSQL="""
@@ -150,12 +195,7 @@ GROUP BY X.ID
 	"""
 	
 	
-	String sdiPorEmpleado="""
-
-"""
-
 }
-
 
 
 

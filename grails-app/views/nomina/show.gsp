@@ -36,15 +36,7 @@
     							<g:hiddenField name="NOMINA" value="${nominaInstance.id}"/>
  						</g:jasperReport>
 					</li>
-					<li>
-						<g:jasperReport
-          						jasper="Nomina"
-          						format="PDF"
-          						name="Detalle">
-    							
-    							<g:hiddenField name="UBICACION" value="BOLIVAR"/>
- 						</g:jasperReport>
-					</li>
+					
 					<g:if test="${['QUINCENAL','SEMANAL'].contains(nominaInstance.periodicidad) }">
 						
 						

@@ -55,28 +55,20 @@ class NominaService {
 	def generarPartidas(Nomina nomina) {
 		
 		def tipo=nomina.periodicidad
-		//def empleados=Empleado.findAll(sort:"apellidoPaterno"){salario.periodicidad==tipo }
-		def empleados=Empleado.findAll(
-			"from Empleado e where e.salario.periodicidad=?  order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
+		def asistencias=Asistencia.findAllByCalendarioDet(nomina.calendarioDet)
 		
 		int orden=1
-		for(def empleado:empleados) {
+		
+		for(def asistencia:asistencias) {
 			
-			
-			
-			if(empleado.baja && empleado.status=='BAJA' && empleado.baja.fecha<=nomina.calendarioDet.asistencia.fechaFinal) {
-				continue
-			}
+			def empleado=asistencia.empleado
 			
 			NominaPorEmpleado ne=nomina.partidas.find{
 				it.empleado.id==empleado.id
 			}
 			if(!ne){
 				
-				//Actualizar asistencia
-				def asistencia=Asistencia.find{calendarioDet==nomina.calendarioDet && empleado==empleado}
-				if(asistencia!=null){
-					log.info 'Agregando empleado: '+empleado
+				log.info 'Agregando empleado: '+empleado
 					ne=new NominaPorEmpleado(
 						empleado:empleado,
 						ubicacion:empleado.perfil.ubicacion,
@@ -89,7 +81,6 @@ class NominaService {
 					ne.antiguedadEnSemanas=ne.getAntiguedad()
 					ne.asistencia=asistencia
 					nomina.addToPartidas(ne)
-				}
 				
 			}
 		}

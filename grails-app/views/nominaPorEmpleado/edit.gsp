@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Nomina de empleado</title>
+	<r:require module="jquery-ui"/>
 </head>
 <body>
 	
@@ -42,6 +43,11 @@
 							class="list-group-item" >
 							<span class="glyphicon glyphicon-list-alt"></span> Regresar a nómina:${nominaPorEmpleadoInstance.nomina.folio}
 						</g:link>
+						
+						
+						<a class="list-group-item" data-toggle="modal" data-target="#cambiarNominaDialog"> 
+							<span class="glyphicon glyphicon-search"></span> Buscar
+						</a>
 						
 						<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 						
@@ -194,6 +200,8 @@
 			</div> <!-- moda-content -->
 		</div> <!-- modal-dialog -->
 	</div> <!-- .modal  -->
+	
+	<g:render template="cambiarNominaDialog"/>
 	
 	<r:script>
 	

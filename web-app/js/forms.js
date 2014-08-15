@@ -14,7 +14,7 @@ $(function(){
 	//$(".moneda-field").autoNumeric({vMin:'0.00',wEmpty:'zero',mRound:'B',aSign: '$',mDec:'2'});
 	$(".moneda-field").autoNumeric({wEmpty:'zero',mRound:'B',aSign: '$'});
 	//$(".numeric-field").attr("type",'text');
-	//$(".numeric-field").autoNumeric({vMin:'0.00',wEmpty:'zero',mDec:'2'});
+	//$(".numeric-field").autoNumeric();
 	//$(".numeric-field-4").attr("type",'text');
 	//$(".numeric-field-4").autoNumeric({vMin:'0.00',wEmpty:'zero',mDec:'4'});
 	

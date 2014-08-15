@@ -16,12 +16,20 @@ class ProcesadorDeIncentivo {
 	
 	def procesar(NominaPorEmpleado nominaEmpleado) {
 		log.info "Procesando Incentivo para ${nominaEmpleado.empleado}"
-		/*
+		
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
 		assert concepto,"Se debe de dar de alta el concepto de nomina: $conceptoClave"
 		
+		def incentivo=null
+		if(nominaEmpleado.empleado.salario.periodicidad=='QUINCENAL'){
+			incentivo=Incentivo.findByCalendarioFinAndEmpleado(nominaEmpleado.nomina.calendarioDet,nominaEmpleado.empleado)
+		}
+		if(incentivo==null){
+			log.debug 'No existe calculo de incentivo para empleado: '+nominaEmpleado.empleado+ ' Calendario: '+nominaEmpleado.nomina.calendarioDet.id
+			return
+		}
 		
 		//Localizar el concepto
 		def nominaPorEmpleadoDet=nominaEmpleado.conceptos.find(){ 
@@ -33,10 +41,23 @@ class ProcesadorDeIncentivo {
 			nominaEmpleado.addToConceptos(nominaPorEmpleadoDet)
 		}
 		
-		nominaPorEmpleadoDet.importeGravado=50
+		
+		def importeGravado=0.0
+		// Buscae el sueldo
+		def salario=nominaEmpleado.conceptos.find{it.concepto.clave=='P001'}
+		if(salario){
+			def bono=(incentivo.tasaBono1+incentivo.tasaBono2)
+			log.debug 'Aplicando a sueldo: '+salario.total+ ' bono del: '+bono
+			importeGravado=salario.total*(bono)
+		}
+		
+		
+		
+		
+		nominaPorEmpleadoDet.importeGravado=importeGravado
 		nominaPorEmpleadoDet.importeExcento=0
 		nominaEmpleado.actualizar()
-		*/
+		
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {
@@ -50,7 +71,7 @@ class ProcesadorDeIncentivo {
 	}
 	
 	String toString() {
-		"Procesador de ISTP "
+		"Procesador de Incentivo "
 	}
 
 }

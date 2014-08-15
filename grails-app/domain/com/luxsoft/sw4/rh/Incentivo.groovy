@@ -21,6 +21,8 @@ class Incentivo {
 	
 	Integer faltas=0
 	
+	Integer minutosNoLaborados=0
+	
 	Integer retardoMenor=0
 	
 	Integer retardoMayor=0

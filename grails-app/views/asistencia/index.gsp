@@ -15,7 +15,7 @@
 	</content>
 	
 	<content tag="gridTitle">
-		<a href="" data-toggle="modal" data-target="#calendarioForm">
+		<a href="" data-toggle="modal" data-target="#calendarioDeAsistenciaForm">
 			Lista de asistencia ${tipo} ${calendarioDet?.folio} (${calendarioDet?.asistencia})
 		</a>
 	
@@ -99,15 +99,21 @@
 						</g:jasperReport>
 						
 					</li>
-					<li>
+					<%--<li>
 						<a href="#"> Retardo mensual</a>
 					</li>
+					--%>
+					<li>
+						<button class="btn btn-default" data-toggle="modal" data-target="#calendarioForm"> Mensual X Empleado</button>
+					</li>
+					
 				</ul>
 			</div>
 		</div>
 		
 <%--		<g:render template="calendarioPeriodoDialog"/>--%>
   		
+  		<g:render template="calendarioPeriodoDialog" model="[periodos:periodos]"/>
   		
 	</content><!-- end .gridTask -->
 	

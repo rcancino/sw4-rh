@@ -1,5 +1,5 @@
 <%@page expressionCodec="none"%>
-<div class="modal fade" id="calendarioForm" tabindex="-1">
+<div class="modal fade" id="calendarioDeAsistenciaForm" tabindex="-1">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">

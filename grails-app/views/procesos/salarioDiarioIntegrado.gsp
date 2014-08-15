@@ -9,7 +9,7 @@
 </head>
 <body>
 	<content tag="header">
-		<h3>Salario diario integrado periodo: ${periodo}</h3>
+		<h3>Salario diario integrado Bimestre: ${bimestre} (${periodo })</h3>
 	</content>
 	
 	<conente tag="buttonBar">
@@ -18,8 +18,8 @@
 	
 	<content tag="content">
 		<div class="btn-group">
-			<g:link action="" class="btn btn-default">
-				<span class="glyphicon glyphicon-search"></span> Buscar
+			<g:link action="cambiarBimestre" class="btn btn-default">
+				<span class="glyphicon glyphicon-search"></span> Cambiar bimestre
 			</g:link>
 			<g:link action="" class="btn btn-default">
 				<span class="glyphicon glyphicon-filter"></span> Filtrar
