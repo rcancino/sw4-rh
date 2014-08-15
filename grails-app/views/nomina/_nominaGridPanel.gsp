@@ -22,7 +22,7 @@
 					</g:link>
 				</td>
 				<td>
-					<g:link controller="calendarioDet" action="show" id="${row?.calendarioDet?.id}" target="_blank">
+					<g:link action="show" id="${row.id}">
 						${row.calendarioDet?.calendario?.tipo} ${row.calendarioDet?.folio}
 					</g:link>
 				</td>
