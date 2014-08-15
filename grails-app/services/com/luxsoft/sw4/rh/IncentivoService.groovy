@@ -71,9 +71,24 @@ class IncentivoService {
 				if(bono.retardoMenor+bono.retardoMayor<=10){
 					bono.tasaBono1=0.05
 				}
+				
 			}
 		}
 		if(bono.retardoComida==0){
+			bono.tasaBono2=0.05
+		}
+		
+		
+		
+		//Para empleados nuevos
+		if(asistencia.diasTrabajados>0){
+			bono.tasaBono1=0.0
+			bono.tasaBono2=0.0
+		}
+		
+		//Casos especiales
+		if(asistencia.empleado.id==271 || asistencia.empleado.id==255){
+			bono.tasaBono1=0.05
 			bono.tasaBono2=0.05
 		}
 		

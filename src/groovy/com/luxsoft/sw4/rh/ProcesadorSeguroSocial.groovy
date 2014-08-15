@@ -28,8 +28,13 @@ class ProcesadorSeguroSocial {
 			nominaPorEmpleado.addToConceptos(nominaPorEmpleadoDet)
 		}
 		
-		def empleado=nominaPorEmpleado.empleado
 		def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+		def empleado=nominaPorEmpleado.empleado
+		if(salarioMinimo==empleado.salario.salarioDiario){
+			nominaPorEmpleado.removeFromConceptos(nominaPorEmpleadoDet)
+			return
+		}
+		
 		def sdi=empleado.salario.salarioDiarioIntegrado
 		def factorDescanso=1/6
 	

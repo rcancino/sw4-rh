@@ -45,10 +45,13 @@ class ProcesadorDeIncentivo {
 		def importeGravado=0.0
 		// Buscae el sueldo
 		def salario=nominaEmpleado.conceptos.find{it.concepto.clave=='P001'}
-		if(salario){
+		def vac=nominaEmpleado.conceptos.find{it.concepto.clave=='P025'}
+		if(salario ){
 			def bono=(incentivo.tasaBono1+incentivo.tasaBono2)
-			log.debug 'Aplicando a sueldo: '+salario.total+ ' bono del: '+bono
-			importeGravado=salario.total*(bono)
+			def vacImp=vac?vac.getTotal():0.0
+			def total=+salario.total+vacImp
+			log.debug 'Base para Incentivo  : '+total+ ' bono del: '+bono
+			importeGravado=total*(bono)
 		}
 		
 		if(importeGravado>0){
@@ -56,7 +59,7 @@ class ProcesadorDeIncentivo {
 			nominaPorEmpleadoDet.importeExcento=0
 			nominaEmpleado.actualizar()
 		}else{
-			nominaEmpleado.removeFromConceptos(nominaEmpleado)
+			nominaEmpleado.removeFromConceptos(nominaPorEmpleadoDet)
 		}
 		
 		
