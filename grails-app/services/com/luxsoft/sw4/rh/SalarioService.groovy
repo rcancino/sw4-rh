@@ -52,12 +52,12 @@ class SalarioService {
 	
 	
 	@NotTransactional
-	def calcularSalarioDiarioIntegradoNuevo(Empleado empleado,def salarioNuevo){
+	def calcularSalarioDiarioIntegradoNuevo(Empleado empleado,def salarioNuevo,String periodicidad){
 		
-		log.info 'Calculando salario diari integrado para: '+empleado+ '  Salario nuevo: '+salarioNuevo
+		log.info 'Calculando salario diari integrado para: '+empleado+ '  Salario nuevo: '+salarioNuevo+ ' Tipo: '+periodicidad
 		
 		def query=sdiPorEmpleadoNuevo
-			.replaceAll('@TIPO', empleado.salario.periodicidad)
+			.replaceAll('@TIPO', periodicidad)
 			.replaceAll('@SALARIO', salarioNuevo.toString())
 			//println query
 		Sql sql=new Sql(dataSource)

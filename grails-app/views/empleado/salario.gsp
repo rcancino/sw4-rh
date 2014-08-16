@@ -25,6 +25,7 @@
 		
 			<fieldset ${!edit?'disabled=""':''}>
 				<f:with bean="empleadoInstance">
+					<f:field input-id="periodicidadField" property="salario.periodicidad" input-class="form-control" />	
 					<g:if test="${empleadoInstance?.salario?.salarioDiario}">
 						<f:field property="salario.salarioDiario" input-id="salarioNuevo"
 							input-class="form-control"  input-readonly="true"/>	
@@ -40,7 +41,7 @@
 						/>	
 					<f:field property="salario.formaDePago" input-class="form-control " />	
 					<f:field property="salario.clabe" input-class="form-control" input-autocomplete="off"/>	
-					<f:field property="salario.periodicidad" input-class="form-control" />	
+					
 					<f:field property="salario.banco" input-class="form-control" />	
 				</f:with>
 			</fieldset>
@@ -74,13 +75,15 @@
 		$(function(){
 			$(".numeric").attr("type",'text');
 			$(".numeric").autoNumeric();
+
 			
 			$("#salarioNuevo").blur(function(){
 				var salario=$(this).val();
-				console.log('Calculando SDI para salario:'+salario);
+				var periodicidad=$("#periodicidadField").val();
+				console.log('Calculando SDI para salario:'+salario+' Periodicidad:'+periodicidad);
 				jQuery.getJSON(
 						'<g:createLink controller="empleadoRest" action="calcularSdiNuevo"/>',
-						{empleadoId:${empleadoInstance.id},salarioNuevo:salario}
+						{empleadoId:${empleadoInstance.id},salarioNuevo:salario,periodicidad:periodicidad}
 						,function(data){
 
 						}).done(function(data){

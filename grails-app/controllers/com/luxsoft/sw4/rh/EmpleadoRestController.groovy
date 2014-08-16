@@ -74,11 +74,13 @@ class EmpleadoRestController {
 		
 		def empleadoId=params.empleadoId
 		def salarioNuevo=params.salarioNuevo as BigDecimal
+		
+		def periodicidad=params.periodicidad
 		def fecha=new Date()
 		Empleado e=Empleado.get(empleadoId)
 		def sdi=0.0
 		if(e) {
-			sdi=salarioService.calcularSalarioDiarioIntegradoNuevo(e,salarioNuevo)
+			sdi=salarioService.calcularSalarioDiarioIntegradoNuevo(e,salarioNuevo,periodicidad)
 		}
 		def res=[sdi:sdi.SDI_NVO] as JSON
 		log.info 'res: '+res+ " Em.id"+empleadoId+ " params: "+params
