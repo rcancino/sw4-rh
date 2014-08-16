@@ -44,7 +44,12 @@ class VacacionesController {
 			notFound()
 			return
 		}
-		[vacacionesInstance:vacacionesInstance,tipo:vacacionesInstance.empleado.salario.periodicidad]
+		def ejercicio=session.ejercicio
+		
+		def tipo=vacacionesInstance.empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
+		println 'Tipo: '+tipo
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
+		[vacacionesInstance:vacacionesInstance,tipo:vacacionesInstance.empleado.salario.periodicidad,periodos:periodos]
 	}
 	
 	@Transactional

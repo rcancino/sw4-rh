@@ -18,16 +18,15 @@ class VacacionesService {
 		asistencia.partidas.each{
 			def found=Vacaciones.find("from Vacaciones v where v.empleado=? and ? in elements(v.dias) ",[asistencia.empleado,it.fecha])
 			if(found){
-				if(found.pg && !found.acreditada){
-					//asistencia.vacacionesp++
-					asistencia.vacacionesp=found.diasPagados
-					found.acreditada=true
-				}else if(!found.pg){
-					it.comentario='VACACIONES'
-					it.tipo='VACACIONES'
-					asistencia.vacaciones++
-				}
-				
+				it.comentario='VACACIONES'
+				it.tipo='VACACIONES'
+				asistencia.vacaciones++
+			}
+			def pagadas=Vacaciones.find("from Vacaciones v where v.empleado=? and ? pg=true and acreditada=false "
+				,[asistencia.empleado,asistencia.calendarioDet])
+			if(pagadas){
+				asistencia.vacacionesp=pagadas.diasPagados
+				pagadas.acreditada=true
 			}
 		}
 		def res=asistencia.faltas-asistencia.vacaciones

@@ -14,6 +14,23 @@
 						<f:field input-id="pagadoField" property="pg" input-class="form-control" label="Pagadas"/>
 						<f:field input-id="diasPagadosField" property="diasPagados" input-class="form-control" label="Pagadas"
 						 input-disabled="${!vacacionesInstance.diasPagados}"/>
+						
+						%{-- <f:field input-id="calendarioField" property="calendarioDet" input-class="form-control" label="Calendario" input-disabled="${!vacacionesInstance.diasPagados}"/> --}%
+						
+						<div class="form-group"><label for="calendarioField" class="col-sm-2">Calendario</label>
+							<div class="col-sm-10">
+								<g:select id="calendarioField" 
+									class="form-control"  
+									name="calendarioDet.id" 
+									value="${vacacionesInstance.calendarioDet}"
+									from="${periodos}" 
+									optionKey="id" 
+									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
+								/>
+							</div>
+						</div>
+						
+
 					</f:with>
 					<div class="col-sm-offset-3 col-sm-9">
 						<g:if test="${!vacacionesInstance.autorizacion }">
@@ -126,8 +143,13 @@
 				$('#diasPagadosField')
 				.prop('disabled', true)
 				.val(0);
+				$('#calendarioField')
+				.prop('disabled', true)
+				.val(null);
 			}else{
 				$('#diasPagadosField')
+				.prop('disabled', false);
+				$('#calendarioField')
 				.prop('disabled', false);
 			}
 			console.log('Vacaciones pagadas: '+$(this).is(':checked'));

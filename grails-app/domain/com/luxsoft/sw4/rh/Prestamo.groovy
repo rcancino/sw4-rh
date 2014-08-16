@@ -17,6 +17,8 @@ class Prestamo {
 	BigDecimal saldo=0
 	BigDecimal totalAbonos
 	
+	BigDecimal importeFijo=0.0
+	
 	List abonos
 
 
