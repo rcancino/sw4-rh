@@ -20,7 +20,7 @@ class VacacionesService {
 			if(found){
 				if(found.pg && !found.acreditada){
 					//asistencia.vacacionesp++
-					asistencia.vacacionesp=found.dias.size()
+					asistencia.vacacionesp=found.diasPagados
 					found.acreditada=true
 				}else if(!found.pg){
 					it.comentario='VACACIONES'

@@ -51,7 +51,7 @@ class AsistenciaController {
 				tipo='QUINCENA'
 			}
 		}
-		redirect action:'index',parans:[tipo:tipo]
+		redirect action:'index',params:[tipo:tipo]
 	}
 	
 	def show(Asistencia asistencia){
@@ -96,7 +96,8 @@ class AsistenciaController {
 			//asistenciaService.depurar(calendarioDet)
 
 		}
-		redirect action:'index',model:[tipo:calendarioDet.calendario.tipo]
+		def tipo=asistencia.calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		redirect action:'index',params:[tipo:tipo]
 		
 	}
 	

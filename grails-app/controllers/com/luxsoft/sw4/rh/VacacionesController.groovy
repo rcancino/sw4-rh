@@ -14,10 +14,9 @@ class VacacionesController {
 	def index(Integer max) {
 		
 		params.max = Math.min(max ?: 15, 100)
-		params.sort=params.sort?:'dateCreated'
-		params.order='desc'
+		
 		def tipo=params.tipo?:'QUINCENAL'
-		def list=Vacaciones.findAll("from Vacaciones i where i.empleado.salario.periodicidad=?",[tipo])
+		def list=Vacaciones.findAll("from Vacaciones i where i.empleado.salario.periodicidad=? order by i.lastUpdated desc",[tipo])
 		[vacacionesList:list,vacacinesTotalCount:Vacaciones.count(),tipo:tipo]
 	}
 	

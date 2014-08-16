@@ -1,5 +1,5 @@
 <%@page expressionCodec="none"%>
-<g:form action="cambiarNominaDeEmpleado" class="form-horizontal numeric-form" >
+<g:form action="edit" class="form-horizontal numeric-form" >
 <div class="modal fade" id="cambiarNominaDialog" tabindex="-1" >
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -10,12 +10,13 @@
 			</div>
 	
 			<div class="modal-body">
-				<g:hiddenField id="empleadoId" name="empleado.id"/>
-				<g:hiddenField name="nomina.id" value="${nominaPorEmpleadoInstance.nomina.id}"/>
+				<g:hiddenField id="target" name="id"/>
 				<div class="form-group ui-front">
 					<label class="col-sm-2 control-label"> Empleado</label>
 					<div class="col-sm-10">
-						<g:field id="empleadoField" type="text" name="clave" class="form-control"/>
+						
+						<input id="empleadoField" type="text" name="empleado" class="form-control" 
+							autocomplete="off" autofocus/>
 					</div>
 					
 				</div>
@@ -35,11 +36,11 @@
 <r:script>
 	$(function(){
 		$("#empleadoField").autocomplete({
-			source:'<g:createLink controller="empleadoRest" action="getEmpleados"/>',
+			source:'<g:createLink action="getEmpleadosDeNomina" id="${nominaPorEmpleadoInstance.nomina.id }"/>',
 			minLength:3,
 			select:function(e,ui){
 				console.log('Valor seleccionado: '+ui.item.id);
-				$("#empleadoId").val(ui.item.id);
+				$("#target").val(ui.item.id);
 			}
 		});
 	});

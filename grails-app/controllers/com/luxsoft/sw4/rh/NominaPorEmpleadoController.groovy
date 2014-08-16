@@ -2,6 +2,7 @@ package com.luxsoft.sw4.rh
 
 import grails.transaction.Transactional;
 import grails.plugin.springsecurity.annotation.Secured
+import grails.converters.JSON
 
 //@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 @Secured(['ROLE_ADMIN'])
@@ -141,6 +142,33 @@ class NominaPorEmpleadoController {
 		def nomina=nominaPorEmpleadoService.eliminar(id)
 		flash.message="Nomina por empleado eliminada: {$id}"
 		redirect controller:'nomina',action:'show',params:[id:nomina.id]
+	}
+	
+	
+	
+	def getEmpleadosDeNomina(Long id) {
+		def term=params.term.trim()+'%'
+		term=term.toLowerCase()
+		
+		
+		def list=NominaPorEmpleado
+			.executeQuery("from NominaPorEmpleado ne where ne.nomina.id=? and (lower(ne.empleado.apellidoPaterno) like ? or lower(ne.empleado.apellidoMaterno) like ? or lower(ne.empleado.nombres) like ?)"
+				,[id,term,term,term])
+		
+		//println query.count()
+		
+		list=list.collect{ ne->
+			def emp=ne.empleado
+			def nombre="$emp.apellidoPaterno $emp.apellidoMaterno $emp.nombres"
+			[id:ne.id
+				,label:nombre
+				,value:nombre
+				,numeroDeTrabajador:emp.perfil.numeroDeTrabajador.trim()
+			]
+		}
+		def res=list as JSON
+		
+		render res
 	}
     
 }

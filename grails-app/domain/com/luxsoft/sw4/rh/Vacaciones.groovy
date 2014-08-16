@@ -28,6 +28,8 @@ class Vacaciones {
 	boolean acreditada=false
 	
 	Set dias=new HashSet()
+	
+	int diasPagados=0
 
 	Date dateCreated
 	Date lastUpdated

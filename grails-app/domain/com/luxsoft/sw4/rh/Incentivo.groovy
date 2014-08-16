@@ -41,7 +41,7 @@ class Incentivo {
 	
 	String status='PENDIENTE'
 	
-	String comentario
+	String comentario	
 	
 	Date dateCreated
 	Date lastUpdated

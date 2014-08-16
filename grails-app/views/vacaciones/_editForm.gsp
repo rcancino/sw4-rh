@@ -11,7 +11,9 @@
 						<f:field property="empleado" input-class="form-control" />
 <%--						<f:field property="solicitud" input-class="form-control" />--%>
 						<f:field property="comentario" input-class="form-control" />
-						<f:field property="pg" input-class="form-control" label="Pagadas"/>
+						<f:field input-id="pagadoField" property="pg" input-class="form-control" label="Pagadas"/>
+						<f:field input-id="diasPagadosField" property="diasPagados" input-class="form-control" label="Pagadas"
+						 input-disabled="${!vacacionesInstance.diasPagados}"/>
 					</f:with>
 					<div class="col-sm-offset-3 col-sm-9">
 						<g:if test="${!vacacionesInstance.autorizacion }">
@@ -117,3 +119,18 @@
 	</g:if>
 	
 </div>
+<r:script>
+	$(function(){
+		$("#pagadoField").on('change',function(e){
+			if ($(this).is(':checked') == false){
+				$('#diasPagadosField')
+				.prop('disabled', true)
+				.val(0);
+			}else{
+				$('#diasPagadosField')
+				.prop('disabled', false);
+			}
+			console.log('Vacaciones pagadas: '+$(this).is(':checked'));
+		});
+	});
+</r:script>

@@ -26,7 +26,7 @@ class Prestamo {
 
     static constraints = {
     	comentario nullable:true
-    	tipo inList:['DESCUENTO_POR_NOMINA']
+    	tipo inList:['DESCUENTO_POR_NOMINA','IMPORTE_FIJO']
     }
 
     static hasMany = [abonos: PrestamoAbono]
