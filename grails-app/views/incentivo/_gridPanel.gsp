@@ -1,5 +1,5 @@
 
-<table id="incentivoGrid" class="table table-striped table-bordered table-condensed incentivoGrid">
+<table  class="table table-striped table-bordered table-condensed incentivoGrid">
 	<thead>
 		<tr>
 			<g:sortableColumn property="id" title="Folio"/>
@@ -15,7 +15,7 @@
 	<tbody>
 		<g:each in="${partidasList}" var="row">
 			<tr>
-				<td>
+				<td id="${row.id}">
 					<g:link action="edit" id="${row.id}">
 						<g:formatNumber number="${row.id}" format="####"/>
 					</g:link>

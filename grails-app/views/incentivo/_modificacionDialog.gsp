@@ -7,7 +7,7 @@
 					aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="myModalLabel">Modificación en grupo</h4>
 			</div>
-			<form id="actualizarForm" class="form-horizontal">
+			<form id="actualizarForm" class="form-horizontal" action="${createLink(action:'actualizarAjax')}">
 				<div class="modal-body">
 					<g:hiddenField name="tipo" value="${tipo}"/>
 					<g:if test="${tipo=='SEMANA'}">

@@ -158,7 +158,7 @@
 
 				$('tbody').on( 'click', 'tr', function () {
 				        $(this).toggleClass('success');
-				        console.log('Selected...');
+				       
 			    } );
 			 
 			    // $('#button').click( function () {
@@ -166,6 +166,57 @@
 			    // } );
 				$('.porcentaje').autoNumeric({vMin:'0.00',vMax:'99.00',mDec:'2'});
 				//$('.porcentaje').autoNumeric();
+
+				var selectedRows=function(){
+					var table=$("div.tab-pane.active table").DataTable();
+					var nodes=table.cells('.success', 0).nodes();
+					var res=[];
+					for(var i=0,tot=nodes.length;i<tot;i++){
+						
+						if(nodes[i].id!==undefined){
+										
+							//console.log('Selected node: '+nodes[i].id+ ' Row:' +i);
+							res[i]=nodes[i].id;
+						}
+						
+					}
+					console.log('Selected rows: '+res.length);
+					return res;
+				};
+
+				$("#modificacionForm").on('show.bs.modal',function(e){
+					var res=selectedRows();
+					var ids = JSON.stringify(res);
+					
+					if(res.length>0){
+						return true;
+					}else{
+						return false;
+					}
+					
+				});
+
+				$("#actualizarForm").submit(function(e){
+
+					var postData = $(this).serializeArray();
+					var data={parametros:postData,ids:'HOLA MUNDO'};
+    				var formURL = $(this).attr("action");
+    				console.log('Submiting form with: '+postData);
+    				$.ajax({
+    					url:formURL,
+    					type:'POST',
+    					data:data,
+    					success:function(data, textStatus, jqXHR){
+
+    					},
+    					error:function(jqXHR, textStatus, errorThrown){
+
+    					}
+    				});
+    				e.preventDefault();
+    				//e.unbind();
+
+				});
 
 			});
 			
