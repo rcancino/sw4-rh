@@ -6,6 +6,7 @@ import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import com.luxsoft.sw4.Periodo
 import grails.gorm.DetachedCriteria
 import grails.plugin.springsecurity.annotation.Secured
+import grails.converters.JSON
 
 @Secured(['ROLE_ADMIN'])
 class AsistenciaController {
@@ -162,6 +163,31 @@ class AsistenciaController {
 			parameters:params
 			)
 		//jasperService
+	}
+
+	def getEmpleadosDeAsistencia(Long id) {
+		def term=params.term.trim()+'%'
+		term=term.toLowerCase()
+		
+		
+		def list=Asistencia
+			.executeQuery("from Asistencia a where a.calendarioDet.id=? and (lower(a.empleado.apellidoPaterno) like ? or lower(a.empleado.apellidoMaterno) like ? or lower(a.empleado.nombres) like ?)"
+				,[id,term,term,term])
+		
+		//println query.count()
+		
+		list=list.collect{ ne->
+			def emp=ne.empleado
+			def nombre="$emp.apellidoPaterno $emp.apellidoMaterno $emp.nombres"
+			[id:ne.id
+				,label:nombre
+				,value:nombre
+				,numeroDeTrabajador:emp.perfil.numeroDeTrabajador.trim()
+			]
+		}
+		def res=list as JSON
+		
+		render res
 	}
 	
 }

@@ -28,4 +28,11 @@ class ControlDeVacacionesController {
 		vacacionesService.generarControl(id)
 		redirect action:'index'
 	}
+
+	def actualizar(ControlDeVacaciones control){
+		log.info 'Actaulizando control de vacaciones'
+		control=vacacionesService.actualizarControl(control)
+		flash.message="Actualización exitosa "
+		redirect action:'show',params:[id:control.id]
+	}
 }

@@ -1,4 +1,5 @@
-<table class="table table-striped table-bordered table-condensed">
+
+<table id="incentivoGrid" class="table table-striped table-bordered table-condensed incentivoGrid">
 	<thead>
 		<tr>
 			<g:sortableColumn property="id" title="Folio"/>
@@ -32,3 +33,4 @@
 		</g:each>
 	</tbody>
 </table>
+

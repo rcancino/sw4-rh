@@ -6,26 +6,59 @@
 			<div class="panel-heading"><h3 class="panel-title">Solicitud ${vacacionesInstance.id} (${tipo })</h3></div>
 			<div class="panel-body">
 				<g:form action="update" role="form" class="form-horizontal" >
+					
+					<div class="form-group">
+						<label class="control-label col-sm-2">Control</label>
+						<div class="col-sm-2">
+							<input type="text" class="form-control"
+								value="${vacacionesInstance?.control?.id}" disabled/>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label col-sm-2">Disponibles</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control"
+								value="${vacacionesInstance?.control?.diasDisponibles}" disabled/>
+						</div>
+					</div>
+					
+					
+					<div class="form-group">
+						<label class="control-label col-sm-2">Vigencia</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control"
+								value="${formatDate(date:vacacionesInstance?.control?.getVigencia(),format:'dd/MM/yyyy')}" 
+								disabled />
+						</div>
+					</div>
+					
 					<f:with bean="vacacionesInstance">
 						<g:hiddenField name="id" value="${vacacionesInstance.id}"/>
+						
 						<f:field property="empleado" input-class="form-control" />
 <%--						<f:field property="solicitud" input-class="form-control" />--%>
 						<f:field property="comentario" input-class="form-control" />
-						<f:field input-id="pagadoField" property="pg" input-class="form-control" label="Pagadas"/>
-						<f:field input-id="diasPagadosField" property="diasPagados" input-class="form-control" label="Pagadas"
-						 input-disabled="${!vacacionesInstance.diasPagados}"/>
+						<f:field input-id="pagadoField" property="pg" input-class="form-control"
+							input-autocomplete="off" 
+							label="Pagadas"/>
+						<f:field input-id="diasPagadosField" 
+							property="diasPagados" 
+							input-class="form-control" label="Pagadas"
+						 	input-disabled="${!vacacionesInstance.diasPagados}"/>
 						
-						%{-- <f:field input-id="calendarioField" property="calendarioDet" input-class="form-control" label="Calendario" input-disabled="${!vacacionesInstance.diasPagados}"/> --}%
-						
-						<div class="form-group"><label for="calendarioField" class="col-sm-2">Calendario</label>
+						<div class="form-group"><label for="calendarioField" class="col-sm-2 control-label">Calendario</label>
 							<div class="col-sm-10">
 								<g:select id="calendarioField" 
 									class="form-control"  
 									name="calendarioDet.id" 
-									value="${vacacionesInstance.calendarioDet}"
+									value="${vacacionesInstance?.calendarioDet?.id}"
 									from="${periodos}" 
 									optionKey="id" 
 									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
+									disabled="${vacacionesInstance.diasPagados<=0}?'':'disabled'"
+									noSelection="['':'Seleccione un calendario']"
+									autocomplete="off"
 								/>
 							</div>
 						</div>
@@ -35,6 +68,10 @@
 					<div class="col-sm-offset-3 col-sm-9">
 						<g:if test="${!vacacionesInstance.autorizacion }">
 						
+							<g:link action="index" class="btn btn-default">
+		      					Cancelar
+		      				</g:link>
+		      				
 		      				<button type="submit" class="btn btn-default">
 		      					<span class="glyphicon glyphicon-floppy-save"></span> Actualizar
 		      				</button>
@@ -116,7 +153,8 @@
 				</ul>
 			<div class="panel-footer">
 				<g:if test="${!vacacionesInstance.autorizacion }">
-					<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fechaForm">
+					<button id="addFecha" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#fechaForm"
+					${vacacionesInstance.pg?'disabled':''}>
   					Agregar fecha
 				</button>
 				</g:if>
@@ -140,19 +178,20 @@
 	$(function(){
 		$("#pagadoField").on('change',function(e){
 			if ($(this).is(':checked') == false){
-				$('#diasPagadosField')
-				.prop('disabled', true)
-				.val(0);
-				$('#calendarioField')
-				.prop('disabled', true)
-				.val(null);
+				$('#diasPagadosField').prop('disabled', true);
+				$('#calendarioField').prop('disabled', true);
+				$('#addFecha').prop('disabled', false);
 			}else{
-				$('#diasPagadosField')
-				.prop('disabled', false);
-				$('#calendarioField')
-				.prop('disabled', false);
+				$('#diasPagadosField').prop('disabled', false);
+				$('#calendarioField').prop('disabled', false);
+				$('#addFecha').prop('disabled', true);
 			}
 			console.log('Vacaciones pagadas: '+$(this).is(':checked'));
 		});
+		var dp=$("#diasPagadosField").val();
+		if(dp!=='undefined' && dp>0){
+			$('#calendarioField').prop('disabled', false);
+		}
+		
 	});
 </r:script>

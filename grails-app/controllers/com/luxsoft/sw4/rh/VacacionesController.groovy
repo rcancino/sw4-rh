@@ -10,6 +10,8 @@ import grails.transaction.Transactional
 @Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
 class VacacionesController {
+
+	def vacacionesService
 	
 	def index(Integer max) {
 		
@@ -33,10 +35,12 @@ class VacacionesController {
 		if(vacacionesInstance.hasErrors()) {
 			render view:'create',model:[vacacionesInstance:vacacionesInstance]
 		}
+		def ejercicio=session.ejercicio
+		def control=ControlDeVacaciones.findByEmpleadoAndEjercicio(vacacionesInstance.empleado,ejercicio)
+		vacacionesInstance.control=control
 		vacacionesInstance.save flush:true
 		flash.message="Solicitud generada: "+vacacionesInstance.id
-		//redirect action:'index'
-		respond vacacionesInstance,[view:'edit',tipo:vacacionesInstance.empleado.salario.periodicidad]
+		redirect action:'edit',params:[id:vacacionesInstance.id]
 	}
 	
 	def edit(Vacaciones vacacionesInstance) {
@@ -45,9 +49,7 @@ class VacacionesController {
 			return
 		}
 		def ejercicio=session.ejercicio
-		
 		def tipo=vacacionesInstance.empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
-		println 'Tipo: '+tipo
 		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
 		[vacacionesInstance:vacacionesInstance,tipo:vacacionesInstance.empleado.salario.periodicidad,periodos:periodos]
 	}
@@ -61,7 +63,11 @@ class VacacionesController {
 		if(vacacionesInstance.hasErrors()) {
 			render view:'edit',model:[vacacionesInstance:vacacionesInstance]
 		}
+		if(vacacionesInstance.pg){
+			vacacionesInstance.dias.clear
+		}
 		vacacionesInstance.save flush:true
+		event('VacacionesTopic',vacacionesInstance.id)
 		flash.message="Solicitud de vacaciones actualizada: "+vacacionesInstance.id
 		redirect action:'index',params:[tipo:vacacionesInstance.empleado.salario.periodicidad]
 	}
@@ -74,10 +80,13 @@ class VacacionesController {
 			return
 		}
 		def dia=params.date('fecha', 'dd/MM/yyyy')
+
 		if(dia) {
 			vacacionesInstance.addToDias(dia)
 			vacacionesInstance.save flush:true
-			event('VacacionesTopic',vacacionesInstance.empleado.id)
+			//event('VacacionesTopic',vacacionesInstance.id)
+			if(vacacionesInstance.control)
+				vacacionesService.actualizarControl(vacacionesInstance.control)
 			flash.message="Fecha agregada"
 		}
 		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
@@ -89,7 +98,9 @@ class VacacionesController {
 		if(dia) {
 			vacacionesInstance.removeFromDias(dia)
 			vacacionesInstance.save flush:true
-			event('VacacionesTopic',vacacionesInstance.empleado.id)
+			//event('VacacionesTopic',vacacionesInstance.id)
+			if(vacacionesInstance.control)
+				vacacionesService.actualizarControl(vacacionesInstance.control)
 			flash.message="Fecha eliminada"
 		}
 		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
@@ -133,7 +144,11 @@ class VacacionesController {
 			notFound()
 			return
 		}
+		def control=vacacionesInstance.control
 		vacacionesInstance.delete flush:true
+		if(control){
+			vacacionesService.actualizarControl(control)
+		}
 		flash.message="Solicitud $vacacionesInstance.id eliminada"
 		redirect action:'index',params:[tipo:vacacionesInstance.empleado.salario.periodicidad]
 	}

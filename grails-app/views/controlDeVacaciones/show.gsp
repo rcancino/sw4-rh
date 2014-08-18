@@ -8,6 +8,11 @@
 		<div class="row">
 			<div class="well col-md-12">
 				<h3>Control de vacaciones: ${controlDeVacacionesInstance?.empleado}</h3>
+				<g:if test="${flash.message}">
+                     <div class="col-md-offset-4">
+                         <span class="label label-warning">${flash.message}</span>
+                     </div>
+                </g:if> 
 			</div>
 		</div>
 		
@@ -64,6 +69,11 @@
 					</fieldset>
 					
 					</fieldset>
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-4">
+							<g:link class="btn btn-default" action="index"> Regresar</g:link>
+						</div>
+					</div>
 				</form>
 			</div>
 			
@@ -113,13 +123,21 @@
 						</div>
 					</div>
 					
+					
+					
+					
 				</fieldset>
+					<div class="form-group">
+						<div class="col-sm-4 col-sm-offset-4">
+							<g:link class="btn btn-warning" action="actualizar" id="${controlDeVacacionesInstance.id }">Actualizar</g:link>
+						</div>
+					</div>
 				</form>
 			</div>
 			
 		</div>
 		
-	</div>
+	</div><%-- End .container --%>
 	
 	
 	

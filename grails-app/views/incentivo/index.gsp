@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="layout" content="operaciones2"/>
 	<title>Incentivos</title>
+	<r:require modules="datatables,forms"/> 
 </head>
 <body>
 	<content tag="header">
@@ -31,61 +32,78 @@
 		
 		<div class="row button-panel">
 			
-			<div class="btn-group col-md-5">
-
-				<g:link action="index" 
-					class="btn  ${tipo=='SEMANA'?'btn-primary':'btn-default'}" 
-					params="[tipo:'SEMANA']">
-					 Semana
-				</g:link>
-				
-				<g:link action="index" 
-					class="btn  ${tipo=='QUINCENA'?'btn-primary':'btn-default'}" 
-					params="[tipo:'QUINCENA']">
-					Quincena
-				</g:link>
-				
-				<g:link action="create" class="btn btn-default">
-					<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
-				</g:link>
-				<g:if test="${calendarioDet}">
-					<g:link action="actualizarIncentivos" class="btn btn-warning" 
-						onclick="return confirm('Actualizar incentivos '+'${tipo} ${calendarioDet?.folio}' +' - ${calendarioDet2?.folio}'  );" 
-						id="${calendarioDet.id}"
-						params="[tipo:tipo]">
-						<span class="glyphicon glyphicon-cog"></span> Actualizar
-					</g:link>
-				</g:if>
-			</div>
-
 			<div class="col-md-4 form-group">
 				<input id="searchField" class="form-control" type="text" placeholder="Empleado" autofocus="autofocus">
 			</div>
 
-			<div class="btn-group">
-				<button type="button" name="reportes"
-					class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-					role="menu">
-					Reportes <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu">
-					<li>
-						
-						<g:jasperReport jasper="AsistenciaRH"
-								format="PDF" name="Asistencia RH">
-							<g:hiddenField name="SFECHA_INI" 
-									value="${g.formatDate(date:calendarioDet?.asistencia?.fechaInicial,format:'dd/MM/yyyy')}" />
-							<g:hiddenField name="SFECHA_FIN" 
-									value="${g.formatDate(date:calendarioDet?.asistencia?.fechaFinal,format:'dd/MM/yyyy')}" />
-						</g:jasperReport>
-						
-						
-					</li>
-				</ul>
-			</div>
+			<div class="col-md-8">
+				<div class="btn-group ">
 
+					<g:link action="index" 
+						class="btn  ${tipo=='SEMANA'?'btn-primary':'btn-default'}" 
+						params="[tipo:'SEMANA']">
+						 Semana
+					</g:link>
+					
+					<g:link action="index" 
+						class="btn  ${tipo=='QUINCENA'?'btn-primary':'btn-default'}" 
+						params="[tipo:'QUINCENA']">
+						Quincena
+					</g:link>
+					
+					<g:link action="create" class="btn btn-default">
+						<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
+					</g:link>
+
+					
+				</div> <%-- end .btn-group acciones --%>
+				<div class="btn-group">
+					<button type="button" name="reportes"
+						class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+						role="menu">
+						Operaciones <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<g:if test="${calendarioDet}">
+								<g:link action="actualizarIncentivos" 
+									class="" 
+									onclick="return confirm('Actualizar incentivos '+'${tipo} ${calendarioDet?.folio}' +' - ${calendarioDet2?.folio}'  );" 
+									id="${calendarioDet.id}"
+									params="[tipo:tipo]">
+									<span class="glyphicon glyphicon-cog"></span> Actualizar
+								</g:link>
+							</g:if>
+						</li>
+						<li>
+							<a href="#modificacionForm" class="" data-toggle="modal" > Modificar selección</a>
+						</li>
+					</ul>
+				</div><%-- end .btn-group operaciones --%>
+
+				<div class="btn-group">
+					<button type="button" name="reportes"
+						class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+						role="menu">
+						Reportes <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							
+							<g:jasperReport jasper="AsistenciaRH"
+									format="PDF" name="Asistencia RH">
+								<g:hiddenField name="SFECHA_INI" 
+										value="${g.formatDate(date:calendarioDet?.asistencia?.fechaInicial,format:'dd/MM/yyyy')}" />
+								<g:hiddenField name="SFECHA_FIN" 
+										value="${g.formatDate(date:calendarioDet?.asistencia?.fechaFinal,format:'dd/MM/yyyy')}" />
+							</g:jasperReport>
+						</li>
+					</ul>
+				</div><%-- end .btn-group reportes --%>
+			</div><%-- end .col-md button panel --%>
+			
 		</div>	
-  		
+  		<g:render template="modificacionDialog"/>
   		
 	</content><!-- end .gridTask -->
 	
@@ -128,6 +146,31 @@
 	  		</div>
 		</div>
 		<g:render template="calendarioPeriodoDialog"/>
+
+		<r:script>
+			$(function(){
+				var table=$(".incentivoGrid").dataTable({
+			        "paging":   false,
+			        "ordering": false,
+			        "info":     false,
+			        "search":   false
+    				});
+
+				$('tbody').on( 'click', 'tr', function () {
+				        $(this).toggleClass('success');
+				        console.log('Selected...');
+			    } );
+			 
+			    // $('#button').click( function () {
+			    //     alert( table.rows('.selected').data().length +' row(s) selected' );
+			    // } );
+				$('.porcentaje').autoNumeric({vMin:'0.00',vMax:'99.00',mDec:'2'});
+				//$('.porcentaje').autoNumeric();
+
+			});
+			
+
+		</r:script>
 	</content>
 
 </body>

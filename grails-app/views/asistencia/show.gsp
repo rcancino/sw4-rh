@@ -6,6 +6,7 @@
 	<%-- <meta name="layout" content="dashboard_1"/>--%>
 	<title>Asistencia</title>
 	<r:require module="forms"/>
+	<r:require module="jquery-ui"/>
 </head>
 <body>
 
@@ -50,6 +51,10 @@
 						<g:link class="btn btn-default" action="nomina" id="${asistenciaInstance.id}"> 
 							<span class="glyphicon glyphicon-usd"></span> Nómina 
 						</g:link>
+						
+						<a class="btn btn-default" data-toggle="modal" data-target="#cambiarEmpleadoDialog"> 
+							<span class="glyphicon glyphicon-search"></span> Buscar
+						</a>
 						
 					</div>
 
@@ -141,6 +146,8 @@
 			</div>
 		</div>
 		<!-- End row 3 -->
+
+		<g:render template="cambiarEmpleadoDialog"/>
 		
 	</div> <!-- End container -->
 	

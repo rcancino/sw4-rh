@@ -53,6 +53,6 @@ class Incentivo {
     }
 	
 	String toString() {
-		"${empleado} ${tipo} ${calendarioIni.folio} al ${calendarioFin.folio}"
+		"${empleado} ${tipo} ${calendarioIni?.folio} al ${calendarioFin?.folio}"
 	}
 }

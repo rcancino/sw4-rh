@@ -12,6 +12,8 @@ class VacacionesService {
 	
 	def dataSource
 
+	
+
     @NotTransactional
 	def procesar(Asistencia asistencia){
 		asistencia.vacaciones=0
@@ -62,20 +64,27 @@ class VacacionesService {
 	
 	@grails.events.Listener(topic='VacacionesTopic')
 	def actualizarControl(Long id) {
-		def empleado=Empleado.get(id)
-		if(empleado){
-			log.info 'Actualizando control de asistencia para: '+empleado
-			def found=Vacaciones.executeQuery("select size(d) from Vacaciones v join v.dias d where v.empleado=?",[empleado])
-			log.info "Dias registrados: "+ found
-			def control=ControlDeVacaciones.findByEmpleadoAndEjercicio(empleado,2014)
-			print 'Control detectado:'+control
-			if(control){
-				control.diasTomados=found[0]
-				log.info "Dias registrados OK: "+ control.diasTomados
-			}
-			
+		def vacaciones=Vacaciones.get(id)
+		if(vacaciones.control){
+			actualizarControl(vacaciones.control)
 		}
+
+		log.info 'Actualizando control de vacaciones....'
 	}
+
+	def actualizarControl(ControlDeVacaciones control){
+		def vacaciones=Vacaciones.findAllByControl(control)
+		def pagados=vacaciones.sum 0,{it.diasPagados}
+		def normales=vacaciones.sum 0,{it.dias.size()}
+		control.diasTomados=normales+pagados
+		control.save failOnError:true
+	}
+
+
+
+
+
+
 	
 	@Listener(namespace='gorm')
 	def afterInsert(Empleado e){
