@@ -19,6 +19,8 @@ class PerfilDeEmpleado implements Serializable{
 	String jornada
 
 	Turno turno
+
+	String tipoDeIncentivo
 	
 	
 	SatRegimenContratacion regimenContratacion
@@ -38,5 +40,6 @@ class PerfilDeEmpleado implements Serializable{
 		tipoDeContrato inList:['BASE','EVENTUAL','CONFIANZA','SINDICALIZADO','A PRUEBA']
 		jornada inList:['MEDIA','COMPLETA','DIURNA','NOCTURAN','MIXTA','POR HORA','REDUCIDA','CONTINUADA','POR TURNOS']
     	turno nullable:true
+    	tipoDeIncentivo nullable:true,inList:['SEMANAL','QUINCENAL','MENSUAL']
     }
 }
