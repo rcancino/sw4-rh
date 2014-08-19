@@ -66,12 +66,23 @@
 					<ul class="dropdown-menu">
 						<li>
 							<g:if test="${calendarioDet}">
+								<g:link action="generar" 
+									class="" 
+									onclick="return confirm('Actualizar incentivos '+'${tipo} ${calendarioDet?.folio}' +' - ${calendarioDet2?.folio}'  );" 
+									id="${calendarioDet.id}"
+									params="[tipo:tipo]">
+									<span class="glyphicon glyphicon-cog"></span> Generar
+								</g:link>
+							</g:if>
+						</li>
+						<li>
+							<g:if test="${calendarioDet}">
 								<g:link action="actualizarIncentivos" 
 									class="" 
 									onclick="return confirm('Actualizar incentivos '+'${tipo} ${calendarioDet?.folio}' +' - ${calendarioDet2?.folio}'  );" 
 									id="${calendarioDet.id}"
 									params="[tipo:tipo]">
-									<span class="glyphicon glyphicon-cog"></span> Actualizar
+									Actualizar
 								</g:link>
 							</g:if>
 						</li>

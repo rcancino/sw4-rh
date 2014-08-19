@@ -69,7 +69,7 @@ class IncentivoController {
 	}
 	
 	@Transactional
-	def actualizarIncentivos(){
+	def generar(){
 		def calendarioDet
     	def calendarioDet2
 		def tipo=params.tipo
@@ -86,6 +86,27 @@ class IncentivoController {
 		calendarioDet2.attach()
 		
 		incentivoService.generarIncentivos(calendarioDet,calendarioDet2)
+		redirect action:'index',params:[tipo:tipo]
+	}
+	
+	@Transactional
+	def actualizarIncentivos(){
+		def calendarioDet
+		def calendarioDet2
+		def tipo=params.tipo
+		assert tipo,'Se debe definir el tipo de actualiacion SEMANAl o QUINCENL'
+		if(tipo=='SEMANA'){
+			calendarioDet=session.calendarioSemana
+			calendarioDet2=session.calendarioSemana2
+
+		}else {
+			calendarioDet=session.calendarioQuincena
+			calendarioDet2=calendarioDet
+		}
+		calendarioDet.attach()
+		calendarioDet2.attach()
+		
+		incentivoService.actualizarIncentivos(calendarioDet,calendarioDet2)
 		redirect action:'index',params:[tipo:tipo]
 	}
 

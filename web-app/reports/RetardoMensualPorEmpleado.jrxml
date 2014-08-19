@@ -430,7 +430,7 @@ group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></q
 					<reportElement
 						x="77"
 						y="63"
-						width="42"
+						width="52"
 						height="11"
 						key="textField-60"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -446,7 +446,7 @@ group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></q
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="119"
+						x="129"
 						y="63"
 						width="10"
 						height="11"
@@ -465,7 +465,7 @@ group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></q
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="129"
+						x="139"
 						y="63"
 						width="16"
 						height="11"
@@ -503,7 +503,7 @@ group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></q
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="145"
+						x="155"
 						y="63"
 						width="16"
 						height="11"
@@ -522,7 +522,7 @@ group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></q
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="160"
+						x="170"
 						y="63"
 						width="16"
 						height="11"
@@ -847,7 +847,7 @@ group by E.id,E.clave having sum(d.retardo_menor-d.retardo_menor_comida)>0]]></q
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($F{retardo_menor}.doubleValue()+$F{ret_men_com}.doubleValue()*2)]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(($F{retardo_menor}.doubleValue()+$F{ret_men_com}.doubleValue())*2)]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

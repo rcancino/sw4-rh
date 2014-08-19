@@ -106,6 +106,8 @@ class AsistenciaController {
 		
 		def asistencia=Asistencia.get(id)
 		def d=params.double('diasTrabajados')
+		println 'Dias trabajados: '+d
+		println params
 		bindData(asistencia, params, [include: ['minutosPorDescontar']])
 		if(d>0.0){
 			log.info "Actualizando dias trabajados "+d
@@ -115,6 +117,7 @@ class AsistenciaController {
 		}
 		
 		if(asistencia){
+			asistencia.diasTrabajados=0.0
 			asistencia=asistenciaService.actualizarAsistencia(asistencia)
 			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 		}
