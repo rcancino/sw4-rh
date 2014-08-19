@@ -94,6 +94,13 @@ class ProcesadorDePrestamosPersonales {
 			
 			*/
 			
+		}else{
+			def neDet=ne.conceptos.find(){
+				it.concepto==concepto
+			}
+			if(neDet){
+				ne.removeFromConceptos(neDet)
+			}
 		}
 		
 		
