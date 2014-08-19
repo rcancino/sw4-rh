@@ -101,11 +101,24 @@ class IncentivoService {
 	
 	def Incentivo aplicarBonoSemanal(Incentivo bono){
 		log.debug 'Calculando bono quincenal '+bono
-		def asistencia=Asistencia.findByCalendarioDet(bono.calendarioFin)
+		
+		def asistencia=Asistencia.findByCalendarioDetAndEmpleado(bono.calendarioIni,bono.empleado)
 		if(asistencia==null){
-			bono.comentario='No hay registros de asistencia'
-			return bono
-		}
+			bono.tasaBono1=0.0
+			bono.tasaBono2=0.0
+    		bono.comentario='No hay registros de asistencia'
+    		return bono
+    	}
+
+    	//Aplicando reglas
+    	bono.otorgado=true
+    	bono.faltas=asistencia.faltas
+		bono.minutosNoLaborados=asistencia.minutosNoLaborados
+    	bono.retardoMayor=asistencia.retardoMayor
+    	bono.retardoMenor=asistencia.retardoMenor
+    	bono.retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
+    	bono.retardoTotal=bono.retardoMayor+bono.retardoMenor+bono.retardoComida
+    	bono.tasaBono1=0.0
 		return bono
 		
 		 

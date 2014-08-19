@@ -38,7 +38,7 @@ class IncentivoController {
 
     		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
     	}
-    	def ejercicio=calendarioDet?calendarioDet.calendario.ejercicio:2014
+    	def ejercicio=calendarioDet?calendarioDet.calendario.ejercicio:session.ejercicio
     	def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
     	
     	[calendarioDet:calendarioDet,calendarioDet2:calendarioDet2
@@ -86,7 +86,7 @@ class IncentivoController {
 		calendarioDet2.attach()
 		
 		incentivoService.generarIncentivos(calendarioDet,calendarioDet2)
-		redirect action:'index'
+		redirect action:'index',params:[tipo:tipo]
 	}
 
 	def create() {
