@@ -42,7 +42,7 @@ class ProcesadorSeguroSocial {
 		faltas=faltas+(faltas*factorDescanso)
 		log.debug 'Faltas: '+faltas
 	
-		def diasTrabajados=nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones
+		def diasTrabajados=nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones+nominaPorEmpleado.asistencia.paternidad
 		def diasDelPeriodo=nominaPorEmpleado.diasDelPeriodo-nominaPorEmpleado.incapacidades
 		if(nominaPorEmpleado.asistencia.diasTrabajados>0){
 			diasDelPeriodo=nominaPorEmpleado.asistencia.diasTrabajados

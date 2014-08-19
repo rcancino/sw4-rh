@@ -157,6 +157,11 @@ class NominaService {
 				porBorrar.add(ne)
 				
 			}
+			//Localisando modiificaciones de ubicacion
+			if(empleado.perfil.ubicacion!=ne.ubicacion){
+				log.info 'Re asignando ubicacion...'+ne
+				ne.ubicacion=empleado.perfil.ubicacion
+			}
 
 		}
 		porBorrar.each{ ne->
@@ -173,8 +178,21 @@ class NominaService {
 
 
 		}
+		// Ordendar la nomina
+		ordenar(nomina)
 		nomina.save failOnError:true
 		return nomina
+	}
+
+	def ordenar(Nomina nomina){
+		def list=nomina.partidas.sort{a,b ->
+			a.ubicacion.clave<=>b.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
+		}
+		for(int i=0;i<list.size();i++){
+			def ne=list[i]
+			ne.orden=i+1
+			//ne.save()
+		}
 	}
 }
 
