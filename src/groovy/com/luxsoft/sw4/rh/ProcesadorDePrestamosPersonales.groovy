@@ -48,10 +48,10 @@ class ProcesadorDePrestamosPersonales {
 				if(retMaxima<0)
 					retMaxima=0
 			}
-			
-			if(ne.empleado.id==271){
-				retMaxima=2500.00
+			if(prestamo.importeFijo>0){
+				retMaxima=prestamo.importeFijo
 			}
+			
 			
 			if(retMaxima){
 				def saldo=prestamo.saldo
@@ -67,7 +67,7 @@ class ProcesadorDePrestamosPersonales {
 				}
 				log.info "Deduccion calculada de: ${importeExcento}"
 				neDet.importeGravado=0
-				neDet.importeExcento=importeExcento.setScale(0,RoundingMode.HALF_EVEN)
+				neDet.importeExcento=importeExcento.setScale(2,RoundingMode.HALF_EVEN)
 				ne.actualizar()
 				
 				
