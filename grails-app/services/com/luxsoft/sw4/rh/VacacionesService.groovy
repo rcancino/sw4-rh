@@ -24,7 +24,7 @@ class VacacionesService {
 				it.tipo='VACACIONES'
 				asistencia.vacaciones++
 			}
-			def pagadas=Vacaciones.find("from Vacaciones v where v.empleado=? and ? pg=true and acreditada=false "
+			def pagadas=Vacaciones.find("from Vacaciones v where v.empleado=? and v.pg=true and v.acreditada=false and v.calendarioDet=?"
 				,[asistencia.empleado,asistencia.calendarioDet])
 			if(pagadas){
 				asistencia.vacacionesp=pagadas.diasPagados
