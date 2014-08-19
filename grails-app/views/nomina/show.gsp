@@ -74,6 +74,12 @@
 							 Timbrar
 						</g:link> 
 					</li>
+					<li>
+						<g:link action="depurar" 
+							id="${nominaInstance.id}" 
+							onclick="return confirm('Depurar toda la nomina?');"> Depurar
+						</g:link> 
+					</li>
 				</ul>
 			</div> <!-- Fin .btn-group -->
 			

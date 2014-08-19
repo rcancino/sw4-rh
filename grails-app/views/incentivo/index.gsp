@@ -198,14 +198,18 @@
 
 				$("#actualizarForm").submit(function(e){
 
-					var postData = $(this).serializeArray();
-					var data={parametros:postData,ids:'HOLA MUNDO'};
+					var postData = $(this).serializeArray(); //JSON.stringify();
+					var ids=JSON.stringify(selectedRows());
+
+					var data={folios:ids}
     				var formURL = $(this).attr("action");
-    				console.log('Submiting form with: '+postData);
+    				console.log('Submiting form with: '+data);
+    				
     				$.ajax({
     					url:formURL,
     					type:'POST',
     					data:data,
+    					dataType:"json",
     					success:function(data, textStatus, jqXHR){
 
     					},

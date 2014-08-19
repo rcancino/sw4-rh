@@ -172,5 +172,13 @@ class IncentivoController {
 			'*'{ render status: NOT_FOUND }
 		}
 	}
+	
+	def actualizarAjax(String[] folios){
+		println 'Actualizando inentivos seleccionados.'
+		def val=params.folios
+		println 'Folios: '+val+ ' Tipo: '+val.class.name
+ 		println 'Folios: '+folios
+		//println 'Request: '+request
+	}
 
 }

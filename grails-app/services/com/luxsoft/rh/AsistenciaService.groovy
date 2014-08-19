@@ -66,16 +66,6 @@ class AsistenciaService {
 			try {
 				actualizarAsistencia(empleado,tipo,calendarioDet)
 				
-				
-				/*
-				if(empleado.baja && empleado.status=='BAJA') {
-					if(empleado.baja.fecha>=calendarioDet.asistencia.fechaInicial) {
-						actualizarAsistencia(empleado,tipo,calendarioDet)
-					}
-				}else {
-					actualizarAsistencia(empleado,tipo,calendarioDet)
-				}
-				*/
 			} catch (Exception ex) {
 			   ex.printStackTrace()
 				
@@ -106,6 +96,9 @@ class AsistenciaService {
 		if(!asistencia) {
 			log.debug 'Generando registro nuevo de asistencia para '+empleado+" Periodo: "+cal.asistencia
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
+		}
+		if(asistencia.diasTrabajados>0){
+			return asistencia
 		}
 		
 		//for(date in periodo.fechaInicial..periodo.fechaFinal){
@@ -332,26 +325,19 @@ class AsistenciaService {
 		//Buscar la posible existencia de asistencia
 	}
 	
-	@NotTransactional
-	def depurar(CalendarioDet calendarioDet){
-		log.info 'Depurando asistencias para: '+calendarioDet
-		def asistencias=Asistencia.findAll{calendarioDet==calendarioDet}
-		def delete=[]
-		asistencias.each{ a->
-			def emp=a.empleado
-			if(emp.baja){
-				if(emp.alta<emp.baja.fecha){
-					
-				}
-				if(emp.baja.fecha<a.periodo.fechaInicial){
-					log.debug 'baja:'+emp+ ' Fecha de baja: '+emp.baja.fecha
-					//log.debug 'Fecha baja:'+emp.baja.fecha + " Periodo: "+a.periodo
-					
-				}
-			}
+	// @NotTransactional
+	// def depurar(CalendarioDet calendarioDet){
+	// 	log.info 'Depurando asistencias para: '+calendarioDet
+	// 	def asistencias=Asistencia.findAll{calendarioDet==calendarioDet}
+	// 	def delete=[]
+	// 	asistencias.each{ a->
+	// 		def emp=a.empleado
+	// 		if(emp.baja){
+	// 			log.info 'Posible depuracion: '+a+ 'Baja: '+emp.baja+ ' Alta'
+	// 		}
 			
-		}
-	}
+	// 	}
+	// }
 	
 	/*
 	@Listener(namespace='gorm')

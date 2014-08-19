@@ -145,6 +145,37 @@ class NominaService {
 		}
 	  nomina.status='CERRADA'
 	}
+
+	def depurar(Long id){
+		Nomina nomina=Nomina.get(id)
+		def calendarioDet=nomina.calendarioDet
+		def asistencia=calendarioDet.asistencia
+		def porBorrar=[]
+		nomina.partidas.each{ ne->
+			def empleado=ne.empleado
+			if(empleado.baja && empleado.baja.fecha>=asistencia.fechaInicial){
+				porBorrar.add(ne)
+				
+			}
+
+		}
+		porBorrar.each{ ne->
+			ne.conceptos.each{
+				//Tratando de localizar prestamo
+				def abono=PrestamoAbono.findByNominaPorEmpleadoDet(it)
+				if(abono){
+					log.info 'Eliminando abono a prestamo...'+abono
+					abono.delete()
+				}
+			}
+			nomina.removeFromPartidas(ne)
+			log.info 'Depuranda por baja nomina de : '+ne.empleado +' NominaPorEmpleado: '+ne.id+ ' Ubicacion: '+ne.ubicacion
+
+
+		}
+		nomina.save failOnError:true
+		return nomina
+	}
 }
 
 class NominaException extends RuntimeException{

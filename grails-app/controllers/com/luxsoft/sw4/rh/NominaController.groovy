@@ -39,7 +39,7 @@ class NominaController {
 		def nomina=Nomina.get(params.id)
 		params.periodicidad=nomina.periodicidad
 		params.folio=nomina.folio
-        redirect view:'agregarPartida', params:params
+        redirect action:'agregarPartida', params:params
     }
 	
 	
@@ -47,7 +47,7 @@ class NominaController {
 	def generar(Long calendarioDet){
 		def nominaInstance=nominaService.generar(calendarioDet,'GENERAL','TRANSFERENCIA')
 		//render view:'show',model:[nominaInstance:nominaInstance]
-		redirect view:'show',params:[id:nominaInstance.id]
+		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	
 	def actualizarPartidas(Long id) {
@@ -55,6 +55,11 @@ class NominaController {
 		def nomina=nominaService.actualizarPartidas(Nomina.get(id))
 		//render view:'show',model:[nominaInstance:nomina]
 		redirect view:'show',params:[id:nomina.id]
+	}
+
+	def depurar(Long id){
+		def nomina=nominaService.depurar(id)
+		redirect action:'show',params:[id:nomina.id]	
 	}
 
     def delete(Nomina nominaInstance){

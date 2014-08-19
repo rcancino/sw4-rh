@@ -94,10 +94,9 @@ class AsistenciaController {
 		if(calendarioDet){
 			log.info 'Actualizando lista de asistencias para el periodo: '+calendarioDet.asistencia
 			asistenciaService.actualizarAsistencia(calendarioDet)
-			//asistenciaService.depurar(calendarioDet)
-
+			
 		}
-		def tipo=asistencia.calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		def tipo=calendarioDet.calendario.tipo
 		redirect action:'index',params:[tipo:tipo]
 		
 	}
@@ -120,6 +119,13 @@ class AsistenciaController {
 			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 		}
 	}
+
+	// def depurarAsistencias(Long id){
+	// 	def calendarioDet=CalendarioDet.get(id)
+	// 	asistenciaService.depurar(calendarioDet)
+	// 	def tipo=calendarioDet.calendario.tipo
+	// 	redirect action:'index',params:[tipo:tipo]
+	// }
 	
 	def next(Long id,Long calendarioDetId){
 		def found=Asistencia.findAll(
