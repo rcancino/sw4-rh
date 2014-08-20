@@ -1,8 +1,8 @@
 package com.luxsoft.sw4.rh
 
-import com.luxsoft.sw4.Autorizacion
-import org.grails.databinding.BindingFormat
+import groovy.transform.EqualsAndHashCode
 
+@EqualsAndHashCode(includes='empleado')
 class Incentivo {
 	
 	Empleado empleado
@@ -10,36 +10,22 @@ class Incentivo {
 	Integer ejercicio
 	
 	String tipo
+
+	BigDecimal tasaBono1=0.0
 	
-	Ubicacion ubicacion
-	
-	CalendarioDet calendarioIni
-	
-	CalendarioDet calendarioFin
+	BigDecimal tasaBono2=0.0
 	
 	Boolean otorgado=true
 	
-	Integer faltas=0
-	
-	Integer minutosNoLaborados=0
-	
-	Integer retardoMenor=0
-	
-	Integer retardoMayor=0
-	
-	Integer retardoComida=0
-	
-	Integer retardoTotal=0
-	
-	double tasaBono1=0
-	
-	double tasaBono2=0
+	Asistencia asistencia
 	
 	BigDecimal ingresoBase=0.0
 	
 	BigDecimal incentivo=0.0
 	
 	String status='PENDIENTE'
+
+	NominaPorEmpleadoDet nominaPorEmpleadoDet
 	
 	String comentario	
 	
@@ -47,12 +33,12 @@ class Incentivo {
 	Date lastUpdated
 
     static constraints = {
-		tipo inList:['QUINCENAL','SEMANAL']
+		tipo inList:['SEMANAL','QUINCENAL','MENSUAL']
 		status inList:['PENDIENTE','CERRADO']
 		comentario nullable:true
     }
 	
 	String toString() {
-		"${empleado} ${tipo} ${calendarioIni?.folio} al ${calendarioFin?.folio}"
+		"${empleado} ${tipo} "
 	}
 }
