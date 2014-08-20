@@ -31,13 +31,10 @@
 ,A.DIAS_PERIODO,A.BANCO,A.FORMA_DE_PAGO,A.CONCEPTO,A.CLAVE,A.DESCRIPCION,A.CLAVE_SAT
 ,SUM(A.GRAVADO) AS TOT_GRV
 ,SUM(A.EXENTO) AS TOT_EXT
-,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=A.NOM_ID)) as SUBS_E_APLIC
 ,SUM(CASE WHEN A.UBICACION_ID=7  THEN A.GRAVADO ELSE 0 END) AS OFI_GRV
 ,SUM(CASE WHEN A.UBICACION_ID=7  THEN A.EXENTO ELSE 0 END) AS OFI_EXT
-,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=A.NOM_ID and z.ubicacion_id=7)) as OFI_SUBS_E_APLIC
 ,SUM(CASE WHEN A.UBICACION_ID=6  THEN A.GRAVADO ELSE 0 END) AS VTA_GRV
 ,SUM(CASE WHEN A.UBICACION_ID=6  THEN A.EXENTO ELSE 0 END) AS VTA_EXT
-,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=A.NOM_ID and z.ubicacion_id=6)) as VTA_SUBS_E_APLIC
 FROM  (
 SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO
@@ -75,13 +72,10 @@ GROUP BY A.CONCEPTO,A.CLAVE,A.DESCRIPCION,A.CLAVE_SAT]]></queryString>
 	<field name="CLAVE_SAT" class="java.lang.Integer"/>
 	<field name="TOT_GRV" class="java.math.BigDecimal"/>
 	<field name="TOT_EXT" class="java.math.BigDecimal"/>
-	<field name="SUBS_E_APLIC" class="java.math.BigDecimal"/>
 	<field name="OFI_GRV" class="java.math.BigDecimal"/>
 	<field name="OFI_EXT" class="java.math.BigDecimal"/>
-	<field name="OFI_SUBS_E_APLIC" class="java.math.BigDecimal"/>
 	<field name="VTA_GRV" class="java.math.BigDecimal"/>
 	<field name="VTA_EXT" class="java.math.BigDecimal"/>
-	<field name="VTA_SUBS_E_APLIC" class="java.math.BigDecimal"/>
 
 	<sortField name="CONCEPTO" order="Descending" />
 	<sortField name="CLAVE" />
@@ -472,7 +466,9 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 					<rightPen lineWidth="0.5" lineStyle="Solid"/>
 </box>
 					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["Z:\\Reportes_MySQL\\VENTAS\\PAPEL, S.A. .jpg"]]></imageExpression>
+					<imageExpression class="java.lang.String">
+					
+					</imageExpression>
 				</image>
 				<staticText>
 					<reportElement
@@ -1329,7 +1325,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="32"  isSplitAllowed="true" >
+			<band height="18"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						x="155"
@@ -1389,70 +1385,6 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{TOTAL_PERCEPCIONES}.doubleValue()-$V{TOTAL_DEDUCCIONES}.doubleValue())]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="233"
-						y="18"
-						width="96"
-						height="12"
-						key="textField-173">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{OFI_SUBS_E_APLIC}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="95"
-						y="18"
-						width="138"
-						height="12"
-						key="textField-174">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["TOT. SUBS. EMPLEO APLICADO  :  "]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="329"
-						y="18"
-						width="96"
-						height="12"
-						key="textField-175">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VTA_SUBS_E_APLIC}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="425"
-						y="18"
-						width="96"
-						height="12"
-						key="textField-176">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SUBS_E_APLIC}]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>

@@ -75,7 +75,7 @@ class AsistenciaService {
 		}
 	}
 	
-	//@NotTransactional
+	@NotTransactional
 	def actualizarAsistencia(Empleado empleado,String tipo,CalendarioDet cal) {
 		
 		def periodo=cal.asistencia

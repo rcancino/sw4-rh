@@ -8,7 +8,7 @@ class IncentivoService {
 
 	//@NotTransactional
     def generarIncentivos(CalendarioDet ini,CalendarioDet fin) {
-		log.info 'Generando inventivos para: '+ini+ ' al '+fin 
+
     	def tipo=ini.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
     	def empleados=Empleado.findAll(
 			"from Empleado e where e.salario.periodicidad=? order by e.perfil.ubicacion.clave,e.apellidoPaterno asc",[tipo])
@@ -43,11 +43,6 @@ class IncentivoService {
     		}
     	}
     }
-	
-	def actualizarIncentivos(CalendarioDet ini,CalendarioDet fin){
-		def incentivos=Incentivo.findAll{tipo==tipo && calendarioIni==ini && calendarioFin==fin}
-		
-	}
 
     //SI(MinNoLab>0,0,SI(G21>=1,0,SI(H21+I21>10,0,0.05)))
 
