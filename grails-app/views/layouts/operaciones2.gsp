@@ -33,8 +33,9 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Consultas</div>
 					<div class="task-panel">
-						<g:pageProperty name="page.consultas"/>
+						
 					</div>
+					<g:pageProperty name="page.consultas"/>
 				</div>
 			</div><!-- end Task panel -->
 			

@@ -9,6 +9,8 @@ class Mes {
 	
 	String nombre
 	int clave
+
+
 	
 	
 	static List getMeses() {
@@ -28,5 +30,14 @@ class Mes {
 			
 		]
 	}
+
+	static Mes findMesByNombre(String nombre){
+		return getMeses().find{it.nombre.toUpperCase()==nombre.toUpperCase()}
+	}
+
+	String toString(){
+		return "$nombre ($clave)"
+	}
+	
 	
 }

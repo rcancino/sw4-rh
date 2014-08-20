@@ -1,6 +1,7 @@
 package com.luxsoft.sw4.rh
 
 import groovy.transform.EqualsAndHashCode
+import org.grails.databinding.BindingFormat
 
 @EqualsAndHashCode(includes='empleado')
 class Incentivo {
@@ -25,6 +26,14 @@ class Incentivo {
 	
 	String status='PENDIENTE'
 
+	String mes
+
+	@BindingFormat('dd/MM/yyyy')
+	Date fechaInicial
+
+	@BindingFormat('dd/MM/yyyy')
+	Date fechaFinal
+
 	NominaPorEmpleadoDet nominaPorEmpleadoDet
 	
 	String comentario	
@@ -36,6 +45,15 @@ class Incentivo {
 		tipo inList:['SEMANAL','QUINCENAL','MENSUAL']
 		status inList:['PENDIENTE','CERRADO']
 		comentario nullable:true
+		nominaPorEmpleadoDet nullable:true
+		mes nullable:true
+		fechaInicial nullable:true
+		fechaFinal nullable:true
+    }
+
+    static mapping = {
+    	fechaInicial type:'date'
+    	fechaFinal type:'date'
     }
 	
 	String toString() {

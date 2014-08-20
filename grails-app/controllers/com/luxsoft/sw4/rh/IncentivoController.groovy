@@ -2,10 +2,12 @@ package com.luxsoft.sw4.rh
 
 import static org.springframework.http.HttpStatus.*
 
-import com.luxsoft.sw4.Autorizacion;
+import com.luxsoft.sw4.Autorizacion
+import com.luxsoft.sw4.Mes
 
 import grails.plugin.springsecurity.annotation.Secured;
 import grails.transaction.Transactional
+import org.apache.commons.lang.exception.ExceptionUtils
 
 @Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
@@ -14,84 +16,84 @@ class IncentivoController {
 	def incentivoService
 
 	def index() {
-
 		def calendarioDet
-    	def calendarioDet2
 		def tipo=params.tipo?:'QUINCENA'
-
-		if(tipo=='SEMANA'){
-			calendarioDet=session.calendarioSemana
-			calendarioDet2=session.calendarioSemana2
-
-		}else{
-			calendarioDet=session.calendarioQuincena
-			calendarioDet2=calendarioDet
-		}
-		calendarioDet.attach()
-		calendarioDet2.attach()
-    	
-    	
-    	def partidasMap=[]
-    	if(calendarioDet){
-    		def list=Incentivo.findAll("from Incentivo i where i.calendarioIni=? and i.calendarioFin=?"
-    			,[calendarioDet,calendarioDet2])
-
-    		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
-    	}
-    	def ejercicio=calendarioDet?calendarioDet.calendario.ejercicio:session.ejercicio
-    	def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
-    	
-    	[calendarioDet:calendarioDet,calendarioDet2:calendarioDet2
-    	,partidasMap:partidasMap,tipo:tipo
-    	,periodos:periodos
-    	,ejercicio:ejercicio]
+		redirect action:'quincenal'
+		
 	}
 
-	def actualizarPeriodo(){
+	def quincenal(){
+		def tipo='QUINCENAL'
+		def calendarioDet=session.calendarioQuincena
+		calendarioDet.attach()
+		def ejercicio=session.ejercicio
+		def list=Incentivo.findAll("from Incentivo i where i.asistencia.calendarioDet=? and tipo=?"
+    			,[calendarioDet,tipo])
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo=='QUINCENA'}
+		
+		[incentivoInstanceList:list,ejercicio:ejercicio,calendarioDet:calendarioDet,tipo:tipo,periodos:periodos]
+	}
+
+	def actualizarPeriodoQuincenal(){
 		Long calendarioDetId=params.long('calendarioDetId')
 		CalendarioDet ini=CalendarioDet.get(calendarioDetId)
-		String tipo=params.tipo
+		session.calendarioQuincena=ini
+		redirect action:'quincenal' 
+	}
 
-		if(tipo=='SEMANA'){
-			Long calendarioDetId2=params.long('calendarioDetId2')
-			CalendarioDet fin=CalendarioDet.get(calendarioDetId2)
-			if(ini && fin){
-				session.calendarioSemana=ini
-				session.calendarioSemana2=fin
-			}
+	def mensual(){
+		def tipo='MENSUAL'
+		def mes=session.mes?:'Enero'
+		def ejercicio=session.ejercicio
+		def asistenciaId=session.asistenciaSemanalId
+		def list=Incentivo.findAll("from Incentivo i where i.ejercicio=? and i.mes=?",[ejercicio,mes])
+		def meses=Mes.getMeses()
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo=='SEMANA'}
+		[incentivoInstanceList:list,ejercicio:ejercicio,tipo:tipo,mes:mes,meses:meses,periodos:periodos]
+	}
 
-		}else{
-			if(ini){
-				session.calendarioQuincena=ini
-			}
-		}
-		redirect action:'index' ,params:[tipo:tipo]
+	def actualizarPeriodoMensual(){
+		session.mes=params.mes
+		redirect action:'mensual' 
 	}
 	
 	@Transactional
-	def actualizarIncentivos(){
-		def calendarioDet
-    	def calendarioDet2
-		def tipo=params.tipo
-		assert tipo,'Se debe definir el tipo de actualiacion SEMANAl o QUINCENL'
-		if(tipo=='SEMANA'){
-			calendarioDet=session.calendarioSemana
-			calendarioDet2=session.calendarioSemana2
-
-		}else {
-			calendarioDet=session.calendarioQuincena
-			calendarioDet2=calendarioDet
+	def generarIncentivoQuincena(CalendarioDet calendarioDet){
+		def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+		try {
+			incentivoService.generarIncentivosQuincenales(calendarioDet)
+			flash.message="Incentivos generados exitosamente"
 		}
-		calendarioDet.attach()
-		calendarioDet2.attach()
-		
-		incentivoService.generarIncentivos(calendarioDet,calendarioDet2)
-		redirect action:'index',params:[tipo:tipo]
+		catch(Exception e) {
+			def msg=ExceptionUtils.getRootCauseMessage(e)
+			flash.message=msg
+		}
+		redirect action:'quincenal'
 	}
 
-	def create() {
-		[incentivoInstance:new Incentivo(fecha:new Date())]
+	
+	@Transactional
+	def generarIncencivoMensual(){
+		println params
+		Long calendarioDetId=params.long('calendarioDetId')
+		CalendarioDet calendarioDet=CalendarioDet.get(calendarioDetId)
+		def mes=Mes.findMesByNombre(params.mes)
+		try {
+			incentivoService.generarIncentivosMensuales(calendarioDet,mes)
+			flash.message="Incentivos mensuales generados exitosamente $mes"
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			log.error e
+			def msg=ExceptionUtils.getRootCauseMessage(e)
+			flash.message=msg
+		}
+		redirect action:'mensual'
 	}
+
+	
+
+	
 
 	
 	@Transactional
@@ -116,38 +118,7 @@ class IncentivoController {
 		flash.message="Solicitud de incentivo actualizada: "+incentivoInstance.id
 		redirect action:'index'
 	}
-
-	@Transactional
-	def autorizar(Incentivo incentivoInstance) {
-
-		def comentario=params.comentarioAutorizacion
-		if(comentario) {
-			def aut=new Autorizacion(
-					autorizo:getAuthenticatedUser(),
-					descripcion:comentario,
-					modulo:'RH',
-					tipo:'INCENTIVO')
-			aut.save failOnError:true
-			incentivoInstance.autorizacion=aut
-			//incentivoInstance.save flush:true
-		}
-		respond incentivoInstance,[view:'edit']
-	}
-
-	@Transactional
-	def cancelarAutorizacion(Incentivo incentivoInstance) {
-		if(incentivoInstance==null) {
-			notFound()
-			return
-		}
-		if(incentivoInstance.autorizacion) {
-			def aut=incentivoInstance.autorizacion
-			incentivoInstance.autorizacion=null
-			aut.delete flush:true
-
-		}
-		respond incentivoInstance,[view:'edit']
-	}
+	
 
 	@Transactional
 	def delete(Incentivo incentivoInstance) {
@@ -159,6 +130,7 @@ class IncentivoController {
 		flash.message="Solicitud $incentivoInstance.id eliminada"
 		redirect action:'index'
 	}
+
 	protected void notFound() {
 		request.withFormat {
 			form multipartForm {
@@ -173,12 +145,6 @@ class IncentivoController {
 		}
 	}
 	
-	def actualizarAjax(String[] folios){
-		println 'Actualizando inentivos seleccionados.'
-		def val=params.folios
-		println 'Folios: '+val+ ' Tipo: '+val.class.name
- 		println 'Folios: '+folios
-		//println 'Request: '+request
-	}
+	
 
 }
