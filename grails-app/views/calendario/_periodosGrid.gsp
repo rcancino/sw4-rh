@@ -1,6 +1,7 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
+			<th>Mes</th>
 			<th>Tipo</th>
 			<th>Folio</th>
 			<th>Inicio</th>
@@ -16,7 +17,16 @@
 	<tbody>
 		<g:each in="${calendarioInstance.periodos.sort{it.folio}}" var="row">
 			<tr>
-				<td>${fieldValue(bean:row,field:"calendario.tipo")}</td>
+				<td>
+					<g:link action="edit" controller="calendarioDet" id="${row.id}">
+						${fieldValue(bean:row,field:"mes")}
+					</g:link>
+				</td>
+				<td>
+					<g:link action="edit" controller="calendarioDet" id="${row.id}">
+						${fieldValue(bean:row,field:"calendario.tipo")}
+					</g:link>
+				</td>
 				<td><g:formatNumber number="${row.folio}" format="######"/>
 					</td>
 				<td><g:formatDate date="${row.inicio }" format="dd/MM/yyyy"/></td>

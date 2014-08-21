@@ -62,11 +62,6 @@ class CalendarioController {
 		
 	}
 	
-	def editPeriodo(CalendarioDet calendarioDetInstance){
-		[calendarioDetInstance:calendarioDetInstance]
-	}
-	
-	
 	
 	@Transactional
 	def eliminarPeriodo(Long id){

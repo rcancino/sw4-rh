@@ -22,6 +22,24 @@ class IncentivoController {
 		
 	}
 
+	def semanal(){
+		def tipo='SEMANAL'
+		def calendarioDet=session.calendarioSemana
+		calendarioDet.attach()
+		def ejercicio=session.ejercicio
+		def list=Incentivo.findAll("from Incentivo i where i.asistencia.calendarioDet=? and tipo=?"
+    			,[calendarioDet,tipo])
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo=='SEMANA'}
+		[incentivoInstanceList:list,ejercicio:ejercicio,calendarioDet:calendarioDet,tipo:tipo,periodos:periodos]
+	}
+
+	def actualizarCalendarioSemanal(){
+		Long calendarioDetId=params.long('calendarioDetId')
+		CalendarioDet ini=CalendarioDet.get(calendarioDetId)
+		session.calendarioSemana=ini
+		redirect action:'semanal' 
+	}
+
 	def quincenal(){
 		def tipo='QUINCENAL'
 		def calendarioDet=session.calendarioQuincena
@@ -92,7 +110,20 @@ class IncentivoController {
 	}
 
 	
-
+	@Transactional
+	def generarIncentivoSemanal(CalendarioDet calendarioDet){
+		def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+		try {
+			incentivoService.generarIncentivosSemanales(calendarioDet)
+			flash.message="Incentivos generados exitosamente"
+		}
+		catch(Exception e) {
+			e.printStackTrace()
+			def msg=ExceptionUtils.getRootCauseMessage(e)
+			flash.message=msg
+		}
+		redirect action:'semanal'
+	}
 	
 
 	

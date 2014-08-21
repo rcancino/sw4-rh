@@ -3,6 +3,7 @@ package com.luxsoft.sw4.rh
 import com.luxsoft.sw4.Periodo
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
+import org.grails.databinding.BindingFormat
 
 @ToString(includes='folio,inicio,fin',includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes='folio')
@@ -12,15 +13,20 @@ class CalendarioDet {
 	
 	Integer folio
 	
+	@BindingFormat('dd/MM/yyyy')
 	Date fechaDePago
 	
+	@BindingFormat('dd/MM/yyyy')
 	Date inicio
 	
+	@BindingFormat('dd/MM/yyyy')
 	Date fin
 	
 	Periodo asistencia
 	
 	Integer bimestre=0
+
+	String mes
 	
 	static embedded = ['asistencia']
 	
@@ -29,7 +35,8 @@ class CalendarioDet {
     static constraints = {
 		asistencia nullable:true
 		fechaDePago nullable:true
-		bimestre nullable:true
+		bimestre nullable:true,range:1..6
+		mes nullable:true,maxSize:15
     }
 	
 	static mapping = {

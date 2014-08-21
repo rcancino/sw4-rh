@@ -38,9 +38,10 @@ class ProcesadorDeIncentivo {
 
 				switch(tipo) {
 					case 'SEMANAL':
-						importeGravado=calcularImporteQuincenal(ne,incentivo)
+						importeGravado=calcularImporteMensual(ne,incentivo)
 						break
 					case 'QUINCENAL':
+						importeGravado=calcularImporteQuincenal(ne,incentivo)
 						break
 					case 'MENSUAL':
 						break
@@ -72,6 +73,14 @@ class ProcesadorDeIncentivo {
 			importe=total*(bono)
 		}
 		return importe
+	}
+
+	BigDecimal calcularImporteMensual(NominaPorEmpleado ne,Incentivo i){
+		def importe=0.0
+		def salario=nominaPorEmpleado.empleado.salario.salarioDiario
+		importe=(salario*30)i.tasaBono2
+		return importe
+
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

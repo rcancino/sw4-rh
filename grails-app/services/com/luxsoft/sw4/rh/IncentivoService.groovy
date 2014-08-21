@@ -9,11 +9,49 @@ import com.luxsoft.sw4.Periodo
 class IncentivoService {
 
 	@NotTransactional
+    def generarIncentivosSemanales(CalendarioDet calendarioDet) {
+    	
+    	//def asistencias=Asistencia.findAll{calendarioDet==calendarioDet && empleado.perfil.tipoDeIncentivo=='SEMANAL'} 
+    	def asistencias=Asistencia.executeQuery("from Asistencia a where a.calendarioDet=? and a.empleado.perfil.tipoDeIncentivo=?"
+    		,[calendarioDet,'SEMANAL'])
+    	if(!asistencias){
+    		throw new RuntimeException("No se hay asistencias y/o empleados  con bono en la semanal $calendarioDet.folio")
+    	}
+		
+		asistencias=asistencias.sort{a,b ->
+			a.empleado.perfil.ubicacion.clave<=>b.empleado.perfil.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
+		}
+
+    	asistencias.each{ asistencia->
+    		log.debug 'Generando incentivo semanal para: '+asistencia.empleado
+    		
+    		def empleado=asistencia.empleado
+    		Incentivo inc=Incentivo.find{asistencia==asistencia}
+    		if(inc==null){
+				inc=new Incentivo(
+					tipo:'SEMANAL',
+					asistencia:asistencia,
+					empleado:empleado,
+					ubicacion:empleado.perfil.ubicacion,
+					ejercicio:calendarioDet.calendario.ejercicio
+				)
+			}
+			calcularIncentivoSemanal(inc)
+
+			inc.save failOnError:true
+			log.info 'Incentivo generado/actualizado : '+inc
+			
+    	}
+    }
+
+	@NotTransactional
     def generarIncentivosQuincenales(CalendarioDet calendarioDet) {
 
-    	def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+    	//def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+    	def asistencias=Asistencia.executeQuery("from Asistencia a where a.calendarioDet=? and a.empleado.perfil.tipoDeIncentivo=?"
+    		,[calendarioDet,'QUINCENAL'])
     	if(!asistencias){
-    		throw new RuntimeException("No se han generado y procesado asistencias para la quincena $calendarioDet.folio")
+    		throw new RuntimeException("No hay asistencias y/o empleados para bono en la quincena $calendarioDet.folio")
     	}
 		
 		asistencias=asistencias.sort{a,b ->
@@ -34,8 +72,11 @@ class IncentivoService {
 					ubicacion:empleado.perfil.ubicacion,
 					ejercicio:calendarioDet.calendario.ejercicio
 				)
-				inc.save failOnError:true
+				
 			}
+			calcularIncentivoQuincenal(inc)
+			inc.save failOnError:true
+			log.info 'Incentivo generado/actualizado : '+inc
 
     	}
     }
@@ -43,7 +84,9 @@ class IncentivoService {
     @NotTransactional
     def generarIncentivosMensuales(CalendarioDet calendarioDet,Mes mes) {
 
-    	def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+    	//def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+    	def asistencias=Asistencia.executeQuery("from Asistencia a where a.calendarioDet=? and a.empleado.perfil.tipoDeIncentivo=?"
+    		,[calendarioDet,'MENSUAL'])
     	if(!asistencias){
     		throw new RuntimeException("No se han generado y procesado asistencias para la quincena $calendarioDet.folio")
     	}
@@ -88,8 +131,8 @@ class IncentivoService {
     def calcularIncentivoMensual(Incentivo incentivo){
 		log.info 'Calculando bono mensual: '+incentivo.empleado
     	def bono1=0.1
-		//def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
-		def per=new Periodo('01/07/2014','21/07/2014')
+		def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
+		//def per=new Periodo('01/07/2014','21/07/2014')
     	def rows=AsistenciaDet
     		.executeQuery("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?"
     	                                               ,[incentivo.empleado,per.fechaInicial,per.fechaFinal])
@@ -123,31 +166,28 @@ class IncentivoService {
 
     }
 
-    def calcularIncentivo(Integer ejercicio,String tipo){
-    	def incentivos=Incentivo.findAll{tipo==tipo && ejercicio==ejercicio}
-    }
-
-    //SI(MinNoLab>0,0,SI(G21>=1,0,SI(H21+I21>10,0,0.05)))
-
-    def Incentivo aplicarBonoQuncenal(Incentivo bono){
+    
+    
+    def Incentivo calcularIncentivoQuincenal(Incentivo bono){
     	log.debug 'Calculando bono quincenal '+bono
+
     	def asistencia=bono.asistencia
     	
     	//Aplicando reglas
     	bono.otorgado=true
-    	bono.faltas=asistencia.faltas
-		bono.minutosNoLaborados=asistencia.minutosNoLaborados
-    	bono.retardoMayor=asistencia.retardoMayor
-    	bono.retardoMenor=asistencia.retardoMenor
+    	
+		def minutosNoLaborados=asistencia.minutosNoLaborados
+    	def retardoMayor=asistencia.retardoMayor
+    	def retardoMenor=asistencia.retardoMenor
     	
     	
 		
 		bono.tasaBono1=0.0
-		def retardoComida=retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
-		def retardoTotal=bono.retardoMayor+bono.retardoMenor+bono.retardoComida
+		def retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
+		def retardoTotal=retardoMayor+retardoMenor+retardoComida
 		if(asistencia.minutosNoLaborados==0){
 			if(asistencia.faltas==0){
-				if(asistencia.retardoMenor+asistencia.retardoMayor<=10){
+				if( (asistencia.retardoMenor+asistencia.retardoMayor)<=10){
 					bono.tasaBono1=0.05
 				}
 				
@@ -170,8 +210,8 @@ class IncentivoService {
 		 return bono
     }
 	
-	def Incentivo aplicarBonoSemanal(Incentivo bono){
-
+	def Incentivo calcularIncentivoSemanal(Incentivo bono){
+		bono.tasaBono1=0.1
 		return bono
 		
 		 
