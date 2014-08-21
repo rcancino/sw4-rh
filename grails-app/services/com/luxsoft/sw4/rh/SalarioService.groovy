@@ -29,23 +29,28 @@ class SalarioService {
     }
 
     @NotTransactional
-    def calcularSalarioDiarioIntegrado(Empleado empleado, Date fecha,def salarioNuevo){
+    def calcularSalarioDiarioIntegrado(Empleado empleado, Date fecha,def salarioNuevo,def ejercicio){
 		log.info 'Calculando salario diari integrado para: '+empleado+ 'fecha:' +fecha+'  Salario nuevo: '+salarioNuevo
 		
-		def val=CalendarioDet.executeQuery("select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin",[fecha])
 		
+		def val=CalendarioDet.executeQuery("select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin",[fecha])
 		def bimestre=val.get(0)-1
-		def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=?",[bimestre])
+		def tipo=empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
+		def res=CalendarioDet
+			.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=? and d.calendario.tipo=? and d.calendario.ejercicio=?"
+			,[bimestre,tipo,ejercicio])
 		
 		def inicio=res.get(0)[0]
 		def fin=res.get(0)[1]
 		log.info "Periodo: $inicio al $fin"
 		
-		def query=sdiPorEmpleado.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
+		def query=sdiPorEmpleado
+			.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
 			.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
+			.replaceAll('@FECHA_ULT_MODIF',fecha.format('yyyy/MM/dd'))
 			.replaceAll('@TIPO', empleado.salario.periodicidad)
 			.replaceAll('@SALARIO', salarioNuevo.toString())
-			println query
+			//println query
 		Sql sql=new Sql(dataSource)
 		def rows= sql.rows(query,[empleado.id])
 	}
@@ -65,19 +70,42 @@ class SalarioService {
 	}
 	
 	String sdiPorEmpleado="""
-		SELECT (CASE WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' )<=						
-	( ROUND( ( ((SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 					
-	FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) THEN 0 ELSE 2 END) AND 					
-	ROUND((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN B.FECHA<N.PERIODO_FECHA_FINAL AND B.FECHA>X.ALTA THEN B.FECHA ELSE N.PERIODO_FECHA_FINAL END )),X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )					
-	*	@SALARIO) 	+			
-	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(22,41,19,42,24,20,44) AND D.ID IS NOT NULL)),0)/(ROUND(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN B.FECHA<N.PERIODO_FECHA_FINAL AND B.FECHA>X.ALTA THEN B.FECHA ELSE N.PERIODO_FECHA_FINAL END )),MIN(N.PERIODO_FECHA_INICIAL))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) )	,2) )			
-		THEN		 (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) 		ELSE 
-	( ROUND( ( ((SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 					
-	FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) THEN 0 ELSE 2 END) AND 					
-	ROUND((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN B.FECHA<N.PERIODO_FECHA_FINAL AND B.FECHA>X.ALTA THEN B.FECHA ELSE N.PERIODO_FECHA_FINAL END )),X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )					
-	*	@SALARIO) 	+			
-	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(22,41,19,42,24,20,44) AND D.ID IS NOT NULL)),0)/(ROUND(((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN B.FECHA<N.PERIODO_FECHA_FINAL AND B.FECHA>X.ALTA THEN B.FECHA ELSE N.PERIODO_FECHA_FINAL END )),MIN(N.PERIODO_FECHA_INICIAL))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) )	,2) )			
-		END ) AS SDI_NVO				
+		SELECT 
+(
+	CASE
+		WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' )<=						
+		(
+			ROUND(	
+					(
+						(	(SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 					
+						FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) THEN 0 ELSE 2 END) AND 
+						ROUND((-(TIMESTAMPDIFF(MINUTE,DATE('@FECHA_ULT_MODIF'),X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA 	)					
+						*@SALARIO	)
+					+			
+						(	IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(22,41,19,42,24,20,44) AND D.ID IS NOT NULL)),0)/
+						(ROUND(((-(TIMESTAMPDIFF(MINUTE,'@FECHA_FIN',(CASE WHEN X.ALTA>'@FECHA_INI' THEN X.ALTA ELSE '@FECHA_INI' END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) 	
+						) 
+					)
+			,2)
+		)			
+	THEN		 (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) 		
+	ELSE 
+		(
+					ROUND(	
+							(
+								(	(SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 					
+								FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR(N.PERIODO_FECHA_FINAL) THEN 0 ELSE 2 END) AND 
+								ROUND((-(TIMESTAMPDIFF(MINUTE,DATE('@FECHA_ULT_MODIF'),X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA 	)					
+								*@SALARIO	)
+							+			
+								(	IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(22,41,19,42,24,20,44) AND D.ID IS NOT NULL)),0)/
+								(ROUND(((-(TIMESTAMPDIFF(MINUTE,'@FECHA_FIN',(CASE WHEN X.ALTA>'@FECHA_INI' THEN X.ALTA ELSE '@FECHA_INI' END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) 	
+								) 
+							)
+					,2)
+		)			
+	END 
+) AS SDI_NVO				
 		FROM NOMINA N 						
 		JOIN nomina_por_empleado E ON(E.nomina_id=N.ID)
 		JOIN empleado X ON(X.ID=E.empleado_id)

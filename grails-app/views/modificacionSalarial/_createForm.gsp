@@ -73,11 +73,13 @@ $(function(){
 		var empleadoId=$("#empleadoId").val();
 		var salarioNuevo=$("#salarioNuevo").autoNumeric('get');
 		if(empleadoId!=="" && salarioNuevo!==null){
-			console.log('Nuevo salario: '+sdi);
+			
 			$('#submitBtn').attr('disabled', 'disabled');
+			var fecha=$('#fecha').val();
+			console.log('Nuevo salario: '+sdi+ ' Fecha: '+fecha);
 			jQuery.getJSON(
 				'<g:createLink controller="empleadoRest" action="calcularSdi"/>',
-				{empleadoId:empleadoId,fecha:'04/08/2014',salarioNuevo:salarioNuevo},function(data){
+				{empleadoId:empleadoId,fecha:fecha,salarioNuevo:salarioNuevo},function(data){
 
 				}
 			).done(function(data){

@@ -55,14 +55,14 @@ class EmpleadoRestController {
 	}
 	
 	def calcularSdi() {
-		
+		def ejercicio=session.ejercicio
 		def empleadoId=params.empleadoId
 		def salarioNuevo=params.salarioNuevo as BigDecimal
 		def fecha=params.date('fecha','dd/MM/yyyy')
 		Empleado e=Empleado.get(empleadoId)
 		def sdi=0.0
 		if(e) {
-			sdi=salarioService.calcularSalarioDiarioIntegrado(e,fecha,salarioNuevo)
+			sdi=salarioService.calcularSalarioDiarioIntegrado(e,fecha,salarioNuevo,ejercicio)
 		}
 		def res=[sdi:sdi.SDI_NVO] as JSON
 		log.info 'res: '+res+ " Em.id"+empleadoId+ " params: "+params
