@@ -78,7 +78,7 @@
 	</content><!-- end .gridTask -->
 	
 	<content tag="panelBody">
-		<g:render template="gridPanel" />
+		<g:render template="gridMensual" />
 		<g:render template="mesesDialog"/>
 		<g:render template="generacionMensualDialog" />
 		<g:render template="calculoMensualDialog" />

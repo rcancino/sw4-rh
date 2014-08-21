@@ -74,7 +74,7 @@ class IncentivoController {
 	
 	@Transactional
 	def generarIncencivoMensual(){
-		println params
+		
 		Long calendarioDetId=params.long('calendarioDetId')
 		CalendarioDet calendarioDet=CalendarioDet.get(calendarioDetId)
 		def mes=Mes.findMesByNombre(params.mes)

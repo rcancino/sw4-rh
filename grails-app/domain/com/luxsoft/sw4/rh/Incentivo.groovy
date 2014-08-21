@@ -49,6 +49,8 @@ class Incentivo {
 		mes nullable:true
 		fechaInicial nullable:true
 		fechaFinal nullable:true
+		tasaBono1 sacle:4
+		tasaBono2 scale:4
     }
 
     static mapping = {

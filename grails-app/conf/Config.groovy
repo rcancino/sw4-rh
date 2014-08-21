@@ -134,6 +134,7 @@ log4j = {
 			info 'grails.app.services.com.luxsoft.rh'
 			debug 'grails.app.services.com.luxsoft.rh.AsistenciaService'
 			debug 'grails.app.services.com.luxsoft.rh.PrestamoService'
+			debug 'grails.app.services.com.luxsoft.sw4.rh.IncentivoService'
 			off 'com.luxsoft.sw4.rh'
 			off 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
 			off 'com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas'

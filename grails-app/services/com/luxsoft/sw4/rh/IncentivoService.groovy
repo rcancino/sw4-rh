@@ -63,6 +63,7 @@ class IncentivoService {
     		if(empleado.perfil.tipoDeIncentivo=='MENSUAL'){
 	    		Incentivo inc=Incentivo.find{tipo==tipo && ejercicio==ejercicio && mes==mes.nombre && empleado==empleado}
 	    		if(inc==null){
+					log.info 'Generando/actualizando incentivos mensuales usando asistencia: '+asistencia
 					inc=new Incentivo(
 						tipo:'MENSUAL',
 						asistencia:asistencia,
@@ -77,7 +78,7 @@ class IncentivoService {
 					inc.save failOnError:true
 				}
 				calcularIncentivoMensual(inc)
-				log.info 'Generando/actualizando incentivos mensuales usando asistencia: '+asistencia
+				
     		}
     		
 
@@ -85,16 +86,18 @@ class IncentivoService {
     }
 
     def calcularIncentivoMensual(Incentivo incentivo){
-
+		log.info 'Calculando bono mensual: '+incentivo.empleado
     	def bono1=0.1
+		//def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
+		def per=new Periodo('01/07/2014','21/07/2014')
     	def rows=AsistenciaDet
     		.executeQuery("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?"
-    	                                               ,[incentivo.empleado,incentivo.fechaInicial,incentivo.fechaFinal])
+    	                                               ,[incentivo.empleado,per.fechaInicial,per.fechaFinal])
     	def minutos=rows.sum 0.0,{it.retardoMenor+it.retardoMenorComida}
     	def faltas=rows.sum 0.0,{it.tipo=='FALTA'?1:0}
     	def incapacidades=rows.sum 0.0,{it.tipo=='INCAPACIDAD'?1:0}
     	def incidenciaf=rows.sum 0.0,{it.tipo=='INCIDENCIA_F'?1:0}
-    	log.debug "Registris: $rows.size Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
+    	log.debug "Dias: $rows.size Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
 
     	faltas+=(incapacidades+incidenciaf)
 
@@ -111,9 +114,9 @@ class IncentivoService {
 
     	if(bono1>0.0){
     	  if(minutos>49){
-    	    bono1=bono1*0.875
-    	  }
-    	  bono2=bono1
+    	    bono2=bono1*0.875
+    	  }else
+    	  	bono2=bono1
     	}
     	incentivo.tasaBono1=bono1
     	incentivo.tasaBono2=bono2

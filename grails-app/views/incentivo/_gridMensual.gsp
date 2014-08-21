@@ -5,8 +5,8 @@
 			<th>Folio</th>
 			<th>Empleado</th>
 			<th>Ubicación</th>
-			<th>Bono 1</th>
-			<th>Bono 2</th>
+			<th>Bono </th>
+			<th>Asignado </th>
 			<th>Nómina</th>
 			<th>Modificado</th>
 			
