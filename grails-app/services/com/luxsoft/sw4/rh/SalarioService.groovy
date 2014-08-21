@@ -45,7 +45,7 @@ class SalarioService {
 			.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
 			.replaceAll('@TIPO', empleado.salario.periodicidad)
 			.replaceAll('@SALARIO', salarioNuevo.toString())
-			//println query
+			println query
 		Sql sql=new Sql(dataSource)
 		def rows= sql.rows(query,[empleado.id])
 	}

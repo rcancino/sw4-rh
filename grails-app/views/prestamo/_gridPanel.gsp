@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${partidasList?.sort{it.id}}" var="row">
+		<g:each in="${partidasList?.sort{it.empleado.nombre}}" var="row">
 			<tr>
 				<td>
 					<g:link action="edit" id="${row.id}">

@@ -38,12 +38,12 @@ class ProcesadorDeIncentivo {
 
 				switch(tipo) {
 					case 'SEMANAL':
-						importeGravado=calcularImporteMensual(ne,incentivo)
 						break
 					case 'QUINCENAL':
 						importeGravado=calcularImporteQuincenal(ne,incentivo)
 						break
 					case 'MENSUAL':
+						importeGravado=calcularImporteMensual(ne,incentivo)
 						break
 				}
 				

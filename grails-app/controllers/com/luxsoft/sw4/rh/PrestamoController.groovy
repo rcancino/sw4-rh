@@ -36,8 +36,11 @@ class PrestamoController {
 			flash.message="Prestamo invalido"
 			render view:'create',model:[prestamoInstance:prestamoInstance]
 		}
-		if(prestamo.tipo=='IMPORTE_FIJO'){
-			prestamo.tasaDescuento=0.0
+		if(prestamoInstance.tipo=='IMPORTE_FIJO'){
+			prestamoInstance.tasaDescuento=0.0
+		}
+		if(!prestamoInstance.autorizo){
+			prestamoInstance.autorizo="ND"
 		}		
 		prestamoInstance.save(failOnError:true)
 		flash.message="Prestamo generado: "+prestamoInstance.id

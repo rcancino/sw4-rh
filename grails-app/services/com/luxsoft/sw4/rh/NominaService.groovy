@@ -145,6 +145,13 @@ class NominaService {
 		}
 	  nomina.status='CERRADA'
 	}
+	
+	def actualizarSaldo(Nomina nomina){
+		//Actualiza los saldos de prima vacacional
+		def rows=NominaPorEmpleadoDet.exequteQuery("from NominaPorEmpleadoDet d where d.parent.nomina=? and d.concepto.clave=?"
+			,[nomina,'P024'])
+		log.debug 'Registros de prima vacacional por actualizar: '+rows.size()
+	}
 
 	def depurar(Long id){
 		Nomina nomina=Nomina.get(id)

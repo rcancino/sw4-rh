@@ -1,11 +1,16 @@
 package com.luxsoft.sw4.rh
 
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat;
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef;
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class ModificacionSalarialController {
+	
+	def jasperService
     
     def index(Long max){
     	params.max = Math.min(max ?: 15, 100)
@@ -45,5 +50,26 @@ class ModificacionSalarialController {
     	def modificacionInstance=ModificacionSalarial.get(id)
     	[modificacionInstance:modificacionInstance]
     }
+	
+	def reporteDeSDI(ModificacionSalarial ms){
+		log.info 'Reporte de analis SDI para modificacion salarial: '+ms
+		
+		def parameters=['EMPLEADO_ID':ms.empleado.id]
+		parameters['FECHA_INICIAL',ms.fecha.format('yyyy/MM/dd')]
+		parameters['TIPO',ms.empleado.salario.periodicidad]
+		parameters['SALARIO',ms.salarioAnterior]
+		
+		JasperReportDef reportDef=new JasperReportDef(name:'AnalisisDeSDIPorEmpleado'
+			,fileFormat:JasperExportFormat.PDF_FORMAT
+			,parameters:parameters)
+		
+		def res=jasperService.generateReport(reportDef)
+		def fileName="AnalisisSDI_"+ms.id
+		response.setHeader("Content-disposition", 'attachment; filename="$fileName"' );
+		response.contentType = reportDef.fileFormat.mimeTyp
+		response.characterEncoding = "UTF-8"
+		response.outputStream << reportDef.contentStream.toByteArray()
+		//chain controller:'jasper',action:'index',params:params
+	}
 
 }

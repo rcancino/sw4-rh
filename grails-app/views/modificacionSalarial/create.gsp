@@ -13,6 +13,7 @@
 					<g:link action="index" class="list-group-item">
 						<span class="glyphicon glyphicon-list"></span> Catálogo
 					</g:link>
+					
 				</div>
 			</div>
 			<div class="col-md-9">

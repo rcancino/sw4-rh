@@ -19,6 +19,9 @@
 					<g:link action="create" class="list-group-item">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
 					</g:link>
+					<g:link action="reporteDeSDI" class="list-group-item" id="${modificacionInstance.id}">
+						<span class="glyphicon glyphicon-check"></span> Análisis SDI
+					</g:link>
 				</div>
 			</div>
 			<div class="col-md-9">
