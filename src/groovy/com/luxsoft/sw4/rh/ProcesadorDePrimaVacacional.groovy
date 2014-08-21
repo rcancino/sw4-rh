@@ -46,8 +46,10 @@ class ProcesadorDePrimaVacacional {
 			
 			def empleado=ne.empleado
 			
-			def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
-			assert acumulado,'Debe existir el registro de acumulados para prima vacional'
+			//def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
+			assert vacaciones.control,'Debe existir el control de vacaciones para: '+vacaciones.empleado
+			def acumulado=vacaciones.control.acumuladoExcento
+			
 			
 			def salarioDiario=ne.salarioDiarioBase
 			
@@ -90,8 +92,8 @@ class ProcesadorDePrimaVacacional {
 			
 			def empleado=ne.empleado
 			def calendarioDet=asistencia.calendarioDet
-			def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
-			
+			//def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
+			def acumulado=vacaciones.control.acumuladoExcento
 			def salarioDiario=ne.salarioDiarioBase
 			
 			def sm=ZonaEconomica.findByClave('A').salario
