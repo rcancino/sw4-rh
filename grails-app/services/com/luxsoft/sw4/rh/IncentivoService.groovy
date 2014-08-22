@@ -186,7 +186,7 @@ class IncentivoService {
 		def retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
 		def retardoTotal=retardoMayor+retardoMenor+retardoComida
 		if(asistencia.minutosNoLaborados==0){
-			if(asistencia.faltas==0){
+			if(asistencia.faltas+asistencia.incapacidades==0){
 				if( (asistencia.retardoMenor+asistencia.retardoMayor)<=10){
 					bono.tasaBono1=0.05
 				}
@@ -195,8 +195,7 @@ class IncentivoService {
 		}
 		
 		if(retardoComida==0){
-			def incapacidades=asistencia.incapacidades
-			if(asistencia.faltas+incapacidades==0){
+			if(asistencia.faltas+asistencia.incapacidades==0){
 				bono.tasaBono2=0.05
 			}
 		}
@@ -211,8 +210,44 @@ class IncentivoService {
     }
 	
 	def Incentivo calcularIncentivoSemanal(Incentivo bono){
-		bono.tasaBono1=0.1
-		return bono
+		log.debug 'Calculando bono semanal '+bono
+
+    	def asistencia=bono.asistencia
+    	
+    	//Aplicando reglas
+    	bono.otorgado=true
+    	
+		def minutosNoLaborados=asistencia.minutosNoLaborados
+    	def retardoMayor=asistencia.retardoMayor
+    	def retardoMenor=asistencia.retardoMenor
+    	
+    	
+		
+		bono.tasaBono1=0.0
+		def retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
+		def retardoTotal=retardoMayor+retardoMenor+retardoComida
+		if(asistencia.minutosNoLaborados==0){
+			
+			if(asistencia.faltas+asistencia.incapacidades==0){
+				if( (asistencia.retardoMenor+asistencia.retardoMayor)<=5){
+					bono.tasaBono1=0.05
+				}
+			}
+		}
+		
+		if(retardoComida==0){
+			if(asistencia.faltas+asistencia.incapacidades==0){
+				bono.tasaBono2=0.05
+			}
+		}
+		
+		//Para empleados nuevos
+		if(asistencia.diasTrabajados>0){
+			bono.tasaBono1=0.0
+			bono.tasaBono2=0.0
+		}
+		
+		 return bono
 		
 		 
 	}

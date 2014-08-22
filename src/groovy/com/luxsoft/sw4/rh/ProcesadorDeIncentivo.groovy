@@ -15,7 +15,7 @@ class ProcesadorDeIncentivo {
 	private static final log=LogFactory.getLog(this)
 	
 	def procesar(NominaPorEmpleado ne) {
-		log.info "Procesando Incentivo para ${ne.empleado}"
+		
 		
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
@@ -26,47 +26,54 @@ class ProcesadorDeIncentivo {
 		def nominaPorEmpleadoDet=ne.conceptos.find(){ 
 			it.concepto==concepto
 		}
-		
+		if(!nominaPorEmpleadoDet){
+				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				ne.addToConceptos(nominaPorEmpleadoDet)
+		}
 		
 		def tipo=ne.empleado.perfil.tipoDeIncentivo
-		if(tipo){
-			def incentivo=Incentivo.findByTipoAndEmpleadoAndAsistencia(tipo,ne.empleado,ne.asistencia)
+		
+		
+		def incentivo=Incentivo.findByTipoAndEmpleadoAndAsistencia(tipo,ne.empleado,ne.asistencia)
 			
-			if(incentivo){
+		if(incentivo){
+			log.debug "Procesando Incentivo $incentivo.id (${ne.empleado} ) "
+			def importeGravado=0.0
 
-				def importeGravado=0.0
-
-				switch(tipo) {
-					case 'SEMANAL':
-						break
-					case 'QUINCENAL':
-						importeGravado=calcularImporteQuincenal(ne,incentivo)
-						break
-					case 'MENSUAL':
-						importeGravado=calcularImporteMensual(ne,incentivo)
-						break
-				}
+			switch(tipo) {
+				case 'SEMANAL':
+					importeGravado=calcularImporteSemanal(ne,incentivo)
+						
+					break
+				case 'QUINCENAL':
+					importeGravado=calcularImporteQuincenal(ne,incentivo)
+					break
+				case 'MENSUAL':
+					importeGravado=calcularImporteMensual(ne,incentivo)
+					break
+			}
 				
-				if(importeGravado>0){
-					nominaPorEmpleadoDet.importeGravado=importeGravado
-					nominaPorEmpleadoDet.importeExcento=0
-					ne.actualizar()
-				}
+			if(importeGravado>0){
+				nominaPorEmpleadoDet.importeGravado=importeGravado
+				nominaPorEmpleadoDet.importeExcento=0
+				ne.actualizar()
+			}
+		}else{
+			if(nominaPorEmpleadoDet){
+				ne.removeFromConceptos(nominaPorEmpleadoDet)
+			
 			}
 		}
 
-		if(nominaEmpleadoDet){
-			ne.removeFromConceptos(nominaEmpleadoDet)
-			
-		}
+		
 	}
 
 	BigDecimal calcularImporteQuincenal(NominaPorEmpleado ne,Incentivo i){
 		def importe=0.0
-		def salario=nominaEmpleado.conceptos.find{it.concepto.clave=='P001'}
-		def vac=nominaEmpleado.conceptos.find{it.concepto.clave=='P025'}
+		def salario=ne.conceptos.find{it.concepto.clave=='P001'}
+		def vac=ne.conceptos.find{it.concepto.clave=='P025'}
 		if(salario ){
-			def bono=(incentivo.tasaBono1+incentivo.tasaBono2)
+			def bono=(i.tasaBono1+i.tasaBono2)
 			def vacImp=vac?vac.getTotal():0.0
 			def total=+salario.total+vacImp
 			log.debug 'Base para Incentivo  : '+total+ ' bono del: '+bono
@@ -77,10 +84,27 @@ class ProcesadorDeIncentivo {
 
 	BigDecimal calcularImporteMensual(NominaPorEmpleado ne,Incentivo i){
 		def importe=0.0
-		def salario=nominaPorEmpleado.empleado.salario.salarioDiario
+		def salario=ne.empleado.salario.salarioDiario
 		importe=(salario*30)i.tasaBono2
 		return importe
 
+	}
+	
+	BigDecimal calcularImporteSemanal(NominaPorEmpleado ne,Incentivo i){
+		
+		log.debug "Aplicando incentivo  Tasas $i.tasaBono1 y $i.tasaBono2"
+		def importe=0.0
+		def salario=ne.conceptos.find{it.concepto.clave=='P001'}
+		def vac=ne.conceptos.find{it.concepto.clave=='P025'}
+		if(salario ){
+			def bono=(i.tasaBono1+i.tasaBono2)
+			def vacImp=vac?vac.getTotal():0.0
+			def total=+salario.total+vacImp
+			importe=total*bono
+			log.debug "Bono del $bono sobre $total total: $importe "
+			
+		}
+		return importe
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

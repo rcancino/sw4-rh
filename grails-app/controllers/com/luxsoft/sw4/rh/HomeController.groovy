@@ -7,8 +7,11 @@ class HomeController {
 
 	@Secured(['IS_AUTHENTICATED_REMEMBERED'])
     def index() { 
-    	if(!isLoggedIn()){
-			redirect (controller:'login')
+		if(grailsApplication.config.grails.plugin.springsecurity.active == true){
+			if(!isLoggedIn()){
+				redirect (controller:'login')
+			}
 		}
+    	
     }
 }
