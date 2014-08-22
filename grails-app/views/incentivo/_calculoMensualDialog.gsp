@@ -9,8 +9,9 @@
 			</div>
 			<g:form class="form-horizontal" action="actualizarIncentivoMensual">
 				<div class="modal-body">
-					<g:hiddenField name="tipo" value="${mes}"/>
-					<g:hiddenField name="tipo" value="${ejercicio}"/>
+					<g:hiddenField name="mes" value="${mes}"/>
+					<g:hiddenField name="ejercicio" value="${ejercicio}"/>
+					<g:hiddenField name="tipo" value="MENSUAL"/>
 					
 					
 					<div class="form-group">
@@ -26,12 +27,6 @@
 
 					<div class="form-group">
 						<label for="bono1Field" class="col-sm-2 control-label">Bono 1</label>
-						<div class="col-sm-10">
-							<input type="text" name="tasaBono1" class="form-control porcentaje">
-						</div>
-					</div>
-					<div class="form-group">
-						<label for="bono1Field" class="col-sm-2 control-label">Bono 2</label>
 						<div class="col-sm-10">
 							<input type="text" name="tasaBono1" class="form-control porcentaje">
 						</div>

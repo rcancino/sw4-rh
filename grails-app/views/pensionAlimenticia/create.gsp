@@ -41,7 +41,7 @@
 	
 	<r:script>
 		$(function(){
-			$(".number").autoNumeric({vMin:'0.00',vMax:99.99});
+			//$(".number").autoNumeric({vMin:'0.00',vMax:99.99});
 		});
 	</r:script>
 	

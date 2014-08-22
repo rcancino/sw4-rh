@@ -8,6 +8,8 @@ import com.luxsoft.sw4.Mes
 import grails.plugin.springsecurity.annotation.Secured;
 import grails.transaction.Transactional
 import org.apache.commons.lang.exception.ExceptionUtils
+import groovy.transform.ToString
+
 
 @Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
@@ -108,6 +110,12 @@ class IncentivoController {
 		}
 		redirect action:'mensual'
 	}
+	
+	@Transactional
+	def actualizarIncentivoMensual(ModificacionDeIncentivoCmd cmd){
+		log.info 'Modificando el incentivo: '+cmd
+		def incentivos=Incentivo.findAll("from Incentivo i where i.ejercicio=? and i.mes=? and i.tipo=?",[cmd.ejercicio,cmd.mes,cmd.tipo])
+	}
 
 	
 	@Transactional
@@ -178,4 +186,21 @@ class IncentivoController {
 	
 	
 
+}
+
+@ToString(includeNames=true,includePackage=false)
+class ModificacionDeIncentivoCmd{
+	
+	
+	int ejercicio
+	String mes
+	Ubicacion ubicacion
+	BigDecimal tasaBono1
+	String comentario
+	String tipo
+	
+	static constraints = {
+		comentario blank:true
+	}
+	
 }

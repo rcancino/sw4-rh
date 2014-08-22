@@ -29,7 +29,12 @@ class ProcesadorDePensionAlimenticia {
 			
 			def percepciones=ne.getPercepciones()
 			
-			def deducciones=ne.getDeducciones()
+			def deducciones=ne.conceptos.sum 0.0,{deduccion->
+				
+				def found=['D001','D002','D012'].find{it==deduccion.concepto.clave }
+				return found?deduccion.importeExcento:0.0
+				
+			}
 			
 			def importeExcento=0.0
 			
@@ -50,7 +55,7 @@ class ProcesadorDePensionAlimenticia {
 			
 			log.info "Deduccion calculada de: ${importeExcento}"
 			neDet.importeGravado=0
-			neDet.importeExcento=importeExcento.setScale(0,RoundingMode.HALF_EVEN)
+			neDet.importeExcento=importeExcento.setScale(2,RoundingMode.HALF_EVEN)
 			ne.actualizar()
 		}
 		

@@ -146,11 +146,22 @@ class NominaService {
 	  nomina.status='CERRADA'
 	}
 	
-	def actualizarSaldo(Nomina nomina){
+	def actualizarSaldos(Nomina nomina){
+		
 		//Actualiza los saldos de prima vacacional
-		def rows=NominaPorEmpleadoDet.exequteQuery("from NominaPorEmpleadoDet d where d.parent.nomina=? and d.concepto.clave=?"
-			,[nomina,'P024'])
-		log.debug 'Registros de prima vacacional por actualizar: '+rows.size()
+		/*
+		long ejercicio=nomina.calendarioDet.calendario.ejercicio
+		def rows=NominaPorEmpleadoDet.findAll("from NominaPorEmpleadoDet d where d.parent.nomina=? and d.concepto.clave=?",[nomina,'P024'])
+		rows.each{
+			def control=ControlDeVacaciones.find("from ControlDeVacaciones v where v.ejercicio=? and v.empleado=?",[ejercicio,it.parent.empleado])
+			if(it.importeExcento>0){
+				control.acumuladoExcento=control.acumuladoExcento+it.importeExcento
+				control.
+				log.info "Acumulado actualizado de prima vacacional para $it.parent.empleado Excento:$it.importeExcento Acu: ${control?.acumuladoExcento}"
+			  	
+			}
+		}
+		*/
 	}
 
 	def depurar(Long id){

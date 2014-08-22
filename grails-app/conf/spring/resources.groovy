@@ -56,8 +56,8 @@ beans = {
 			ref('procesadorDeIncentivo'),
 			ref('procesadorSeguroSocial'),
 			ref('procesadorDeISTP'),
-			ref('procesadorDeInfonavit'),
 			ref('procesadorRetardoPermiso'),
+			ref('procesadorDeInfonavit'),
 			ref('prcoesadorDePensionAlimenticia'),
 			ref('procesadorDePrestamosPersonales')
 			]

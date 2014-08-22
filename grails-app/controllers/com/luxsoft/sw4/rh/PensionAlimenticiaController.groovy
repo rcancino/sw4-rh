@@ -37,8 +37,10 @@ class PensionAlimenticiaController {
 	}
 	
 	
+	
 	@Transactional
-	def update(PensionAlimenticia pension){
+	def actualizar(PensionAlimenticia pension){
+		println 'Actualizando pension....'
 		pension.validate()
 		if(pension.hasErrors()){
 			flash.message="Errores de validacion"

@@ -24,7 +24,7 @@
 	
 	<g:if test="${pensionInstance}">
 		<div class="col-md-6">
-		<g:form  class="form-horizontal numeric-form" action="update">
+		<g:form  class="form-horizontal numeric-form" action="actualizar">
 		
 			<f:with bean="${pensionInstance}">
 				<g:hiddenField name="id" value="${pensionInstance.id}"/>

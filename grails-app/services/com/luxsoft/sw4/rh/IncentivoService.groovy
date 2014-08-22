@@ -130,7 +130,7 @@ class IncentivoService {
 
     def calcularIncentivoMensual(Incentivo incentivo){
 		log.info 'Calculando bono mensual: '+incentivo.empleado
-    	def bono1=0.1
+    	def bono1=incentivo.tasaBono1
 		def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
 		//def per=new Periodo('01/07/2014','21/07/2014')
     	def rows=AsistenciaDet
@@ -161,10 +161,13 @@ class IncentivoService {
     	  }else
     	  	bono2=bono1
     	}
-    	incentivo.tasaBono1=bono1
     	incentivo.tasaBono2=bono2
 
     }
+	
+	def actcualisarIncentivosMensuales(int ejercicio,String mes){
+		
+	}
 
     
     

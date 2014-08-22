@@ -45,10 +45,11 @@ class ProcesadorDePrimaVacacional {
 		if(vacaciones>0){
 			
 			def empleado=ne.empleado
-			
+			def ejercicio=ne.nomina.calendarioDet.calendario.ejercicio
+			def control=ControlDeVacaciones.findByEjercicioAndEmpleado(ejercicio,empleado)
 			//def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
-			assert vacaciones.control,'Debe existir el control de vacaciones para: '+vacaciones.empleado
-			def acumulado=vacaciones.control.acumuladoExcento
+			assert control,'Debe existir el control de vacaciones para: '+empleado+' Para el ejercicio: '+ejercicio
+			def acumulado=control.acumuladoExcentoCalculado
 			
 			
 			def salarioDiario=ne.salarioDiarioBase
@@ -63,14 +64,14 @@ class ProcesadorDePrimaVacacional {
 			def tasa=0.25
 			
 			def prima=importeDeVacaciones*tasa
-			def acuExcento=acumulado.acumuladoExcento
-			def disponibleExcento=(topeSalarial-acuExcento)
+			//def acuExcento=acumulado.acumuladoExcento
+			def disponibleExcento=(topeSalarial-acumulado)
 			
 			
 			def gravado=disponibleExcento>prima?0.0:prima-disponibleExcento
 			def excento=disponibleExcento<prima?disponibleExcento:prima
 			
-			log.info "Acumulabe  excento:${acuExcento} disponible excento:${disponibleExcento}"
+			log.info "Acumulabe  excento:${acumulado} disponible excento:${disponibleExcento}"
 			log.info "Prima: ${prima} Excento:${excento} Gravado:${gravado}"
 			
 			nominaPorEmpleadoDet.importeGravado=gravado

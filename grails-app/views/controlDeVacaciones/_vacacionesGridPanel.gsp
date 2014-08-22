@@ -3,7 +3,8 @@
 		<tr>
 			<th>Folio</th>
 			<th>Empleado</th>
-			<th>Excento</th>
+			<th>Excento (ini)</th>
+			<th>Excento (real)</th>
 			<th>Gravado</th>
 			<th>Ant Dias</th>
 			<th>Ant Años</th>
@@ -28,6 +29,7 @@
 					</g:link>
 				</td>
 				<td><g:formatNumber number="${row.acumuladoExcento}" format="###.##"/></td>
+				<td><g:formatNumber number="${row.acumuladoExcentoCalculado}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.acumuladoGravado}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.antiguedadDias }" format="###"/></td>
 				<td><g:formatNumber number="${row.antiguedadYears }" format="###"/></td>

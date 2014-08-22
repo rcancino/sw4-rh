@@ -35,7 +35,7 @@ class ControlDeVacaciones {
 		empleado unique:['ejercicio']
     }
 
-    static transients = ['diasDisponibles','vigencia']
+    static transients = ['diasDisponibles','vigencia','acumuladoExcentoCalculado']
 
     int getDiasDisponibles(){
     	return diasVacaciones+diasTrasladados-diasTomados
@@ -54,5 +54,14 @@ class ControlDeVacaciones {
 			return DateUtils.addMonths(aniversario, 6)
 		return null
 	}
+	
+	
+	def getAcumuladoExcentoCalculado(){
+		def acumulado=NominaPorEmpleadoDet.executeQuery(
+			"select sum(n.importeExcento) from NominaPorEmpleadoDet n where n.parent.empleado=? and n.concepto.clave='P024' ",[empleado])
+		def res=acumulado.get(0)?:0.0
+		return res
+	} 
+	
 	
 }
