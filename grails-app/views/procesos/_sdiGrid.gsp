@@ -1,8 +1,9 @@
-<table class="table  table-bordered table-condensed table-hover">
+<table id="sdiGrid" class="table  table-bordered table-condensed table-hover">
 	<thead>
 		<tr>
 			<th>Clave</th>
 			<th>Nombre</th>
+			<th>Ubicacion</th>
 			<th>Per</th>
 			<th>Alta</th>
 			<th>SD</th>
@@ -23,6 +24,7 @@
 			<tr>
 				<td>${row.clave}</td>
 				<td style="max-width:300px;font-size:12px">${row.APELLIDO_PATERNO} ${row.APELLIDO_MATERNO} ${row.NOMBRES}</td>
+				<td>${row.UBICACION}</td>
 				<td>${row.PERIODICIDAD.substring(0,1)}</td>
 				<td><g:formatDate date="${row.ALTA}" format="dd/MM/yyyy"/></td>
 				<td><g:formatNumber number="${row.SDB}" format="#,###.##"/></td>

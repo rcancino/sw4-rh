@@ -7,6 +7,8 @@ import com.luxsoft.sw4.Periodo
 class ProcesosController {
 	
 	def empleadoService
+	
+	def salarioService
 
     def index() { }
 	
@@ -25,18 +27,20 @@ class ProcesosController {
 	def salarioDiarioIntegrado(){
 		
 		def bimestre=3
-		def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=?",[bimestre])
+		def ejercicio=session.ejercicio
+		//def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=?",[bimestre])
 		
-		def inicio=res.get(0)[0]
-		def fin=res.get(0)[1]
-		def periodo=new Periodo(inicio,fin)
-		[rows:[],bimestre:bimestre,periodo:periodo]
+		//def inicio=res.get(0)[0]
+		//def fin=res.get(0)[1]
+		//def periodo=new Periodo(inicio,fin)
+		[rows:[],bimestre:bimestre]
 	}
 	
 	def calcularSalarioDiarioIntegrado(){
-		def periodo=new Periodo('01/01/2014','02/03/2014')
-		def rows=empleadoService.calcularSalarioDiarioIntegrado(periodo)		
-		render view:'salarioDiarioIntegrado',model:[rows:rows,periodo:periodo]
+		//def periodo=new Periodo('01/01/2014','02/03/2014')
+		//def rows=empleadoService.calcularSalarioDiarioIntegrado(periodo)
+		def rows=salarioService.calcularSalarioDiario(2014,3)		
+		render view:'salarioDiarioIntegrado',model:[rows:rows]
 	}
 	
 	def aplicarSalarioDiarioIntegrado(){
