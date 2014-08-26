@@ -459,21 +459,6 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 						key="line-5"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
-				<image  evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="10"
-						y="17"
-						width="194"
-						height="54"
-						key="image-1"/>
-					<box>					<topPen lineWidth="0.5" lineStyle="Solid"/>
-					<leftPen lineWidth="0.5" lineStyle="Solid"/>
-					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-					<rightPen lineWidth="0.5" lineStyle="Solid"/>
-</box>
-					<graphicElement stretchType="NoStretch"/>
-					<imageExpression class="java.lang.String"><![CDATA["Z:\\Reportes_MySQL\\VENTAS\\PAPEL, S.A. .jpg"]]></imageExpression>
-				</image>
 				<staticText>
 					<reportElement
 						x="57"
@@ -1073,6 +1058,15 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 					</textElement>
 				<text><![CDATA[EXENTO]]></text>
 				</staticText>
+				<rectangle>
+					<reportElement
+						x="10"
+						y="17"
+						width="194"
+						height="54"
+						key="rectangle-1"/>
+					<graphicElement stretchType="NoStretch"/>
+				</rectangle>
 			</band>
 		</columnHeader>
 		<detail>

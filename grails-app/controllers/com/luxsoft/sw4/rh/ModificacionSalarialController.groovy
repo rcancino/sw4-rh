@@ -53,22 +53,31 @@ class ModificacionSalarialController {
 	
 	def reporteDeSDI(ModificacionSalarial ms){
 		log.info 'Reporte de analis SDI para modificacion salarial: '+ms
-		
-		def parameters=['EMPLEADO_ID':ms.empleado.id]
-		parameters['FECHA_INICIAL',ms.fecha.format('yyyy/MM/dd')]
+		def tipo=ms.empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
+		def ejercicio=session.ejercicio
+		def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=? and d.calendario.tipo=? and d.calendario.ejercicio=?"
+		,[ms.bimestre,tipo,ejercicio])
+	
+		def inicio=res.get(0)[0]
+		def fin=res.get(0)[1]
+		log.info 'Reporte de analis SDI para modificacion salarial: '+ms
+		def parameters=['ID':ms.empleado.id]
+		parameters['FECHA_INI',inicio.format('yyyy/MM/dd')]
+		parameters['FECHA_FIN',fin.format('yyyy/MM/dd')]
+		parameters['FECHA_ULT_MODIF',ms.fecha.format('yyyy/MM/dd')]
 		parameters['TIPO',ms.empleado.salario.periodicidad]
-		parameters['SALARIO',ms.salarioAnterior]
+		parameters['SALARIO',ms.sdiAnterior]
 		
-		JasperReportDef reportDef=new JasperReportDef(name:'AnalisisDeSDIPorEmpleado'
+		JasperReportDef reportDef=new JasperReportDef(name:'SalarioDiarioIntegradoIndividual'
 			,fileFormat:JasperExportFormat.PDF_FORMAT
 			,parameters:parameters)
 		
-		def res=jasperService.generateReport(reportDef)
-		def fileName="AnalisisSDI_"+ms.id
+		def out=jasperService.generateReport(reportDef)
+		def fileName="sdi_$ms.empleado.nombre.pdf"
 		response.setHeader("Content-disposition", 'attachment; filename="$fileName"' );
 		response.contentType = reportDef.fileFormat.mimeTyp
 		response.characterEncoding = "UTF-8"
-		response.outputStream << reportDef.contentStream.toByteArray()
+		response.outputStream << out
 		//chain controller:'jasper',action:'index',params:params
 	}
 
