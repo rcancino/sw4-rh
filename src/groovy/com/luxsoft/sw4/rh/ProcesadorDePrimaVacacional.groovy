@@ -49,7 +49,8 @@ class ProcesadorDePrimaVacacional {
 			def control=ControlDeVacaciones.findByEjercicioAndEmpleado(ejercicio,empleado)
 			//def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
 			assert control,'Debe existir el control de vacaciones para: '+empleado+' Para el ejercicio: '+ejercicio
-			def acumulado=control.acumuladoExcentoCalculado
+			//def acumulado=control.acumuladoExcentoCalculado
+			def acumulado=control.acumuladoExcento
 			
 			
 			def salarioDiario=ne.salarioDiarioBase

@@ -14,6 +14,8 @@ class NominaPorEmpleadoController {
 	
 	def conceptoDeNominaRuleResolver
 	
+	def ajusteIsr
+	
 
     def index() { }
 
@@ -169,6 +171,12 @@ class NominaPorEmpleadoController {
 		def res=list as JSON
 		
 		render res
+	}
+	
+	@Transactional
+	def ajusteMensualIsr(NominaPorEmpleado ne){
+		ajusteIsr.ajusteMensual(ne)
+		redirect action:'edit',params:[id:ne.id]
 	}
     
 }

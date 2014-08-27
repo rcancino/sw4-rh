@@ -82,6 +82,11 @@
 							id="${nominaPorEmpleadoInstance.id }" >
 							<span class="glyphicon glyphicon-remove-circle"></span> Eliminar 
 						</g:link>
+						
+						<g:link class="list-group-item" action="ajusteMensualIsr" onClick="return confirm('Aplicar ajuste mensual ISR?');"
+							id="${nominaPorEmpleadoInstance.id}" >
+							<span class="glyphicon glyphicon-cog"></span> Ajuste mensual ISR 
+						</g:link>
 
 						</g:if>	 
 					</div>

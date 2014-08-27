@@ -15,8 +15,9 @@ import com.luxsoft.sw4.rh.ProcesadorDeVacaciones
 import com.luxsoft.sw4.rh.ProcesadorRetardoPermiso;
 import com.luxsoft.sw4.rh.ProcesadorSeguroSocial
 import com.luxsoft.sw4.rh.ProcesadorDeIncentivo
-import com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas
 import com.luxsoft.sw4.rh.ProcesadorDePaternidad
+import com.luxsoft.sw4.rh.procesadores.*
+
 
 
 
@@ -90,4 +91,5 @@ beans = {
 	
 	procesadorDeChecadas(ProcesadorDeChecadas){}
 	prcoesadorDePensionAlimenticia(ProcesadorDePensionAlimenticia){}
+	ajusteIsr(AjusteIsr){}
 }

@@ -23,15 +23,25 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_ULT_MODIF" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="TIPO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date">
+		
+	</parameter>
+	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date">
+		
+	</parameter>
+	<parameter name="FECHA_ULT_MODIF" isForPrompting="true" class="java.lang.String">
+		
+	</parameter>
+	<parameter name="TIPO" isForPrompting="true" class="java.lang.String">
+		
+	</parameter>
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SDI_ANTERIOR" isForPrompting="true" class="java.math.BigDecimal"/>
-	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="SDI_ANTERIOR" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ID" isForPrompting="true" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["17"]]></defaultValueExpression>
+	</parameter>
 	<queryString><![CDATA[SELECT x.ID,X.CLAVE,x.NOMBRES,x.APELLIDO_PATERNO,X.APELLIDO_MATERNO,X.ALTA ,X.STATUS,DATE(B.FECHA) AS F_BAJA,P.numero_de_trabajador AS NUM_TRAB,P.JORNADA
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS UBICACION
 ,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS DEPTO
