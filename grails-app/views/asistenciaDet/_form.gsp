@@ -8,16 +8,16 @@
 	
 		<f:with bean="${asistenciaDetInstance }">
 			<f:field property="entrada1">
-				<input class="time " type="text" name="entrada1" value="${g.formatDate(date:asistenciaDetInstance.entrada1,format:'hh:mm') }" >
+				<input class="time " type="text" name="entrada1" value="${g.formatDate(date:asistenciaDetInstance.entrada1,format:'HH:mm') }" >
 			</f:field>
 			<f:field property="salida1">
-				<input class="time" type="text" name="salida1" value="${g.formatDate(date:asistenciaDetInstance.salida1,format:'hh:mm') }">
+				<input class="time" type="text" name="salida1" value="${g.formatDate(date:asistenciaDetInstance.salida1,format:'HH:mm') }">
 			</f:field>
 			<f:field property="entrada2">
-				<input class="time" type="text" name="entrada2" value="${g.formatDate(date:asistenciaDetInstance.salida1,format:'hh:mm') }">
+				<input class="time" type="text" name="entrada2" value="${g.formatDate(date:asistenciaDetInstance.entrada2,format:'HH:mm') }">
 			</f:field>
 			<f:field property="salida2">
-				<input class="time" type="text" name="salida2" value="${g.formatDate(date:asistenciaDetInstance.salida2,format:'hh:mm') }">
+				<input class="time" type="text" name="salida2" value="${g.formatDate(date:asistenciaDetInstance.salida2,format:'HH:mm') }">
 			</f:field>
 			<f:field property="manual"/>
 			<f:field property="cancelarIncentivo"/>

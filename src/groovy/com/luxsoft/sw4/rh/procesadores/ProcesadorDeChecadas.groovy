@@ -4,6 +4,7 @@ import com.luxsoft.sw4.*
 import com.luxsoft.sw4.rh.Asistencia
 import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.Checado
+import com.luxsoft.sw4.rh.DiaFestivo;
 import com.luxsoft.sw4.rh.Empleado
 import com.luxsoft.sw4.rh.TurnoDet
 
@@ -60,13 +61,35 @@ class ProcesadorDeChecadas {
 		def time=new Time(chk.hora.time)
 		def lectura=LocalTime.fromDateFields(chk.hora)
 		
+		def festivo=DiaFestivo.findByFecha(ad.fecha)
+		
+		if(festivo){
+			if(!festivo.parcial){
+				ad.tipo='DIA_FESTIVO'
+				return
+			}
+		}
+		
 		if(t.entrada1==null || t.salida1==null) { // Descanso
 			ad.tipo='DESCANSO'
-			//println 'Descanso para: '+ad.fecha.format('EEEE-dd')
 			return 
 		}
 		
-		//Medio dia
+		//Dia festivo parcial
+		if(festivo && festivo.parcial){
+			def salidaFestivo=LocalTime.fromDateFields(festivo.salida)
+			if(lectura<salidaFestivo) {
+				ad.entrada1=time
+				return
+			}
+			if(lectura>=salidaFestivo) {
+				ad.salida1=time
+				return
+			}
+			return
+		}
+		
+		//Medio dia (Sabado eje)
 		if(t.entrada2==null || t.salida2==null) {
 			if(lectura<t.salida1) {
 				ad.entrada1=time

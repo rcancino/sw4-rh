@@ -36,5 +36,15 @@ class Subsidio {
 		}
 		return res
 	}
+	
+	static Subsidio buscar(def valor){
+		return valores.find(){ it ->
+			(valor>it.desde && valor<=it.hasta)
+		}
+	}
+	
+	String toString(){
+		return "$desde - $hasta - Sub:$subsidio"
+	}
 
 }

@@ -14,10 +14,10 @@ import com.luxsoft.sw4.rh.Asistencia;
 import com.luxsoft.sw4.rh.AsistenciaDet
 import com.luxsoft.sw4.rh.BajaDeEmpleado;
 import com.luxsoft.sw4.rh.Checado
+import com.luxsoft.sw4.rh.DiaFestivo;
 import com.luxsoft.sw4.rh.Nomina;
 import com.luxsoft.sw4.rh.NominaPorEmpleado
 import com.luxsoft.sw4.rh.NominaPorEmpleadoDet
-
 import com.luxsoft.sw4.rh.Empleado
 import com.luxsoft.sw4.rh.CalendarioDet
 
@@ -146,8 +146,6 @@ class AsistenciaService {
 		asistencia.asistencias=asistencia.partidas.sum 0,{it.tipo=='ASISTENCIA'?1:0}
 		asistencia.faltas=asistencia.partidas.sum 0,{it.tipo=='FALTA'?1:0}
 		
-		
-		
 		//Actualizar horas trabajadas (Horas de trabajo)
 		asistencia.horasTrabajadas=0
 		asistencia.partidas.each{ it->
@@ -163,6 +161,7 @@ class AsistenciaService {
 		
 	}
 	
+	@NotTransactional
 	def boolean validarEmpleado(Empleado empleado,CalendarioDet calendarioDet,Asistencia asistencia){
 		
 		def asistenciaInicial=calendarioDet.asistencia.fechaInicial
@@ -197,7 +196,7 @@ class AsistenciaService {
 		log.info 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
 		def retardoMenor=0
 		asistencia.faltas=0
-		asistencia.partidas.each{ it->
+		asistencia.partidas.each{ it-> //Iteracion dia por dia
 			
 			it.retardoMenor=0
 			it.retardoMayor=0
@@ -206,14 +205,13 @@ class AsistenciaService {
 			it.minutosNoLaborados=0
 			def turnoDet=it.turnoDet
 			
+			def diaFestivo=DiaFestivo.findByFecha(it.fecha)
+			
 			if(it.entrada1) {
 				LocalTime inicio=it.turnoDet.entrada1
 				LocalTime entrada=LocalTime.fromDateFields(it.entrada1)
 				
-				//def retraso=(entrada.getLocalMillis()-inicio.getLocalMillis())/(1000*60) 
 				def retraso=(((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour())-((inicio.getHourOfDay()*60)+inicio.getMinuteOfHour()))
-				
-			//	def retraso=(entrada.getMinuteOfHour()-inicio.getMinuteOfHour())
 				
 				if(retraso>0){
 					
@@ -226,19 +224,16 @@ class AsistenciaService {
 				}
 			}
 			
+			//Evaluacion de retardo comida
 			if(turnoDet.salida1 && turnoDet.entrada2) {
-			//if(it.salida1 && it.entrada2) {
+			
 				if(it.salida1 && it.entrada2) {
 					LocalTime salida=LocalTime.fromDateFields(it.salida1)
 					LocalTime entrada=LocalTime.fromDateFields(it.entrada2)
-					//TimeDuration comida=TimeCategory.minus(it.entrada2,it.salida1)
-					//def retardoComida=( (comida.getHours()-1)*60 + comida.getMinutes() )
-					//def retardoComida=(entrada.getMinuteOfHour()-salida.getMinuteOfHour())
+					
 					def tiempoDeComida=( ((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour()) - ((salida.getHourOfDay()*60)+salida.getMinuteOfHour()) )
 					def retardoComida=tiempoDeComida-60
-					//log.info 'Retardo comida: '+retardoComida
-					//def retardoComida=( (comida.getHours()-1)*60 + comida.getMinutes() )
-				
+					
 					if(retardoComida>0) {
 						if(retardoComida<=10){
 							it.retardoMenorComida=retardoComida
@@ -280,6 +275,10 @@ class AsistenciaService {
 			
 			LocalTime salidaOficial=turnoDet.salida2?:turnoDet.salida1
 			
+			if(diaFestivo && diaFestivo.parcial){
+				salidaOficial=LocalTime.fromDateFields(diaFestivo.salida)
+			}
+			
 			if(salidaOficial){
 				
 				def salidaRegistrada=turnoDet.salida2?it.salida2:it.salida1
@@ -289,16 +288,13 @@ class AsistenciaService {
 					LocalTime salida=LocalTime.fromDateFields(salidaRegistrada)
 					def horas=salidaOficial.getHourOfDay()- salida.getHourOfDay()
 					def minutos=salidaOficial.getMinuteOfHour() - salida.getMinuteOfHour()
-					//log.info 'Horas: '+horas+ 'Minutos: '+minutos
-					//def salidaAnticipada=salidaOficial.getLocalMillis()/(1000*60)-salida.getLocalMillis()/(1000*60)
+					
 					def salidaAnticipada=horas*60+minutos
 					
 					if(salidaAnticipada>0){
-						//log.info 'Salida anticipada: '+salidaAnticipada
 						it.minutosNoLaborados+=salidaAnticipada
 					}
 				}
-				//it.minutosNoLaborados+=it.retardoMayor
 			}
 			
 		}
@@ -319,41 +315,6 @@ class AsistenciaService {
 		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		actualizarAsistencia(det.asistencia.empleado,tipo,calendarioDet)
 	}
-	
-	@Listener(namespace='gorm')
-	def afterInsert(Empleado emp){
-		//Buscar la posible existencia de asistencia
-	}
-	
-	// @NotTransactional
-	// def depurar(CalendarioDet calendarioDet){
-	// 	log.info 'Depurando asistencias para: '+calendarioDet
-	// 	def asistencias=Asistencia.findAll{calendarioDet==calendarioDet}
-	// 	def delete=[]
-	// 	asistencias.each{ a->
-	// 		def emp=a.empleado
-	// 		if(emp.baja){
-	// 			log.info 'Posible depuracion: '+a+ 'Baja: '+emp.baja+ ' Alta'
-	// 		}
-			
-	// 	}
-	// }
-	
-	/*
-	@Listener(namespace='gorm')
-	def afterInsert(BajaDeEmpleado baja){
-		log.debug 'Localizando la asistencia para el empleado: '+baja
-		def emp=baja.empleado
-		def fecha=baja.fecha
-		def found=Asistencia.executeQuery(
-			"from Asistencia det where det.empleado=? and date(?) between det.periodo.fechaInicial and det.periodo.fechaFinal"
-			,[emp,fecha])
-		if(found){
-			def asistencia=found.get(0)
-			log.debug 'Eliminar la asistencia: '+asistencia
-		}
-	}
-	*/
 
 	
 	def delete(Asistencia asistencia){
@@ -369,6 +330,8 @@ class AsistenciaService {
 		}
 		return asistencia
 	}
+	
+	
     
 }
 

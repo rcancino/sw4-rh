@@ -35,7 +35,7 @@ class AsistenciaDetController {
 		if(val){
 			try{
 				def time=fecha+" "+val
-				def res=Date.parse("dd/MM/yyyy hh:mm",time)
+				def res=Date.parse("dd/MM/yyyy HH:mm",time)
 				def newTime= new Time(res.getTime())
 				log.info 'Time calculado: '+newTime
 				return newTime

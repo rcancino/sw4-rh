@@ -17,7 +17,11 @@
   		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 		
 	</content>
-	<content tag="gridTitle">Registros de lectora periodo:  ${periodo}  Registros:${checadoTotalCount}</content>
+	<content tag="gridTitle">
+		<a href="#periodoForm" data-toggle="modal">
+			Registros de lectora periodo:  ${periodo}  Registros:${checadoTotalCount}
+		</a>
+	</content>
 	<content tag="gridTasks">
   		
   		<button class="btn btn-default" data-toggle="modal" data-target="#periodoForm">
@@ -36,7 +40,7 @@
 	<content tag="gridPanel">
 		<g:render template="lecturasGridPanel"/>
 		
-		
+		<g:render template="/_common/periodoForm" ,model="[action:'actualizarPeriodoDeLecturas']"/>
 	</content>
 	
 	

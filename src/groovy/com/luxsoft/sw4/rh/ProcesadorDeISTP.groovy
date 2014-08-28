@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import org.apache.commons.logging.LogFactory
 
 import com.luxsoft.sw4.rh.imss.*
+import com.luxsoft.sw4.rh.acu.*
 
 class ProcesadorDeISTP {
 	
@@ -98,6 +99,23 @@ class ProcesadorDeISTP {
 		
 		
 		
+	}
+	
+	def boolean procesarAjusteMensual(NominaPorEmpleadoDet det){
+		
+		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
+		if(found){
+			
+			if(det.concepto.clave=='D002'){
+				def ajuste=det.importeExcento+found.resultadoImpuesto
+				det.importeExcento=ajuste
+			}
+			if(found.resultadoSubsidio!=0.0){
+				
+			}
+			return true
+		}
+		return false
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

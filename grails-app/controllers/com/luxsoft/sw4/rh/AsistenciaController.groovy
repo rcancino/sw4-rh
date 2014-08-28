@@ -70,22 +70,29 @@ class AsistenciaController {
 		redirect view:'index', model:[tipo:tipo]
 	}
 
-	def lectora(Integer max,Periodo periodo){
+	def lectora(Integer max){
 		params.max = Math.min(max ?: 50, 100)
-		if(!periodo)
+		def periodo=session.periodoDeLecturas
+		if(!periodo){
 			periodo=new Periodo()
+			session.periodoDeLEcturas=periodo
+		}
 		def query=Checado.where{fecha>=periodo.fechaInicial &&
 			fecha<=periodo.fechaFinal
 		}
-		[checadoInstanceList:query.list(params),checadoTotalCount:query.count(params),periodo:periodo]
+		[checadoInstanceList:query.list(params),checadoTotalCount:query.count(),periodo:periodo]
 
 	}
 	
+	def actualizarPeriodoDeLecturas(Periodo periodo){
+		session.periodoDeLecturas=periodo
+		redirect action:'lectora'
+	}
+	
 	def importarLecturas(Periodo periodo){
-		
 		checadoService.importarLecturas(periodo)
-		session.periodo=periodo
-		redirect action:'lectora',params:params
+		session.periodoDeLecturas=periodo
+		redirect action:'lectora'
 	}
 
 	def actualizarAsistencias(Long id){
@@ -113,13 +120,15 @@ class AsistenciaController {
 			log.info "Actualizando dias trabajados "+d
 			asistencia.diasTrabajados=d
 			asistencia=asistencia.save flush:true
-			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+			//render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+			redirect action:'show',params:[id:asistencia.id]
 		}
 		
 		if(asistencia){
 			asistencia.diasTrabajados=0.0
 			asistencia=asistenciaService.actualizarAsistencia(asistencia)
-			render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+			//render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
+			redirect action:'show',params:[id:asistencia.id]
 		}
 	}
 
