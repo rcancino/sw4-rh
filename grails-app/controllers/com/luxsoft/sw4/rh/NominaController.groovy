@@ -8,6 +8,7 @@ import grails.transaction.Transactional
 import grails.validation.Validateable
 import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
+
 import org.grails.databinding.BindingFormat
 
 //@Transactional(readOnly = true)
@@ -17,6 +18,8 @@ class NominaController {
 	def nominaService
     //static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 	def importarNominaService
+	
+	def ajusteIsr
     
     def index(Integer max) {
         params.max = Math.min(max ?: 60, 100)
@@ -133,6 +136,17 @@ class NominaController {
 			}
 			'*'{ render status: NOT_FOUND }
 		}
+	}
+	
+	//@Transactional
+	def ajusteMensualIsr(Long id){
+		
+		Nomina nomina=Nomina.get(id)
+		nomina.partidas.each{
+			ajusteIsr.ajusteMensual(it)
+		}
+		nominaService.actualizarPartidas(Nomina.get(id))
+		redirect action:'show',params:[id:nomina.id]
 	}
     
 }

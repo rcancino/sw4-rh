@@ -53,10 +53,14 @@ class ProcesadorDeIncentivo {
 					break
 			}
 				
-			if(importeGravado>0){
+			if(importeGravado>0.0){
+				//println 'Mayor a 0.0 agregar'
 				nominaPorEmpleadoDet.importeGravado=importeGravado
 				nominaPorEmpleadoDet.importeExcento=0
 				ne.actualizar()
+			}else{
+				//println 'Menor a 0.0 quitar'
+				ne.removeFromConceptos(nominaPorEmpleadoDet)
 			}
 		}else{
 			if(nominaPorEmpleadoDet){
@@ -85,7 +89,7 @@ class ProcesadorDeIncentivo {
 	BigDecimal calcularImporteMensual(NominaPorEmpleado ne,Incentivo i){
 		def importe=0.0
 		def salario=ne.empleado.salario.salarioDiario
-		importe=(salario*30)i.tasaBono2
+		importe=(salario*30)*i.tasaBono2
 		return importe
 
 	}

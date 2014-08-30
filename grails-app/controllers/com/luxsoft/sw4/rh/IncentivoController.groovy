@@ -20,7 +20,20 @@ class IncentivoController {
 	def index() {
 		def calendarioDet
 		def tipo=params.tipo?:'QUINCENA'
-		redirect action:'quincenal'
+		def target=""
+		
+		switch (tipo) {
+			case 'QUINCENA':
+				target="quincenal"
+				break
+			case 'SEMANAL':
+				target="semanal"
+				break
+			case 'MENSUAL':
+				target="mensual"
+				break
+		}
+		redirect action:target
 		
 	}
 
@@ -112,9 +125,16 @@ class IncentivoController {
 	}
 	
 	@Transactional
-	def actualizarIncentivoMensual(ModificacionDeIncentivoCmd cmd){
+	def modificarIncentivoMensual(ModificacionDeIncentivoCmd cmd){
 		log.info 'Modificando el incentivo: '+cmd
-		def incentivos=Incentivo.findAll("from Incentivo i where i.ejercicio=? and i.mes=? and i.tipo=?",[cmd.ejercicio,cmd.mes,cmd.tipo])
+		def incentivos=Incentivo
+			.findAll("from Incentivo i where i.ejercicio=? and i.mes=? and i.tipo=? and i.empleado.perfil.ubicacion=?"
+				,[cmd.ejercicio,cmd.mes,cmd.tipo,cmd.ubicacion])
+		incentivos.each{ 
+			//println 'Actualizando bono para: '+it.empleado +' Nuevo: '+cmd.tasaBono1
+			it.tasaBono1=cmd.tasaBono1
+		}
+		redirect action:'mensual'
 	}
 
 	
@@ -155,7 +175,7 @@ class IncentivoController {
 		}
 		incentivoInstance.save flush:true
 		flash.message="Solicitud de incentivo actualizada: "+incentivoInstance.id
-		redirect action:'index'
+		redirect action:'index',params:[tipo:incentivoInstance.tipo]
 	}
 	
 

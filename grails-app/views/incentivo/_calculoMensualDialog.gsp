@@ -7,7 +7,7 @@
 					aria-hidden="true">&times;</button>
 				<h4 class="modal-title" id="myModalLabel">Cálculo incentivo mensual</h4>
 			</div>
-			<g:form class="form-horizontal" action="actualizarIncentivoMensual">
+			<g:form class="form-horizontal" action="modificarIncentivoMensual">
 				<div class="modal-body">
 					<g:hiddenField name="mes" value="${mes}"/>
 					<g:hiddenField name="ejercicio" value="${ejercicio}"/>

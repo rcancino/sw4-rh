@@ -21,7 +21,7 @@ class ProcesadorDePensionAlimenticia {
 			assert concepto,"Se debe de dar de alta el concepto de nomina: $conceptoClave"
 		}
 		
-		//Buscando un prestamo vigente
+		//Buscando un pension vigente
 		def pension=buscarPension(ne)
 		if(pension) {
 			
@@ -53,7 +53,7 @@ class ProcesadorDePensionAlimenticia {
 				ne.addToConceptos(neDet)
 			}
 			
-			log.info "Deduccion calculada de: ${importeExcento}"
+			log.info "Deduccion calculada de: ${importeExcento} base de calculo: $percepciones "
 			neDet.importeGravado=0
 			neDet.importeExcento=importeExcento.setScale(2,RoundingMode.HALF_EVEN)
 			ne.actualizar()

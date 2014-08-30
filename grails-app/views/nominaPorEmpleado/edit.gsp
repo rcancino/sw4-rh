@@ -14,8 +14,12 @@
 				<div class="page-header">
 					<h3>Nómina de : ${nominaPorEmpleadoInstance?.empleado}
 						<small>${nominaPorEmpleadoInstance?.ubicacion}  (${nominaPorEmpleadoInstance?.nomina?.periodo})  Días:${nominaPorEmpleadoInstance?.nomina?.diasPagados}</small>
-						
 					</h3>
+					<g:if test="${flash.message}">
+						<div class="alert alert-warning" role="status">
+							<strong>${flash.message}</strong>
+						</div>
+					</g:if>
 				</div>
 			</div>
 		</div>
@@ -86,6 +90,11 @@
 						<g:link class="list-group-item" action="ajusteMensualIsr" onClick="return confirm('Aplicar ajuste mensual ISR?');"
 							id="${nominaPorEmpleadoInstance.id}" >
 							<span class="glyphicon glyphicon-cog"></span> Ajuste mensual ISR 
+						</g:link>
+						
+						<g:link class="list-group-item" action="eliminarMensualIsr" onClick="return confirm('Aplicar ajuste mensual ISR?');"
+							id="${nominaPorEmpleadoInstance.id}" >
+							<span class="glyphicon glyphicon-trash"></span> Eliminar ajuste ISR 
 						</g:link>
 
 						</g:if>	 

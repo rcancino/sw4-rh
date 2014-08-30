@@ -8,13 +8,13 @@
 		<div class="row">
 			<div class="alert alert-info">
 				<h4>${incentivoInstance.empleado}</h4>
-				<h5>${incentivoInstance.calendarioIni.inicio.format('dd/MM/yyyy')} al 
-					${incentivoInstance.calendarioIni.fin.format('dd/MM/yyyy')}</h5>
+				<h5>${incentivoInstance.fechaInicial.format('dd/MM/yyyy')} al 
+					${incentivoInstance.fechaFinal.format('dd/MM/yyyy')}</h5>
 
 			</div>
 			<g:hasErrors bean="${incentivoInstance}">
 				<div class="alert alert-danger">
-					<g:renderErrors bean="${socioInstance}" as="list" />
+					<g:renderErrors bean="${incentivoInstance}" as="list" />
 				</div>
 			</g:hasErrors>
 		</div>
@@ -31,7 +31,7 @@
 				
 				<div class="form-group">
 					<div class="col-md-offset-2 col-sm-10">
-						<g:link class="btn btn-default" action="index"> Cancelar</g:link>
+						<g:link class="btn btn-default" action="index" params="[tipo:incentivoInstance.tipo]"> Cancelar</g:link>
 						<g:submitButton name="Salvar" class="btn btn-primary " />
 					</div>
 				</div>

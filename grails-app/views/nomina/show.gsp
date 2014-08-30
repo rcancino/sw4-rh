@@ -80,6 +80,14 @@
 							onclick="return confirm('Depurar toda la nomina?');"> Depurar
 						</g:link> 
 					</li>
+					<li>
+						<g:link  action="ajusteMensualIsr" 
+							onClick="return confirm('Aplicar ajuste mensual ISR?');"
+							id="${nominaInstance.id}" >
+							 Ajuste mensual ISR 
+						</g:link>
+					</li>
+					
 				</ul>
 			</div> <!-- Fin .btn-group -->
 			

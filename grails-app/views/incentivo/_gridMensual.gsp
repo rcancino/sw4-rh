@@ -20,7 +20,11 @@
 						<g:formatNumber number="${row.id}" format="####"/>
 					</g:link>
 				</td>
-				<td>${fieldValue(bean:row,field:"empleado")}</td>
+				<td>
+					<g:link action="edit" id="${row.id}">
+						${fieldValue(bean:row,field:"empleado")}
+					</g:link>
+				</td>
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td><g:formatNumber number="${row.tasaBono1 }" type="percent" maxFractionDigits="3"/></td>
 				<td><g:formatNumber number="${row.tasaBono2 }" type="percent" maxFractionDigits="3"/></td>

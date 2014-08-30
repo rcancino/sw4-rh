@@ -1,5 +1,7 @@
 package com.luxsoft.sw4.rh
 
+import com.luxsoft.sw4.rh.acu.IsptMensual;
+
 import grails.transaction.Transactional;
 import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.JSON
@@ -175,7 +177,26 @@ class NominaPorEmpleadoController {
 	
 	@Transactional
 	def ajusteMensualIsr(NominaPorEmpleado ne){
-		ajusteIsr.ajusteMensual(ne)
+		def found=IsptMensual.findByNominaPorEmpleado(ne)
+		if(!found){
+			ajusteIsr.ajusteMensual(ne)
+			nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
+		}else{
+			println 'Ya existe....'
+			flash.message="Nomina ya ajustada para ISTP mensual"
+		}
+		
+		redirect action:'edit',params:[id:ne.id]
+	}
+	
+	@Transactional
+	def eliminarMensualIsr(NominaPorEmpleado ne){
+		def found=IsptMensual.findByNominaPorEmpleado(ne)
+		if(found){
+			found.delete flush:true
+			nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
+			flash.message="Ajuste mensual ISTP eliminado"
+		}
 		redirect action:'edit',params:[id:ne.id]
 	}
     
