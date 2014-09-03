@@ -87,6 +87,7 @@ class ProcesadorDeISTP {
 				procesarAjusteMensualISPT(nominaPorEmpleadoDet)
 			}
 		}
+		procesarAjusteSubsidioAplicado(nominaEmpleado)
 		nominaEmpleado.actualizar()
 		
 	}
@@ -148,7 +149,16 @@ class ProcesadorDeISTP {
 				det.importeExcento=ajuste
 			}
 		}
-		
+	}
+	
+	def procesarAjusteSubsidioAplicado(NominaPorEmpleado ne){
+		def found=IsptMensual.findByNominaPorEmpleado(ne)
+		if(found){
+			
+			def ajuste=ne.subsidioEmpleoAplicado+found.resultadoSubsidioAplicado
+			println 'Ajustando subsidio aplicado en nomina empleado: '+ne + '  Subsidio aplicado nuevo: '+ajuste
+			ne.subsidioEmpleoAplicado=ajuste
+		}
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

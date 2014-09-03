@@ -45,7 +45,7 @@ class NominaPorEmpleadoController {
 
 	@Transactional
     def agregarConcepto(Long id,String tipo){
-		println 'Localizando conceptos para: '+tipo
+		
     	request.withFormat{
     		html {
 				
@@ -87,9 +87,18 @@ class NominaPorEmpleadoController {
 	}
 	
 	def actualizarNominaPorEmpleado(Long id){
-		def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+		def ajuste=IsptMensual.find("from IsptMensual i where i.nominaPorEmpleado.id=?",[id])
+		if(ajuste){
+			flash.message="Nomina con ajuste mensual ISPT (NO SE PUEDE RECALCULAR)"
+			redirect action:'edit',params:[id:id]
+			return
+		}else{
+			def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+			redirect action:'edit',params:[id:ne.id]
+			return
+		}
 		//event("ActualizacionDeNominaDet")
-		redirect action:'edit',params:[id:ne.id]
+		
 	}
 	
 	protected void notFound() {

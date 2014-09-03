@@ -17,19 +17,14 @@ class AjusteIsr {
 		
 		def mes=ne.nomina.calendarioDet.mes
 		def ejercicio=ne.nomina.calendarioDet.calendario.ejercicio
-		log.debug 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
-		log.debug 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
+		println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
+		println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
 
 		
 		def baseGravable=NominaPorEmpleadoDet
 		.executeQuery("select sum(d.baseGravable) from NominaPorEmpleado d "
 					+" where d.empleado=? and d.nomina.calendarioDet.mes=?",[ne.empleado,mes])[0]
-		/*
-		def registros=NominaPorEmpleado
-			.findAll("from NominaPorEmpleado d "
-					+" where d.empleado=? and d.nomina.calendarioDet.mes=?",[ne.empleado,mes])[0]
-		def baseGravable=registros.sum 0.0,{it.getPercepcionesGravadas()}
-	    */
+		
 					
 		log.debug  'Base gravable: ' +baseGravable
 		if(baseGravable<=0.0)
@@ -80,12 +75,20 @@ class AjusteIsr {
 	    def resultadoImpuesto=impuestoFinal-impuestoAcumuladoFinal
 	    def resultadoSubsidio=subsidioFinal-subsidioAcumuladoFinal
   
-        log.debug " Resultado impuesto final $resultadoImpuesto subsidio final: $resultadoSubsidio"
+        println " Resultado impuesto final $resultadoImpuesto subsidio final: $resultadoSubsidio"
   
 	     def istpMensual=IsptMensual
 		 .find("from IsptMensual i where i.empleado=? and i.mes=? and i.ejercicio=?"
           ,[ne.empleado,mes,ejercicio])
 		
+		 //Calcular el subsidio aplicado
+		 def subsidioAplicado=NominaPorEmpleado
+				.executeQuery("select sum(ne.subsidioEmpleoAplicado) from NominaPorEmpleado ne "
+					+" where ne.empleado=? and ne.nomina.calendarioDet.mes=? "
+					,[ne.empleado,mes])[0]?:0.0
+				
+		 def resultadoSubsidioAplicado=subsidioMensual-subsidioAplicado
+		 
 		 if(istpMensual==null){
 			istpMensual=new IsptMensual()
 			istpMensual.empleado=ne.empleado
@@ -107,6 +110,8 @@ class AjusteIsr {
 			istpMensual.subsidioAcumuladoFinal=subsidioAcumuladoFinal
 			istpMensual.resultadoImpuesto=resultadoImpuesto
 			istpMensual.resultadoSubsidio=resultadoSubsidio
+			istpMensual.subsidioAplicado=subsidioAplicado
+			istpMensual.resultadoSubsidioAplicado=resultadoSubsidioAplicado
 			istpMensual.save failOnError:true
 		}		
 		 

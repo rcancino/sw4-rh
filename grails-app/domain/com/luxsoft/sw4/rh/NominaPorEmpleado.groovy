@@ -128,10 +128,10 @@ class NominaPorEmpleado {
 		return a1.compareTo(a2)
 	}*/
 	
-	/*
-	def beforeInsert= {
-		antiguedadEnSemanas=getAntiguedad()
+	
+	def beforeUpdate() {
+		this.baseGravable=getPercepcionesGravadas()
 		
-	}*/
+	}
 	
 }

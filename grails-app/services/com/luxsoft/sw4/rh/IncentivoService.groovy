@@ -141,6 +141,7 @@ class IncentivoService {
     	def incapacidades=rows.sum 0.0,{it.tipo=='INCAPACIDAD'?1:0}
     	def incidenciaf=rows.sum 0.0,{it.tipo=='INCIDENCIA_F'?1:0}
     	log.debug "Dias: $rows.size Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
+		def checadasFaltantes=calcularChecadasFaltantes(rows)
 
     	faltas+=(incapacidades+incidenciaf)
 
@@ -161,9 +162,31 @@ class IncentivoService {
     	  }else
     	  	bono2=bono1
     	}
+		
+		if(checadasFaltantes>2){
+			bono2=0.0
+			incentivo.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
+		}
     	incentivo.tasaBono2=bono2
 
     }
+	
+	def calcularChecadasFaltantes(List registros){
+		def faltantes=0
+		registros.each{ det->
+			
+			if(det.turnoDet.entrada1 && !det.entrada1)
+				faltantes++
+			if(det.turnoDet.salida1 && !det.salida1)
+				faltantes++
+			if(det.turnoDet.entrada2 && !det.entrada2)
+				faltantes++
+			if(det.turnoDet.salida2 && !det.salida2)
+				faltantes++
+				
+		}
+		return faltantes
+	}
 	
 	def actcualisarIncentivosMensuales(int ejercicio,String mes){
 		

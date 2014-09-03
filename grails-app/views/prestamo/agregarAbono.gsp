@@ -34,7 +34,7 @@
 			<g:hiddenField name="prestamo.id" value="${prestamoInstance.id}"/>
 			<f:with bean="${prestamoAbonoInstance}">
 				<f:field property="fecha" input-class="form-control"/>
-				<f:field property="importe" input-class="form-control"/>
+				<f:field property="importe" input-class="form-control" input-type="text"/>
 				<f:field property="comentario" input-class="form-control"/>
 			</f:with>
 			</div>

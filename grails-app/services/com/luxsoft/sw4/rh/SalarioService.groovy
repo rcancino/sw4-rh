@@ -49,7 +49,7 @@ class SalarioService {
 			.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
 			.replaceAll('@FECHA_ULT_MODIF',fin.format('yyyy/MM/dd'))
 			.replaceAll('@TIPO', it+'L')
-			//println query
+			println query
 		Sql sql=new Sql(dataSource)
 		rows.addAll(sql.rows(query))
 		}
@@ -151,7 +151,7 @@ SELECT (CASE WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A'
 		,(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) AS SMG		
 		,(25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) AS TOPE_SMG		
 		,ROUND((-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24)/365,0)  AS YEARS
-		,ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0)  AS DIAS
+		,ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0)+1  AS DIAS
 		,(SELECT MAX(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_DIAS	
 		,(SELECT MAX(F.VAC_PRIMA) FROM factor_de_integracion F WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_PRIMA	
 		,(SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_DIAS WHEN  S.periodicidad='@TIPO' THEN F.SEM_DIAS	ELSE F.QNA_DIAS END	) 

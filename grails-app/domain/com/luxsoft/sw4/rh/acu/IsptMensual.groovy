@@ -19,19 +19,23 @@ class IsptMensual {
 	
 	
 	BigDecimal impuestoMensual
-	BigDecimal subsidioMensual
+	BigDecimal subsidioMensual //Segun tabla de tarifa
+	
+	
 	
 	BigDecimal impuestoFinal
 	BigDecimal subsidioFinal
 	
 	BigDecimal impuestoAcumulado
 	BigDecimal subsidioAcumulado
+	BigDecimal subsidioAplicado
 	
 	BigDecimal impuestoAcumuladoFinal
 	BigDecimal subsidioAcumuladoFinal
 	
 	BigDecimal resultadoImpuesto
 	BigDecimal resultadoSubsidio
+	BigDecimal resultadoSubsidioAplicado
 	
 	
 	Date dateCreated
@@ -40,5 +44,6 @@ class IsptMensual {
 	
 
     static constraints = {
+		
     }
 }

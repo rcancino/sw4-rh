@@ -72,12 +72,18 @@ class ProcesadorDePrestamosPersonales {
 				
 				
 				//Actualizar el saldo del prestamo
-				def abono=prestamo.abonos.find({it.nominaPorEmpleadoDet==neDet})
+				println 'neDet.id: '+neDet?.id
+				def abono=prestamo.abonos.find{
+					if(it.nominaPorEmpleadoDet){
+						return it.nominaPorEmpleadoDet.id==neDet?.id
+					}
+					return false
+				}
 				if(abono){
-					log.debug 'Actualizando abono a prestamo'
+					log.info 'Actualizando abono existente'
 					abono.importe=neDet.importeExcento
 				}else{
-					log.debug 'Aaplicando abono nuevo a prestamo'
+					log.info 'Generando abono nuevo '
 					abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
 							,importe:neDet.importeExcento
 							,nominaPorEmpleadoDet:neDet)

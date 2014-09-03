@@ -25,8 +25,8 @@ class ProcesosController {
 	}
 	
 	def salarioDiarioIntegrado(){
-		
-		def bimestre=3
+		def cal=session.calendarioSemana
+		def bimestre=4
 		def ejercicio=session.ejercicio
 		//def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=?",[bimestre])
 		
@@ -39,7 +39,7 @@ class ProcesosController {
 	def calcularSalarioDiarioIntegrado(){
 		//def periodo=new Periodo('01/01/2014','02/03/2014')
 		//def rows=empleadoService.calcularSalarioDiarioIntegrado(periodo)
-		def rows=salarioService.calcularSalarioDiario(2014,3)		
+		def rows=salarioService.calcularSalarioDiario(2014,4)		
 		render view:'salarioDiarioIntegrado',model:[rows:rows]
 	}
 	
