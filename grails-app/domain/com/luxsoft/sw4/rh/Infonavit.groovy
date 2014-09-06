@@ -7,6 +7,8 @@ class Infonavit {
 	Date alta=new Date()
 	
 	BigDecimal cuotaFija
+
+	BigDecimal cuotaDiaria
 	
 	Boolean activo=true
 	
@@ -20,13 +22,15 @@ class Infonavit {
 	
 	Date lastUpdated
 
+	static hasMany = [partidas:InfonavitDet]
+
     static constraints = {
 		tipo inList:['CUOTA_FIJA','VSM','PORCENTAJE']
     }
 	
 	static mapping = {
 		alta type:'date'
-		
-		
+		partidas cascade: "all-delete-orphan"
 	}
+	
 }
