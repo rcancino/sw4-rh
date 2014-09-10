@@ -26,6 +26,7 @@ class Infonavit {
 
     static constraints = {
 		tipo inList:['CUOTA_FIJA','VSM','PORCENTAJE']
+		cuotaFija sacle:6
     }
 	
 	static mapping = {

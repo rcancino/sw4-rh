@@ -6,7 +6,7 @@ import groovy.transform.ToString
 import groovy.time.TimeCategory
 
 @EqualsAndHashCode(includes='ejercicio,bimestre')
-@ToString(includes='ejercicio,bimestre,numero,importeBimestral,acumulado,saldo,fechaInicial,fechaFinal',includeNames=true,includePackage=false)
+@ToString(excludes="dateCreated,lastUpdated,infonavit",includeNames=true,includePackage=false)
 class InfonavitDet {
 	
 	Integer ejercicio
@@ -21,25 +21,27 @@ class InfonavitDet {
 
 	Integer diasDelBimestre
 
-	BigDecimal cuota //Puede ser vsm,%,cuotaFija
+	BigDecimal cuota=0.0 //Puede ser vsm,%,cuotaFija
 
 	BigDecimal salarioMinimoGeneral //Salario minimo general
 
 	BigDecimal salarioDiarioIntegrado
 
-	BigDecimal cuotaDiaria
+	BigDecimal cuotaDiaria=0.0
 
-	Integer faltas
+	Integer faltas=0
 
-	Integer incapacidades
+	Integer incapacidades=0
 
-	BigDecimal seguroDeVivienda
+	BigDecimal seguroDeVivienda=0.0
 
-	BigDecimal importeBimestral
+	BigDecimal importeBimestral=0.0
+	
+	BigDecimal cuotaBimestral=0.0
 
-	BigDecimal acumulado
+	BigDecimal acumulado=0.0
 
-	BigDecimal saldo
+	BigDecimal saldo=0.0
 
 	Date dateCreated
 	Date lastUpdated
@@ -64,10 +66,5 @@ class InfonavitDet {
 		}
 	}
 
-	def beforeInsert() {
-		diasDelBimestre=dias()
-	}
-	def beforeUpdate() {
-		diasDelBimestre=dias()
-	}
+	
 }
