@@ -6,7 +6,7 @@ import groovy.transform.ToString
 import groovy.time.TimeCategory
 
 @EqualsAndHashCode(includes='ejercicio,bimestre')
-@ToString(includes='ejercicio,bimestre,numero,importeBimestral,acumulado,saldo',includeNames=true,includePackage=false)
+@ToString(includes='ejercicio,bimestre,numero,importeBimestral,acumulado,saldo,fechaInicial,fechaFinal',includeNames=true,includePackage=false)
 class InfonavitDet {
 	
 	Integer ejercicio

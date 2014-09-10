@@ -15,4 +15,8 @@ class InfonavitController {
 		def query=Infonavit.where{empleado.salario.periodicidad==tipo}
 		[infonavitInstanceList:query.list(params),infonavitInstanceListTotal:query.count(),tipo:tipo]
 	}
+	
+	def calcularCuotaBimestral(Infonavit infonavit){
+		
+	}
 }

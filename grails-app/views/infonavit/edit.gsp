@@ -2,12 +2,12 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="layout" content="operacionesForm"/>
-	<title>INFONAVIT (alta)</title>
+	<title>INFONAVIT ${infonavitInstance.id }</title>
 	<r:require module="forms"/>
 </head>
 <body>
 	<content tag="header">
-		<h3>Alta de crédito INFONAVIT</h3>
+		<h3>CréditoINFONAVIT de: ${infonavitInstance.empleado}</h3>
 	</content>
 	
 	<content tag="operaciones">
@@ -18,11 +18,7 @@
 			<li>
 				<g:link action="create" class="list-group-item"> <span class="glyphicon glyphicon-floppy-saved"></span> Nuevo</g:link>
 			</li>
-			
-			
-			
 		</ul>
-		
 	</content>
 	
 	<content tag="formTitle">
@@ -34,7 +30,7 @@
 		<f:with bean="${infonavitInstance}">
 			<g:hiddenField name="id" value="${infonavitInstance?.id}" />
 			<g:hiddenField name="version" value="${infonavitInstance?.version}" />
-			<f:field property="empleado" input-class="form-control"/>
+			
 			<f:field property="alta" input-class="form-control"/>
 			<f:field property="numeroDeCredito" input-class="form-control"/>
 			<f:field property="tipo" input-class="form-control"/>
