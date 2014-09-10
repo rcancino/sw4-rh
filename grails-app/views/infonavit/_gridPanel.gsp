@@ -15,7 +15,7 @@
 		<g:each in="${infonavitInstanceList}" var="row">
 			<tr>
 				<td>
-					<g:link action="edit" id="${row.id}">
+					<g:link action="show" id="${row.id}">
 						<g:formatNumber number="${row.id}" format="######"/>
 					</g:link>
 				</td>
