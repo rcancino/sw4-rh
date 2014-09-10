@@ -31,13 +31,14 @@
 	</parameter>
 	<parameter name="CALENDARIODET" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT E.ID,C.FOLIO,C.INICIO,C.FIN,C.ASISTENCIA_FECHA_INICIAL,ASISTENCIA_FECHA_FINAL,U.CLAVE as sucursal,concat(ifnull(e.apellido_paterno,''),' ',ifnull(e.apellido_materno,''),' ',ifnull(e.nombres,'')) AS nombre,E.CLAVE as emp,P.numero_de_trabajador,D.FECHA,DAYOFWEEK(D.FECHA)AS DIA,D.entrada1
-,(SELECT ENTRADA1 FROM turno_det X WHERE X.turno_id=T.ID AND dias_idx=DAYOFWEEK(D.FECHA)) AS ENTRADA_TURNO
+,(SELECT ENTRADA1 FROM turno_det X WHERE X.turno_id=T.ID AND dias_idx=DAYOFWEEK(D.FECHA)-1) AS ENTRADA_TURNO
 ,d.retardo_menor
-,(case when dayofweek(fecha)=1 then 'DOM' when dayofweek(fecha)=2 then 'LUN' when dayofweek(fecha)=3 then 'MAR' when dayofweek(fecha)=4 then 'MIE' when dayofweek(fecha)=5 then 'JUE' when dayofweek(fecha)=6 then 'VIE' when dayofweek(fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
+,(case when dayofweek(d.fecha)=1 then 'DOM' when dayofweek(d.fecha)=2 then 'LUN' when dayofweek(d.fecha)=3 then 'MAR' when dayofweek(d.fecha)=4 then 'MIE' when dayofweek(d.fecha)=5 then 'JUE' when dayofweek(d.fecha)=6 then 'VIE' when dayofweek(d.fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 FROM  asistencia_det D JOIN asistencia A ON (A.id=D.asistencia_id) JOIN empleado E ON (E.ID=A.empleado_id) JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) JOIN ubicacion U ON  (P.ubicacion_id=U.ID)
 JOIN turno T ON ( P.turno_id=T.ID)  JOIN calendario_det C ON (C.ID=A.CALENDARIO_DET_ID)
+LEFT JOIN baja_de_empleado B ON (E.ID=B.EMPLEADO_ID)
 WHERE A.CALENDARIO_DET_ID=$P{CALENDARIODET} AND d.entrada1 is not null and d.retardo_menor<>0
-anD E.ID NOT IN ( SELECT B.EMPLEADO_ID FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID )
+AND (E.ALTA>B.FECHA OR B.ID IS NULL)
 ORDER BY U.ID,E.APELLIDO_PATERNO,E.APELLIDO_MATERNO]]></queryString>
 
 	<field name="ID" class="java.lang.Long"/>

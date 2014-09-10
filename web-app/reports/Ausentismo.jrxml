@@ -35,17 +35,27 @@
 SELECT 
 1 AS COUNTER,
 E.ID,C.FOLIO,C.INICIO,C.FIN,C.ASISTENCIA_FECHA_INICIAL,ASISTENCIA_FECHA_FINAL,U.CLAVE AS SUCURSAL,concat(ifnull(e.apellido_paterno,''),' ',ifnull(e.apellido_materno,''),' ',ifnull(e.nombres,'')) AS nombre,E.CLAVE AS EMP,P.numero_de_trabajador,D.FECHA,DAYOFWEEK(D.FECHA)AS DIA
-,(SELECT ENTRADA1 FROM turno_det X WHERE X.turno_id=T.ID AND dias_idx=DAYOFWEEK(D.FECHA)) AS ENTRADA_TURNO
-,(case when dayofweek(fecha)=1 then 'DOM' when dayofweek(fecha)=2 then 'LUN' when dayofweek(fecha)=3 then 'MAR' when dayofweek(fecha)=4 then 'MIE' when dayofweek(fecha)=5 then 'JUE' when dayofweek(fecha)=6 then 'VIE' when dayofweek(fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
+,(SELECT ENTRADA1 FROM turno_det X WHERE X.turno_id=T.ID AND dias_idx=DAYOFWEEK(D.FECHA)-1) AS ENTRADA_TURNO
+,(case when dayofweek(d.fecha)=1 then 'DOM' when dayofweek(d.fecha)=2 then 'LUN' when dayofweek(d.fecha)=3 then 'MAR' when dayofweek(d.fecha)=4 then 'MIE' when dayofweek(d.fecha)=5 then 'JUE' when dayofweek(d.fecha)=6 then 'VIE' when dayofweek(d.fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 ,D.TIPO
 ,CASE WHEN E.ALTA>=C.asistencia_fecha_inicial THEN 'NUEVO' ELSE 'NORMAL' END AS TIPO_EMPLEADO
+,B.FECHA AS FECHA_BAJA,E.ALTA
+,case when b.fecha is null then asistencia_fecha_final
+      when b.fecha <=e.alta then asistencia_fecha_final else b.fecha end as final
+,case when e.alta  between C.ASISTENCIA_FECHA_INICIAL and asistencia_fecha_final then e.alta else asistencia_fecha_inicial end as ini
 FROM 
 asistencia_det D JOIN asistencia A ON (A.id=D.asistencia_id) JOIN empleado E ON (E.ID=A.empleado_id) JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) JOIN ubicacion U ON  (P.ubicacion_id=U.ID)
 JOIN turno T ON ( P.turno_id=T.ID)  JOIN calendario_det C ON (C.ID=A.CALENDARIO_DET_ID)
+LEFT JOIN baja_de_empleado B ON (B.EMPLEADO_ID=E.ID)
 WHERE A.CALENDARIO_DET_ID=$P{CALENDARIODET} AND  d.TIPO NOT IN ('ASISTENCIA','DESCANSO')
-AND E.ID NOT IN ( SELECT B.EMPLEADO_ID FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID )
 ORDER BY U.ID
-)AS X WHERE X.TIPO_EMPLEADO<>'NUEVO']]></queryString>
+)AS X 
+WHERE fecha BETWEEN ini and final
+
+
+
+
+]]></queryString>
 
 	<field name="COUNTER" class="java.lang.Integer"/>
 	<field name="ID" class="java.lang.Long"/>
@@ -64,6 +74,10 @@ ORDER BY U.ID
 	<field name="diaSem" class="java.lang.String"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="TIPO_EMPLEADO" class="java.lang.String"/>
+	<field name="FECHA_BAJA" class="java.sql.Timestamp"/>
+	<field name="ALTA" class="java.sql.Timestamp"/>
+	<field name="final" class="java.sql.Timestamp"/>
+	<field name="ini" class="java.sql.Timestamp"/>
 
 	<variable name="AUSENCIAS" class="java.lang.Integer" resetType="Group" resetGroup="EMPLEADO" calculation="Sum">
 		<variableExpression><![CDATA[$F{COUNTER}]]></variableExpression>
