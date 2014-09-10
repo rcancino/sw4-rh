@@ -21,30 +21,18 @@
 				<g:hiddenField name="ID" value="${asistenciaInstance?.empleado?.id?:'%'}"/>
 				<div class="modal-body">
 					<div class="form-group">
-    					<label for="calendarioIni" class="col-sm-3">Calendario Inicial</label>
+    					<label for="calendarioIni" class="col-sm-3">Ejercicio</label>
     					<div class="col-sm-9">
-    						<g:select id="calendarioField" class="form-control"  
-								name="CAL_ID_INI" 
-								value="${calendarioDet}"
-								from="${periodos}" 
-								optionKey="id" 
-								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
-								/>
-								
+<%--    						<g:field type="text" name="FECHA_INI" class="form-control"/>	--%>
+							<g:datePicker id="inicioPago" name="FECHA_INI"  precision="day" class="form-control"/>
     					</div>
   					</div>
 					
 						<div class="form-group">
 	    					<label for="calendarioIni" class="col-sm-3">Calendario Final</label>
 	    					<div class="col-sm-9">
-	    						<g:select id="calendarioField" class="form-control"  
-									name="CAL_ID_FIN" 
-									value="${calendarioDet2}"
-									from="${periodos}" 
-									optionKey="id" 
-									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
-									/>
-									
+	    						
+								<g:datePicker id="inicioPago" name="FECHA_FIN"  precision="day" class="form-control"/>	
 	    					</div>
 	  					</div>
 						<div class="form-group">

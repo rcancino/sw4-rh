@@ -188,11 +188,7 @@ class IncentivoService {
 		return faltantes
 	}
 	
-	def actcualisarIncentivosMensuales(int ejercicio,String mes){
-		
-	}
-
-    
+	
     
     def Incentivo calcularIncentivoQuincenal(Incentivo bono){
     	log.debug 'Calculando bono quincenal '+bono
@@ -246,7 +242,7 @@ class IncentivoService {
 		def minutosNoLaborados=asistencia.minutosNoLaborados
     	def retardoMayor=asistencia.retardoMayor
     	def retardoMenor=asistencia.retardoMenor
-    	
+		
     	
 		
 		bono.tasaBono1=0.0
@@ -273,9 +269,49 @@ class IncentivoService {
 			bono.tasaBono2=0.0
 		}
 		
+		
+		def checadasFaltantesComida=calcularChecadasFaltantesComida(asistencia.partidas)
+		if(checadasFaltantesComida>0){
+			bono.tasaBono2=0.0
+			bono.comentario="CANCELADO POR $checadasFaltantesComida CHECADAS FALTANTES"
+		}
+		def checadasFaltantes=calcularChecadasFaltantesPrincipales(asistencia.partidas)
+		if(checadasFaltantes>0){
+			bono.tasaBono1=0.0
+			bono.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
+		}
+		
 		 return bono
 		
 		 
+	}
+	
+	def calcularChecadasFaltantesComida(List registros){
+		def faltantes=0
+		registros.each{ det->
+			
+			
+			if(det.turnoDet.salida1 && !det.salida1)
+				faltantes++
+			if(det.turnoDet.entrada2 && !det.entrada2)
+				faltantes++
+			
+				
+		}
+		return faltantes
+	}
+	
+	def calcularChecadasFaltantesPrincipales(List registros){
+		def faltantes=0
+		registros.each{ det->
+			
+			if(det.turnoDet.entrada1 && !det.entrada1)
+				faltantes++
+			if(det.turnoDet.salida2 && !det.salida2)
+				faltantes++
+				
+		}
+		return faltantes
 	}
 
 }
