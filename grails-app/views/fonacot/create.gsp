@@ -34,15 +34,10 @@
 			<f:with bean="${fonacotInstance }">
 				
 				<f:field property="empleado" input-class="form-control"/>
+				<f:field property="numeroDeCredito" input-class="form-control"/>
+				<f:field property="numeroDeFonacot" input-class="form-control"/>
 				<f:field property="importe" input-class="form-control" input-type="text"/>
 				<f:field property="retencionMensual" input-class="form-control" input-type="text"/>
-				
-				%{-- <f:field property="autorizo" input-class="form-control"/>
-				<f:field property="fechaDeAutorizacion" input-class="form-control"/>
-				<f:field property="importe" input-class="form-control" input-type='text'/>
-				<f:field property="tipo" input-class="form-control"/>
-				<f:field property="tasaDescuento" input-class="form-control"/>
-				<f:field property="importeFijo" input-class="form-control" disabled='true'/> --}%
 				
 			</f:with>
 			<div class="form-group">

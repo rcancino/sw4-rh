@@ -47,8 +47,11 @@
 			<g:hiddenField name="version" value="${fonacotInstance.version}"/>
 			<fieldset disabled>
 				<f:with bean="${fonacotInstance }">
+					<f:field property="numeroDeCredito" input-class="form-control"/>
+					<f:field property="numeroDeFonacot" input-class="form-control"/>
 					<f:field property="importe" input-class="form-control" input-type="text"/>
-					<f:field property="retencionMensual" input-class="form-control" input-type="text"/>
+					<f:field property="retencionMensual" input-class="form-control" />
+					<f:field property="retencionDiaria" input-class="form-control" />
 					<f:field property="totalAbonos" input-class="form-control" input-type="text"/>
 					<f:field property="saldo" input-class="form-control" input-type="text"/>
 				</f:with>

@@ -4,15 +4,21 @@ class Fonacot {
 
     Empleado empleado
 
-	BigDecimal importe=0
+    String numeroDeFonacot
+
+    String numeroDeCredito
+
+    BigDecimal importe=0
+
+    BigDecimal retencionMensual
+
+    BigDecimal retencionDiaria
 
 	BigDecimal saldo=0
 
 	BigDecimal totalAbonos
-	
-	BigDecimal importeFijo=0.0
 
-	BigDecimal retencionMensual
+    Boolean activo=true
 	
 	List abonos
 
@@ -21,7 +27,6 @@ class Fonacot {
 	
 
     static constraints = {
-    	
     }
 
     static hasMany = [abonos: FonacotAbono]

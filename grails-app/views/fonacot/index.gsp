@@ -16,7 +16,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="button-panel">
-					<div class="btn-group col-md-4">
+					<div class="btn-group">
 						<input type='text' id="nombreField" placeholder="Empleado" class="form-control">
 					</div>
 					<div class="btn-group">
@@ -50,7 +50,7 @@
 		</div><!-- end .row 2 -->
 
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-md-12">
 				<g:render template="gridPanel"/>
 			</div>
 		</div>
