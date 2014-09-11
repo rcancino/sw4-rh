@@ -10,9 +10,13 @@ class Infonavit {
 
 	BigDecimal cuotaDiaria
 	
+	BigDecimal ultimaDiferencia=0.0
+	
 	Boolean activo=true
 	
 	String numeroDeCredito
+	
+	Integer bimestreActual
 	
 	String tipo
 	

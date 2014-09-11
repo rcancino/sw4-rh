@@ -20,6 +20,10 @@ class MonedaUtils {
 		return importe.setScale(2, RoundingMode.HALF_EVEN);
 	}
 	
+	public static final round(BigDecimal importe,int decimales){
+		return importe.setScale(decimales, RoundingMode.HALF_EVEN);
+	}
+	
 	public static final BigDecimal calcularImpuesto(BigDecimal importe){
 		return importe.multiply(IVA);
 	}

@@ -51,7 +51,10 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li>
-							<g:link action="actualizarBimestre">Actualizar</g:link>
+							<g:link action="calcularBimestre" 
+								onclick="return confirm('Calcular cuota para  bimestre actual?')">
+								<span class="glyphicon glyphicon-cog"></span> Re calcular
+							</g:link>
 						</li>
 					</ul>
 				</div>

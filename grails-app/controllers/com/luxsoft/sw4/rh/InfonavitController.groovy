@@ -22,5 +22,25 @@ class InfonavitController {
 		def ejercicio=session.ejercicio
 		def bimestre=Bimestre.getCurrentBimestre()
 		infonavitService.calcularCuota(infonavit,ejercicio,bimestre)
+		flash.message="Cálculo de bimestre actualizado"
+		redirect action:'show',params:[id:infonavit.id]
+	}
+	
+	def calcularBimestre(){
+		def ejercicio=session.ejercicio
+		def bimestre=Bimestre.getCurrentBimestre()
+		def list=Infonavit.findAll{activo==true}
+		list.each{
+			infonavitService.calcularCuota(it,ejercicio,bimestre)
+		}
+		flash.message="Actualización general exitosa"
+		redirect action:'index'
+	}
+	
+	def show(Infonavit infonavitInstance){
+		log.info 'Probando .....'
+		def ejercicio=session.ejercicio
+		def abonos=infonavitService.geAcumuladoActual(infonavitInstance,ejercicio)
+		[infonavitInstance:infonavitInstance,abonos:abonos]	
 	}
 }

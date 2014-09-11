@@ -11,7 +11,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header">
-					<h3>Crédito INFONAVIT: ${infonavitInstance.empleado} (${infonavitInstance.empleado.clave })</h3>
+					<h3>Crédito INFONAVIT: ${infonavitInstance.empleado} (${infonavitInstance.empleado.clave } ID:${infonavitInstance.empleado.id })</h3>
 				</div>
 			</div>
 		</div><!-- end .row 1 Headeer-->
@@ -30,6 +30,7 @@
 					       <p class="form-control-static">${g.formatDate(date:infonavitInstance.alta)}</p>
 					     </div>
 					 </div>
+					 
 					 <div class="form-group">
 					    <label class="col-sm-3 control-label">Tipo</label>
 					    <div class="col-sm-3">
@@ -40,14 +41,43 @@
 					     	<p class="form-control-static">${g.formatNumber(number:infonavitInstance.cuotaFija,format:"##.####")}</p>
 					     </div>
 					</div>
+					
+					<g:if test="${infonavitInstance.partidas}">
+						<div class="form group">
+							<label class="col-sm-3 control-label">SMG</label>
+							<div class="col-sm-3">
+								<p class="form-control-static">${infonavitInstance?.partidas?.last()?.salarioMinimoGeneral}</p>
+							</div>
+						</div>
+						<div class="form group">
+							<label class="col-sm-3 control-label">SDI</label>
+							<div class="col-sm-3">
+								<p class="form-control-static">${infonavitInstance?.partidas?.last()?.salarioDiarioIntegrado}</p>
+							</div>
+						</div>
+					</g:if>
+					
 					<div class="form group">
 						<label class="col-sm-3 control-label">Cuota diaria</label>
 						<div class="col-sm-3">
 							<p class="form-control-static">${infonavitInstance.cuotaDiaria}</p>
 						</div>
-						<label class="col-sm-3 control-label">Comentario</label>
+						<label class="col-sm-3 control-label">Seguro</label>
 						 <div class="col-sm-3">
-						 	<p class="form-control-static">${infonavitInstance.comentario}</p>
+						 	<g:if test="${infonavitInstance.partidas}">
+						 		<p class="form-control-static">${infonavitInstance?.partidas?.last()?.seguroDeVivienda}</p>
+						 	</g:if>
+						 </div>
+					</div>
+					
+					<div class="form group">
+						<label class="col-sm-3 control-label">Bimestre actual</label>
+						<div class="col-sm-3">
+							<p class="form-control-static">${infonavitInstance.bimestreActual}</p>
+						</div>
+						<label class="col-sm-3 control-label">Abonos acumulados</label>
+						 <div class="col-sm-3">
+						 	<p class="form-control-static">${abonos}</p>
 						 </div>
 					</div>
 				</g:form>
