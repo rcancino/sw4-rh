@@ -63,6 +63,7 @@ navigation={
 				pagados()
 			}
 			infonavit(controller:'infonavit',action:'index')
+			fonacot(controller:'fonacot',action:'index')
 			
 			bonos(){
 				productividad()
