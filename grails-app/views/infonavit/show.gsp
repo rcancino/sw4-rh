@@ -1,13 +1,107 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<meta name="layout" content="operacionesForm"/>
-	<title>INFONAVIT (alta)</title>
+	%{-- <meta name="layout" content="operacionesForm"/> --}%
+	<title>INFONAVIT ${infonavitInstance.id }</title>
 	<r:require module="forms"/>
 </head>
 <body>
+	<div class="container">
+		
+		<div class="row">
+			<div class="col-md-12">
+				<div class="page-header">
+					<h3>Crédito INFONAVIT: ${infonavitInstance.empleado} (${infonavitInstance.empleado.clave })</h3>
+				</div>
+			</div>
+		</div><!-- end .row 1 Headeer-->
+
+		<div class="row">
+			<div class="col-md-8">
+				<g:form class="form-horizontal numeric-form" action="save">
+
+					<div class="form-group">
+					    <label class="col-sm-3 control-label">Número de crédito</label>
+					    <div class="col-sm-3">
+					      <p class="form-control-static">${infonavitInstance.numeroDeCredito}</p>
+					    </div>
+					    <label class="col-sm-3 control-label">Alta</label>
+					     <div class="col-sm-3">
+					       <p class="form-control-static">${g.formatDate(date:infonavitInstance.alta)}</p>
+					     </div>
+					 </div>
+					 <div class="form-group">
+					    <label class="col-sm-3 control-label">Tipo</label>
+					    <div class="col-sm-3">
+					    	<p class="form-control-static">${infonavitInstance.tipo}</p>
+					    </div>
+					    <label class="col-sm-3 control-label">Descuento</label>
+					     <div class="col-sm-3">
+					     	<p class="form-control-static">${g.formatNumber(number:infonavitInstance.cuotaFija,format:"##.####")}</p>
+					     </div>
+					</div>
+					<div class="form group">
+						<label class="col-sm-3 control-label">Cuota diaria</label>
+						<div class="col-sm-3">
+							<p class="form-control-static">${infonavitInstance.cuotaDiaria}</p>
+						</div>
+						<label class="col-sm-3 control-label">Comentario</label>
+						 <div class="col-sm-3">
+						 	<p class="form-control-static">${infonavitInstance.comentario}</p>
+						 </div>
+					</div>
+				</g:form>
+			</div>
+		</div><!-- end .row Forma -->
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="page-header">
+					<h4>Bimestres</h4>
+				</div>
+				<g:render template="bimestresGrid"/>
+				
+				
+			</div>
+		</div>
+
+		<div class="row">
+			<ul class="nav nav-pills ">
+				<li>
+					<g:link action="index" class="btn btn-default"> <span class="glyphicon glyphicon-list-alt"></span> Catálogo</g:link>
+				</li>
+				<li>
+					<g:link action="create" class="btn btn-default"> <span class="glyphicon glyphicon-floppy-saved"></span> Nuevo</g:link>
+				</li>
+				
+				<li>
+					<g:link action="edit" class="btn btn-default" id="${infonavitInstance.id}"> Editar</g:link>
+				</li>
+				
+				
+				<li>
+					<g:link action="calcularCuotaBimestral" id="${infonavitInstance.id}" 
+						class="btn btn-default"
+						onclick="return confirm('Calcular cuota para  bimestre actual?')"> 
+						<span class="glyphicon glyphicon-cog"></span> Re calcular
+					</g:link>
+				</li>
+
+				<li>
+					<g:link action="delete" id="${infonavitInstance.id}" 
+						class="btn btn-danger"
+						onclick="return confirm('Eliminar prestamo?')"> 
+						<span class="glyphicon glyphicon-trash"></span> Eliminar
+					</g:link>
+				</li>
+				
+			</ul>
+		</div> <!-- end .row 2 Toolbar-->
+
+	</div>
+
 	<content tag="header">
-		<h3>Crédito INFONAVIT: ${infonavitInstance.empleado}</h3>
+		<h3>Crédito INFONAVIT: ${infonavitInstance.empleado} (${infonavitInstance.empleado.clave })</h3>
 	</content>
 	
 	<content tag="formTitle">
@@ -44,7 +138,6 @@
 		<g:form class="form-horizontal numeric-form" action="save">
 		<fieldset disabled="disabled">
 		<f:with bean="${infonavitInstance}">
-			<f:field property="empleado" input-class="form-control"/>
 			<f:field property="alta" input-class="form-control"/>
 			<f:field property="numeroDeCredito" input-class="form-control"/>
 			<f:field property="tipo" input-class="form-control"/>

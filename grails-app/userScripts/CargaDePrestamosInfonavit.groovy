@@ -9,7 +9,7 @@ import com.luxsoft.sw4.rh.*
 		def clave=fields[1].split(" ")
 		def empleado=Empleado.findByClave(clave)
 		def tipo=fields[2]
-		def importe=fields[3] as BigDecimal
+		def importe=fields[5] as BigDecimal
 		def numeroDeCredito=fields[4]
 	  if(importe>0){
 		println 'Infonavit :'+empleado+ ' Cuota:' +importe

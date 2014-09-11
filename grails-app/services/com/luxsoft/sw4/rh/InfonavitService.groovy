@@ -26,13 +26,14 @@ class InfonavitService {
 				bimestre:bimestre,
 				diasDelBimestre:diasDelBimestre,
 				fechaInicial:periodoAnterior.fechaInicial,
-				fechaFinal:periodoAnterior.fechaFinal,
-				seguroDeVivienda:15.00,
-				salarioDiarioIntegrado:infonavit.empleado.salario.salarioDiarioIntegrado,
-				salarioMinimoGeneral:67.29
-				)
+				fechaFinal:periodoAnterior.fechaFinal)
 			infonavit.addToPartidas(det)
 		}
+		det.cuota=infonavit.cuotaFija
+		det.seguroDeVivienda=15.00
+		det.salarioDiarioIntegrado=infonavit.empleado.salario.salarioDiarioIntegrado
+		det.salarioMinimoGeneral=67.29
+		
 		def faltas=AsistenciaDet
 			.executeQuery("select count(*) from AsistenciaDet d "+
 				"where d.asistencia.empleado=? "+
@@ -54,10 +55,13 @@ class InfonavitService {
 		//Evaluando tipo
 		switch (infonavit.tipo){
 			case 'VSM':
-				calcularCuotaVSM(infonavit,det)
+				calcularDescuentoVSM(infonavit,det)
 				break
 			case 'CUOTA_FIJA':
+				calcularDescuentoCuotaFija(det)
+				break
 			case 'PORCENTAJE':
+				calcularDescuentoPorcentaje(det)
 			default:
 				break
 		}
@@ -66,14 +70,34 @@ class InfonavitService {
 		//Calcular faltas e incapacidades
     }
 	
-	def calcularCuotaVSM(Infonavit inf,InfonavitDet det){
+	def calcularDescuentoVSM(Infonavit inf,InfonavitDet det){
 		def cuotaMensual=inf.cuotaFija*det.salarioMinimoGeneral
-		log.info 'Cuota mensual: '+cuotaMensual
 		det.importeBimestral=cuotaMensual*2
-		log.debug 'Cuota Bimestreal: '+det.importeBimestral
 		det.cuotaDiaria=MonedaUtils.round(det.importeBimestral/det.diasDelBimestre)
 		inf.cuotaDiaria=det.cuotaDiaria
 		det.cuotaBimestral=det.cuotaDiaria*(det.diasDelBimestre-det.faltas-det.incapacidades)
 		det.cuotaBimestral+=det.seguroDeVivienda
+		log.debug "(Descuento VSM) Cuota diaria:$det.cuotaDiaria Importe bimestral:$det.importeBimestral Cuota bimestral:$det.cuotaBimestral"
+	}
+	
+	def calcularDescuentoPorcentaje(InfonavitDet det){
+		def sdi=det.salarioDiarioIntegrado
+		det.cuotaDiaria=MonedaUtils.round(sdi*(det.infonavit.cuotaFija/100))
+		det.infonavit.cuotaDiaria=det.cuotaDiaria
+		det.importeBimestral=det.cuotaDiaria*det.DiasDelBimestre
+		det.cuotaBimestral=det.cuotaDiaria*(det.diasDelBimestre-det.faltas-det.incapacidades)
+		det.cuotaBimestral+=det.seguroDeVivienda
+		log.debug "(Descuento en Porentaje) Cuota diaria:$det.cuotaDiaria Importe bimestral:$det.importeBimestral Cuota bimestral:$det.cuotaBimestral"
+		
+	}
+	
+	def calcularDescuentoCuotaFija(InfonavitDet det){
+		def cuotaMensual=inf.cuotaFija*2
+		det.cuotaDiaria=MonedaUtils.round(cuotaMensual/det.diasDelBimestre)
+		det.infonavit.cuotaDiaria=det.cuotaDiaria
+		det.importeBimestral=det.cuotaDiaria*det.diasDelBimestre
+		det.cuotaBimestral=det.cuotaDiaria*(det.diasDelBimestre-det.faltas-det.incapacidades)
+		det.cuotaBimestral+=det.seguroDeVivienda
+		log.info "(Descuento en Cuota Fija) Cuota diaria:$det.cuotaDiaria Importe bimestral:$det.importeBimestral Cuota bimestral:$det.cuotaBimestral"
 	}
 }
