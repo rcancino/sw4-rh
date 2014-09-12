@@ -20,7 +20,11 @@
   					<span class="glyphicon glyphicon-pencil"></span> Editar
   			    </g:link>
   			</li>
-  			
+  			<li><g:link action="delete" id="${fonacotInstance.id}"
+  					onclick="return confirm('Eliminar el registro de FONACOT');">
+  					<span class="glyphicon glyphicon-trash"></span> Eliminar
+  			    </g:link>
+  			</li>
   			<li>
 				<g:jasperReport
           			jasper="EstadoDeCuentaFonacot"
@@ -54,6 +58,7 @@
 					<f:field property="retencionDiaria" input-class="form-control" />
 					<f:field property="totalAbonos" input-class="form-control" input-type="text"/>
 					<f:field property="saldo" input-class="form-control" input-type="text"/>
+					<f:field property="activo" input-class="form-control" input-type="text"/>
 				</f:with>
 			</fieldset>
 			

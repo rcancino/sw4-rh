@@ -9,6 +9,9 @@
 			<div class="col-md-12">
 				<div class="page-header">
 					<h3>Prestamos FONACTO</h3>
+					<g:if test="${flash.message}">
+						<span class="label label-warning text-center">${flash.message}</span>
+					</g:if>
 				</div>
 			</div>
 		</div>

@@ -10,11 +10,11 @@ class FonacotService {
     	def empleado =fonacot.empleado
     	def tipo=empleado.salario.periodicidad
     	if(tipo=='SEMENAL'){
-    		def r=fonacot.retencionMensual/4
-    		fonacot.retencionMensual=r
+    		def r=fonacot.retencionMensual/7
+    		fonacot.retencionDiaria=r
 		}else if(tipo=='QUINCENAL'){
-			def r=fonacot.retencionMensual/2
-    		fonacot.retencionMensual=r
+			def r=fonacot.retencionMensual/15
+    		fonacot.retencionDiaria=r
 		}
 		fonacot.save failOnError:true
 

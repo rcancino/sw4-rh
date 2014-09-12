@@ -59,6 +59,7 @@ beans = {
 			ref('procesadorDeISTP'),
 			ref('procesadorRetardoPermiso'),
 			ref('procesadorDeInfonavit'),
+			ref('procesadorFonacot'),
 			ref('prcoesadorDePensionAlimenticia'),
 			ref('procesadorDePrestamosPersonales')
 			]
@@ -85,6 +86,7 @@ beans = {
 	procesadorDeVacaciones(ProcesadorDeVacaciones){}
 	procesadorDePrimaVacacional(ProcesadorDePrimaVacacional){}
 	procesadorDeInfonavit(ProcesadorDeInfonavit){}
+	procesadorFonacot(ProcesadorFonacot){}
 	procesadorDePrestamosPersonales(ProcesadorDePrestamosPersonales){}
 	procesadorRetardoPermiso(ProcesadorRetardoPermiso)
 	procesadorDePaternidad(ProcesadorDePaternidad)

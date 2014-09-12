@@ -11,7 +11,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${abonos}" var="row">
+		<g:each in="${fonacotInstance.abonos}" var="row">
 			<tr>
 				<td>
 					<g:link action="edit" id="${row.id}">

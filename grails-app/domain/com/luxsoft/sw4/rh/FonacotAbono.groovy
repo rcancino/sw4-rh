@@ -1,8 +1,10 @@
 package com.luxsoft.sw4.rh
 
 import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
 @EqualsAndHashCode(includes='nominaPorEmpleadoDet,fecha,importe')
+@ToString(includeNames=true,includePackage=false)
 class FonacotAbono {
 
     Date fecha

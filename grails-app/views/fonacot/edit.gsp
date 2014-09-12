@@ -59,8 +59,10 @@
 				<f:with bean="${fonacotInstance}">
 					<f:field property="importe" input-class="form-control" input-type="text"/>
 					<f:field property="retencionMensual" input-class="form-control" input-type="text"/>
+					<f:field property="retencionDiaria" input-class="form-control" input-type="text" input-disabled="disabled"/>
 					<f:field property="totalAbonos" input-class="form-control" input-type="text" input-disabled="disabled"/>
 					<f:field property="saldo" input-class="form-control" input-type="text" input-disabled="disabled"/>
+					<f:field property="activo" input-class="form-control" input-type="text"/>
 				</f:with>
 			</fieldset>
 
