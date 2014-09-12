@@ -9,12 +9,14 @@ class FonacotService {
     	log.info 'Salvando credito fonacot'
     	def empleado =fonacot.empleado
     	def tipo=empleado.salario.periodicidad
-    	if(tipo=='SEMENAL'){
-    		def r=fonacot.retencionMensual/7
+    	if(tipo=='SEMANAL'){
+    		def r=(fonacot.retencionMensual/4)/7
     		fonacot.retencionDiaria=r
 		}else if(tipo=='QUINCENAL'){
-			def r=fonacot.retencionMensual/15
+			def r=(fonacot.retencionMensual/2)15
     		fonacot.retencionDiaria=r
+		}else{
+			log.info 'No eixste regla para tipo: '+tipo
 		}
 		fonacot.save failOnError:true
 

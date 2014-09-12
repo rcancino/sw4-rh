@@ -5,7 +5,8 @@ import com.luxsoft.sw4.cfdi.CfdiSellador
 import com.luxsoft.sw4.cfdi.CfdiTimbrador
 import com.luxsoft.sw4.rh.ConceptoDeNominaRuleResolver
 import com.luxsoft.sw4.rh.ProcesadorDeISTP
-import com.luxsoft.sw4.rh.ProcesadorDeInfonavit;
+import com.luxsoft.sw4.rh.ProcesadorDeInfonavit
+import com.luxsoft.sw4.rh.ProcesadorDeFonacot
 import com.luxsoft.sw4.rh.ProcesadorDeNomina
 import com.luxsoft.sw4.rh.ProcesadorDePensionAlimenticia;
 import com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales
@@ -75,7 +76,8 @@ beans = {
 				 'D004':ref('procesadorDePrestamosPersonales'),
 				 'D012':ref('procesadorRetardoPermiso'),
 				 'P032':ref('procesadorDePaternidad'),
-				 'D006':ref('prcoesadorDePensionAlimenticia')
+				 'D006':ref('prcoesadorDePensionAlimenticia'),
+				 'D014':ref('procesadorDeFonacot')
 				 ]
 	}
 	

@@ -30,7 +30,7 @@ class ProcesadorDePrestamosPersonales {
 			def percepciones=getPercepciones(ne)
 			
 			def deducciones=0
-			["D002","D001","D013","D007","D006","D012"].each{ clave->
+			["D002","D001","D013","D007","D006","D012","D014"].each{ clave->
 				def c=ne.conceptos.find {it.concepto.clave==clave}
 				if(c){
 					log.info 'Deduccion previa: '+c

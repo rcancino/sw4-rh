@@ -8,7 +8,7 @@ import com.luxsoft.sw4.rh.imss.*
 
 class ProcesadorDeFonacot {
 	
-	def conceptoClave='D00X'
+	def conceptoClave='D014'
 	
 	def concepto
 	
@@ -29,17 +29,18 @@ class ProcesadorDeFonacot {
 		def fonacot=buscarPrestamo(ne)
 		if(fonacot) {
 
-			log.debug "Aplicando decucccon para FONACOT: ${fonacot.empleado} ${fonacot.tipo} ${fonacot.cuotaFija}"			
+					
 			if(!neDet){
 				neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				
 			}
 			def importeExcento=fonacot.retencionDiaria*ne.diasTrabajados
-			log.info "Deduccion calculada de: ${importeExcento}"
+			
+			println "Aplicando decucccon para FONACOT: ${fonacot.empleado}  ${fonacot.retencionDiaria} Deduccion calculada de: ${importeExcento}"
 			neDet.importeGravado=0
 			neDet.importeExcento=importeExcento
 			ne.actualizar()
-			if(!ne.id)
+			if(!neDet.id)
 				ne.addToConceptos(neDet)
 
 		}else{
@@ -53,7 +54,7 @@ class ProcesadorDeFonacot {
 	}
 	
 	private Fonacot buscarPrestamo(NominaPorEmpleado ne) {
-		def fonacot=fonacot.findAll("from Fonacot i where i.empleado=? and i.activo=true order by i.id desc"
+		def fonacot=Fonacot.findAll("from Fonacot i where i.empleado=? and i.activo=true order by i.id desc"
 			,[ne.empleado],[max:1])
 		return fonacot?fonacot[0]:null
 	}
