@@ -108,8 +108,9 @@ grails.project.dependency.resolution = {
 		runtime ':console:1.3'
 		//compile ":jasper:1.8.0"
 		//runtime ":jasper:1.8.0"
-		runtime ':jasper:1.6.1'
-		compile ":searchable:0.6.6"
+		//runtime ':jasper:1.6.1'
+		compile ":jasper:1.9.0"
+		//compile ":searchable:0.6.9"
 		//compile ":export:1.5"
 		//compile ":easygrid:1.5.0"
         
