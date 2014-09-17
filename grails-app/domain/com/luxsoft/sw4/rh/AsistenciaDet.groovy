@@ -65,6 +65,8 @@ class AsistenciaDet {
 	
 	Boolean cancelarIncentivo=false
 	
+	Boolean pagarTiempoExtra=false
+	
 	TurnoDet turnoDet
 	
 	Date dateCreated

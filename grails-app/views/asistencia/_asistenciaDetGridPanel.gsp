@@ -16,7 +16,8 @@
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Min NL"/></th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Hrs Tr"/></th>
 			<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
-			<th>Manual</th>
+			<th>M</th>
+			<th>TE</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -39,7 +40,25 @@
 				<td><g:fieldValue bean="${row}" field="minutosNoLaborados"/> </td>
 				<td><g:fieldValue bean="${row}" field="horasTrabajadas"/> </td>
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
-				<td><g:fieldValue bean="${row}" field="manual"/> </td>
+				
+				<td>
+					<g:if test="${row.manual }">
+						<span class="glyphicon glyphicon-ok"></span>
+					</g:if>
+					<g:else>
+						
+					</g:else>
+					 
+				</td>
+				<td>
+					<g:if test="${row.pagarTiempoExtra }">
+						<span class="glyphicon glyphicon-ok"></span>
+					</g:if>
+					<g:else>
+						
+					</g:else>
+					 
+				</td>
 			</tr>
 		</g:each>
 	</tbody>

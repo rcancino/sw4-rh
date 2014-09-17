@@ -65,14 +65,9 @@ navigation={
 			infonavit(controller:'infonavit',action:'index')
 			fonacot(controller:'fonacot',action:'index')
 			
-			bonos(){
-				productividad()
-				desempeno()
-				comisiones()
-				incentivo()
-				compensaciones()
-			}
+			
 			vacaciones(controller:'controlDeVacaciones',action:'index')
+			tiempoExtra(controller:'tiempoExtra',action:'index')
 			solicitudes()
 		}
 		procesos(){

@@ -1,39 +1,61 @@
 package com.luxsoft.sw4.rh
 
 
+
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 
-import org.grails.databinding.BindingFormat
 
-@ToString(includes='empleado,comentario',includeNames=true,includePackage=false)
-//@EqualsAndHashCode(includes="empleado,ejercicio,id")
+@ToString(excludes='asistencia,dateCreated,lastUpdated',includeNames=true,includePackage=false)
+@EqualsAndHashCode(includes="empleado,ejercicio,id")
 class TiempoExtra {
 	
+	Asistencia asistencia
 	
 	Empleado empleado
 	
 	Integer ejercicio
 	
-	@BindingFormat("dd/MM/yyyy")
-	Date fecha
+	String tipo
 	
-	String comentario
+	Integer folio
+	
+	NominaPorEmpleado nominaPorEmpleado
+	
+	BigDecimal doblesExcentos
+	
+	BigDecimal doblesGravados
 
+	BigDecimal triplesGravados
+	
 	Date dateCreated
 	
 	Date lastUpdated
+	
+	
 
 	static constraints = {
-		comentario nullable:true
+		asistencia unique:true
+		nominaPorEmpleado nullable:true
 	}
+	
+	static transients =['doblesExcentos','doblesGravados','triplesGravados']
 	
 	static hasMany = [partidas:TiempoExtraDet]
 	
 	static mapping = {
-		fecha type:'date'
 		partidas cascade: "all-delete-orphan"
 	}
-
+	
+	BigDecimal getDoblesExcentos(){
+		return partidas.sum (0.0,{it.importeDoblesExcentos})
+	}
+	
+	BigDecimal getDoblesGravados(){
+		return partidas.sum (0.0,{it.importeDoblesGravados})
+	}
     
+	BigDecimal getTriplesGravados(){
+		return partidas.sum (0.0,{it.importeTriplesGravados})
+	}
 }
