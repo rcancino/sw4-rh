@@ -48,7 +48,7 @@ class TiempoExtraDet {
 
 	static transients = ['salarioPorMinuto','total']
 	
-	static hasOne = [tiempoEstraImss:TiempoExtraImss]
+	static hasOne = [tiempoExtraImss:TiempoExtraImss]
 	
     static constraints = {
 		

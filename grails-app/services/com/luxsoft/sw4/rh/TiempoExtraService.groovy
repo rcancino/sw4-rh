@@ -168,11 +168,15 @@ class TiempoExtraService {
 		def diasPorSemana=3
 		
 		te.partidas.each{det->
-			def found=det.tiempoEstraImss
+			def found=det.tiempoExtraImss
 			if(found==null){
-				found=new TiempoExtraImss()
+				found=new TiempoExtraImss(tiempoExtraDet:det)
 			}
-			found.lunes=det.lunes*det.getSalarioPorMinuto()
+			Dias.NOMBRES.each{dd->
+				def dia=dd.toLowerCase()
+				found[dia]=det[dia]*det.getSalarioPorMinuto()
+			}
+			
 			det.tiempoExtraImss=found
 		}
 	}
