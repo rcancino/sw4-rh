@@ -283,6 +283,9 @@ class AsistenciaService {
 				
 				def salidaRegistrada=turnoDet.salida2?it.salida2:it.salida1
 				
+				if(salidaRegistrada==null)
+					salidaRegistrada=it.salida1
+					
 				if(salidaRegistrada){
 					
 					LocalTime salida=LocalTime.fromDateFields(salidaRegistrada)

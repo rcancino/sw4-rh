@@ -12,6 +12,9 @@
 			<div class="col-md-12">
 				<div class="page-header">
 					<h3>Crédito INFONAVIT: ${infonavitInstance.empleado} (${infonavitInstance.empleado.clave } ID:${infonavitInstance.empleado.id })</h3>
+					<g:if test="${flash.message}">
+						<p>${flash.message}</p>
+					</g:if>
 				</div>
 			</div>
 		</div><!-- end .row 1 Headeer-->
@@ -46,13 +49,13 @@
 						<div class="form group">
 							<label class="col-sm-3 control-label">SMG</label>
 							<div class="col-sm-3">
-								<p class="form-control-static">${infonavitInstance?.partidas?.last()?.salarioMinimoGeneral}</p>
+								<p class="form-control-static">${infonavitInstance.salarioMinimoGeneral}</p>
 							</div>
 						</div>
 						<div class="form group">
 							<label class="col-sm-3 control-label">SDI</label>
 							<div class="col-sm-3">
-								<p class="form-control-static">${infonavitInstance?.partidas?.last()?.salarioDiarioIntegrado}</p>
+								<p class="form-control-static">${infonavitInstance.salarioDiarioIntegrado}</p>
 							</div>
 						</div>
 					</g:if>
@@ -65,7 +68,7 @@
 						<label class="col-sm-3 control-label">Seguro</label>
 						 <div class="col-sm-3">
 						 	<g:if test="${infonavitInstance.partidas}">
-						 		<p class="form-control-static">${infonavitInstance?.partidas?.last()?.seguroDeVivienda}</p>
+						 		<p class="form-control-static">${infonavitInstance.seguroDeVivienda}</p>
 						 	</g:if>
 						 </div>
 					</div>

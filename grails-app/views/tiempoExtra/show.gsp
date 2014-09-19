@@ -79,11 +79,53 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<div class="page-header">
-					<h4>Detalle</h4>
-				</div>
-				<g:render template="partidasGrid"/>
 				
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="active"><a href="#detalle" role="tab" data-toggle="tab">Detalle</a></li>
+  					<li><a href="#imss" role="tab" data-toggle="tab">IMSS</a></li>
+				</ul>
+				
+				
+				<div class="tab-content">
+					<div class="tab-pane active" id="detalle">
+						<g:render template="partidasGrid"/>
+					</div>
+  					<div class="tab-pane" id="imss">
+  						<table class="table table-striped table-bordered table-condensed">
+  							<thead>
+								<tr>
+									<th>Semana</th>
+									<th>Lunes</th>
+									<th>Martes</th>
+									<th>Miércoles</th>
+									<th>Jueves</th>
+									<th>Viernes</th>
+									<th>Sábado</th>
+									<th>Domingo</th>
+									<th>Total</th>
+									<th>Integra</th>
+								</tr>
+							</thead>
+							<tbody>
+								<g:each in="${tiempoExtraInstance.partidas}" var="row">
+									<tr>
+										<td><g:formatNumber number="${row.semana}" format="##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.lunes}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.martes}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.miercoles}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.jueves}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.viernes}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.sabado}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.domingo}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.total}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.integra}" format="#,###.##"/></td>
+									</tr>
+								</g:each>
+							</tbody>
+  						</table>
+  						
+  					</div>
+				</div>
 				
 			</div>
 		</div>

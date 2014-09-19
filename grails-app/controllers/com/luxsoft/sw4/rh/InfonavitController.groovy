@@ -21,8 +21,8 @@ class InfonavitController {
 	def calcularCuotaBimestral(Infonavit infonavit){
 		def ejercicio=session.ejercicio
 		def bimestre=Bimestre.getCurrentBimestre()
-		infonavitService.calcularCuota(infonavit,ejercicio,bimestre)
-		flash.message="Cálculo de bimestre actualizado"
+		//infonavitService.calcularCuota(infonavit,ejercicio,bimestre)
+		flash.message="Cálculo de bimestre $bimestre actualizado"
 		redirect action:'show',params:[id:infonavit.id]
 	}
 	

@@ -1,6 +1,9 @@
 package com.luxsoft.sw4.rh
 
+import java.math.BigDecimal;
+
 import grails.transaction.Transactional
+
 import com.luxsoft.sw4.*
 
 @Transactional
@@ -37,25 +40,13 @@ class InfonavitService {
 		det.incapacidades=0
 		det.saldo=infonavit.ultimaDiferencia
 		infonavit.bimestreActual=bimestre
-		/*
-		def faltas=AsistenciaDet
-			.executeQuery("select count(*) from AsistenciaDet d "+
-				"where d.asistencia.empleado=? "+
-				" and date(d.fecha) between ? and ? and d.tipo=?",
-			[infonavit.empleado
-			,periodoAnterior.fechaInicial
-			,periodoAnterior.fechaFinal
-			,'FALTA'])
-		det.faltas=faltas.get(0)
-		def incapacidad=AsistenciaDet
-			.executeQuery("select count(*) from AsistenciaDet d "+
-				"where d.asistencia.empleado=? "+
-				" and date(d.fecha) between ? and ? and d.tipo=?",
-				[infonavit.empleado
-					,periodoAnterior.fechaInicial
-					,periodoAnterior.fechaFinal
-					,'INCAPACIDAD'])
-		*/
+		infonavit.salarioMinimoGeneral=det.salarioMinimoGeneral
+		infonavit.salarioDiarioIntegrado=det.salarioDiarioIntegrado
+		infonavit.diasDelBimestre=det.diasDelBimestre
+		
+		infonavit.seguroDeVivienda=det.seguroDeVivienda
+		 
+		
 		//Evaluando tipo
 		switch (infonavit.tipo){
 			case 'VSM':
@@ -69,6 +60,7 @@ class InfonavitService {
 			default:
 				break
 		}
+		infonavit.importeBimestral=det.importeBimestral
 		return det
 		
 		//Calcular faltas e incapacidades

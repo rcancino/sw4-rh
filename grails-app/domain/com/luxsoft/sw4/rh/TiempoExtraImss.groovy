@@ -1,7 +1,14 @@
 package com.luxsoft.sw4.rh
 
-class TiempoExtraImss {
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
+@EqualsAndHashCode(includes="semana")
+@ToString(excludes='tiempoExtraDet',includeNames=true,includePackage=false)
+class TiempoExtraImss {
+	
+	
+	Integer semana
 	BigDecimal lunes=0.0
 	BigDecimal martes=0.0
 	BigDecimal miercoles=0.0

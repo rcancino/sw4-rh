@@ -43,21 +43,35 @@
 						params="[tipo:'QUINCENA']"> Quincena
 					</g:link>
 					
+				</div>
+				
+				<div class="btn-group">
+					<button type="button" name="reportes"
+						class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+						role="menu">
+						Operaciones <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							<g:if test="${calendarioDet}">
+								<g:link action="actualizarAsistencias" class="" 
+									onclick="return confirm('Actualizar la asistencia de todos los empleados?','${tipo} ${calendarioDet?.folio}');" 
+									id="${calendarioDet.id}">
+									<span class="glyphicon glyphicon-cog"></span> Actualizar
+								</g:link>
+							</g:if>
+						</li>
+						<li>
+							<g:link action="eliminarAsistencias" class="" 
+								onclick="return confirm('Eliminar las asistencias de todos los empleados? (${tipo} ${calendarioDet?.folio})');" 
+								id="${calendarioDet.id}"
+								params="[tipo:tipo]">
+								<span class="glyphicon glyphicon-trash"></span> Eliminar
+							</g:link>
+						</li>
+						
+					</ul>
 					
-					<g:if test="${calendarioDet}">
-						<g:link action="actualizarAsistencias" class="btn btn-warning" 
-							onclick="return confirm('Actualizar la asistencia de todos los empleados?','${tipo} ${calendarioDet?.folio}');" 
-							id="${calendarioDet.id}">
-							<span class="glyphicon glyphicon-cog"></span> Actualizar
-						</g:link>
-					</g:if>
-					%{-- <g:if test="${calendarioDet}">
-						<g:link action="depurarAsistencias" class="btn btn-default" 
-							onclick="return confirm('Depurar la asistencia de todos los empleados?','${tipo} ${calendarioDet?.folio}');" 
-							id="${calendarioDet.id}">
-							Depurar
-						</g:link>
-					</g:if> --}%
 				</div>
 			
 				<div class="btn-group">

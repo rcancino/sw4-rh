@@ -8,8 +8,8 @@
 		<div class="row">
 			<div class="alert alert-info">
 				<h4>${incentivoInstance.empleado}</h4>
-				<h5>${incentivoInstance.fechaInicial.format('dd/MM/yyyy')} al 
-					${incentivoInstance.fechaFinal.format('dd/MM/yyyy')}</h5>
+				<h5>${incentivoInstance?.fechaInicial?.format('dd/MM/yyyy')} al 
+					${incentivoInstance?.fechaFinal?.format('dd/MM/yyyy')}</h5>
 
 			</div>
 			<g:hasErrors bean="${incentivoInstance}">

@@ -36,8 +36,10 @@
 ,A.retardo_menor as ret_,A.retardo_mayor,A.retardo_comida
 ,(case when dayofweek(fecha)=1 then 'DOM' when dayofweek(fecha)=2 then 'LUN' when dayofweek(fecha)=3 then 'MAR' when dayofweek(fecha)=4 then 'MIE' when dayofweek(fecha)=5 then 'JUE' when dayofweek(fecha)=6 then 'VIE' when dayofweek(fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 ,D.id,d.fecha,D.entrada1,d.salida1,d.entrada2,d.salida2,d.entrada3,d.salida3,d.comentario
-,((CASE WHEN d.tipo='FALTA' AND A.dias_trabajados>0  THEN '' 	WHEN d.tipo='FALTA' THEN 'FLT' WHEN d.tipo='DESCANSO' THEN 'DSC' WHEN d.tipo='DIA_FESTIVO' THEN 'FES' WHEN d.tipo='VACACIONES' THEN 'VAC' WHEN d.tipo='INCAPACIDAD' THEN 'INC'
-		WHEN d.tipo='INCIDENCIA' THEN 'PCG' WHEN d.tipo='INCIDENCIA_F' THEN 'PSG' WHEN d.tipo='ASISTENCIA' THEN 'AST' ELSE 'NDT' END)) as tipoReg
+,CASE WHEN E.ALTA<=D.FECHA AND D.TIPO='FALTA' THEN 'FLT' WHEN (SELECT B.FECHA FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID)<D.FECHA AND D.TIPO='FALTA' THEN '' ELSE 
+	((CASE WHEN d.tipo='FALTA' AND A.dias_trabajados>0  THEN '' 	WHEN d.tipo='FALTA' THEN 'FLT' WHEN d.tipo='DESCANSO' THEN 'DSC' WHEN d.tipo='DIA_FESTIVO' THEN 'FES' WHEN d.tipo='VACACIONES' THEN 'VAC' WHEN d.tipo='INCAPACIDAD' THEN 'INC'
+		WHEN d.tipo='INCIDENCIA' THEN 'PCG' WHEN d.tipo='INCIDENCIA_F' THEN 'PSG' WHEN d.tipo='ASISTENCIA' THEN 'AST' ELSE 'NDT' END))
+		END AS tipoReg
 ,a.horas_trabajadas,d.horas_trabajadas as hrsTrab
 ,ifnull(((TIME_TO_SEC((CASE WHEN D.SALIDA2 IS NULL THEN SEC_TO_TIME((TIME_TO_SEC(d.salida1)-TIME_TO_SEC(d.entrada1))) ELSE SEC_TO_TIME((TIME_TO_SEC(d.salida2)-TIME_TO_SEC(d.entrada1))) END)))/60)/60,0) AS hrsTrabReal
 ,d.retardo_menor as retMn,d.retardo_mayor as retMy,d.retardo_comida as retCm
@@ -357,7 +359,7 @@ WHERE E.ID LIKE $P{ID} AND C.ID=$P{CALENDARIO_ID} AND E.ID NOT IN(SELECT B.EMPLE
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>

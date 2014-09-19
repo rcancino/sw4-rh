@@ -15,7 +15,8 @@
 			<th>Tot(min)</th>
 			<th>Dobles(min)</th>
 			<th>Triples(min)</th>
-
+			
+			<th>$ x Min</th>
 			<th>Dobles E($)</th>
 			<th>Dobles G($)</th>
 			<th>Triples G($)</th>
@@ -37,6 +38,10 @@
 				<td><g:formatNumber number="${row.totalMinutos}" format="###"/></td>
 				<td><g:formatNumber number="${row.minutosDobles}" format="###"/></td>
 				<td><g:formatNumber number="${row.minutosTriples}" format="###"/></td>
+				
+				<td><g:formatNumber number="${row.salarioPorMinuto}" format="###.####"/></td>
+				
+				
 				<td><g:formatNumber number="${row.importeDoblesExcentos}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.importeDoblesGravados}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.importeTriplesGravados}" format="###.##"/></td>

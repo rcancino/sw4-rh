@@ -1,5 +1,7 @@
 package com.luxsoft.sw4.rh
 
+import java.math.BigDecimal;
+
 class Infonavit {
 	
 	Empleado empleado
@@ -19,6 +21,16 @@ class Infonavit {
 	Integer bimestreActual
 	
 	String tipo
+	
+	BigDecimal salarioMinimoGeneral //Salario minimo general
+	
+	BigDecimal salarioDiarioIntegrado
+	
+	Integer diasDelBimestre
+	
+	BigDecimal importeBimestral
+	
+	BigDecimal seguroDeVivienda
 	
 	String comentario
 	

@@ -35,11 +35,13 @@
 				<td><g:if test="${row.cfdi}">
 						<g:jasperReport
 							controller="reciboDeNomina"
-							action="imprimirCfdi"
+							action="impresionDirecta"
 							jasper="NominaDigitalCFDI" 
 							format="PDF" 
-							name="${row.cfdi.folio }">
-							<g:hiddenField name="id" value="${row.cfdi.id}"/>
+							name="${row.cfdi.folio }"
+							inline="true">
+<%--							<g:hiddenField name="id" value="${row.cfdi.id}"/>--%>
+							<g:hiddenField name="id" value="${row.nomina.id}"/>
 						</g:jasperReport>
 						
 					</g:if>

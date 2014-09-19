@@ -2,13 +2,13 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="ChecadasFaltantes"
-		 columnCount="1"
+		 name="BitacoraChecado"
+		 columnCount="3"
 		 printOrder="Vertical"
 		 orientation="Portrait"
 		 pageWidth="612"
 		 pageHeight="792"
-		 columnWidth="552"
+		 columnWidth="184"
 		 columnSpacing="0"
 		 leftMargin="30"
 		 rightMargin="30"
@@ -27,80 +27,52 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["CHECADAS FALTANTES"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["BITACORA DE CHECADO"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CALENDARIODET" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT C.ASISTENCIA_FECHA_INICIAL,ASISTENCIA_FECHA_FINAL,u.clave as 'ubic',e.id,e.CLAVE AS clavemp,CONCAT(apellido_paterno,' ',apellido_materno,' ',nombres) as emp,fecha,DAYOFWEEK(fecha) as dia,d.entrada1,d.salida1,d.entrada2,d.salida2,d.entrada3,d.salida3
-,if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0) AS CHK
-,(CASE 
- WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND D.FECHA =(SELECT FECHA FROM dia_festivo F WHERE F.FECHA=D.FECHA ) THEN 2
- WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 THEN  4
- WHEN DAYOFWEEK(FECHA) =7 THEN 2 
- ELSE 4 END)-(if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0)) AS CHK_FLT
-,CASE 
- WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND D.FECHA =(SELECT FECHA FROM dia_festivo F WHERE F.FECHA=D.FECHA ) 
- AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK'
- WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=4 THEN 'OK' 
- WHEN DAYOFWEEK(FECHA) =7 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK' 
- WHEN M.TURNO_ID in (9,8) AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK' 
-ELSE 'ERROR' END AS 'VALID'
-,M.TURNO_ID,a.periodo_fecha_inicial,a.periodo_fecha_final
-FROM asistencia a join asistencia_det d on (a.id=d.asistencia_id) join empleado e on (e.id=a.empleado_id) JOIN ubicacion U ON (U.ID=D.ubicacion_id)
-join perfil_de_empleado m on (m.EMPLEADO_id=e.id) join calendario_det  c on (a.calendario_det_id=c.id)
-where a.calendario_det_id=$P{CALENDARIODET} and D.tipo='ASISTENCIA' 
-AND
-((CASE 
- WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=4 THEN 'OK' 
- WHEN DAYOFWEEK(FECHA) =7 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK' 
- WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND D.FECHA =(SELECT FECHA FROM dia_festivo F WHERE F.FECHA=D.FECHA ) 
- AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK'  
- WHEN M.TURNO_ID in (9,8) AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK' 
-ELSE 'ERROR' END)<>'OK' )
-ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
+	<parameter name="EMPLEADO_ID" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT
+u.clave as 'ubic',e.id,e.CLAVE AS clavemp,P.numero_de_trabajador AS NUMERO,CONCAT(IFNULL(apellido_paterno,''),' ',apellido_materno,' ',nombres) as emp
+,A.periodo_fecha_inicial,A.periodo_fecha_final,C.FECHA AS CHECADA,D.FECHA AS ASIST ,C.HORA
+FROM empleado E join perfil_de_empleado p on (p.empleado_id=e.id) JOIN ubicacion U ON (U.ID=P.ubicacion_id)
+JOIN asistencia a on (a.empleado_id=e.id) join asistencia_det d on (a.id=d.asistencia_id )
+join checado c on (p.numero_de_trabajador=c.numero_de_empleado AND D.FECHA=C.FECHA)
+WHERE E.ID=$P{EMPLEADO_ID} AND a.calendario_det_id = $P{CALENDARIODET}
+ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 
-	<field name="ASISTENCIA_FECHA_INICIAL" class="java.sql.Timestamp"/>
-	<field name="ASISTENCIA_FECHA_FINAL" class="java.sql.Timestamp"/>
 	<field name="ubic" class="java.lang.String"/>
 	<field name="id" class="java.lang.Long"/>
 	<field name="clavemp" class="java.lang.String"/>
+	<field name="NUMERO" class="java.lang.String"/>
 	<field name="emp" class="java.lang.String"/>
-	<field name="fecha" class="java.sql.Date"/>
-	<field name="dia" class="java.lang.Long"/>
-	<field name="entrada1" class="java.sql.Time"/>
-	<field name="salida1" class="java.sql.Time"/>
-	<field name="entrada2" class="java.sql.Time"/>
-	<field name="salida2" class="java.sql.Time"/>
-	<field name="entrada3" class="java.sql.Time"/>
-	<field name="salida3" class="java.sql.Time"/>
-	<field name="CHK" class="java.lang.Long"/>
-	<field name="CHK_FLT" class="java.lang.Long"/>
-	<field name="VALID" class="java.lang.String"/>
-	<field name="TURNO_ID" class="java.lang.Long"/>
 	<field name="periodo_fecha_inicial" class="java.sql.Timestamp"/>
 	<field name="periodo_fecha_final" class="java.sql.Timestamp"/>
+	<field name="CHECADA" class="java.sql.Date"/>
+	<field name="ASIST" class="java.sql.Date"/>
+	<field name="HORA" class="java.sql.Time"/>
 
 
-		<group  name="UBICACION" isStartNewPage="true" >
-			<groupExpression><![CDATA[$F{ubic}]]></groupExpression>
+		<group  name="FECHA" >
+			<groupExpression><![CDATA[$F{CHECADA}]]></groupExpression>
 			<groupHeader>
-			<band height="18"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+			<band height="14"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="0"
+						x="6"
 						y="0"
 						width="100"
-						height="18"
+						height="14"
 						key="textField"/>
 					<box></box>
 					<textElement>
-						<font pdfFontName="Helvetica-Bold" isBold="true"/>
+						<font pdfFontName="Helvetica" isBold="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ubic}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{CHECADA}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="15"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 			</groupFooter>
 		</group>
@@ -142,8 +114,8 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="6"
-						y="37"
+						x="416"
+						y="45"
 						width="25"
 						height="11"
 						key="staticText-5"/>
@@ -155,8 +127,8 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="6"
-						y="26"
+						x="416"
+						y="34"
 						width="25"
 						height="11"
 						key="staticText-6"/>
@@ -168,11 +140,11 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="33"
-						y="26"
+						x="443"
+						y="34"
 						width="100"
 						height="11"
-						key="textField"/>
+						key="textField-8"/>
 					<box></box>
 					<textElement textAlignment="Left">
 						<font size="8"/>
@@ -181,212 +153,24 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="33"
-						y="37"
+						x="443"
+						y="45"
 						width="100"
 						height="11"
-						key="textField"/>
+						key="textField-9"/>
 					<box></box>
 					<textElement textAlignment="Left">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{periodo_fecha_final}]]></textFieldExpression>
 				</textField>
-			</band>
-		</pageHeader>
-		<columnHeader>
-			<band height="25"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="6"
-						y="7"
-						width="44"
-						height="11"
-						forecolor="#000000"
-						key="staticText-8"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[CLAVE]]></text>
-				</staticText>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="2"
-						width="552"
-						height="2"
-						forecolor="#666666"
-						key="line-5"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="23"
-						width="552"
-						height="2"
-						forecolor="#666666"
-						key="line-6"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="50"
-						y="7"
-						width="178"
-						height="11"
-						forecolor="#000000"
-						key="staticText-21"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[EMPLEADO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="228"
-						y="7"
-						width="64"
-						height="11"
-						forecolor="#000000"
-						key="staticText-22"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FECHA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="292"
-						y="7"
-						width="50"
-						height="11"
-						forecolor="#000000"
-						key="staticText-23"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[ENTRADA 1]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="342"
-						y="7"
-						width="50"
-						height="11"
-						forecolor="#000000"
-						key="staticText-24"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[SALIDA 1]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="392"
-						y="7"
-						width="50"
-						height="11"
-						forecolor="#000000"
-						key="staticText-25"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[ENTRADA 2]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="442"
-						y="7"
-						width="50"
-						height="11"
-						forecolor="#000000"
-						key="staticText-26"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[SALIDA 2]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="492"
-						y="7"
-						width="56"
-						height="11"
-						forecolor="#000000"
-						key="staticText-27"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FALTANTES]]></text>
-				</staticText>
-			</band>
-		</columnHeader>
-		<detail>
-			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="6"
-						y="0"
+						x="68"
+						y="34"
 						width="44"
 						height="11"
-						key="textField"/>
+						key="textField-11"/>
 					<box></box>
 					<textElement>
 						<font size="8"/>
@@ -395,107 +179,97 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="51"
-						y="0"
+						x="113"
+						y="34"
 						width="177"
 						height="11"
-						key="textField"/>
+						key="textField-12"/>
 					<box></box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{emp}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<staticText>
 					<reportElement
-						x="292"
-						y="0"
-						width="50"
+						x="6"
+						y="34"
+						width="57"
 						height="11"
-						key="textField"/>
+						key="staticText-30"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{entrada1}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="342"
-						y="0"
-						width="50"
-						height="11"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{salida1}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="392"
-						y="0"
-						width="50"
-						height="11"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{entrada2}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="442"
-						y="0"
-						width="50"
-						height="11"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{salida2}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="492"
-						y="0"
-						width="56"
-						height="11"
-						key="textField"/>
-					<box></box>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{CHK_FLT}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="228"
-						y="0"
-						width="64"
-						height="11"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
-				</textField>
+				<text><![CDATA[EMPLEADO :]]></text>
+				</staticText>
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="25"  isSplitAllowed="true" >
 				<line direction="TopDown">
 					<reportElement
-						mode="Opaque"
 						x="0"
-						y="12"
+						y="2"
 						width="552"
 						height="0"
-						forecolor="#CCCCCC"
-						backcolor="#FFFFFF"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch" fill="Solid" />
+						forecolor="#666666"
+						key="line-5"/>
+					<graphicElement stretchType="NoStretch"/>
 				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="0"
+						y="22"
+						width="552"
+						height="0"
+						forecolor="#666666"
+						key="line-6"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<staticText>
+					<reportElement
+						x="6"
+						y="7"
+						width="100"
+						height="14"
+						key="staticText-31"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+				<text><![CDATA[FECHA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="106"
+						y="7"
+						width="54"
+						height="14"
+						key="staticText-32"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+				<text><![CDATA[HORA]]></text>
+				</staticText>
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="13"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="106"
+						y="0"
+						width="54"
+						height="13"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{HORA}]]></textFieldExpression>
+				</textField>
 			</band>
 		</detail>
 		<columnFooter>
@@ -612,7 +386,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -728,7 +502,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>

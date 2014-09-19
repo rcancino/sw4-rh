@@ -228,7 +228,12 @@ class IncentivoService {
 			bono.tasaBono2=0.0
 		}
 		
-		 return bono
+		//Casos especiales
+		if([271l,255l].contains(asistencia.empleado.id)){
+			bono.tasaBono1=0.05
+			bono.tasaBono2=0.05
+		}
+		return bono
     }
 	
 	def Incentivo calcularIncentivoSemanal(Incentivo bono){

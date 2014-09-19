@@ -75,6 +75,7 @@ navigation={
 			salarioDiarioIntegrado()
 			acumulados(controller:'acumuladoPorConcepto',action:'index')
 			modificacionSalarial(controller:'modificacionSalarial',action:'index')
+			exportador(controller:'exportador',action:'index',titleText:'Layouts')
 		}
 		configuracion(){
 			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){

@@ -40,7 +40,8 @@ class NominaService {
 			folio:calendarioDet.folio,
 			status:"PENDIENTE",
 			periodo:periodo,
-			calendarioDet:calendarioDet)
+			calendarioDet:calendarioDet,
+			ejercicio:calendarioDet.calendario.ejercicio)
 		nomina.pago=calendarioDet.fechaDePago
 		nomina.diaDePago=calendarioDet.fechaDePago.format('EEEE')
 		nomina.formaDePago=formaDePago

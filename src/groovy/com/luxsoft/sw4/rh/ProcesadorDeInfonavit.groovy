@@ -41,7 +41,7 @@ class ProcesadorDeInfonavit {
 				case 'VSM':
 				case'PORCENTAJE':
 				default:
-					importeExcento=infonavit.cuotaFija
+					importeExcento=infonavit.cuotaDiaria*(ne.diasDelPeriodo-ne.faltas-ne.incapacidades)
 			}
 			
 			if(importeExcento>0){

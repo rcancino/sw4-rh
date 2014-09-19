@@ -113,8 +113,8 @@ class AsistenciaController {
 		
 		def asistencia=Asistencia.get(id)
 		def d=params.double('diasTrabajados')
-		println 'Dias trabajados: '+d
-		println params
+		//println 'Dias trabajados: '+d
+		//println params
 		bindData(asistencia, params, [include: ['minutosPorDescontar']])
 		if(d>0.0){
 			log.info "Actualizando dias trabajados "+d
@@ -206,6 +206,24 @@ class AsistenciaController {
 		def res=list as JSON
 		
 		render res
+	}
+	
+	def eliminarAsistencias(CalendarioDet det){
+		log.info 'Eliminando asistencias para el calendario: '+det
+		def found=NominaPorEmpleado.find("from NominaPorEmpleado ne where ne.nomina.calendarioDet=?",[det])
+		if(found)
+			flash.message="Asistencias usadas en una nomina por lo que no se puede eliminar"
+		else{
+			def rows=Asistencia.findAllByCalendarioDet(det)
+			rows.each{a->
+				a.delete flush:true
+			}
+			//AsistenciaDet.executeUpdate("delete AsistenciaDet  d where d.asistencia.calendarioDet=?",[det])
+			//Asistencia.executeUpdate("delete Asistencia a where a.calendarioDet=?",[det])
+			flash.message="Asistencias eliminadas"
+		}
+		redirect action:'index',params:params
+		
 	}
 	
 }

@@ -87,6 +87,16 @@
 							 Ajuste mensual ISR 
 						</g:link>
 					</li>
+					<li>
+						<g:link  controller="reciboDeNomina"
+							action="imprimirCfdis" 
+							onClick="return confirm('Imprimir todos los recibos de nómina?');"
+							id="${nominaInstance.id}" >
+							<span class="glyphicon glyphicon-print"></span>
+							 Imprimir recibos
+						</g:link>
+					</li>
+					
 					
 				</ul>
 			</div> <!-- Fin .btn-group -->

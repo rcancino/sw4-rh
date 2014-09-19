@@ -39,9 +39,7 @@ JOIN turno T ON ( P.turno_id=T.ID)  JOIN calendario_det C ON (C.ID=A.CALENDARIO_
 LEFT JOIN baja_de_empleado B ON (E.ID=B.EMPLEADO_ID)
 WHERE A.CALENDARIO_DET_ID=$P{CALENDARIODET}  AND d.entrada1 is not null and d.retardo_mayor<>0
 AND (E.ALTA>B.FECHA OR B.ID IS NULL)
-ORDER BY U.ID,E.APELLIDO_PATERNO,E.APELLIDO_MATERNO
-
-]]></queryString>
+ORDER BY U.ID,E.APELLIDO_PATERNO,E.APELLIDO_MATERNO]]></queryString>
 
 	<field name="ID" class="java.lang.Long"/>
 	<field name="FOLIO" class="java.lang.Integer"/>
@@ -634,7 +632,7 @@ ORDER BY U.ID,E.APELLIDO_PATERNO,E.APELLIDO_MATERNO
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -750,7 +748,7 @@ ORDER BY U.ID,E.APELLIDO_PATERNO,E.APELLIDO_MATERNO
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
