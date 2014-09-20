@@ -122,11 +122,11 @@ class ReciboDeNominaController {
 			it.clave
 		}
 		
-		def repParams=CfdiPrintUtils.resolverParametros(comprobante,complemento.nomina)
+		def repParams=CfdiPrintUtils.resolverParametros(comprobante,complemento.nomina,nominaPorEmpleado)
 		params<<repParams
 		params.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
 		//params['SALARIO_DIARIO_BASE']=nominaPorEmpleado.salarioDiarioBase
-		params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado
+		//params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado
 		params['RECIBO_NOMINA']=nominaPorEmpleado.id
 		params[PdfExporterConfiguration.PROPERTY_PDF_JAVASCRIPT]="this.print();"
 		//println 'Parametros enviados: '+params
@@ -135,6 +135,7 @@ class ReciboDeNominaController {
 	}
 	
 	def impresionDirecta() {
+		
 		def cfdi=Cfdi.findById(params.id)
 		if(cfdi==null){
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'cfdiInstance.label', default: 'Cfdi'), params.id])
@@ -174,10 +175,10 @@ class ReciboDeNominaController {
 			it.clave
 		}
 		
-		def repParams=CfdiPrintUtils.resolverParametros2(comprobante,complemento.nomina)
+		def repParams=CfdiPrintUtils.resolverParametros2(comprobante,complemento.nomina,nominaPorEmpleado)
 		params<<repParams
 		params.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
-		params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado as String
+		//params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado as String
 		params['RECIBO_NOMINA']=nominaPorEmpleado.id as String
 		params[PdfExporterConfiguration.PROPERTY_PDF_JAVASCRIPT]="this.print();"
 		def reportDef=new JasperReportDef(
@@ -195,14 +196,15 @@ class ReciboDeNominaController {
 		JRPdfExporter exporter = new JRPdfExporter();
 		exporter.setParameter(JRExporterParameter.JASPER_PRINT, print);
 		exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, pdfStream); // your output goes here
-		exporter.setParameter(JRPdfExporterParameter.PDF_JAVASCRIPT, "this.print();");
+		//exporter.setParameter(JRPdfExporterParameter.PDF_JAVASCRIPT, "this.print();");
 		exporter.exportReport();
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf')
 	}
 	
 	def imprimirCfdis(Nomina n){
 		def reportes=[]
-		n.partidas.each{ nominaPorEmpleado->
+		n.partidas.sort{it.orden}.each{ nominaPorEmpleado->
+			
 			if(nominaPorEmpleado.cfdi){
 				def cfdi=nominaPorEmpleado.cfdi
 				Comprobante comprobante=cfdi.comprobante
@@ -236,24 +238,23 @@ class ReciboDeNominaController {
 					it.clave
 				}
 				
-				def repParams=CfdiPrintUtils.resolverParametros2(comprobante,complemento.nomina)
-				params<<repParams
-				params.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
-				params['SALARIO_DIARIO_INTEGRADO']=nominaPorEmpleado.salarioDiarioIntegrado as String
-				params['RECIBO_NOMINA']=nominaPorEmpleado.id as String
-				params[PdfExporterConfiguration.PROPERTY_PDF_JAVASCRIPT]="this.print();"
+				def repParams=CfdiPrintUtils.resolverParametros2(comprobante,complemento.nomina,nominaPorEmpleado)
+				//params<<repParams
+				repParams.FECHA=comprobante.fecha.getTime().format("yyyy-MM-dd'T'HH:mm:ss")
+				repParams['RECIBO_NOMINA']=nominaPorEmpleado.id as String
+				
 				def reportDef=new JasperReportDef(
 					name:'NominaDigitalCFDI'
 					,fileFormat:JasperExportFormat.PDF_FORMAT
 					,reportData:modelData,
-					,parameters:params
+					,parameters:repParams
 					)
 				reportes.add(reportDef)
 			}
 		}
 		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportes)
 		//FileUtils.writeByteArrayToFile(new File("c:/pruebas/testReport2.pdf"), jasperService.generateReport(reportes).toByteArray())
-		def fileName="nomina_${n.calendarioDet.calendario.ejercicio}_${n.periodicidad}_${n.folio}.pdf"
+		def fileName="nomina_${n.ejercicio}_${n.periodicidad}_${n.folio}.pdf"
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:fileName)
 	}
 	

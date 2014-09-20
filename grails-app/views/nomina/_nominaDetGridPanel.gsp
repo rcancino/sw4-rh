@@ -41,7 +41,7 @@
 							name="${row.cfdi.folio }"
 							inline="true">
 <%--							<g:hiddenField name="id" value="${row.cfdi.id}"/>--%>
-							<g:hiddenField name="id" value="${row.nomina.id}"/>
+							<g:hiddenField name="id" value="${row.cfdi.id}"/>
 						</g:jasperReport>
 						
 					</g:if>

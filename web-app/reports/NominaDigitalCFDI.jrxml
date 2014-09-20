@@ -59,7 +59,7 @@
 	<parameter name="TIPO_NOMINA" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="FECHA_INICIAL" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="FECHA_FINAL" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="DIAS_PAGADOS" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="DIAS_TRABAJADOS" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="PERIOCIDAD_PAGO" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="BANCO" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="CLABE" isForPrompting="false" class="java.lang.String"/>
@@ -88,6 +88,7 @@
 	<parameter name="DIAS_INCAPACIDAD" isForPrompting="false" class="java.math.BigDecimal"/>
 	<parameter name="REGISTRO_PATRONAL" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="EMPRESA_LOGO" isForPrompting="false" class="java.lang.Object"/>
+	<parameter name="FALTAS" isForPrompting="false" class="java.lang.String"/>
 
 	<field name="GRUPO" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
@@ -223,7 +224,12 @@
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						key="textField-77"/>
-					<box></box>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid"/>
+					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+</box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
@@ -236,7 +242,11 @@
 						width="194"
 						height="46"
 						key="image-1"/>
-					<box></box>
+					<box>					<topPen lineWidth="0.5" lineStyle="Solid"/>
+					<leftPen lineWidth="0.5" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5" lineStyle="Solid"/>
+</box>
 					<graphicElement stretchType="NoStretch"/>
 					<imageExpression class="java.lang.String"><![CDATA[$P{EMPRESA_LOGO}]]></imageExpression>
 				</image>
@@ -315,7 +325,7 @@
 					</textElement>
 				<text><![CDATA[CLAVE]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="398"
 						y="19"
@@ -386,7 +396,7 @@
 					</textElement>
 				<text><![CDATA[RECIBO DE NOMINA]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="yyyy-MM-dd'T'HH:mm:ss" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="yyyy-MM-dd'T'HH:mm:ss" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="472"
 						y="76"
@@ -457,7 +467,7 @@
 					</textElement>
 				<text><![CDATA[MEXICO, D.F. A  ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="398"
 						y="47"
@@ -509,7 +519,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO_NOMINA}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="425"
 						y="132"
@@ -562,7 +572,7 @@
 					</textElement>
 				<text><![CDATA[DEL :  ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="510"
 						y="132"
@@ -597,7 +607,7 @@
 					</textElement>
 				<text><![CDATA[AL :  ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="488"
 						y="103"
@@ -792,7 +802,7 @@
 					</textElement>
 				<text><![CDATA[CLABE]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="398"
 						y="217"
@@ -825,26 +835,9 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Times-Roman" size="7"/>
 					</textElement>
-				<text><![CDATA[DIAS PAGADOS]]></text>
+				<text><![CDATA[DIAS TRAB     /     FALTAS     ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="398"
-						y="159"
-						width="175"
-						height="16"
-						key="textField-112"/>
-					<box>					<topPen lineWidth="0.5"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.5"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{DIAS_PAGADOS}]]></textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="210"
 						y="19"
@@ -897,7 +890,7 @@
 					</textElement>
 				<text><![CDATA[ No. DE EMPLEADO  /     No. SEGURIDAD SOCIAL        ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="280"
 						y="47"
@@ -914,7 +907,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{NUMERO_IMSS}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="210"
 						y="47"
@@ -949,7 +942,7 @@
 					</textElement>
 				<text><![CDATA[RFC                   /                   CURP]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="298"
 						y="76"
@@ -966,7 +959,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{CURP}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="210"
 						y="76"
@@ -1001,7 +994,7 @@
 					</textElement>
 				<text><![CDATA[         RAMO                /    REGIMEN DEL TRABAJADOR]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="280"
 						y="103"
@@ -1051,9 +1044,9 @@
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Times-Roman" size="7"/>
 					</textElement>
-				<text><![CDATA[         SUCURSAL      /               DEPARTAMENTO]]></text>
+				<text><![CDATA[         UBICACION      /               DEPARTAMENTO]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="280"
 						y="132"
@@ -1105,7 +1098,7 @@
 					</textElement>
 				<text><![CDATA[    PUESTO     / RIESGO PUESTO  \ TIPO DE JORNADA]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="210"
 						y="159"
@@ -1122,7 +1115,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PUESTO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="334"
 						y="159"
@@ -1139,7 +1132,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO_JORNADA}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="285"
 						y="159"
@@ -1174,7 +1167,7 @@
 					</textElement>
 				<text><![CDATA[FECHA  INGRESO / ANTIGÜEDAD \ TIPO CONTRATO]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="210"
 						y="188"
@@ -1191,7 +1184,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FECHA_INGRESO_LABORAL}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="280"
 						y="188"
@@ -1226,7 +1219,7 @@
 					</textElement>
 				<text><![CDATA[SAL. DIARIO BASE       /              S.D.I.  IMSS       ]]></text>
 				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="210"
 						y="217"
@@ -1243,7 +1236,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SALARIO_DIARIO_BASE}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="302"
 						y="217"
@@ -1260,7 +1253,7 @@
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{SALARIO_DIARIO_INTEGRADO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="334"
 						y="188"
@@ -1327,6 +1320,40 @@
 						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{EMISOR_RFC}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="398"
+						y="159"
+						width="90"
+						height="16"
+						key="textField-148"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{DIAS_TRABAJADOS}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="488"
+						y="159"
+						width="85"
+						height="16"
+						key="textField-149"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FALTAS}]]></textFieldExpression>
 				</textField>
 			</band>
 		</columnHeader>

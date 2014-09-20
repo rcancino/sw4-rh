@@ -1,6 +1,8 @@
 package com.luxsoft.sw4.cfdi
 
 
+import com.luxsoft.sw4.rh.NominaPorEmpleado
+import com.luxsoft.sw4.rh.Nomina
 import java.security.Policy.Parameters;
 import java.text.MessageFormat;
 
@@ -20,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
 
 class CfdiPrintUtils {
 	
-	static resolverParametros(Comprobante comprobante,Nomina nomina){
+	static resolverParametros(Comprobante comprobante,Nomina nomina,NominaPorEmpleado nominaPorEmpleado){
 		//NominaDocument nominaDocto=NominaDocument.Factory.parse(comprobante.getCo)
 		
 		
@@ -69,18 +71,20 @@ class CfdiPrintUtils {
 		
 		parametros['REGISTRO_PATRONAL']=nomina.registroPatronal
 		
+		
+		
 		parametros.put("NFISCAL", 			comprobante.getSerie()+" - "+comprobante.getFolio());
-		parametros['PUESTO']=nomina.puesto
-		parametros['DEPARTAMENTO']=nomina.departamento
+		//parametros['PUESTO']=nomina.puesto
+		//parametros['DEPARTAMENTO']=nomina.departamento
 		//parametros['SUCURSAL']=nomina.departamento
 		parametros['RIESGO_PUESTO']=''+nomina.riesgoPuesto
 		parametros['TIPO_JORNADA']=nomina.tipoJornada
-		parametros['DEPARTAMENTO']=nomina.departamento
+		//parametros['DEPARTAMENTO']=nomina.departamento
 		parametros['FECHA_INGRESO_LABORAL']=nomina.fechaInicioRelLaboral?.format("yyyy-MM-dd")
 		parametros['ANTIGUEDAD']=''+nomina.antiguedad
 		parametros['TIPO_CONTRATO']=nomina.tipoContrato
-		parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor
-		parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
+		//parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor
+		//parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
 		
 		parametros['FECHA_INICIAL']=nomina.fechaInicialPago?.format("yyyy-MM-dd")
 		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd")
@@ -154,7 +158,16 @@ class CfdiPrintUtils {
 			
 			
 			
-		//println 'Cadena original sat: '+parametros['CADENA_ORIGINAL_SAT']
+		if(nominaPorEmpleado.asistencia){
+			//parametros['DIAS_PAGADOS']=nomina.numDiasPagados as String
+			
+			parametros['PUESTO']=nomina.puesto
+			parametros['DEPARTAMENTO']=nomina.departamento
+			parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
+			parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
+			parametros['DIAS_TRABAJADOS']=nominaPorEmpleado.diasTrabajados
+			parametros['FALTAS']=nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades
+		}
 		
 		
 		return parametros;
@@ -177,10 +190,11 @@ class CfdiPrintUtils {
 				,u.getEstado()!=null?","+u.getEstado()+",":""
 				,u.getPais()!=null?u.getPais():""
 				);
+		
 	}
 	
 	
-	static resolverParametros2(Comprobante comprobante,Nomina nomina){
+	static resolverParametros2(Comprobante comprobante,Nomina nomina,NominaPorEmpleado nominaPorEmpleado){
 		
 		//NominaDocument nominaDocto=NominaDocument.Factory.parse(comprobante.getCo)
 		
@@ -219,20 +233,18 @@ class CfdiPrintUtils {
 		parametros.put("SELLO_DIGITAL", 	comprobante.getSello());
 		parametros.put("IMP_CON_LETRA", 	ImporteALetra.aLetra(comprobante.getTotal()));
 		parametros['REGISTRO_PATRONAL']=nomina.registroPatronal
-		parametros.put("NFISCAL", 			comprobante.getSerie()+" - "+comprobante.getFolio());
-		parametros['PUESTO']=nomina.puesto
-		parametros['DEPARTAMENTO']=nomina.departamento
+		parametros.put("NFISCAL", 			comprobante.getSerie()+": "+nominaPorEmpleado.nomina.folio+" - "+comprobante.getFolio());
+		
 		parametros['RIESGO_PUESTO']=''+nomina.riesgoPuesto
 		parametros['TIPO_JORNADA']=nomina.tipoJornada
-		parametros['DEPARTAMENTO']=nomina.departamento
+		
 		parametros['FECHA_INGRESO_LABORAL']=nomina.fechaInicioRelLaboral?.format("yyyy-MM-dd")
 		parametros['ANTIGUEDAD']=''+nomina.antiguedad
 		parametros['TIPO_CONTRATO']=nomina.tipoContrato
-		parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
-		parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
+		
 		parametros['FECHA_INICIAL']=nomina.fechaInicialPago?.format("yyyy-MM-dd")
 		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd")
-		parametros['DIAS_PAGADOS']=nomina.numDiasPagados as String
+		
 		parametros['CLABE']=nomina.CLABE
 		parametros['TOTAL']=comprobante.getTotal() as String
 		parametros['COMENTARIO_NOM']='Nómina'
@@ -244,6 +256,21 @@ class CfdiPrintUtils {
 		parametros.put("SELLO_DIGITAL_SAT", timbre.selloSAT);
 		parametros.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
 		parametros.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
+		
+		
+		if(nominaPorEmpleado.asistencia){
+			//parametros['DIAS_PAGADOS']=nomina.numDiasPagados as String
+			//println 'Agregando parametros por asistencia....'
+			parametros['SUCURSAL']=nominaPorEmpleado.empleado.perfil.ubicacion.clave
+			parametros['PUESTO']=nomina.puesto
+			parametros['DEPARTAMENTO']=nomina.departamento
+			parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
+			parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado as String
+			parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasTrabajados)) as String
+			def faltas=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades)) as String
+			parametros['FALTAS']=faltas
+		}
+		
 		
 		return parametros;
 	}

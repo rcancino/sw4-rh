@@ -43,10 +43,16 @@
 							<span class="glyphicon glyphicon-arrow-left"></span> Anterior 
 						</g:link>
 						
+						<g:link class="list-group-item" action="show" controller="asistencia" id="${nominaPorEmpleadoInstance?.asistencia?.id }">
+							<span class="glyphicon glyphicon-pencil"></span> Asistencia </g:link>
+						
+						
 						<g:link controller="nomina" action="show" id="${nominaPorEmpleadoInstance.nomina.id}"
 							class="list-group-item" >
 							<span class="glyphicon glyphicon-list-alt"></span> Regresar a nómina:${nominaPorEmpleadoInstance.nomina.folio}
 						</g:link>
+						
+						
 						
 						
 						<a class="list-group-item" data-toggle="modal" data-target="#cambiarNominaDialog"> 
@@ -79,8 +85,6 @@
 							<span class="glyphicon glyphicon-refresh"></span> Re-Calcular
 						</g:link>
 						
-						<g:link class="list-group-item" action="show" controller="asistencia" id="${nominaPorEmpleadoInstance?.asistencia?.id }">
-							<span class="glyphicon glyphicon-pencil"></span> Asistencia </g:link>
 						
 						<g:link class="list-group-item" action="delete" onClick="return confirm('Eliminar registro de nómina?');"
 							id="${nominaPorEmpleadoInstance.id }" >
@@ -122,6 +126,13 @@
 								</g:link>
 							</g:if>
 
+							<g:jasperReport jasper="ReciboDeNomina"
+									format="PDF" 
+									name="Recibo">
+									<g:hiddenField name="ID" value="${nominaPorEmpleadoInstance.id}" />
+									
+									
+								</g:jasperReport>
 							
 							<g:if test="${nominaPorEmpleadoInstance.cfdi}">
 								<g:jasperReport
