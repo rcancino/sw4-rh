@@ -27,6 +27,7 @@ import com.luxsoft.sw4.Mes;
 import com.luxsoft.sw4.cfdi.Cfdi;
 import com.luxsoft.sw4.cfdi.CfdiPrintUtils;
 import com.luxsoft.sw4.cfdi.ComplementoNomina;
+import com.luxsoft.sw4.Empresa
 
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -280,6 +281,10 @@ class ReciboDeNominaController {
 		repParams['NFISCAL']=ne.id as String
 		repParams['FECHA_INICIAL']=n.periodo.fechaInicial?.format("yyyy-MM-dd")
 		repParams['FECHA_FINAL']=n.periodo.fechaFinal?.format("yyyy-MM-dd")
+		repParams['EMISOR_NOMBRE']=Empresa.first().nombre
+		repParams['PERIOCIDAD_PAGO']=n.periodicidad
+		repParams['IMP_CON_LETRA']=com.luxsoft.sw4.cfdi.ImporteALetra.aLetra(ne.getTotal())
+		repParams['TOTAL']=ne.total as String
 		
 		def deducciones=ne.conceptos.findAll{it.concepto.tipo=='DEDUCCION'}
 		def percepciones=ne.conceptos.findAll{it.concepto.tipo=='PERCEPCION'}
