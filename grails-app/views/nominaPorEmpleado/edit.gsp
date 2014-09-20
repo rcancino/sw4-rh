@@ -125,14 +125,12 @@
 									<span class="glyphicon glyphicon-screenshot"></span> Timbrar
 								</g:link>
 							</g:if>
-
-							<g:jasperReport jasper="ReciboDeNomina"
-									format="PDF" 
-									name="Recibo">
-									<g:hiddenField name="ID" value="${nominaPorEmpleadoInstance.id}" />
-									
-									
-								</g:jasperReport>
+							
+							<g:link class="list-group-item" 
+								controller="reciboDeNomina" 
+								action="imprimirRecibo" id="${nominaPorEmpleadoInstance.id}">
+								<span class="glyphicon glyphicon-print"></span> Imprimir recibo
+							</g:link>							
 							
 							<g:if test="${nominaPorEmpleadoInstance.cfdi}">
 								<g:jasperReport

@@ -258,6 +258,69 @@ class ReciboDeNominaController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:fileName)
 	}
 	
+	def imprimirRecibo(NominaPorEmpleado ne){
+		log.info 'Imprimiendo recibo de nomina para: '+ne
+		def empleado=ne.empleado
+		def n=ne.nomina
+		def repParams=[:]
+		repParams["NOMBRE"]=empleado.nombre
+		repParams["RFC"]=empleado.rfc
+		repParams['NUMERO_EMPLEADO']=empleado.perfil.numeroDeTrabajador
+		repParams['NUMERO_IMSS']=empleado.seguridadSocial.numero
+		repParams['CURP']=empleado.curp
+		repParams['SUCURSAL']=empleado.perfil.ubicacion.clave
+		repParams['PUESTO']=empleado.perfil.puesto.clave
+		repParams['DEPARTAMENTO']=empleado.perfil.departamento.clave
+		repParams['SALARIO_DIARIO_BASE']=ne.salarioDiarioBase as String
+		repParams['SALARIO_DIARIO_INTEGRADO']=ne.salarioDiarioIntegrado as String
+		repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.diasTrabajados)) as String
+		def faltas=(com.luxsoft.sw4.MonedaUtils.round(ne.faltas+ne.incapacidades)) as String
+		repParams['FALTAS']=faltas
+		repParams['FECHA_INGRESO_LABORAL']=empleado.alta.format("yyyy-MM-dd")
+		repParams['NFISCAL']=ne.id as String
+		repParams['FECHA_INICIAL']=n.periodo.fechaInicial?.format("yyyy-MM-dd")
+		repParams['FECHA_FINAL']=n.periodo.fechaFinal?.format("yyyy-MM-dd")
+		
+		def deducciones=ne.conceptos.findAll{it.concepto.tipo=='DEDUCCION'}
+		def percepciones=ne.conceptos.findAll{it.concepto.tipo=='PERCEPCION'}
+		
+		def modelData=deducciones.collect { cc ->
+			def res=[
+				'GRUPO':cc.concepto.tipo,
+				'CLAVE':cc.concepto.clave,
+				'DESCRIPCION':cc.concepto.descripcion,
+				'IMPORTE_GRAVADO':cc.importeGravado,
+				'IMPORTE_EXENTO':cc.importeExcento,
+				'CONCEPTO':'D'
+			 ]
+			return res
+		}
+		
+		percepciones.each{ cc->
+			def res=[
+				'GRUPO':cc.concepto.tipo,
+				'CLAVE':cc.concepto.clave,
+				'DESCRIPCION':cc.concepto.descripcion,
+				'IMPORTE_GRAVADO':cc.importeGravado,
+				'IMPORTE_EXENTO':cc.importeExcento,
+				'CONCEPTO':'P'
+			 ]
+			modelData<<res
+		}
+		modelData.sort{
+			it.clave
+		}
+		def reportDef=new JasperReportDef(
+			name:'Recibo'
+			,fileFormat:JasperExportFormat.PDF_FORMAT
+			,reportData:modelData,
+			,parameters:repParams
+			)
+		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+		def fileName="nomina_${n.ejercicio}_${n.periodicidad}_${n.folio}_${ne.empleado.clave}.pdf"
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:fileName)
+	}
+	
 	def showXml(Long id){
 		println 'Mostrando XML: '+id
 		def cfdi=Cfdi.findById(id)
