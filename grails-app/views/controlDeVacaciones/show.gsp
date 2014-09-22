@@ -137,6 +137,15 @@
 			
 		</div>
 		
+		<div class="row">
+			<div class="col-md-6">
+				<div class="page-header">	
+					<h3> Percepciones de primas vacacionales</h3>
+				</div>
+				<g:render template="primasVacacionalesGrid"/>
+			</div>
+		</div>
+		
 	</div><%-- End .container --%>
 	
 	

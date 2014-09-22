@@ -56,7 +56,7 @@ navigation={
 				tiempoExtra(controller:'tiempoExtra',action:'index',titleText:'Compensaciones')
 			}
 			incentivo(controller:'incentivo',action:'index')
-			aportaciones()
+			
 			
 			prestamo(controller:'prestamo',action:'index',titleText:'Prestamos '){
 				vigentes()
@@ -64,11 +64,9 @@ navigation={
 			}
 			infonavit(controller:'infonavit',action:'index')
 			fonacot(controller:'fonacot',action:'index')
-			
-			
 			vacaciones(controller:'controlDeVacaciones',action:'index')
 			tiempoExtra(controller:'tiempoExtra',action:'index')
-			solicitudes()
+			otrasDeducciones(controller:'otraDeduccion',action:'index')
 		}
 		procesos(){
 			empleados()

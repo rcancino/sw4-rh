@@ -35,4 +35,17 @@ class ControlDeVacacionesController {
 		flash.message="Actualización exitosa "
 		redirect action:'show',params:[id:control.id]
 	}
+	
+	def show(ControlDeVacaciones controlDeVacacionesInstance){
+		def percepcionesPorPrimas=NominaPorEmpleadoDet
+			.findAll("from NominaPorEmpleadoDet n where n.parent.empleado=? "
+				+" and n.concepto.clave=? and n.parent.nomina.ejercicio=?"
+				,[controlDeVacacionesInstance.empleado,'P024',controlDeVacacionesInstance.ejercicio.toInteger()])
+		def totalExcentoPrima=percepcionesPorPrimas.sum 0.0,{it.importeExcento}
+		def totalGravadoPrima=percepcionesPorPrimas.sum 0.0,{it.importeGravado}
+		[controlDeVacacionesInstance:controlDeVacacionesInstance
+			,percepcionesPorPrimas:percepcionesPorPrimas
+			,totalExcentoPrima:totalExcentoPrima
+			,totalGravadoPrima:totalGravadoPrima]
+	}
 }
