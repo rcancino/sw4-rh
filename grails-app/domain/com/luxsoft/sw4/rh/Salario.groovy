@@ -8,6 +8,7 @@ class Salario implements Serializable{
 	BigDecimal salarioMensual  // Dato informatico
 	BigDecimal salarioDiario
 	BigDecimal salarioDiarioIntegrado
+	BigDecimal salarioVariable=0.0
 	String formaDePago
 	
 	String clabe

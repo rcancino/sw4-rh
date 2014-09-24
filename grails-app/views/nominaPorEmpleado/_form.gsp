@@ -7,10 +7,23 @@
    				<label class="col-sm-6 control-label">Salario Diario</label>
     			<div class="col-sm-6">
       				<p class="form-control-static">
-      					<g:formatNumber number="${nominaPorEmpleadoInstance?.salarioDiarioBase}" format="###.##" type="currency"/>
+      					<g:formatNumber number="${nominaPorEmpleadoInstance?.salarioDiarioBase}" 
+      					format="###.##" type="currency"/>
       				</p>
     			</div>
   			</div>
+  			
+  			<g:if test="${nominaPorEmpleadoInstance.empleado.salario.salarioVariable}">
+  				<div class="form-group">
+   				<label class="col-sm-6 control-label">Salario Variable</label>
+    			<div class="col-sm-6">
+      				<p class="form-control-static">
+      					<g:formatNumber number="${nominaPorEmpleadoInstance.empleado.salario.salarioVariable}" 
+      					format="###.##" type="currency"/>
+      				</p>
+    			</div>
+  			</div>
+  			</g:if>
   			
   			<div class="form-group">
    				<label class="col-sm-6 control-label">Salario Diario Integrado</label>

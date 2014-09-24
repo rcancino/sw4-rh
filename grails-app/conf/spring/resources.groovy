@@ -18,6 +18,7 @@ import com.luxsoft.sw4.rh.ProcesadorSeguroSocial
 import com.luxsoft.sw4.rh.ProcesadorDeIncentivo
 import com.luxsoft.sw4.rh.ProcesadorDePaternidad
 import com.luxsoft.sw4.rh.ProcesadorDeOtrasDeducciones
+import com.luxsoft.sw4.rh.ProcesadorDePagoDeComisiones
 import com.luxsoft.sw4.rh.procesadores.*
 
 
@@ -53,6 +54,7 @@ beans = {
 	procesadorDeNomina(ProcesadorDeNomina){
 		reglas=[
 			ref('procesadorDeSueldo'),
+			ref('procesadorDePagoDeComisiones'),
 			ref('procesadorDePaternidad'),
 			ref('procesadorDeVacaciones'),
 			ref('procesadorDePrimaVacacional'),
@@ -81,7 +83,8 @@ beans = {
 				 'P032':ref('procesadorDePaternidad'),
 				 'D006':ref('prcoesadorDePensionAlimenticia'),
 				 'D014':ref('procesadorDeFonacot'),
-				 'D005':ref('procesadorDeOtrasDeducciones')
+				 'D005':ref('procesadorDeOtrasDeducciones'),
+				 'P029':ref('procesadorDePagoDeComisiones')
 				 ]
 	}
 	
@@ -99,5 +102,6 @@ beans = {
 	procesadorDeChecadas(ProcesadorDeChecadas){}
 	prcoesadorDePensionAlimenticia(ProcesadorDePensionAlimenticia){}
 	procesadorDeOtrasDeducciones(ProcesadorDeOtrasDeducciones){}
+	procesadorDePagoDeComisiones(ProcesadorDePagoDeComisiones){}
 	ajusteIsr(AjusteIsr){}
 }

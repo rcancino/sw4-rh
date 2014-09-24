@@ -22,6 +22,10 @@ class ProcesadorDeVacaciones {
 		def asistencia=ne.asistencia
 		def salarioDiario=ne.salarioDiarioBase
 		
+		if(ne.empleado.salario.salarioVariable){
+			salarioDiario=ne.empleado.salario.salarioVariable
+		}
+		
 		if(asistencia.vacaciones>0){
 			
 			//Localizar el concepto

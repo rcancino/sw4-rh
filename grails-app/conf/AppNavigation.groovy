@@ -67,6 +67,7 @@ navigation={
 			vacaciones(controller:'controlDeVacaciones',action:'index')
 			tiempoExtra(controller:'tiempoExtra',action:'index')
 			otrasDeducciones(controller:'otraDeduccion',action:'index')
+			registroDeComisiones(controller:'registroDeComisiones',action:'index')
 		}
 		procesos(){
 			empleados()

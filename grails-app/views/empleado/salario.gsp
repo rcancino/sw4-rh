@@ -33,6 +33,8 @@
 						
 					<g:else>
 						<f:field property="salario.salarioDiario" input-id="salarioNuevo"
+							input-class="form-control numeric" />
+						<f:field property="salario.salarioVariable" input-id="salarioVariable"
 							input-class="form-control numeric" />	
 					</g:else>
 					<f:field property="salario.salarioDiarioIntegrado" input-id="sdiNuevo"
