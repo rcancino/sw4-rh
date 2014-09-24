@@ -40,9 +40,9 @@ FROM EMPLEADO E
 JOIN perfil_de_empleado P ON(E.ID=P.empleado_id)
 JOIN asistencia A ON(A.empleado_id=E.ID)
 JOIN asistencia_det D ON(A.ID=D.asistencia_id)
-WHERE A.empleado_id LIKE $P{ID} AND D.fecha between $P{FECHA_INI} and $P{FECHA_FIN}
-AND E.ID NOT IN(SELECT B.EMPLEADO_ID FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID and (b.fecha<A.periodo_fecha_inicial OR B.FECHA<E.ALTA))
-group by E.id,E.clave having sum(d.retardo_menor+d.retardo_menor_comida)>0]]></queryString>
+WHERE A.empleado_id LIKE $P{ID} AND D.fecha between $P{FECHA_INI} and $P{FECHA_FIN} AND E.CLAVE<>'MARJ'
+AND E.ID NOT IN(SELECT B.EMPLEADO_ID FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID and B.FECHA<E.ALTA)
+group by E.id,E.clave having sum(d.retardo_menor+d.retardo_menor_comida)>=10]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
@@ -321,7 +321,7 @@ group by E.id,E.clave having sum(d.retardo_menor+d.retardo_menor_comida)>0]]></q
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>

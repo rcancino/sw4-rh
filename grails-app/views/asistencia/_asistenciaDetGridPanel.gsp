@@ -39,7 +39,7 @@
 				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
 				<td><g:fieldValue bean="${row}" field="minutosNoLaborados"/> </td>
 				<td><g:fieldValue bean="${row}" field="horasTrabajadas"/> </td>
-				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
+				<td><g:fieldValue bean="${row}" field="tipo"/> </td>
 				
 				<td>
 					<g:if test="${row.manual }">

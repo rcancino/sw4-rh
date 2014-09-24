@@ -22,7 +22,7 @@ class OtraDeduccion {
 
     static constraints = {
 		comentario nullable:true
-		tipo inList:['OTROS']
+		tipo inList:['OTROS','PERDIDA_DE_CELULAR','BILLETE_FALSO','DESCUENTO_POR_FACTURA']
     }
 	
 	static hasMany = [abonos:OtraDeduccionAbono]

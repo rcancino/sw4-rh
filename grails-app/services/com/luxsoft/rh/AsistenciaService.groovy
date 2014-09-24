@@ -207,6 +207,7 @@ class AsistenciaService {
 			
 			def diaFestivo=DiaFestivo.findByFecha(it.fecha)
 			
+			
 			if(it.entrada1) {
 				LocalTime inicio=it.turnoDet.entrada1
 				LocalTime entrada=LocalTime.fromDateFields(it.entrada1)
@@ -298,6 +299,17 @@ class AsistenciaService {
 						it.minutosNoLaborados+=salidaAnticipada
 					}
 				}
+			}
+			
+			if(diaFestivo && !diaFestivo.parcial){
+				
+				it.retardoMenor=0
+				it.retardoMayor=0
+				it.retardoComida=0
+				it.retardoMenorComida=0
+				it.minutosNoLaborados=0
+				it.tipo='DIA_FESTIVO'
+				it.comentario="DIA_FESTIVO"
 			}
 			
 		}

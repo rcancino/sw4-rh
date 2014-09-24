@@ -34,11 +34,25 @@ class ProcesadorDeOtrasDeducciones {
 			def retMaxima=(percepciones-deducciones)*0.3
 			
 			log.debug 'Deducciones calculadas: '+deducciones
-			log.info 'Percepcion maxima calculada: '+retMaxima
+			log.info 'Retencion maxima permitida: '+retMaxima
 			
 			if(retMaxima){
 				def saldo=deduccion.saldo
-				def importeExcento=retMaxima<=saldo?retMaxima:saldo
+				
+				def importeExcento=0.0
+				if(retMaxima>=saldo){
+					importeExcento=saldo
+				}else{
+					def prestamo=buscarPrestamo(ne)
+					if(prestamo){
+						importeExcento=retMaxima/2
+					}else{
+						importeExcento=retMaxima
+					}
+				}
+				
+				//def importeExcento=retMaxima<=saldo?retMaxima:saldo
+				
 				//Localizar el concepto
 				def neDet=ne.conceptos.find(){
 					it.concepto==concepto
@@ -107,6 +121,11 @@ class ProcesadorDeOtrasDeducciones {
 		return deducciones
 	}
 	
+	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
+			,[ne.empleado],[max:1])
+		return prestamos?prestamos[0]:null
+	}
 	
 	
 	def getModel(NominaPorEmpleadoDet det) {

@@ -83,5 +83,18 @@ navigation={
 			concepto(controller:'',action:'index')
 			
 		}
+		reportes(controller:'reporte'){
+			nomina(controller:'reporte'){
+				impuestoSobreNominas(controller:'reporte',titleText:'Impusto sobre nominas')
+			}
+			salarios(){
+				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
+			}
+			contratacion(){
+				contrato(controller:'reporte',titleText:'Contrato')
+			}
+			
+		}
+		
 	}
 }

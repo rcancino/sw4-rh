@@ -30,6 +30,7 @@
 				<g:render template="/_menu/operaciones"/>
 				<g:render template="/_menu/procesos"/>
 				<li><g:link controller="reporte" action="index" >Reportes</g:link></li>
+				<li><g:link controller="contratacion" action="index" >Contratación</g:link></li>
 				<g:render template="/_menu/configuracion"/>
 			</ul>
 				

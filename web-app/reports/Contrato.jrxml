@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"  ?>
+<!-- Created with iReport - A designer for JasperReports -->
+<!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
+<jasperReport
+		 name="Contrato"
+		 columnCount="1"
+		 printOrder="Vertical"
+		 orientation="Portrait"
+		 pageWidth="612"
+		 pageHeight="792"
+		 columnWidth="494"
+		 columnSpacing="0"
+		 leftMargin="59"
+		 rightMargin="59"
+		 topMargin="20"
+		 bottomMargin="20"
+		 whenNoDataType="NoPages"
+		 isTitleNewPage="false"
+		 isSummaryNewPage="false">
+	<property name="ireport.zoom" value="1.5" />
+	<property name="ireport.x" value="0" />
+	<property name="ireport.y" value="102" />
+	<property name="ireport.scriptlethandling" value="0" />
+	<property name="ireport.encoding" value="UTF-8" />
+	<import value="java.util.*" />
+	<import value="net.sf.jasperreports.engine.*" />
+	<import value="net.sf.jasperreports.engine.data.*" />
+
+	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
+		<defaultValueExpression ><![CDATA["PAPEL, S.A. DE C.V." ]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IMP_CON_LETRA" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="SALARIO_MENSUAL" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[SELECT CONCAT(e.nombres," ",E.apellido_paterno," ",E.apellido_materno) AS nombre,e.fecha_de_nacimiento,e.alta,d.estado_civil,e.rfc,e.curp
+,(SELECT m.mes_nombre FROM mes m where m.mes=month(e.alta)) as mes,DAYOFMONTH(e.alta) as dia,year(e.alta) as year
+,(SELECT U.clave FROM puesto U WHERE p.puesto_id=U.ID) AS puesto
+,(SELECT U.descripcion FROM puesto U WHERE p.puesto_id=U.ID) AS funciones_puesto
+,FLOOR((TO_DAYS(NOW())-(TO_DAYS(E.fecha_de_nacimiento)))/365) AS years
+,(SELECT U.salario_diario FROM salario U WHERE e.id=U.empleado_id) AS sbd
+,(SELECT U.salario_diario FROM salario U WHERE e.id=U.empleado_id)*30 AS sueldo_mes
+,(case when substr((SELECT U.periodicidad FROM salario U WHERE e.id=U.empleado_id),1,3)='SEMANAL' THEN 'SEMANAS' ELSE 'QUINCENAS'END) AS periodicidad
+,concat(d.direccion_calle,' No. ',ifnull(D.direccion_numero_interior,''),' INT ',ifnull(D.direccion_numero_interior,''),', COL. ',d.direccion_colonia,', C.P. ',D.direccion_codigo_postal,', ',D.direccion_municipio,', ',D.direccion_estado,', ',D.direccion_pais) AS direccion_empleado
+,(select concat(x.direccion_calle,' No. ',x.direccion_numero_exterior,' INT ',ifnull(x.direccion_numero_interior,''),', COL. ',x.direccion_colonia,', C.P. ',x.direccion_codigo_postal,', ',x.direccion_municipio,', ',x.direccion_estado,', ',x.direccion_pais) AS direccion_empresa
+	from empresa x where x.id=p.empresa_id) as direccion_empresa
+FROM empleado e 
+join datos_personales d on(d.empleado_id=e.id)
+join perfil_de_empleado p on(p.empleado_id=e.id)
+Where e.id=$P{ID}]]></queryString>
+
+	<field name="nombre" class="java.lang.String"/>
+	<field name="fecha_de_nacimiento" class="java.sql.Timestamp"/>
+	<field name="alta" class="java.sql.Timestamp"/>
+	<field name="estado_civil" class="java.lang.String"/>
+	<field name="rfc" class="java.lang.String"/>
+	<field name="curp" class="java.lang.String"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="dia" class="java.lang.Long"/>
+	<field name="year" class="java.lang.Long"/>
+	<field name="puesto" class="java.lang.String"/>
+	<field name="funciones_puesto" class="java.lang.String"/>
+	<field name="years" class="java.lang.Long"/>
+	<field name="sbd" class="java.math.BigDecimal"/>
+	<field name="sueldo_mes" class="java.math.BigDecimal"/>
+	<field name="periodicidad" class="java.lang.String"/>
+	<field name="direccion_empleado" class="java.lang.String"/>
+	<field name="direccion_empresa" class="java.lang.String"/>
+
+
+		<group  name="TIPO" >
+			<groupExpression><![CDATA[$F{nombre}]]></groupExpression>
+			<groupHeader>
+			<band height="748"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="10"
+						width="494"
+						height="72"
+						key="textField-153"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="11"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["CONTRATO INDIVIDUAL DE TRABAJO QUE CELEBRAN POR UNA PARTE ".concat($P{COMPANY}).concat(" QUE EN LO SUCESIVO SE DENOMINARA “EL PATRON”, REPRESENTADA POR EL SR. C. P. JOSE ANGEL MORALES AREVALO, Y POR LA OTRA ").concat($F{nombre}).concat(" POR SU PROPIO DERECHO QUIEN EN LO SUCESIVO SE DENOMINARA “EL TRABAJADOR” DE CONFORMIDAD CON LAS SIGUIENTES DECLARACIONES Y CLAUSULAS:")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="93"
+						width="494"
+						height="13"
+						key="textField-154"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="11" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["D E C L A R A C I O N E S"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="31"
+						y="117"
+						width="463"
+						height="58"
+						key="textField-164"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Declara  “EL PATRON” que esta constituido en una persona de carácter moral, de nacionalidad mexicana y cuyos fines sociales son la compra-venta, distribución y exportación de papel y cartulinas nuevas; y, prestación de servicios. Así mismo tener su domicilio en ".concat($F{direccion_empresa})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="31"
+						y="186"
+						width="463"
+						height="116"
+						key="textField-171"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Declara “EL TRABAJADOR”  ser de nacionalidad MEXICANA, de "
+.concat($F{years}.toString())
+.concat(" años de edad, ser de estado civil ")
+.concat($F{estado_civil})
+.concat(", R.F.C. ")
+.concat($F{rfc})
+.concat(", CURP ")
+.concat($F{curp})
+.concat(", con domicilio en ")
+.concat($F{direccion_empleado})
+.concat(". Domicilio que el trabajador proporciona a la empresa para todos los efectos legales a que haya lugar y especialmente para el señalado en la parte final del articulo 47 de la Ley Federal del Trabajo, o sea el domicilio que señala para recibir notificaciones o aviso por parte de la empresa, obligándose éste a dar aviso a la empresa de cualquier cambio de domicilio. En tanto comunique a la empresa un nuevo domicilio, este que ahora proporciona tendrá el carácter de tal  para los efectos mencionados.")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="313"
+						width="31"
+						height="12"
+						key="textField-173"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["C) "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="31"
+						y="313"
+						width="463"
+						height="23"
+						key="textField-174"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Manifiesta “EL TRABAJADOR” bajo protesta de decir verdad tener los conocimientos y experiencia necesaria para prestar sus servicios en el puesto de "
+.concat($F{puesto}).concat(".")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="347"
+						width="31"
+						height="12"
+						key="textField-176"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["D) "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="31"
+						y="347"
+						width="463"
+						height="23"
+						key="textField-177"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Declara de igual manera “EL PATRON” que desea utilizar los servicios de la persona que tenga los conocimientos necesarios para desempeñar el puesto de "
+.concat($F{puesto}).concat(".")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="381"
+						width="494"
+						height="13"
+						key="textField-179"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="11" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["C L A U S U L A S"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="405"
+						width="494"
+						height="23"
+						key="textField-181"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["PRIMERA.-      El trabajador se obliga a prestar sus servicios personales para el patrón en el puesto de  "
+.concat($F{puesto}).concat(".")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="439"
+						width="494"
+						height="57"
+						key="textField-183"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["SEGUNDA.-   Las actividades del trabajador consistirán en "
+.concat($F{funciones_puesto}).concat(",")
+.concat(" además de todas las similares y conexas que al patrón  le encomiende.    ")
+.concat("El trabajador acepta que podrá ser cambiado de puesto libremente en los diferentes departamentos y dependencias de la empresa, de acuerdo a las necesidades de ésta, respetando su salario y categoría.")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="507"
+						width="494"
+						height="23"
+						key="textField-185"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TERCERA.-    El trabajador desarrollará sus labores en el domicilio principal de la empresa, o en cualquier otro que tenga dentro de la República Mexicana de acuerdo con las necesidades del servicio."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="186"
+						width="31"
+						height="12"
+						key="textField-188"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["B) "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="117"
+						width="31"
+						height="12"
+						key="textField-192"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["A) "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="541"
+						width="494"
+						height="81"
+						key="textField-198"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["CUARTA.-      El trabajador prestará sus servicios bajo la dirección y dependencia del patrón en términos de lo dispuesto por el artículo 59 de la Ley Federal del Trabajo conforme al siguiente horario de 09:00 hrs. a 18:30 hrs. con una hora para tomar sus alimentos fuera de la empresa de lunes a viernes, y sábado de 09:00 hrs. a 14:00 hrs., dentro de los términos legales queda expresamente convenido que el trabajador laborará durante jornada extraordinaria, durante los días festivos y descanso obligatorio solamente por instrucciones previas y por escrito del patrón. El horario y días de descanso pactados podrán ser modificados de acuerdo con las necesidades del trabajo, sin exceder de la jornada legal."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="633"
+						width="494"
+						height="58"
+						key="textField-206"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["QUINTA.-       El trabajador se sujetará a un periodo de prueba de 30 días, si al término de éste período el patrón a su exclusivo juicio, considera que el trabajador satisface los requisitos necesarios para desempeñar el trabajo, el presente contrato continuará por tiempo indefinido, en caso contrario el patrón se reservará el derecho de darlo por terminado dentro del período de 30 días sin responsabilidad alguna de su parte y sin necesidad de expresar o justificar la causa."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="691"
+						width="494"
+						height="36"
+						key="textField-207"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Así mismo el patrón se reserva el derecho de darlo por terminado en cualquier tiempo en caso de que el trabajador no cumpla con las obligaciones estipuladas en este contrato, la Ley Federal del Trabajo o en el Reglamento Interior de Trabajo."]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupHeader>
+			<groupFooter>
+			<band height="645"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="399"
+						width="31"
+						height="11"
+						key="textField-205"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["X) "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="21"
+						width="494"
+						height="46"
+						key="textField-208"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["SEXTA.-        Se  conviene  como  retribución  por  los  servicios  a  que  se  refiere  este  contrato  la  cantidad  de:   $ "
+.concat($P{SALARIO_MENSUAL}.toString())
+.concat(" (")
+.concat($P{IMP_CON_LETRA})
+.concat(") mensuales, el pago de éste salario se hará por el patrón por QUINCENAS vencidas.")
+.concat(" El trabajador solicita que el pago de su salario se realice mediante abono en su cuenta del Banco BANAMEX.")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="78"
+						width="494"
+						height="12"
+						key="textField-209"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Por cada seis días de trabajo disfrutará el trabajador (a) de un día de descanso con goce de salario."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="101"
+						width="494"
+						height="58"
+						key="textField-210"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["SEPTIMA.-    Conviene expresamente el trabajador en que es causa de terminación del Contrato de Trabajo, sin responsabilidad para el patrón, el hecho de que en su solicitud de empleo hubiera omitido las referencias de patrones a los cuales haya prestado sus servicios con anterioridad, en la inteligencia de que el derecho a rescindir el Contrato de Trabajo, lo podrá ejercitar el patrón dentro del período de 30 días contados a partir de la fecha en que descubra la omisión."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="170"
+						width="494"
+						height="23"
+						key="textField-211"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["OCTAVA.-      El trabajador disfrutará de un período anual de vacaciones de acuerdo con lo establecido por el artículo 76 de la Ley Federal del Trabajo."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="204"
+						width="494"
+						height="23"
+						key="textField-212"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["NOVENA.-      El trabajador tendrá derecho a un aguinaldo anual equivalente a 15 días de salario, de acuerdo con lo establecido por el artículo 87 de la Ley Federal del Trabajo."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="238"
+						width="494"
+						height="46"
+						key="textField-213"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["DECIMA.-       INCENTIVO DE PRODUCTIVIDAD.- El trabajador que cuente con una antigüedad mínima de un año de servicios tendrá derecho a un Incentivo de Productividad que podrá ser de 1 a 30 días de salario base el cual se determinará a través de una evaluación del trabajo durante el año y  que se entregará en  el mes de diciembre de cada año"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="295"
+						width="494"
+						height="70"
+						key="textField-214"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["DECIMA PRIMERA.- “EL PATRON” se obliga a capacitar o adiestrar a “EL TRABAJADOR” de acuerdo  a los planes y programas que existan o se establezcan referente a trabajos eventuales o temporales y  “EL TRABAJADOR” por su parte se obliga a cumplir con los programas, cursos, sesiones de grupo y actividades que formen parte de los mismos y a presentar los exámenes y evaluación de conocimientos y aptitudes que le sean requeridos así como atender las indicaciones de las personas que impartan la capacitación o adiestramiento."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="376"
+						width="494"
+						height="23"
+						key="textField-215"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["DECIMA SEGUNDA.- Ambas partes convienen en que lo NO estipulado en este Contrato se regirá por lo dispuesto en la Ley Federal del Trabajo."]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="410"
+						width="494"
+						height="36"
+						key="textField-216"/>
+					<box></box>
+					<textElement textAlignment="Justified">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Leído que fue el presente Contrato por las partes, se firman ante la presencia de dos testigos el  día "
+.concat($F{dia}.toString())
+.concat(" del mes de ")
+.concat($F{mes})
+.concat(" del año ")
+.concat($F{year}.toString())
+.concat(", quedando el original en poder del patrón y una copia en poder del trabajador.")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="482"
+						width="219"
+						height="14"
+						key="textField-217"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["C.P. JOSE ANGEL MORALES AREVALO"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="275"
+						y="482"
+						width="219"
+						height="14"
+						key="textField-218"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{nombre}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="531"
+						width="219"
+						height="14"
+						key="textField-219"/>
+					<box>					<topPen lineWidth="0.75"/>
+</box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["POR LA EMPRESA"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="275"
+						y="531"
+						width="219"
+						height="14"
+						key="textField-220"/>
+					<box>					<topPen lineWidth="0.75"/>
+</box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["EL TRABAJADOR"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="582"
+						width="219"
+						height="14"
+						key="textField-221"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["LIC. MARTIN GARCIA SALAZAR"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="0"
+						y="631"
+						width="219"
+						height="14"
+						key="textField-222"/>
+					<box>					<topPen lineWidth="0.75"/>
+</box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TESTIGO"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="275"
+						y="582"
+						width="219"
+						height="14"
+						key="textField-223"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["LIC. ALMA ANGELICA LARA LEON"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="275"
+						y="631"
+						width="219"
+						height="14"
+						key="textField-224"/>
+					<box>					<topPen lineWidth="0.75"/>
+</box>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA["TESTIGO"]]></textFieldExpression>
+				</textField>
+			</band>
+			</groupFooter>
+		</group>
+		<background>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</background>
+		<title>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</title>
+		<pageHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageHeader>
+		<columnHeader>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnHeader>
+		<detail>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</detail>
+		<columnFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</columnFooter>
+		<pageFooter>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</pageFooter>
+		<summary>
+			<band height="0"  isSplitAllowed="true" >
+			</band>
+		</summary>
+</jasperReport>

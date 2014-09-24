@@ -157,14 +157,15 @@ class CfdiPrintUtils {
 			//parametros["EMPRESA_LOGO"]=new File("z://siipapex/etc/empresaFacLogo.jpg")
 			
 			
-			
+			parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
+			parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
 		if(nominaPorEmpleado.asistencia){
 			//parametros['DIAS_PAGADOS']=nomina.numDiasPagados as String
 			
 			parametros['PUESTO']=nomina.puesto
 			parametros['DEPARTAMENTO']=nomina.departamento
-			parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
-			parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
+			
+			
 			parametros['DIAS_TRABAJADOS']=nominaPorEmpleado.diasTrabajados
 			parametros['FALTAS']=nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades
 		}
@@ -257,15 +258,16 @@ class CfdiPrintUtils {
 		parametros.put("CERTIFICADO_SAT", timbre.noCertificadoSAT);
 		parametros.put("CADENA_ORIGINAL_SAT", timbre.cadenaOriginal());
 		
-		
+		parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
+		parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado as String
 		if(nominaPorEmpleado.asistencia){
 			//parametros['DIAS_PAGADOS']=nomina.numDiasPagados as String
 			//println 'Agregando parametros por asistencia....'
 			parametros['SUCURSAL']=nominaPorEmpleado.empleado.perfil.ubicacion.clave
 			parametros['PUESTO']=nomina.puesto
 			parametros['DEPARTAMENTO']=nomina.departamento
-			parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor as String
-			parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado as String
+			
+			
 			parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasTrabajados)) as String
 			def faltas=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades)) as String
 			parametros['FALTAS']=faltas

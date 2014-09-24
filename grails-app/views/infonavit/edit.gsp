@@ -35,6 +35,7 @@
 			<f:field property="numeroDeCredito" input-class="form-control"/>
 			<f:field property="tipo" input-class="form-control"/>
 			<f:field property="cuotaFija" input-type="text" input-class="form-control " label="Descuento"/>
+			<f:field property="activo" input-type="text" input-class="form-control " />
 			<f:field property="comentario" input-class="form-control"/>
 		</f:with>
 		

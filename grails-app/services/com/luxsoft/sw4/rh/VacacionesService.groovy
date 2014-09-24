@@ -81,7 +81,9 @@ class VacacionesService {
 	}
 
 
-
+	def actualizarPrimaVacacional(Nomina nomina){
+		def found=nomina.partidas.findAll{it}
+	}
 
 
 

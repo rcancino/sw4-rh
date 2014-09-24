@@ -10,7 +10,7 @@ class InfonavitController {
 	def infonavitService
 	
 	def index(Long max){
-		params.max = Math.min(max ?: 60, 100)
+		params.max = Math.min(max ?: 1000, 10000)
 		def tipo=params.tipo?:'SEMANAL'
 		params.sort=params.sort?:'lastUpdated'
 		params.order='desc'
