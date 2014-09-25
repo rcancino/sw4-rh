@@ -93,9 +93,16 @@ navigation={
 			}
 			contratacion(){
 				contrato(controller:'reporte',titleText:'Contrato')
+				solicitud(controller:'reporte',titleText:'Solicitud de empleo')
+				recepcionDeDocumentos()
+				induccion()
+				entregaDeDocumentos()
+				constanciaDeNoEmbarazo()
+				constanciaDeNoFamiliares()
+				solicitudDeTarjetaDeNomina()
 			}
 			
 		}
-		
+		 
 	}
 }

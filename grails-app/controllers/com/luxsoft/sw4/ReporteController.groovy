@@ -26,12 +26,13 @@ class ReporteController {
 		def repParams=[:]
 		repParams<<params
 		def reportDef=new JasperReportDef(
-			name:'NominaDigitalCFDI'
+			name:'ImpuestoSobreNomina'
 			,fileFormat:JasperExportFormat.PDF_FORMAT
 			,parameters:repParams
 			)
 		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
-		render(file: pdfStream.toByteArray(), contentType: 'application/pdf')
+		log.info 'Ejecutando reporte Impuesto sobre nominas '+command
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:'impuestoSobreNominas')
 	}
 	
 	def historicoDeSalarios(EmpleadoPorEjercicioCommand command){
@@ -89,6 +90,16 @@ class ReporteController {
 			)
 		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:command.empleado.nombre+'_contrato')
+	}
+	
+	def solicitud(){
+		def file=grailsApplication.mainContext.getResource("/reports/SolicitudDeEmpleo.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'SolicitudDeEmpleo.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
 	}
 }
 
