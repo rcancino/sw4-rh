@@ -133,7 +133,10 @@ class IncentivoController {
 		incentivos.each{ 
 			
 			it.tasaBono1=params.tasaBono1 as BigDecimal 
+			incentivoService.calcularIncentivoMensual(it)
 		}
+		
+		
 		redirect action:'mensual'
 	}
 

@@ -129,7 +129,7 @@ class IncentivoService {
     }
 
     def calcularIncentivoMensual(Incentivo incentivo){
-		log.info 'Calculando bono mensual: '+incentivo.empleado
+		log.debug 'Calculando bono mensual: '+incentivo.empleado
     	def bono1=incentivo.tasaBono1
 		def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
 		//def per=new Periodo('01/07/2014','21/07/2014')
@@ -174,6 +174,7 @@ class IncentivoService {
 	def calcularChecadasFaltantes(List registros){
 		def faltantes=0
 		registros.each{ det->
+			
 			if(det.tipo=='ASISTENCIA'){
 				if(det.turnoDet.entrada1 && !det.entrada1)
 					faltantes++
@@ -183,7 +184,12 @@ class IncentivoService {
 					faltantes++
 				if(det.turnoDet.salida2 && !det.salida2)
 					faltantes++
-			}	
+			}
+			/*
+			if(det.asistencia.empleado.id==95){
+				println 'Procesando Dia: '+det.fecha+ ' Checadas faltantes: '+faltantes  
+			}
+			*/
 		}
 		return faltantes
 	}
