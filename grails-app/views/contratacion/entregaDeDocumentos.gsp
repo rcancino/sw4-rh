@@ -2,12 +2,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="layout" content="reportes"/>
-<title>Reportes</title>
+<title>Recepción de documentos</title>
 </head>
 <body>
 
 	<content tag="reporteTitle">
-		Histórico de salarios
+		Relación de recepción de documentos
 	</content>
 	
 	<content tag="reportForm">
@@ -18,11 +18,11 @@
         </g:hasErrors>
 		<div class="col-sm-8">
 		
-		<g:form action="historicoDeSalarios" class="form-horizontal">
+		<g:form action="reportePorEmpleado" class="form-horizontal">
+			<g:hiddenField name="reportName" value="EntregaDeDocumentos"/>
 			<fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">
-					<f:field property="ejercicio" input-class="form-control"/>
 					<f:field property="empleado" input-class="form-control"/>
 				</f:with>
 			</fieldset>

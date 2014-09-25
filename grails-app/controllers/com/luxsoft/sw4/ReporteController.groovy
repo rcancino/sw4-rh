@@ -2,8 +2,9 @@ package com.luxsoft.sw4
 
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import grails.validation.Validateable
 
-import com.luxsoft.sw4.cfdi.ImporteALetra;
+import com.luxsoft.sw4.cfdi.ImporteALetra
 import com.luxsoft.sw4.rh.*
 
 class ReporteController {
@@ -64,43 +65,9 @@ class ReporteController {
 		
 	}
 	
-	def contrato(EmpleadoPorEjercicioCommand command){
-		if(request.method=='GET'){
-			render view:'contrato',model:[reportCommand:new EmpleadoPorEjercicioCommand()]
-			return
-		}
-		command.ejercicio=session.ejercicio
-		log.info 'Generando contrato: '+command
-		log.info 'Parametros: '+params
-		command.validate()
-		if(command.hasErrors()){
-			render view:'contrato',model:[reportCommand:command]
-			return
-		}
-		
-		def salario=command.empleado.salario.getSalarioMensual()
-		def repParams=[:]
-		repParams['ID']=command.empleado.id as Integer
-		repParams['SALARIO_MENSUAL']=salario as String
-		repParams['IMP_CON_LETRA']=ImporteALetra.aLetra(salario)
-		def reportDef=new JasperReportDef(
-			name:'Contrato'
-			,fileFormat:JasperExportFormat.PDF_FORMAT
-			,parameters:repParams
-			)
-		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
-		render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:command.empleado.nombre+'_contrato')
-	}
 	
-	def solicitud(){
-		def file=grailsApplication.mainContext.getResource("/reports/SolicitudDeEmpleo.pdf").file
-		if(file.exists()){
-			render(file: file, contentType: 'application/pdf',fileName:'SolicitudDeEmpleo.pdf')
-		}else{
-			flash.message="No existe el archivo "+file
-			redirect action:'index'
-		}
-	}
+	
+	
 }
 
 class ImpuestoSobreNominaCommand{
@@ -115,6 +82,7 @@ class ImpuestoSobreNominaCommand{
     }
 }
 
+@Validateable
 class EmpleadoPorEjercicioCommand{
 	
 	Empleado empleado

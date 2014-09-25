@@ -54,6 +54,9 @@ class ProcesadorDePrimaVacacional {
 			
 			
 			def salarioDiario=ne.salarioDiarioBase
+			if(ne.empleado.salario.salarioVariable>0){
+				salarioDiario=ne.empleado.salario.salarioVariable
+			}
 			
 			def sm=ZonaEconomica.findByClave('A').salario
 			def diasSalarioMinimo=15

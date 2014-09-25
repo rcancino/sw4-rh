@@ -91,9 +91,9 @@ navigation={
 			salarios(){
 				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
 			}
-			contratacion(){
-				contrato(controller:'reporte',titleText:'Contrato')
-				solicitud(controller:'reporte',titleText:'Solicitud de empleo')
+			contratacion(controller:'contratacion'){
+				contrato()
+				solicitud(titleText:'Solicitud de empleo')
 				recepcionDeDocumentos()
 				induccion()
 				entregaDeDocumentos()

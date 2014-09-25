@@ -22,7 +22,7 @@ class ProcesadorDeVacaciones {
 		def asistencia=ne.asistencia
 		def salarioDiario=ne.salarioDiarioBase
 		
-		if(ne.empleado.salario.salarioVariable){
+		if(ne.empleado.salario.salarioVariable>0){
 			salarioDiario=ne.empleado.salario.salarioVariable
 		}
 		
