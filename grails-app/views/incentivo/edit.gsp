@@ -19,16 +19,6 @@
 			</g:hasErrors>
 		</div>
 		<div class="row">
-			<div class="col-md-3">
-				<div class="panel panel-default">
-  					<div class="panel-heading">Operaciones</div>
-    				<div class="list-group">
-    					<g:link action="recalcular" class="list-group-item" id="${incentivoInstance.id}">
-    						<span class="glyphicon glyphicon-wrench"></span> Re calcular
-    					</g:link>
-    				</div>
-				</div>
-			</div>
 			<div class="col-md-6">
 				<g:form action="update" id="${incentivoInstance.id}" class="form-horizontal">
 				<f:with bean="${incentivoInstance}">
