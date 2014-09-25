@@ -96,7 +96,7 @@
       					table.DataTable().search( $(this).val() ).draw();
 					});
 					
-				$('.porcentaje').autoNumeric({vMin:'0.00',vMax:'99.00',mDec:'2'});
+				$('.porcentaje').autoNumeric({vMin:'0.00',vMax:'99.00',mDec:'6'});
 			});
 		</r:script>
 	</content>

@@ -28,7 +28,7 @@
 					<div class="form-group">
 						<label for="bono1Field" class="col-sm-2 control-label">Bono 1</label>
 						<div class="col-sm-10">
-							<input type="text" name="tasaBono1" class="form-control porcentaje">
+							<input type="text" name="tasaBono1" class="form-control">
 						</div>
 					</div>
 					<div class="form-group">

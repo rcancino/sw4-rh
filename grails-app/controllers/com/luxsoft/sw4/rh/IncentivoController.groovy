@@ -131,8 +131,8 @@ class IncentivoController {
 			.findAll("from Incentivo i where i.ejercicio=? and i.mes=? and i.tipo=? and i.empleado.perfil.ubicacion=?"
 				,[cmd.ejercicio,cmd.mes,cmd.tipo,cmd.ubicacion])
 		incentivos.each{ 
-			//println 'Actualizando bono para: '+it.empleado +' Nuevo: '+cmd.tasaBono1
-			it.tasaBono1=cmd.tasaBono1
+			
+			it.tasaBono1=params.tasaBono1 as BigDecimal 
 		}
 		redirect action:'mensual'
 	}
@@ -215,7 +215,7 @@ class ModificacionDeIncentivoCmd{
 	int ejercicio
 	String mes
 	Ubicacion ubicacion
-	BigDecimal tasaBono1
+	double tasaBono1
 	String comentario
 	String tipo
 	

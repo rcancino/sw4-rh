@@ -174,16 +174,16 @@ class IncentivoService {
 	def calcularChecadasFaltantes(List registros){
 		def faltantes=0
 		registros.each{ det->
-			
-			if(det.turnoDet.entrada1 && !det.entrada1)
-				faltantes++
-			if(det.turnoDet.salida1 && !det.salida1)
-				faltantes++
-			if(det.turnoDet.entrada2 && !det.entrada2)
-				faltantes++
-			if(det.turnoDet.salida2 && !det.salida2)
-				faltantes++
-				
+			if(det.tipo=='ASISTENCIA'){
+				if(det.turnoDet.entrada1 && !det.entrada1)
+					faltantes++
+				if(det.turnoDet.salida1 && !det.salida1)
+					faltantes++
+				if(det.turnoDet.entrada2 && !det.entrada2)
+					faltantes++
+				if(det.turnoDet.salida2 && !det.salida2)
+					faltantes++
+			}	
 		}
 		return faltantes
 	}
