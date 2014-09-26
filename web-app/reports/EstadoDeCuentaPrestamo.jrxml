@@ -39,8 +39,7 @@ prestamo p join empleado e on (e.id=p.empleado_id) left join prestamo_abono a on
 left join nomina_por_empleado_det o on (a.nomina_por_empleado_det_id=o.id)
 left join nomina_por_empleado n on (n.id=o.parent_id) left join nomina m on (m.id=n.nomina_id )
 WHERE
-P.IMPORTE-(SELECT IFNULL(SUM(IMPORTE),0) FROM prestamo_abono X WHERE X.prestamo_id=P.ID)>0
-and P.id=$P{PRESTAMO_ID}]]></queryString>
+P.id=$P{PRESTAMO_ID}]]></queryString>
 
 	<field name="SUCURSAL" class="java.lang.String"/>
 	<field name="id" class="java.lang.Long"/>
