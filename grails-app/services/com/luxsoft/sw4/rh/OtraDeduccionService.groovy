@@ -10,7 +10,7 @@ class OtraDeduccionService {
 	
 	@Listener(namespace='gorm')
 	def beforeDelete(NominaPorEmpleado ne){
-		ne.partidas.each{
+		ne.conceptos.each{
 			beforeDelete(it)
 		}
 	}

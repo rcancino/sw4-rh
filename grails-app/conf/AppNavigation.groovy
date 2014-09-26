@@ -103,6 +103,9 @@ navigation={
 			}
 			
 		}
+		exportadores(controller:'exportador'){
+			nominaBanamex()
+		}
 		 
 	}
 }
