@@ -208,9 +208,9 @@ class IncentivoController {
 	}
 	
 	@Transactional
-	def recaulcular(Incentivo incentivo){
+	def recalcular(Incentivo incentivo){
 		if(incentivo.tipo=='MENSUAL'){
-			incentivo=incentivoService.calcularIncentivoMensual
+			incentivo=incentivoService.calcularIncentivoMensual(incentivo)
 			redirect action:'edit', params:[id:incentivo.id]
 			return
 		}

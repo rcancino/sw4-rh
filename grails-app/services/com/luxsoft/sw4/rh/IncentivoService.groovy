@@ -136,11 +136,11 @@ class IncentivoService {
     	def rows=AsistenciaDet
     		.executeQuery("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?"
     	                                               ,[incentivo.empleado,per.fechaInicial,per.fechaFinal])
-    	def minutos=rows.sum 0.0,{it.retardoMenor+it.retardoMenorComida}
+    	def minutos=rows.sum 0.0,{(it.retardoMenor+it.retardoMayor+it.retardoComida+it.retardoMenorComida)}
     	def faltas=rows.sum 0.0,{it.tipo=='FALTA'?1:0}
     	def incapacidades=rows.sum 0.0,{it.tipo=='INCAPACIDAD'?1:0}
     	def incidenciaf=rows.sum 0.0,{it.tipo=='INCIDENCIA_F'?1:0}
-    	log.debug "Dias: $rows.size Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
+    	log.info "Dias: $rows.size Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
 		def checadasFaltantes=calcularChecadasFaltantes(rows)
 
     	faltas+=(incapacidades+incidenciaf)
@@ -168,7 +168,7 @@ class IncentivoService {
 			incentivo.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
 		}
     	incentivo.tasaBono2=bono2
-
+		return incentivo
     }
 	
 	def calcularChecadasFaltantes(List registros){
