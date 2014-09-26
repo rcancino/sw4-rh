@@ -164,8 +164,12 @@ class IncentivoController {
 			notFound()
 			return
 		}
-		[incentivoInstance:incentivoInstance]
+		def asistencias=AsistenciaDet
+			.findAll("from AsistenciaDet d where d.asistencia.empleado=? and date(d.fecha) between ? and ? and d.tipo='ASISTENCIA'"
+			,[incentivoInstance.empleado,incentivoInstance.fechaInicial,incentivoInstance.fechaFinal])
+		[incentivoInstance:incentivoInstance,asistencias:asistencias]
 	}
+	
 
 	@Transactional
 	def update(Incentivo incentivoInstance) {

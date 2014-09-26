@@ -154,6 +154,12 @@ class IncentivoService {
     	  bono1=bono1/2
     	}
 
+    	if(incentivo.calificacion=='REGULAR'){
+    		bono1=bono1*0.5
+    	}else if(incentivo.calificacion=='MALA'){
+    		bono1=0.0
+    	}
+
     	def bono2=0.0
 
     	if(bono1>0.0){

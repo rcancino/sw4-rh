@@ -57,6 +57,17 @@
 					<thead>
 						<tr>
 							<th>Fecha</th>
+							<th><g:message code="asistenciaDet.entrada1.label" default="Ent 1"/></th>
+							<th><g:message code="asistenciaDet.salida1.label" default="Sal 1"/></th>
+							<th><g:message code="asistenciaDet.entrada2.label" default="Ent 2"/></th>
+							<th><g:message code="asistenciaDet.salida2.label" default="Sal 2"/></th>
+							<th><g:message code="asistenciaDet.retardoMenor.label" default="Ret men"/></th>
+							<th><g:message code="asistenciaDet.retardoMayor.label" default="Ret may"/></th>
+							<th>RMen(Com)</th>
+							<th>RMay(Com)</th>
+							<th><g:message code="asistenciaDet.retardoComida.label" default="Min NL"/></th>
+							<th><g:message code="asistenciaDet.retardoComida.label" default="Hrs Tr"/></th>
+							<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -66,12 +77,39 @@
 									<g:link controller="asistencia" action="edit" id="${row.asistencia.id}">
 										<g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/>
 									</g:link>
+									<td><g:formatDate date="${row.entrada1}" format="HH:mm"/></td>
+									<td><g:formatDate date="${row.salida1}" format="HH:mm"/></td>
+									<td><g:formatDate date="${row.entrada2}" format="HH:mm"/></td>
+									<td><g:formatDate date="${row.salida2}" format="HH:mm"/></td>
+									<td><g:fieldValue bean="${row}" field="retardoMenor"/> </td>
+									<td><g:fieldValue bean="${row}" field="retardoMayor"/> </td>
+									<td><g:fieldValue bean="${row}" field="retardoMenorComida"/> </td>
+									<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
+									<td><g:fieldValue bean="${row}" field="minutosNoLaborados"/> </td>
+									<td><g:fieldValue bean="${row}" field="horasTrabajadas"/> </td>
+									<td><g:fieldValue bean="${row}" field="tipo"/> </td>
 								</td>
 								
 								
 							</tr>
 						</g:each>
 					</tbody>
+					<tfoot>
+						<tr>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th></th>
+							<th>Totales:</th>
+							<th><g:formatNumber number="${asistencias.sum (0.0,{it.retardoMenor}) }" format="###"/></th>
+							<th><g:formatNumber number="${asistencias.sum (0.0,{it.retardoMayor}) }" format="###"/></th>
+							<th><g:formatNumber number="${asistencias.sum (0.0,{it.retardoMenorComida}) }" format="###"/></th>
+							<th><g:formatNumber number="${asistencias.sum (0.0,{it.retardoComida}) }" format="###"/></th>
+							<th><g:formatNumber number="${asistencias.sum (0.0,{it.minutosNoLaborados}) }" format="###"/></th>
+							<th><g:formatNumber number="${asistencias.sum (0.0,{it.horasTrabajadas}) }" format="###"/></th>
+							<th><g:formatNumber number="${asistencias.count({it.tipo}) }" format="###"/> dias</th>
+						</tr>
+					</tfoot>
 				</table>
 
 
