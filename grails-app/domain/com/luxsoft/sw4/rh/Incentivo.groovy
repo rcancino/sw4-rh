@@ -25,6 +25,8 @@ class Incentivo {
 	BigDecimal incentivo=0.0
 	
 	String status='PENDIENTE'
+	
+	String calificacion='BUENA'
 
 	String mes
 
@@ -44,6 +46,7 @@ class Incentivo {
     static constraints = {
 		tipo inList:['SEMANAL','QUINCENAL','MENSUAL']
 		status inList:['PENDIENTE','CERRADO']
+		calificacion inList:['BUENA','REGULAR','MALA']
 		comentario nullable:true
 		nominaPorEmpleadoDet nullable:true
 		mes nullable:true

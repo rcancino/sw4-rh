@@ -5,6 +5,7 @@
 			<th>Folio</th>
 			<th>Empleado</th>
 			<th>Ubicación</th>
+			<th>Calificación</th>
 			<th>Bono </th>
 			<th>Asignado </th>
 			<th>Nómina</th>
@@ -26,6 +27,7 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
+				<td>${fieldValue(bean:row,field:"calificacion")}</td>
 				<td><g:formatNumber number="${row.tasaBono1 }" type="percent" maxFractionDigits="3"/></td>
 				<td><g:formatNumber number="${row.tasaBono2 }" type="percent" maxFractionDigits="3"/></td>
 				<td>${fieldValue(bean:row,field:"nominaPorEmpleadoDet.nomina.folio")}</td>

@@ -18,6 +18,7 @@
 				</div>
 			</g:hasErrors>
 		</div>
+
 		<div class="row">
 			<div class="col-md-3">
 				<div class="panel panel-default">
@@ -31,24 +32,52 @@
 			</div>
 			<div class="col-md-6">
 				<g:form action="update" id="${incentivoInstance.id}" class="form-horizontal">
-				<f:with bean="${incentivoInstance}">
-					<f:field property="otorgado" input-class="form-control"/>
-					<f:field property="tasaBono1" input-class="form-control" input-type="text"/>
-					<f:field property="tasaBono2" input-class="form-control" input-type="text"/>
-				</f:with>
-
-
-				
-				<div class="form-group">
-					<div class="col-md-offset-2 col-sm-10">
-						<g:link class="btn btn-default" action="index" params="[tipo:incentivoInstance.tipo]"> Cancelar</g:link>
-						<g:submitButton name="Salvar" class="btn btn-primary " />
-					</div>
-				</div>
+					<f:with bean="${incentivoInstance}">
+						<f:field property="otorgado" input-class="form-control"/>
+						<f:field property="calificacion" input-class="form-control"/>
+						<f:field property="tasaBono1" input-class="form-control" input-type="text"/>
+						<f:field property="tasaBono2" input-class="form-control" input-type="text"/>
+					</f:with>
 					
+					<div class="form-group">
+						<div class="col-md-offset-2 col-sm-10">
+							<g:link class="btn btn-default" action="index" params="[tipo:incentivoInstance.tipo]"> Cancelar</g:link>
+							<g:submitButton name="Salvar" class="btn btn-primary " />
+						</div>
+					</div>
 				</g:form>
 			</div>
-		</div>
+		</div> <!-- end .row 1 -->
+
+		<div class="row">
+			<div class="col-md-12">
+				<legend>Días</legend>
+				
+				<table  class="table table-striped table-bordered table-condensed incentivoGrid ">
+					<thead>
+						<tr>
+							<th>Fecha</th>
+						</tr>
+					</thead>
+					<tbody>
+						<g:each in="${asistencias}" var="row">
+							<tr>
+								<td id="${row.id}">
+									<g:link controller="asistencia" action="edit" id="${row.asistencia.id}">
+										<g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/>
+									</g:link>
+								</td>
+								
+								
+							</tr>
+						</g:each>
+					</tbody>
+				</table>
+
+
+			</div>
+		</div><!-- end .row 2 -->
+
 		
 	</div>
 	
