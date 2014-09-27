@@ -23,7 +23,8 @@
 			
 			<div class="row">
 				<div class="col-md-3">
-					<div class="panel-group" id="accordion">
+					
+					%{-- <div class="panel-group" id="accordion">
 						<div class="panel panel-default">
 							<div class="panel-heading">
 								<h4 class="panel-title">
@@ -91,7 +92,55 @@
 								<nav:menu class="nav nav-pills nav-stacked" scope="app/reportes/creditosYPrestamos" />
 							</div>
 						</div>
-					</div>
+					</div> --}%
+
+					<nav:menu id="reportesTaskPanel" custom="true" scope="app/reportes">
+						<li class="${item.data.icon ? 'i_'+item.data.icon : ''}">
+						        
+								<div class="panel-group" id="accordion">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion"
+													href="#collapse${item.titleDefault}"> <nav:title item="${item}"/> </a>
+											</h4>
+										</div>
+										<div id="collapse${item.titleDefault}" class="panel-collapse collapse ">
+											<g:if test="${item.children}">
+											<nav:menu class="nav nav-pills nav-stacked" scope="${item.id}" />
+											%{-- <nav:menu scope="${item.id}" custom="true" class="visible">
+											     <li class="${item.data.icon ? 'i_'+item.data.icon : ''}">
+											         <p:callTag tag="g:link"
+											                    attrs="${linkArgs + [class:active ? 'active' : '']}">
+											            <span>
+											                <nav:title item="${item}"/>
+											            </span>
+											         </p:callTag>
+											 </nav:menu> --}%
+											 </g:if>
+										</div>
+									</div>
+								</div>
+
+						        %{-- <p:callTag tag="g:link"
+						                   attrs="${linkArgs + [class:active ? 'active' : '']}">
+						           <span>
+						               <nav:title item="${item}"/>
+						           </span>
+						        </p:callTag> --}%
+						        %{-- <g:if test="${active && item.children}">
+						        <nav:menu scope="${item.id}" custom="true" class="visible">
+						             <li class="${item.data.icon ? 'i_'+item.data.icon : ''}">
+						                 <p:callTag tag="g:link"
+						                            attrs="${linkArgs + [class:active ? 'active' : '']}">
+						                    <span>
+						                        <nav:title item="${item}"/>
+						                    </span>
+						                 </p:callTag>
+						         </nav:menu>
+						         </g:if> --}%
+						    </li>
+					</nav:menu>
 					
 				</div>
 				

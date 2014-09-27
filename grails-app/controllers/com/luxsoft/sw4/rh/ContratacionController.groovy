@@ -91,16 +91,10 @@ class ContratacionController {
 	}
 	
 	
-	def executeReport(){
-		println 'Ejecutando reporte: '+params
-		if(request.method=='POST'){
-			println 'Ejecutando reporte: '+params
-		}
-		
-	}
+	
 	
 	private runReport(Map repParams){
-		println 'Ejecutando reporte: '+repParams
+		
 		def nombre=WordUtils.capitalize(repParams.reportName)
 		def reportDef=new JasperReportDef(
 			name:nombre

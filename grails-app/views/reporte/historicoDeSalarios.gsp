@@ -18,8 +18,9 @@
         </g:hasErrors>
 		<div class="col-sm-8">
 		
-		<g:form action="historicoDeSalarios" class="form-horizontal">
+		<g:form action="reportePorEmpleadoEjercicio" class="form-horizontal">
 			<fieldset>
+				<g:hiddenField name="reportName" value="HistoricoDeSalarios"/>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">
 					<f:field property="ejercicio" input-class="form-control"/>
