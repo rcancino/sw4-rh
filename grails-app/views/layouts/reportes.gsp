@@ -65,6 +65,34 @@
 						</div>
 					</div>
 					
+					<div class="panel-group" id="accordion">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a data-toggle="collapse" data-parent="#accordion"
+										href="#collapse4"> Asistencia </a>
+								</h4>
+							</div>
+							<div id="collapse4" class="panel-collapse collapse ">
+								<nav:menu class="nav nav-pills nav-stacked" scope="app/reportes/asistencia" />
+							</div>
+						</div>
+					</div>
+					
+					<div class="panel-group" id="accordion">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h4 class="panel-title">
+									<a data-toggle="collapse" data-parent="#accordion"
+										href="#collapse5"> Creditos y Prestamos </a>
+								</h4>
+							</div>
+							<div id="collapse5" class="panel-collapse collapse ">
+								<nav:menu class="nav nav-pills nav-stacked" scope="app/reportes/creditosYPrestamos" />
+							</div>
+						</div>
+					</div>
+					
 				</div>
 				
 				<div class="col-md-9">
