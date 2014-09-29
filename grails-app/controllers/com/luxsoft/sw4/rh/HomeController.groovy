@@ -14,4 +14,8 @@ class HomeController {
 		}
     	
     }
+
+    def cambioDeEjercicio(Integer ejercicio){
+    	session.ejercicio=ejercicio
+    }
 }
