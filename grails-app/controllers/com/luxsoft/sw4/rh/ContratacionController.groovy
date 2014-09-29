@@ -90,7 +90,15 @@ class ContratacionController {
 			,fileName:command.empleado.nombre+'_'+repParams.reportName)
 	}
 	
-	
+	def referenciasLaborales(){
+		def file=grailsApplication.mainContext.getResource("/reports/ReferenciasLaborales.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'ReferenciasLaborales.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
 	
 	
 	private runReport(Map repParams){

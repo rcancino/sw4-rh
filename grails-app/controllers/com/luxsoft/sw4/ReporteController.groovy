@@ -192,6 +192,25 @@ class ReporteController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:repParams.reportName)
 	}
+
+	def tiempoExtra(EmpleadoCalendarioDetCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new EmpleadoCalendarioDetCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'tiempoExtra',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['EMPLEADO_ID']=command.empleado.id 
+		repParams['CALENDARIODET']=command.calendario.id 
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:command.empleado.nombre+'_'+repParams.reportName)
+	}
 	
 	private runReport(Map repParams){
 		log.info 'Ejecutando reporte  '+repParams
