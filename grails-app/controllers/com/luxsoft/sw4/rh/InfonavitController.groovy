@@ -22,7 +22,7 @@ class InfonavitController {
 		def ejercicio=session.ejercicio
 		def bimestre=Bimestre.getCurrentBimestre()
 		//infonavitService.calcularCuota(infonavit,ejercicio,bimestre)
-		flash.message="Cálculo de bimestre $bimestre actualizado"
+		flash.message="Cï¿½lculo de bimestre $bimestre actualizado"
 		redirect action:'show',params:[id:infonavit.id]
 	}
 	
@@ -33,7 +33,7 @@ class InfonavitController {
 		list.each{
 			infonavitService.calcularCuota(it,ejercicio,bimestre)
 		}
-		flash.message="Actualización general exitosa"
+		flash.message="Actualizaciï¿½n general exitosa"
 		redirect action:'index'
 	}
 	
@@ -43,4 +43,18 @@ class InfonavitController {
 		def abonos=infonavitService.geAcumuladoActual(infonavitInstance,ejercicio)
 		[infonavitInstance:infonavitInstance,abonos:abonos]	
 	}
+	
+	def save(Infonavit infonavitInstance){
+		log.info 'Alta de nuevo credito infonavit: '+infonavitInstance
+		def bimestre=Bimestre.getCurrentBimestre()
+		infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		infonavitInstance.validate()
+		if(infonavitInstance.hasErrors()){
+			render view:'create' ,model:[infonavitInstance:infonavitInstance]
+		}
+		flash.message="Credito infonavit generado :"+infonavitInstance
+		redirect action:'index'
+	}
+	
+	
 }

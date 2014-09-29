@@ -56,6 +56,11 @@
 								<span class="glyphicon glyphicon-cog"></span> Re calcular
 							</g:link>
 						</li>
+						<li>
+							<g:link action="create">
+								<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
+							</g:link>
+						</li>
 					</ul>
 				</div>
 			</div>

@@ -10,6 +10,17 @@
 		<h3>Alta de crédito INFONAVIT</h3>
 	</content>
 	
+	<content tag="operaciones">
+		<ul class="nav nav-pills nav-stacked">
+			<li>
+				<g:link action="index" class="list-group-item"> <span class="glyphicon glyphicon-list-alt"></span> Catálogo</g:link>
+			</li>
+			<li>
+				<g:link action="create" class="list-group-item"> <span class="glyphicon glyphicon-floppy-saved"></span> Nuevo</g:link>
+			</li>
+		</ul>
+	</content>
+	
 	<content tag="formTitle">
 		Crédito INFONAVIT
 	</content>

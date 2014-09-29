@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh
 
-import java.math.BigDecimal;
+
 
 import grails.transaction.Transactional
 
@@ -9,13 +9,58 @@ import com.luxsoft.sw4.*
 @Transactional
 class InfonavitService {
 	
-	
+	def altaDeCuota(Infonavit infonavit,Integer ejercicio,Integer bimestre) {
+		
+		log.info "Calculando la cuota INFONAVIT para nuevo credito para $infonavit.empleado partiendo del bimestre: $bimestre $ejercicio"
+		def periodo=Bimestre.getBimestre(ejercicio,bimestre)
+		def diasDelBimestre=periodo.fechaFinal-periodo.fechaInicial+1
+		log.info "Periodo base $periodo  Dias del periodo: $diasDelBimestre"
+		
+		
+		log.info 'Generando registro de InfonavitDet '
+		def	det=new InfonavitDet(
+				ejercicio:ejercicio,
+				bimestre:bimestre,
+				diasDelBimestre:diasDelBimestre,
+				fechaInicial:periodo.fechaInicial,
+				fechaFinal:periodo.fechaFinal)
+			infonavit.addToPartidas(det)
+		
+		det.cuota=infonavit.cuotaFija
+		det.seguroDeVivienda=15.00
+		det.salarioDiarioIntegrado=infonavit.empleado.salario.salarioDiarioIntegrado
+		det.salarioMinimoGeneral=67.29
+		det.faltas=0
+		det.incapacidades=0
+		det.saldo=infonavit.ultimaDiferencia
+		infonavit.bimestreActual=bimestre
+		infonavit.salarioMinimoGeneral=det.salarioMinimoGeneral
+		infonavit.salarioDiarioIntegrado=det.salarioDiarioIntegrado
+		infonavit.diasDelBimestre=det.diasDelBimestre
+		
+		infonavit.seguroDeVivienda=det.seguroDeVivienda
+		//Evaluando tipo
+		switch (infonavit.tipo){
+			case 'VSM':
+				calcularDescuentoVSM(det)
+				break
+			case 'CUOTA_FIJA':
+				calcularDescuentoCuotaFija(det)
+				break
+			case 'PORCENTAJE':
+				calcularDescuentoPorcentaje(det)
+			default:
+				break
+		}
+		infonavit.importeBimestral=det.importeBimestral
+		infonavit.save failOnError:true
+		return infonavit
+		
+		//Calcular faltas e incapacidades
+	}
 
     def calcularCuota(Infonavit infonavit,Integer ejercicio,Integer bimestre) {
-		/*def bimestreAnterior=bimestre-1
-		def ejercicioAnterior=ejercicio
-		if(bimestreAnterior==6)
-			ejercicioAnterior=ejrecicio-1*/
+		
 		log.info "Calculando la cuota INFONAVIT para $infonavit.empleado partiendo del bimestre: $bimestre $ejercicio"
 		def periodo=Bimestre.getBimestre(ejercicio,bimestre)
 		//def periodoAnterior=Bimestre.getBimestre(ejercicioAnterior,bimestreAnterior)
