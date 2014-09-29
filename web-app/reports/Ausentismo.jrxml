@@ -183,7 +183,7 @@ order by sucursal,emp]]></queryString>
 						key="textField"/>
 					<box></box>
 					<textElement textAlignment="Right">
-						<font fontName="Algerian"/>
+						<font fontName="Arial"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{NomReporte}]]></textFieldExpression>
 				</textField>

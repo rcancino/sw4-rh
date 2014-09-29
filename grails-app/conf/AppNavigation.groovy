@@ -92,7 +92,7 @@ navigation={
 				
 				
 			}
-			salarios(){
+			salarios(controller:'reporte'){
 				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
 				incrementosIndividuales()
 			}
@@ -109,16 +109,15 @@ navigation={
 				referenciasLaborales()
 				
 			}
-			asistencia(){
+			asistencia(controller:'reporte'){
 				bitacoraDeChecado()
 				vacacionesEjercicio()
 				vacacionesEmpleado()
-				ausentismo()
 				incapacidades()
 				incapacidadesEmpleado()
 			}
 			
-			creditosYPrestamos(){
+			prestamos(controller:'reporte',titleText:'Prestamos'){
 				prestamosResumen()
 				historicoDePrestamos()
 				estadoDeCuentaPrestamo()
