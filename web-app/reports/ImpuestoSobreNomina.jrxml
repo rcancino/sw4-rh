@@ -33,6 +33,7 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="MES" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT 
 A.control,
 A.EMPRESA,A.RFC,A.REGISTRO_PATRONAL,A.NOM_ID 
@@ -64,6 +65,7 @@ A.EMPRESA,A.RFC,A.REGISTRO_PATRONAL,A.NOM_ID
 ,SUM(CASE WHEN A.UBICACION_ID=5  THEN A.EXENTO ELSE 0 END) AS TAC_EXT
 ,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=A.NOM_ID and z.ubicacion_id=5)) as TAC_SUBS_E_APLIC
 ,A.empleadOS
+,A.DESC_CONCEPTO,A.TIPO_CONCEPTO,A.CLASE
 FROM  (
 SELECT 
 case when c.id in (40,31,33) then "Y"else "X" end as control,b.mes, a.ejercicio,b.folio as folio_nom
@@ -74,6 +76,7 @@ case when c.id in (40,31,33) then "Y"else "X" end as control,b.mes, a.ejercicio,
 ,D.importe_excento AS EXENTO
 ,D.importe_gravado AS GRAVADO
 ,(SELECT count(*) FROM nomina_por_empleado r where r.nomina_id=e.nomina_id) as empleados
+,C.CLASE,C.descripcion AS DESC_CONCEPTO,C.TIPO AS TIPO_CONCEPTO
 FROM 
 calendario a join calendario_det b on (b.calendario_id=a.id) join
 NOMINA N ON ( N.calendario_det_id= b.ID )
@@ -82,7 +85,7 @@ JOIN nomina_por_empleado E ON(E.nomina_id=N.ID)
 JOIN empleado X ON(X.ID=E.empleado_id)
 LEFT JOIN nomina_por_empleado_det D ON(E.ID=D.parent_id)
 LEFT JOIN concepto_de_nomina C ON(C.ID=D.concepto_id)
-WHERE mes=$P{MES}   and c.tipo='PERCEPCION'
+WHERE mes=$P{MES} AND N.EJERCICIO= $P{EJERCICIO}  and c.tipo='PERCEPCION'
 AND C.TIPO IS NOT NULL 
 ) AS A
 GROUP BY 
@@ -130,6 +133,9 @@ order by control]]></queryString>
 	<field name="TAC_EXT" class="java.math.BigDecimal"/>
 	<field name="TAC_SUBS_E_APLIC" class="java.math.BigDecimal"/>
 	<field name="empleadOS" class="java.lang.Long"/>
+	<field name="DESC_CONCEPTO" class="java.lang.String"/>
+	<field name="TIPO_CONCEPTO" class="java.lang.String"/>
+	<field name="CLASE" class="java.lang.String"/>
 
 	<sortField name="control" />
 	<sortField name="CLAVE" />

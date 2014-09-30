@@ -29,7 +29,8 @@
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["HISTORICO DE PRESTAMOS"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="EMPLEADO" isForPrompting="true" class="java.lang.Integer"/>
+	<parameter name="EMPLEADO_ID" isForPrompting="true" class="java.lang.Long"/>
+	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT U.CLAVE AS SUCURSAL,
 e.id,E.CLAVE,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.NOMBRES)as nombre,P.importe
 ,p.importe-(SELECT IFNULL(SUM(IMPORTE),0) FROM prestamo_abono X WHERE X.prestamo_id=P.ID) as saldo
@@ -37,8 +38,9 @@ e.id,E.CLAVE,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.NOMBRES)as n
 ,P.ALTA,P.autorizo,P.tasa_descuento,P.comentario
 ,(SELECT SUM(IMPORTE) FROM prestamo A WHERE A.EMPLEADO_ID=E.ID) AS TOTAL_PRESTAMOS
 FROM 
-prestamo p join empleado e on (e.id=p.empleado_id)  JOIN perfil_de_empleado R ON (R.empleado_id=E.ID) JOIN UBICACION U ON (U.ID=R.UBICACION_ID)
-where e.id=$P{EMPLEADO}]]></queryString>
+prestamo p join empleado e on (e.id=p.empleado_id)  
+JOIN perfil_de_empleado R ON (R.empleado_id=E.ID) JOIN UBICACION U ON (U.ID=R.UBICACION_ID)
+where e.id=$P{EMPLEADO_ID} AND YEAR(P.ALTA)=$P{EJERCICIO}]]></queryString>
 
 	<field name="SUCURSAL" class="java.lang.String"/>
 	<field name="id" class="java.lang.Long"/>
@@ -576,7 +578,7 @@ where e.id=$P{EMPLEADO}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -692,7 +694,7 @@ where e.id=$P{EMPLEADO}]]></queryString>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>

@@ -6,6 +6,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 
 import grails.transaction.Transactional
 import grails.transaction.NotTransactional
+import grails.events.Listener
 
 @Transactional
 class NominaPorEmpleadoService {
@@ -54,7 +55,22 @@ class NominaPorEmpleadoService {
 		return procesadorDeNomina.procesar(ne)
 	}
 	
-	
+	/*
+	@Listener(namespace='gorm')
+	def afterUpdate(NominaPorEmpleado ne){
+		def togo=[]
+		ne.conceptos.each{
+			if(it.total<=0.0){
+				togo.add(it)
+			}
+		}
+		println 'Eliminar: '+togo.size()
+		togo.each{
+			//println 'Eliminando: '+it+' Idx:'+ne.conceptos.indexOf(it)
+			
+		}
+	}
+	*/
 	
 	
 		

@@ -45,6 +45,9 @@ class ProcesadorDeSueldo {
 		ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
 		ne.diasDelPeriodo=ne.nomina.getDiasPagados()
 		ne.faltas=asistencia.faltas+asistencia.incidencias
+		if(asistencia.diasTrabajados>0){
+			ne.faltas=0
+		}
 		ne.incapacidades=asistencia.incapacidades
 		ne.vacaciones=asistencia.vacaciones
 		ne.fraccionDescanso=(1/6*ne.faltas)

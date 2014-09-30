@@ -19,7 +19,7 @@
 		<div class="col-sm-8">
 		
 		<g:form action="incapacidades" class="form-horizontal">
-			<g:hiddenField name="reportName" value="VacacionesEjercicio"/>
+			<g:hiddenField name="reportName" value="Incapacidades"/>
 			<fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">

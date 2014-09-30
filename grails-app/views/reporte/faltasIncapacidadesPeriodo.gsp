@@ -2,31 +2,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="layout" content="reportes"/>
-<title>Prestamos</title>
+<title>Faltas Incapacidades</title>
 </head>
 <body>
 
 	<content tag="reporteTitle">
-		Histórico de prestamos
+		Faltas e Incapacidades
 	</content>
-	
 	<content tag="reportForm">
 		<g:hasErrors bean="${reportCommand}">
             <div class="alert alert-danger">
                 <g:renderErrors bean="${reportCommand}" as="list" />
             </div>
         </g:hasErrors>
-		<div class="col-sm-8">
+		<div class="col-sm-6">
 		
-		<%--<g:form action="reportePorEmpleado" class="form-horizontal">
-			--%>
-			<g:form action="reportePorEmpleadoEjercicio2" class="form-horizontal">
-			<g:hiddenField name="reportName" value="HistoricoDePrestamos"/>
+		<g:form action="faltasIncapacidadesPeriodo" class="form-horizontal">
+			<g:hiddenField name="reportName" value="FaltasIncapacidadesPeriodo"/>
 			<fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">
-					<f:field property="ejercicio" input-class="form-control"/>
-					<f:field property="empleado" input-class="form-control"/>
+					<f:field property="periodicidad" input-class="form-control"/>
+					<f:field property="fechaInicial" input-class="form-control"/>
+					<f:field property="fechaFinal" input-class="form-control"/>
 				</f:with>
 			</fieldset>
 			<div class="form-group">

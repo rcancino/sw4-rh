@@ -18,14 +18,13 @@
         </g:hasErrors>
 		<div class="col-sm-8">
 		
-		<g:form action="incapacidadesEmpleado" class="form-horizontal">
-			<g:hiddenField name="reportName" value="VacacionesEjercicio"/>
+		<g:form action="reportePorEmpleadoEjercicio2" class="form-horizontal">
+			<g:hiddenField name="reportName" value="IncapacidadesEmpleado"/>
 			<fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">
+					<f:field property="ejercicio" input-class="form-control"/>
 					<f:field property="empleado" input-class="form-control"/>
-					<f:field property="fechaInicial" input-class="form-control"/>
-					<f:field property="fechaFinal" input-class="form-control"/>
 				</f:with>
 			</fieldset>
 			<div class="form-group">

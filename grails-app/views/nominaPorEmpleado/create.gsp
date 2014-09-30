@@ -8,40 +8,35 @@
 </head>
 <body>
 	<content tag="header">
-		<g:link controller="nomina" action="show" id="${nominaInstance.id}">
-			<h4>Nómina: ${nominaInstance.folio} ${nominaInstance.periodicidad} </h4>
+		<g:link controller="nomina" action="show" id="${command.nomina.id}">
+			<h4>Nómina: ${command.nomina.folio} ${command.nomina.periodicidad} </h4>
 		</g:link>
 	</content>
+	
 	<content tag="buttonBar">
-		%{-- <div class="button-panel">
-			<div class="btn-group">
-			<g:link action="index" class="btn btn-default">
-				<span class="glyphicon glyphicon-repeat"></span> Refrescar
-			</g:link>
-			<g:link action="create" class="btn btn-primary">
-				<span class="glyphicon glyphicon-floppy-saved"></span> Alta
-			</g:link>
-			<g:link action="create" class="btn btn-default">
-				<span class="glyphicon glyphicon-search"></span> Buscar
-			</g:link>
-			<g:link action="create" class="btn btn-default">
-				<span class="glyphicon glyphicon-filter"></span> Filtrar
-			</g:link>
-			</div>
-		</div> --}%
-		
 	</content>
+	
 	<content tag="grid">
 		<div class="panel panel-default">
-			<div class="panel-heading">Alta de nomina </div>
+			<div class="panel-heading">Agregar empleado </div>
 			<div class="panel-body">
-				<form action="agregarPartida" class="form-horizontal" role="form">
+				<g:form action="agregar" class="form-horizontal"  >
+					<g:hiddenField name="nomina.id" value="${command.nomina.id}"/>
 					<formset>
-						<f:with bean="nominaPorEmpleadoInstance">
+						<f:with bean="command">
 							<f:field property="empleado"/>
 						</f:with>
 					</formset>
-				</form>
+					<div class="form-group">
+		    			<div class="col-sm-offset-2 col-sm-4">
+		    				<br/>
+		      				<button type="submit" class="btn btn-primary">
+		      					<span class="glyphicon glyphicon-floppy-save"></span> Agregar
+		      				</button>
+		      				<g:link action="index"  class="btn btn-default"> Cancelar</g:link>
+		    			</div>
+					</div>
+				</g:form>
 			</div>
 		</div>
 	</content>

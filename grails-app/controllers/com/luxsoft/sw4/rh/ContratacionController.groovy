@@ -100,6 +100,76 @@ class ContratacionController {
 		}
 	}
 	
+	def actualizacionExpedientesPersonales(){
+		def file=grailsApplication.mainContext.getResource("/reports/ActualizacionExpedientesPersonales.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'ActualizacionExpedientesPersonales.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
+	def cambioPuesto(){
+		def file=grailsApplication.mainContext.getResource("/reports/CambioPuesto.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'CambioPuesto.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
+	def dc3(){
+		def file=grailsApplication.mainContext.getResource("/reports/DC-3.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'DC3.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
+	def entrevistaSalida(){
+		def file=grailsApplication.mainContext.getResource("/reports/EntrevistaSalida.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'entrevistaSalida.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
+	def evaluacionNvoIngreso(){
+		def file=grailsApplication.mainContext.getResource("/reports/EvaluacionNvoIngreso.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'EvaluacionNvoIngreso.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
+	def solicitudPrestamos(){
+		def file=grailsApplication.mainContext.getResource("/reports/SolicitudPrestamos.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'SolicitudPrestamos.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
+	def solicitudVacaciones(){
+		def file=grailsApplication.mainContext.getResource("/reports/SolicitudVacaciones.pdf").file
+		if(file.exists()){
+			render(file: file, contentType: 'application/pdf',fileName:'SolicitudVacaciones.pdf')
+		}else{
+			flash.message="No existe el archivo "+file
+			redirect action:'index'
+		}
+	}
+	
 	
 	private runReport(Map repParams){
 		

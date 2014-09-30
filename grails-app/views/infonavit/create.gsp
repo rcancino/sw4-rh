@@ -32,7 +32,7 @@
 			<f:field property="alta" input-class="form-control"/>
 			<f:field property="numeroDeCredito" input-class="form-control"/>
 			<f:field property="tipo" input-class="form-control"/>
-			<f:field property="cuotaFija" input-type="text" input-class="form-control moneda-field"/>
+			<f:field property="cuotaFija" input-type="text" input-class="form-control" label="Descuento"/>
 			<f:field property="comentario" input-class="form-control"/>
 		</f:with>
 		

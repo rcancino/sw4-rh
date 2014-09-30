@@ -30,6 +30,8 @@ class ProcesadorDeNomina {
 		
 		return ne
 	}
+	
+	
 
 }
 

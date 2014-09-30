@@ -29,7 +29,11 @@ class ReporteController {
 			return
 		}
 		def repParams=[:]
-		repParams<<params
+		repParams['EJERCICIO']=command.ejercicio
+		repParams['MES']=command.mes.toUpperCase()
+		//repParams['TIPO']=command.tipo
+		
+		println 'Impuesto sobre nomina params: '+repParams
 		def reportDef=new JasperReportDef(
 			name:'ImpuestoSobreNomina'
 			,fileFormat:JasperExportFormat.PDF_FORMAT
@@ -94,6 +98,7 @@ class ReporteController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:command.empleado.nombre+'_'+repParams.reportName)
 	}
+	
 	def reportePorEmpleadoEjercicio2(EmpleadoPorEjercicioCommand command){
 		if(command==null){
 			render 'No esta bien generado el gsp para el reporte falta el bean PorEmpleadoCommand'
@@ -105,8 +110,8 @@ class ReporteController {
 			return [reportCommand:command]
 		}
 		def repParams=[:]
-		repParams['EJERCICIO']=command.ejercicio as Integer
-		repParams['EMPLEADO_ID']=command.empleado.id as Long
+		repParams['EJERCICIO']=command.ejercicio
+		repParams['EMPLEADO_ID']=command.empleado.id
 		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
 		ByteArrayOutputStream  pdfStream=runReport(repParams)
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
@@ -130,7 +135,8 @@ class ReporteController {
 	}
 
 	def historicoDePrestamos(){
-		[reportCommand:new PorEmpleadoCommand()]
+		//[reportCommand:new PorEmpleadoCommand()]
+		[reportCommand:new EmpleadoPorEjercicioCommand(ejercicio:session.ejercicio)]
 	}
 
 	def vacacionesEjercicio(EjercicioCommand command){
@@ -172,8 +178,13 @@ class ReporteController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:repParams.reportName)
 	}
+	
+	def incapacidadesEmpleado(){
+		[reportCommand:new EmpleadoPorEjercicioCommand(ejercicio:session.ejercicio)]
+	}
 
-	def incapacidadesEmpleado(EmpleadoPeriodoCommand command){
+	/*
+	def incapacidadesEmpleado(Empleado command){
 		if(request.method=='GET'){
 			return [reportCommand:new EmpleadoPeriodoCommand()]
 		}
@@ -192,7 +203,7 @@ class ReporteController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:repParams.reportName)
 	}
-
+*/
 	def tiempoExtra(EmpleadoCalendarioDetCommand command){
 		if(request.method=='GET'){
 			return [reportCommand:new EmpleadoCalendarioDetCommand()]
@@ -210,6 +221,70 @@ class ReporteController {
 		ByteArrayOutputStream  pdfStream=runReport(repParams)
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:command.empleado.nombre+'_'+repParams.reportName)
+	}
+	
+	def faltasIncapacidades(){
+		[reportCommand:new EmpleadoPorEjercicioCommand(ejercicio:session.ejercicio)]
+	}
+	
+	def faltasIncapacidadesPeriodo(IncapacidadPeriodoCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new IncapacidadPeriodoCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'incapacidadesEmpleado',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['FECHA_INICIAL']=command.fechaInicial
+		repParams['FECHA_FINAL']=command.fechaFinal
+		repParams['PERIODICIDAD']=command.periodicidad
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
+	def detallePorConcepto(DetallePorConceptoCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new DetallePorConceptoCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'incapacidadesEmpleado',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['CONCEPTO_ID']=command.concepto.id
+		repParams['NOMINA_ID']=command.nomina.id
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
+	def acumuladoDeNominasPorConcepto(AcumuladoDeNominaPorConceptoCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new AcumuladoDeNominaPorConceptoCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'incapacidadesEmpleado',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['CONCEPTO_ID']=command.concepto.id
+		repParams['PERIODICIDAD']=command.periodicidad
+		repParams['MES']=command.mes.toUpperCase()
+		repParams['EJERCICIO']=command.ejercicio
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
 	}
 	
 	private runReport(Map repParams){
@@ -233,12 +308,12 @@ class ReporteController {
 
 class ImpuestoSobreNominaCommand{
 	Integer ejercicio
-	String tipo
+//	String tipo
 	String mes
 	
 	static constraints = {
 		ejercicio inList:2014..2018
-		tipo inList:['SEMANAL','QUINCENAL']
+		//tipo inList:['SEMANAL','QUINCENAL']
 		mes inList:Mes.getNombres()
     }
 }
@@ -306,3 +381,40 @@ class EmpleadoPeriodoCommand{
 }
 
 
+@Validateable
+class IncapacidadPeriodoCommand{
+	String periodicidad
+	Date fechaInicial
+	Date fechaFinal
+
+	static constraints={
+		periodicidad inList:['SEMANAL','QUINCENAL']
+		fechaInicial nullable:false
+		fechaFinal nullable:false
+	}
+
+}
+
+@Validateable
+class DetallePorConceptoCommand{
+	ConceptoDeNomina concepto
+	Nomina nomina	
+	static constraints={
+		concepto nullable:false
+		nomina nullable:false
+	}
+}
+
+@Validateable
+class AcumuladoDeNominaPorConceptoCommand{
+	ConceptoDeNomina concepto
+	String periodicidad
+	String mes
+	Integer ejercicio
+	static constraints={
+		concepto nullable:false
+		periodicidad inList:['SEMANAL','QUINCENAL']
+		ejercicio inList:2014..2018
+		mes inList:Mes.getNombres()
+	}
+}

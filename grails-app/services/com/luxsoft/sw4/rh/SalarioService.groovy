@@ -25,6 +25,7 @@ class SalarioService {
     	
     	def salario=modificacion.empleado.salario
     	salario.salarioDiario=modificacion.salarioAnterior
+		salario.salarioDiarioIntegrado=modificacion.sdiAnterior
     	log.info "${modificacion} detectada Salario ${salario} actualizado"
     }
 	
@@ -88,7 +89,7 @@ class SalarioService {
 			
 			
 			
-			//println query
+			println query
 		Sql sql=new Sql(dataSource)
 		def rows= sql.rows(query,[empleado.id])
 	}
@@ -109,12 +110,12 @@ class SalarioService {
 	
 	String sdiPorEmpleado="""
 SELECT (CASE WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' )<=						
-	( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
+	( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
 		FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') THEN 0 ELSE 2 END) AND 	
 		ROUND((-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )		*	 @SALARIO )	+			
 	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0) /	(ROUND(((-(TIMESTAMPDIFF(MINUTE,'@FECHA_FIN',(CASE WHEN X.ALTA>'@FECHA_INI' THEN X.ALTA ELSE '@FECHA_INI' END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) ),2) )			
 		THEN		 (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) 		ELSE 
-	( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
+	( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
 		FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') THEN 0 ELSE 2 END) AND 	
 		ROUND((-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )		*	 @SALARIO )	+			
 	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0) /	(ROUND(((-(TIMESTAMPDIFF(MINUTE,'@FECHA_FIN',(CASE WHEN X.ALTA>'@FECHA_INI' THEN X.ALTA ELSE '@FECHA_INI' END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) ),2) )			

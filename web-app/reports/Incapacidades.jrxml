@@ -26,8 +26,8 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA_INICIAL" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA_FINAL" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT I.ID AS folio,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.nombres) AS nombre,SI.clave,SI.descripcion ,P.jornada
 ,I.fecha_inicial,I.fecha_final,ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0) AS dias,I.referencia_imms,I.comentario
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS ubicacion
@@ -35,7 +35,7 @@
 FROM incapacidad I JOIN empleado E ON(E.ID=I.empleado_id) 
 JOIN sat_incapacidad SI ON(SI.ID=I.tipo_id)
 JOIN perfil_de_empleado P ON(P.empleado_id=E.ID)
-WHERE I.fecha_inicial>=$P{FECHA_INI} AND I.fecha_final<=$P{FECHA_FIN}]]></queryString>
+WHERE I.fecha_inicial>=$P{FECHA_INICIAL} AND I.fecha_final<=$P{FECHA_FINAL}]]></queryString>
 
 	<field name="folio" class="java.lang.Long"/>
 	<field name="nombre" class="java.lang.String"/>
@@ -129,7 +129,7 @@ WHERE I.fecha_inicial>=$P{FECHA_INI} AND I.fecha_final<=$P{FECHA_FIN}]]></queryS
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INICIAL}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -166,7 +166,7 @@ WHERE I.fecha_inicial>=$P{FECHA_INI} AND I.fecha_final<=$P{FECHA_FIN}]]></queryS
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FINAL}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
@@ -696,7 +696,7 @@ WHERE I.fecha_inicial>=$P{FECHA_INI} AND I.fecha_final<=$P{FECHA_FIN}]]></queryS
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
@@ -803,7 +803,7 @@ WHERE I.fecha_inicial>=$P{FECHA_INI} AND I.fecha_final<=$P{FECHA_FIN}]]></queryS
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#FFFFFF"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" lineSpacing="Single">
-						<font fontName="Times-Roman" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+						<font fontName="Arial" pdfFontName="Times-Roman" size="8" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>

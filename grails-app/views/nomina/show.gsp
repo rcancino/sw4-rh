@@ -59,6 +59,13 @@
 			<div class="btn-group">
 				<button type="button" name="reportes" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Operaciones <span class="caret"></span></button>
 				<ul class="dropdown-menu">
+					
+					<li>
+						<g:link  controller="nominaPorEmpleado" action="create" id="${nominaInstance.id}"> 
+							<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
+						</g:link> 
+					</li>
+					
 					<li>
 						<g:link  action="actualizarPartidas" id="${nominaInstance.id}"> 
 							<span class="glyphicon glyphicon-cog"></span> Actualizar

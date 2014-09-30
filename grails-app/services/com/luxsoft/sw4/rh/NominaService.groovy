@@ -202,6 +202,26 @@ class NominaService {
 		nomina.save failOnError:true
 		return nomina
 	}
+	
+	
+	@Transactional
+	def generarEmpleado(Nomina nomina,Empleado empleado) {
+		def ne=new NominaPorEmpleado(
+			empleado:empleado,
+			ubicacion:empleado.perfil.ubicacion,
+			antiguedadEnSemanas:0,
+			nomina:nomina,
+			vacaciones:0,
+			fraccionDescanso:0
+			)
+		ne.antiguedadEnSemanas=ne.getAntiguedad()
+		def asistencia=Asistencia.findByCalendarioDetAndEmpleado(nomina.calendarioDet,empleado)
+		ne.asistencia=asistencia
+		nomina.addToPartidas(ne)
+		nomina.save failOnError:true
+		ordenar(nomina)
+		return nomina
+	}
 
 	def ordenar(Nomina nomina){
 		def list=nomina.partidas.sort{a,b ->

@@ -89,8 +89,8 @@ navigation={
 			nomina(controller:'reporte'){
 				impuestoSobreNominas(controller:'reporte',titleText:'Impusto sobre nominas')
 				tiempoExtra()
-				
-				
+				detallePorConcepto()
+				acumuladoDeNominasPorConcepto()
 			}
 			salarios(controller:'reporte'){
 				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
@@ -107,7 +107,13 @@ navigation={
 				solicitudDeTarjetaDeNomina()
 				/*nuevos*/
 				referenciasLaborales()
-				
+				actualizacionExpedientesPersonales()
+				cambioPuesto()
+				dc3(titleText:'DC3')
+				entrevistaSalida()
+				evaluacionNvoIngreso()
+				solicitudPrestamos()
+				solicitudVacaciones()
 			}
 			asistencia(controller:'reporte'){
 				bitacoraDeChecado()
@@ -115,12 +121,12 @@ navigation={
 				vacacionesEmpleado()
 				incapacidades()
 				incapacidadesEmpleado()
+				faltasIncapacidades()
+				faltasIncapacidadesPeriodo()
 			}
 			
 			prestamos(controller:'reporte',titleText:'Prestamos'){
-				prestamosResumen()
 				historicoDePrestamos()
-				estadoDeCuentaPrestamo()
 				
 		}
 			

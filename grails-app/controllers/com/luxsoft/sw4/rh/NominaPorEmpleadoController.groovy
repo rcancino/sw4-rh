@@ -23,9 +23,26 @@ class NominaPorEmpleadoController {
 
     def create(Long id){
     	def nomina=Nomina.get(id)
-    	def ne=new NominaPorEmpleado(params)
-    	[nominaInstance:nomina,nominaPorEmpleadoInstance:ne]
+    	[command:new AgregarEmpleadoCommand(nomina:nomina)]
     }
+	
+	def agregar(AgregarEmpleadoCommand command){
+		log.info 'Agregando empleado a nomina: '+command.empleado
+		def nomina=command.nomina
+		def empleado=command.empleado
+		def found=nomina.partidas.find{it.empleado==empleado}
+		if(found){
+			flash.message="ERROR Empleado: $empleado  ya existe en la nomina "
+			render view:'create',model:[command:new AgregarEmpleadoCommand(nomina:nomina)]
+		}
+		if(empleado.salario.periodicidad!=nomina.periodicidad){
+			flash.message="ERROR Empleado: $empleado  no es de $nomina.periodicidad"
+			render view:'create',model:[command:new AgregarEmpleadoCommand(nomina:nomina)]
+		}
+		nomina=nominaService.generarEmpleado(nomina,empleado)
+		flash.message="Empleado $empleado agregado a la $nomina.folio"
+		redirect controller:'nomina',action:'show',params:[id:nomina.id]
+	}
 
     def edit(Long id){
     	def ne=NominaPorEmpleado.get(id)
@@ -209,4 +226,13 @@ class NominaPorEmpleadoController {
 		redirect action:'edit',params:[id:ne.id]
 	}
     
+}
+
+class AgregarEmpleadoCommand{
+	Empleado empleado
+	Nomina nomina
+	static constraints = {
+		empleado nullable:false
+		nomina nullable:false
+	}
 }

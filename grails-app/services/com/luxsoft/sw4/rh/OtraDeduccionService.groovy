@@ -20,11 +20,13 @@ class OtraDeduccionService {
 		if(neDet.concepto.clave==CONCEPTO){
 			OtraDeduccionAbono.withNewSession{
 				def abono=OtraDeduccionAbono.findByNominaPorEmpleadoDet(neDet)
-				def od=abono.otraDeduccion
-				od.removeFromAbonos(abono)
-				od.actualizarSaldo()
-				od.save flush:true
-				log.info "Abono de OtrasDeducciones ${abono.id} eliminado al eliminar detalle de nomina por empleado ${neDet.id}"
+				if(abono){
+					def od=abono.otraDeduccion
+					od.removeFromAbonos(abono)
+					od.actualizarSaldo()
+					od.save flush:true
+					log.info "Abono de OtrasDeducciones ${abono.id} eliminado al eliminar detalle de nomina por empleado ${neDet.id}"
+				}
 			}
 		}
 		
