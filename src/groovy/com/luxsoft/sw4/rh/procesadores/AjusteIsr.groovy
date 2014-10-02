@@ -17,8 +17,8 @@ class AjusteIsr {
 		
 		def mes=ne.nomina.calendarioDet.mes
 		def ejercicio=ne.nomina.calendarioDet.calendario.ejercicio
-		println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
-		println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
+		//println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
+		//println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
 
 		
 		def baseGravable=NominaPorEmpleadoDet
@@ -26,56 +26,55 @@ class AjusteIsr {
 					+" where d.empleado=? and d.nomina.calendarioDet.mes=?",[ne.empleado,mes])[0]
 		
 					
-		log.debug  'Base gravable: ' +baseGravable
+		
 		if(baseGravable<=0.0)
 			return
 		def tarifa =TarifaIsr.buscar(baseGravable)
-	    log.debug  'Tarifa: ' +tarifa
+		
 	    def subsidio=Subsidio.buscar(baseGravable)
-	    log.debug 'Subsidio: '+subsidio
+		
   
 	    def importeGravado=baseGravable-tarifa.limiteInferior
 	    def impuestoMensual=(importeGravado*tarifa.porcentaje)/100
 	
 	    impuestoMensual+=tarifa.cuotaFija
 	    impuestoMensual=impuestoMensual.setScale(2,RoundingMode.HALF_EVEN)
-	
-	    log.debug 'Impuesto Mensual :'+impuestoMensual
   
 	    def subsidioMensual=subsidio.subsidio
 	
 	    def impuestoAcumulado=NominaPorEmpleadoDet
 			.executeQuery("select sum(det.importeGravado+det.importeExcento) from NominaPorEmpleadoDet det "
 					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.mes=? "
-					+" and det.concepto.clave=?",[ne.empleado,mes,'D002'])[0]?:0.0
+					+" and det.concepto.clave=? and det.parent.cfdi is not null ",[ne.empleado,mes,'D002'])[0]?:0.0
   
 	    def subsidioAcumulado=NominaPorEmpleadoDet
 			.executeQuery("select sum(det.importeGravado+det.importeExcento) from NominaPorEmpleadoDet det "
 					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.mes=? "
-					+" and det.concepto.clave=?",[ne.empleado,mes,'P021'])[0]?:0.0
+					+" and det.concepto.clave=? and det.parent.cfdi is not null ",[ne.empleado,mes,'P021'])[0]?:0.0
   
 	
   
 	    def diferenciaMensual=impuestoMensual-subsidioMensual
-	    log.debug "Impuesto acumulado: $impuestoAcumulado  Subsidio acumulado: $subsidioAcumulado Impuesto mensual: $impuestoMensual Subsidio Mensual: $subsidioMensual"
+		
+		
   
 	    def subsidioFinal=diferenciaMensual<=0?diferenciaMensual:0.0
   
 	    def impuestoFinal=diferenciaMensual>0?diferenciaMensual:0.0
-  
-	    log.debug "Subsidio final: $subsidioFinal  Impuesto final: $impuestoFinal"
+		
+		
   
 	    def diferenciaAcumulada=impuestoAcumulado-subsidioAcumulado
   
 	    def subsidioAcumuladoFinal=diferenciaAcumulada<=0?diferenciaAcumulada:0.0
 	    def impuestoAcumuladoFinal=diferenciaAcumulada>0?diferenciaAcumulada:0.0
   
-	    log.debug "Subsidio acu final: $subsidioAcumuladoFinal  Impuesto acu final: $impuestoAcumuladoFinal"
+		
   
 	    def resultadoImpuesto=impuestoFinal-impuestoAcumuladoFinal
 	    def resultadoSubsidio=subsidioFinal-subsidioAcumuladoFinal
   
-        println " Resultado impuesto final $resultadoImpuesto subsidio final: $resultadoSubsidio"
+        //println " Resultado impuesto final $resultadoImpuesto subsidio final: $resultadoSubsidio"
   
 	     def istpMensual=IsptMensual
 		 .find("from IsptMensual i where i.empleado=? and i.mes=? and i.ejercicio=?"
@@ -88,6 +87,21 @@ class AjusteIsr {
 					,[ne.empleado,mes])[0]?:0.0
 				
 		 def resultadoSubsidioAplicado=subsidioMensual-subsidioAplicado
+		 
+		 log.info "Base gravable: "+baseGravable
+		 log.info "Impuesto Mensual :"+impuestoMensual
+		 log.info "Subsidio mensual :"+subsidioMensual
+		 log.info "ImpuestoFinal: " +impuestoFinal
+		 log.info "Subsidio Final: "+subsidioFinal
+		 log.info "Impuesto acumulado:"+impuestoAcumulado 
+		 log.info "Subsidio acumulado:"+subsidioAcumulado 
+		 log.info "Impuesto acumulado final: "+impuestoAcumuladoFinal
+		 log.info "Subsidio acumulado final: "+subsidioAcumuladoFinal
+		 log.info "Resultado impuesto: "+resultadoImpuesto  
+		 log.info "Resultado subsidio: "+resultadoSubsidio
+		 log.info "Resultado subsidio aplicado: "+resultadoSubsidioAplicado
+		 
+		 //Impuesto acu final: $impuestoAcumuladoFinal"
 		 
 		 if(istpMensual==null){
 			istpMensual=new IsptMensual()

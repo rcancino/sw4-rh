@@ -57,6 +57,11 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li>
+							<g:link action="create">
+								<span class="glyphicon glyphicon-plus"></span> Nuevo
+							</g:link>
+						</li>
+						<li>
 							<g:link action="actualizar">
 								<span class="glyphicon glyphicon-cog"></span> Actualizar
 							</g:link>

@@ -28,13 +28,13 @@
 	</parameter>
 	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="CALENDARIO_ID" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,P.jornada
+	<queryString><![CDATA[SELECT C.asistencia_fecha_inicial,A.ID,E.STATUS,E.ALTA,E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,P.jornada
 ,C.folio,C.id,a.tipo as tipoPrdo
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS ubicacion
 ,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS depto
 ,A.ID,A.periodo_fecha_inicial,A.periodo_fecha_final,A.incapacidades,A.vacaciones
 ,A.retardo_menor as ret_,A.retardo_mayor,A.retardo_comida
-,(case when dayofweek(fecha)=1 then 'DOM' when dayofweek(fecha)=2 then 'LUN' when dayofweek(fecha)=3 then 'MAR' when dayofweek(fecha)=4 then 'MIE' when dayofweek(fecha)=5 then 'JUE' when dayofweek(fecha)=6 then 'VIE' when dayofweek(fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
+,(case when dayofweek(D.fecha)=1 then 'DOM' when dayofweek(D.fecha)=2 then 'LUN' when dayofweek(D.fecha)=3 then 'MAR' when dayofweek(D.fecha)=4 then 'MIE' when dayofweek(D.fecha)=5 then 'JUE' when dayofweek(D.fecha)=6 then 'VIE' when dayofweek(D.fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 ,D.id,d.fecha,D.entrada1,d.salida1,d.entrada2,d.salida2,d.entrada3,d.salida3,d.comentario
 ,CASE WHEN E.ALTA<=D.FECHA AND D.TIPO='FALTA' THEN 'FLT' WHEN (SELECT B.FECHA FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID)<D.FECHA AND D.TIPO='FALTA' THEN '' ELSE 
 	((CASE WHEN d.tipo='FALTA' AND A.dias_trabajados>0  THEN '' 	WHEN d.tipo='FALTA' THEN 'FLT' WHEN d.tipo='DESCANSO' THEN 'DSC' WHEN d.tipo='DIA_FESTIVO' THEN 'FES' WHEN d.tipo='VACACIONES' THEN 'VAC' WHEN d.tipo='INCAPACIDAD' THEN 'INC'
@@ -46,9 +46,13 @@
 ,A.dias_trabajados,(case when d.manual is true then '*' else '' end) as manual
 FROM EMPLEADO E JOIN perfil_de_empleado P ON(E.ID=P.empleado_id) JOIN asistencia A ON(A.empleado_id=E.ID) JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
-WHERE E.ID LIKE $P{ID} AND C.ID=$P{CALENDARIO_ID} AND E.ID NOT IN(SELECT B.EMPLEADO_ID FROM baja_de_empleado B WHERE E.ID=B.EMPLEADO_ID and (b.fecha<C.asistencia_fecha_inicial OR B.FECHA<E.ALTA))]]></queryString>
+LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
+WHERE E.ID LIKE $P{ID} AND C.ID=$P{CALENDARIO_ID} AND E.ALTA<=C.asistencia_fecha_inicial AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></queryString>
 
-	<field name="id" class="java.lang.Long"/>
+	<field name="asistencia_fecha_inicial" class="java.sql.Timestamp"/>
+	<field name="ID" class="java.lang.Long"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="ALTA" class="java.sql.Timestamp"/>
 	<field name="clave" class="java.lang.String"/>
 	<field name="nombre" class="java.lang.String"/>
 	<field name="numero_de_trabajador" class="java.lang.String"/>

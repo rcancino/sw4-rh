@@ -10,7 +10,7 @@ class PrestamoService {
 	static String CONCEPTO='D004'
 	
 	def beforeDelete(NominaPorEmpleado ne){
-		log.debug 'Evaluando la eliminacion de nomina por empleado: '+ne
+		log.info 'Evaluando la eliminacion de nomina por empleado: '+ne
 		ne.conceptos.each{
 			beforeDelete(it)
 		}

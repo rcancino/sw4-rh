@@ -117,6 +117,19 @@
 										value="${calendarioDet.id}" />
 							</g:jasperReport>
 							
+							<g:jasperReport jasper="TarjetaDeAsistencia"
+								format="PDF" name="Tarjetas">
+								<g:hiddenField name="ID" value="%" />
+								<g:hiddenField name="CALENDARIO_ID" 
+									value="${calendarioDet.id}" />
+							</g:jasperReport>
+							
+							<g:jasperReport jasper="MinutosNoLaborados"
+								format="PDF" name="Mins. no Laborados">
+								<g:hiddenField name="CALENDARIODET" 
+										value="${calendarioDet.id}" />
+							</g:jasperReport>
+							
 						</li>
 						<li>
 							<button class="btn btn-default" data-toggle="modal" data-target="#calendarioForm"> Mensual X Empleado</button>

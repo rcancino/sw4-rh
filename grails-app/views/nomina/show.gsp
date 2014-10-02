@@ -62,7 +62,7 @@
 					
 					<li>
 						<g:link  controller="nominaPorEmpleado" action="create" id="${nominaInstance.id}"> 
-							<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
+							<span class="glyphicon glyphicon-plus"></span> Agregar
 						</g:link> 
 					</li>
 					

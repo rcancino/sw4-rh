@@ -42,6 +42,9 @@ class ProcesadorDeInfonavit {
 				case'PORCENTAJE':
 				default:
 					importeExcento=infonavit.cuotaDiaria*(ne.diasDelPeriodo-ne.faltas-ne.incapacidades)
+					if(ne.asistencia.diasTrabajados>0){
+						importeExcento=infonavit.cuotaDiaria*ne.asistencia.diasTrabajados
+					}
 			}
 			
 			if(importeExcento>0){

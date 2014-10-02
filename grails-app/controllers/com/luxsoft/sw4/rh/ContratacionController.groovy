@@ -8,9 +8,10 @@ import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 
 import com.luxsoft.sw4.cfdi.ImporteALetra
 import com.luxsoft.sw4.EmpleadoPorEjercicioCommand
+import grails.plugin.springsecurity.annotation.Secured
 
 
-
+@Secured(['ROLE_ADMIN','RH_USER'])
 class ContratacionController {
 	
 	def jasperService

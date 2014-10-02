@@ -14,7 +14,7 @@
 				<g:render template="/_menu/catalogos"/>
 				<g:render template="/_menu/operaciones"/>
 				<g:render template="/_menu/procesos"/>
-				<li><a href="#">Reportes</a></li>
+				<li><g:link controller="reporte" action="index" >Reportes</g:link></li>
 				<g:render template="/_menu/configuracion"/>
 			</ul>
 				

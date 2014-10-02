@@ -7,10 +7,10 @@ import org.apache.commons.logging.LogFactory
 import com.luxsoft.sw4.rh.imss.*
 import com.luxsoft.sw4.rh.acu.*
 
-class ProcesadorDeISTP {
+class ProcesadorDeISTPBak {
 	
 	def conceptoClave='D002'
-	  
+	
 	def concepto
 	
 	private static final log=LogFactory.getLog(this)
@@ -116,9 +116,6 @@ class ProcesadorDeISTP {
 					subc=ConceptoDeNomina.findByClave('P021')
 				}else{
 					subc=ConceptoDeNomina.findByClave('D013')
-				} 
-				if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
-					subc=ConceptoDeNomina.findByClave('D002')
 				}
 				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				nominaPorEmpleadoDet.concepto=subc
@@ -133,28 +130,11 @@ class ProcesadorDeISTP {
 	def  procesarAjusteMensualSubsidio(NominaPorEmpleadoDet det){
 		
 		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
-		NominaPorEmpleado ne=det.parent
 		if(found){
 			//def ajuste=det.importeExcento-found.resultadoSubsidio
 			def ajuste=found.resultadoSubsidio
 			if(ajuste){
-				det.importeExcento=ajuste.abs()
-			}
-			
-			if(found.impuestoAcumulado>0 && found.subsidioFinal<0){
-				def subc=ConceptoDeNomina.findByClave('P019')
-				
-
-				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				nominaPorEmpleadoDet.concepto=subc
-				nominaPorEmpleadoDet.importeGravado=0.0
-				nominaPorEmpleadoDet.importeExcento=found.impuestoAcumulado.abs()
-				ne.addToConceptos(nominaPorEmpleadoDet)
-			}
-			if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
-				det.concepto=ConceptoDeNomina.findByClave('D002')
-				det.importeExcento=found.resultadoSubsidio.abs()
-				//ne.addToConceptos(nominaPorEmpleadoDet)
+				det.importeExcento=ajuste
 			}
 		}
 	}
@@ -167,8 +147,6 @@ class ProcesadorDeISTP {
 			println 'Ajustando subsidio aplicado en nomina empleado: '+ne + '  Subsidio aplicado nuevo: '+ajuste
 			ne.subsidioEmpleoAplicado=ajuste
 		}
-		
-		
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

@@ -13,7 +13,7 @@ class NominaPorEmpleado {
 	
 	Empleado empleado 
 	Ubicacion ubicacion
-	BigDecimal salarioDiarioBase=0.0
+	BigDecimal salarioDiarioBase=0.0 
 	BigDecimal salarioDiarioIntegrado=0.0
 	BigDecimal total=0.0
 	BigDecimal totalGravado=0.0

@@ -165,7 +165,7 @@ class IncentivoController {
 			return
 		}
 		def asistencias=AsistenciaDet
-			.findAll("from AsistenciaDet d where d.asistencia.empleado=? and date(d.fecha) between ? and ? and d.tipo='ASISTENCIA'"
+			.findAll("from AsistenciaDet d where d.asistencia.empleado=? and date(d.fecha) between ? and ? "
 			,[incentivoInstance.empleado,incentivoInstance.fechaInicial,incentivoInstance.fechaFinal])
 		[incentivoInstance:incentivoInstance,asistencias:asistencias]
 	}

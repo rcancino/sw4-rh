@@ -19,6 +19,7 @@ import com.luxsoft.sw4.rh.ProcesadorDeIncentivo
 import com.luxsoft.sw4.rh.ProcesadorDePaternidad
 import com.luxsoft.sw4.rh.ProcesadorDeOtrasDeducciones
 import com.luxsoft.sw4.rh.ProcesadorDePagoDeComisiones
+import com.luxsoft.sw4.rh.ProcesadorDeAjusteISPT
 import com.luxsoft.sw4.rh.procesadores.*
 
 
@@ -61,6 +62,7 @@ beans = {
 			ref('procesadorDeIncentivo'),
 			ref('procesadorSeguroSocial'),
 			ref('procesadorDeISTP'),
+			ref('procesadorDeAjusteISPT'),
 			ref('procesadorRetardoPermiso'),
 			ref('procesadorDeInfonavit'),
 			ref('procesadorDeFonacot'),
@@ -103,5 +105,6 @@ beans = {
 	prcoesadorDePensionAlimenticia(ProcesadorDePensionAlimenticia){}
 	procesadorDeOtrasDeducciones(ProcesadorDeOtrasDeducciones){}
 	procesadorDePagoDeComisiones(ProcesadorDePagoDeComisiones){}
+	procesadorDeAjusteISPT(ProcesadorDeAjusteISPT){}
 	ajusteIsr(AjusteIsr){}
 }

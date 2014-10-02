@@ -208,7 +208,7 @@ class NominaPorEmpleadoController {
 			ajusteIsr.ajusteMensual(ne)
 			nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
 		}else{
-			println 'Ya existe....'
+			
 			flash.message="Nomina ya ajustada para ISTP mensual"
 		}
 		
@@ -224,6 +224,17 @@ class NominaPorEmpleadoController {
 			flash.message="Ajuste mensual ISTP eliminado"
 		}
 		redirect action:'edit',params:[id:ne.id]
+	}
+	
+	def mostrarAjusteIspt(NominaPorEmpleado ne){
+		def found=IsptMensual.findByNominaPorEmpleado(ne)
+		if(!found){
+			flash.message 'No existe ajuste mejsual para este empleado'
+			redirect action:'edit',params:[id:ne.id]
+		}
+		println found
+		//redirect action:'edit',params:[id:ne.id]
+		[nominaPorEmpleadoInstance:ne]
 	}
     
 }
