@@ -27,6 +27,7 @@ class PrestamoService {
 					
 					def prestamo=abono.prestamo
 					prestamo.removeFromAbonos(abono)
+					prestamo.actualizarSaldo()
 					prestamo.save flush:true
 					log.debug "PrestamoAbono ${abono.id} eliminado al eliminar detalle de nomina por empleado ${neDet.id}"
 				}
