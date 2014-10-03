@@ -15,13 +15,13 @@ class NominaPorEmpleadoService {
 	
 	def procesadorDeNomina
 	
-	def prestamoService
+	//def prestamoService
 	
 	@Transactional
 	def eliminar(Long id){
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
 		log.info 'Eliminar nomina por empleado: '+ne		
-		prestamoService.beforeDelete(ne)
+		//prestamoService.beforeDelete(ne)
 		def nomina=ne.nomina
 		nomina.removeFromPartidas(ne)
 		nomina.save flush:true		
@@ -33,8 +33,8 @@ class NominaPorEmpleadoService {
 		
 		NominaPorEmpleadoDet det=NominaPorEmpleadoDet.get(id)
 		log.debug 'Eliminando concepto: '+det
-		prestamoService.beforeDelete(det)
-		prestamoService
+		//prestamoService.beforeDelete(det)
+		//prestamoService
 		def ne=det.parent
 		def target=ne.conceptos.find(){it.id==id}
 		log.debug 'Found: '+target
@@ -52,7 +52,31 @@ class NominaPorEmpleadoService {
 	@Transactional
 	def actualizarNominaPorEmpleado(Long id) {
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
-		return procesadorDeNomina.procesar(ne)
+		NominaPorEmpleado res= procesadorDeNomina.procesar(ne)
+		depurarNominaPorEmpleado(res)
+		return res
+	}
+	
+	@Transactional
+	def depurarNominaPorEmpleado(Long id){
+		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
+		return depurarNominaPorEmpleado(ne)
+	}
+	
+	@Transactional
+	def depurarNominaPorEmpleado(NominaPorEmpleado ne){
+		
+		def togo=[]
+		ne.conceptos.each{
+			if(it.getTotal()<=0.0)
+				togo.add(it)
+		}
+		log.info "Depurando ${togo.size()} conceptos de la nomina por empleado $ne.id"
+		println "Depurando ${togo.size()} conceptos de la nomina por empleado $ne.id"
+		togo.each{det->
+			ne.removeFromConceptos(det)
+		}
+		return ne
 	}
 	
 	/*

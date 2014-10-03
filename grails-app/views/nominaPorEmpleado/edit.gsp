@@ -14,11 +14,18 @@
 				<div class="page-header">
 					<h3>Nómina de : ${nominaPorEmpleadoInstance?.empleado}
 						<small>${nominaPorEmpleadoInstance?.ubicacion}  (${nominaPorEmpleadoInstance?.nomina?.periodo})  Días:${nominaPorEmpleadoInstance?.nomina?.diasPagados}</small>
+						<g:if test="${nominaPorEmpleadoInstance.cfdi}">
+							<p><small>UUID: ${nominaPorEmpleadoInstance.cfdi.uuid}  
+							 Timbrado: ${nominaPorEmpleadoInstance.cfdi.timbrado}  </small>
+						</g:if>
 					</h3>
 					<g:if test="${flash.message}">
 						<div class="alert alert-warning" role="status">
 							<strong>${flash.message}</strong>
 						</div>
+					</g:if>
+					<g:if test="${ajuste}">
+						<g:render template="ajusteMensual"/>
 					</g:if>
 				</div>
 			</div>
@@ -101,9 +108,9 @@
 							<span class="glyphicon glyphicon-trash"></span> Eliminar ajuste ISR 
 						</g:link>
 						
-						<g:link class="list-group-item" action="mostrarAjusteIspt"
+						<g:link class="list-group-item" action="depurar"
 							id="${nominaPorEmpleadoInstance.id}" >
-							<span class="glyphicon glyphicon-"></span> Mostrar Ajuste ISR  
+							<span class="glyphicon glyphicon-"></span> Depurar  
 						</g:link>
 
 						</g:if>	 
@@ -126,7 +133,7 @@
 
 					    	<g:if test="${!nominaPorEmpleadoInstance.cfdi}">
 
-								<g:link class="list-group-item" action="todo" >
+								<g:link class="list-group-item" action="timbrar" id="${nominaPorEmpleadoInstance.id}" >
 									<span class="glyphicon glyphicon-screenshot"></span> Timbrar
 								</g:link>
 							</g:if>

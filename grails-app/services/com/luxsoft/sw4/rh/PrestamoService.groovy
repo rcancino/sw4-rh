@@ -16,22 +16,25 @@ class PrestamoService {
 		}
 	}
 	
-	//@Listener(namespace='gorm')
+	@Listener(namespace='gorm')
 	def beforeDelete(NominaPorEmpleadoDet neDet){
 		log.debug 'Evaluando la eliminacion de CONCEPTO DE nomina por empleado: '+neDet
 		if(neDet.concepto.clave==CONCEPTO){
-			log.debug 'Cancelando abono en prestamo'
-			def abono=PrestamoAbono.findByNominaPorEmpleadoDet(neDet)
-			if(abono){
-				
-				def prestamo=abono.prestamo
-				log.debug 'Eliminando abono de prestamo existente '+prestamo
-				prestamo.removeFromAbonos(abono)
-				
-				
+			PrestamoAbono.withNewSession{
+				log.debug 'Buscando prestamoAbono para NominaPorEmpleadoDet:'+neDet.id
+				def abono=PrestamoAbono.findByNominaPorEmpleadoDet(neDet)
+				if(abono){
+					
+					def prestamo=abono.prestamo
+					prestamo.removeFromAbonos(abono)
+					prestamo.save flush:true
+					log.debug "PrestamoAbono ${abono.id} eliminado al eliminar detalle de nomina por empleado ${neDet.id}"
+				}
 			}
 		}
 	}
+	
+	
 	
 	/*
 	

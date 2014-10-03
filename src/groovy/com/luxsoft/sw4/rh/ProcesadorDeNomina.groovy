@@ -27,10 +27,20 @@ class ProcesadorDeNomina {
 			}
 			
 		}
-		
+		//depurar(ne)
 		return ne
 	}
-	
+	/*
+	def depurar(NominaPorEmpleado ne){
+		try{
+			println 'Depurando nomina por empleado : '+ne.id
+		}catch(Exception ex){
+			ex.printStackTrace()
+			
+		}
+		
+	}
+	*/
 	
 
 }

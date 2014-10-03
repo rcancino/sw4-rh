@@ -1,6 +1,7 @@
 package com.luxsoft.sw4.rh
 
 import com.luxsoft.sw4.rh.acu.IsptMensual;
+import com.luxsoft.sw4.rh.procesadores.AjusteIsr;
 
 import grails.transaction.Transactional;
 import grails.plugin.springsecurity.annotation.Secured
@@ -47,7 +48,8 @@ class NominaPorEmpleadoController {
     def edit(Long id){
     	def ne=NominaPorEmpleado.get(id)
     	def partidas=ne.nomina.partidas.sort{it.orden}
-    	[nominaPorEmpleadoInstance:ne,nextItem:getNext(ne,partidas),prevItem:getPrev(ne,partidas)]
+		def ajuste=IsptMensual.find("from IsptMensual i where i.nominaPorEmpleado.id=?",[id])
+    	[nominaPorEmpleadoInstance:ne,nextItem:getNext(ne,partidas),prevItem:getPrev(ne,partidas),ajuste:ajuste]
     }
 	
 	@Transactional
@@ -100,6 +102,7 @@ class NominaPorEmpleadoController {
 	@Transactional
 	def eliminarConcepto(Long id){
 		def ne=nominaPorEmpleadoService.eliminarConcepto(id)
+		nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
 		redirect action:'edit',params:[id:ne.id]
 	}
 	
@@ -111,11 +114,17 @@ class NominaPorEmpleadoController {
 			return
 		}else{
 			def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
+			nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
 			redirect action:'edit',params:[id:ne.id]
 			return
 		}
 		//event("ActualizacionDeNominaDet")
 		
+	}
+	
+	def depurar(NominaPorEmpleado ne){
+		nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
+		redirect action:'edit',params:[id:ne.id]
 	}
 	
 	protected void notFound() {
@@ -131,10 +140,12 @@ class NominaPorEmpleadoController {
 	
 	def timbrar(Long id){
 		def ne=NominaPorEmpleado.get(id)
-		if(ne){
-			//ne=nominaService.timbrar(ne)
+		if(!ne){
+			flash.message="No existe la nomina por empleado "+id
 			redirect action:'edit',params:[id:id]
 		}
+		ne=nominaService.timbrar(ne)
+		redirect action:'edit',params:[id:ne.id]
 	}
 	
 	

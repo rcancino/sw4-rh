@@ -21,24 +21,16 @@ class ProcesadorDeIncentivo {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
 		assert concepto,"Se debe de dar de alta el concepto de nomina: $conceptoClave"
-
-		//Localizar el concepto
-		def nominaPorEmpleadoDet=ne.conceptos.find(){ 
-			it.concepto==concepto
-		}
-		if(!nominaPorEmpleadoDet){
-				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(nominaPorEmpleadoDet)
-		}
 		
 		def tipo=ne.empleado.perfil.tipoDeIncentivo
 		
 		
 		def incentivo=Incentivo.findByTipoAndEmpleadoAndAsistencia(tipo,ne.empleado,ne.asistencia)
-			
+		
+		def importeGravado=0.0
+		
 		if(incentivo){
 			log.debug "Procesando Incentivo $incentivo.id (${ne.empleado} ) "
-			def importeGravado=0.0
 
 			switch(tipo) {
 				case 'SEMANAL':
@@ -51,24 +43,23 @@ class ProcesadorDeIncentivo {
 				case 'MENSUAL':
 					importeGravado=calcularImporteMensual(ne,incentivo)
 					break
-			}
-				
-			if(importeGravado>0.0){
-				//println 'Mayor a 0.0 agregar'
-				nominaPorEmpleadoDet.importeGravado=importeGravado
-				nominaPorEmpleadoDet.importeExcento=0
-				ne.actualizar()
-			}else{
-				//println 'Menor a 0.0 quitar'
-				ne.removeFromConceptos(nominaPorEmpleadoDet)
-			}
-		}else{
-			if(nominaPorEmpleadoDet){
-				ne.removeFromConceptos(nominaPorEmpleadoDet)
+			}	
 			
-			}
 		}
-
+		if(importeGravado>0.0){
+			//Localizar el concepto
+			def nominaPorEmpleadoDet=ne.conceptos.find(){
+				it.concepto==concepto
+			}
+			if(!nominaPorEmpleadoDet){
+				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				ne.addToConceptos(nominaPorEmpleadoDet)
+			}
+			nominaPorEmpleadoDet.importeGravado=importeGravado
+			nominaPorEmpleadoDet.importeExcento=0
+			ne.actualizar()
+		}
+		
 		
 	}
 
