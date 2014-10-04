@@ -7,8 +7,8 @@
 	<div class="container">
 		<div class="row">
 			<div class="alert alert-info">
-				<h4>${incentivoInstance.empleado}</h4>
-				<g:if test="${incentivoInstance.tipo=='MENSUAK'}">
+				<h4>${incentivoInstance.empleado} Tipo:${incentivoInstance.tipo} </h4>
+				<g:if test="${incentivoInstance.tipo=='MENSUAL'}">
 					<h5>${incentivoInstance?.fechaInicial?.format('dd/MM/yyyy')} al 
 					${incentivoInstance?.fechaFinal?.format('dd/MM/yyyy')}</h5>
 				</g:if>

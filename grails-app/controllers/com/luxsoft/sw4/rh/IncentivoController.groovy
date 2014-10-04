@@ -170,7 +170,7 @@ class IncentivoController {
 			case 'QUINCENAL':
 				asistencias=incentivoInstance.asistencia.partidas
 				break
-			case 'MENSUAK':
+			case 'MENSUAL':
 				asistencias=AsistenciaDet
 					.findAll("from AsistenciaDet d where d.asistencia.empleado=? and date(d.fecha) between ? and ? "
 					,[incentivoInstance.empleado,incentivoInstance.fechaInicial,incentivoInstance.fechaFinal])
