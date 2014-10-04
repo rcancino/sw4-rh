@@ -8,8 +8,15 @@
 		<div class="row">
 			<div class="alert alert-info">
 				<h4>${incentivoInstance.empleado}</h4>
-				<h5>${incentivoInstance?.fechaInicial?.format('dd/MM/yyyy')} al 
+				<g:if test="${incentivoInstance.tipo=='MENSUAK'}">
+					<h5>${incentivoInstance?.fechaInicial?.format('dd/MM/yyyy')} al 
 					${incentivoInstance?.fechaFinal?.format('dd/MM/yyyy')}</h5>
+				</g:if>
+				<g:else>
+					<h5>${incentivoInstance.asistencia.periodo.fechaInicial?.format('dd/MM/yyyy')} al 
+					${incentivoInstance.asistencia.periodo.fechaFinal?.format('dd/MM/yyyy')}</h5>
+				</g:else>
+				
 
 			</div>
 			<g:hasErrors bean="${incentivoInstance}">
@@ -35,8 +42,10 @@
 					<f:with bean="${incentivoInstance}">
 						<f:field property="otorgado" input-class="form-control"/>
 						<f:field property="calificacion" input-class="form-control"/>
-						<f:field property="tasaBono1" input-class="form-control" input-type="text"/>
-						<f:field property="tasaBono2" input-class="form-control" input-type="text"/>
+						<f:field property="tasaBono1" input-class="form-control" input-type="text"
+							label="${incentivoInstance.tipo=='MENSUAL'?'Autorizado':'Entrada'}"/>
+						<f:field property="tasaBono2" input-class="form-control" input-type="text"
+							label="${incentivoInstance.tipo=='MENSUAL'?'Asignado':'Comida'}"/>
 					</f:with>
 					
 					<div class="form-group">
