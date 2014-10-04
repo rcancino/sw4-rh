@@ -1,11 +1,33 @@
 package com.luxsoft.sw4.rh
 
+import org.apache.commons.lang.time.DateUtils
+
 import grails.transaction.Transactional
 import grails.transaction.NotTransactional
+
 import com.luxsoft.sw4.Periodo
 
 @Transactional
 class AguinaldoService {
+
+
+	def generar(Empleado empleado ,Integer ejercicio){
+		def aguinaldo=Aguinaldo.find{ejercicio==ejercicio && empleado==empleado}
+		if(!aguinaldo){
+			log.info "Generando aguinaldo para $empleado ($ejercicio)"
+			aguinaldo=new Aguinaldo(empleado:empleado,ejercicio:ejercicio)
+			def periodo=Periodo.getPeriodoAnual(ejercicio)
+			aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+			aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+			aguinaldo.salario=empleado.salario.salarioDiario
+			aguinaldo.sueldoMensual=empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
+			aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
+			aguinaldo.diasParaBono=aguinaldo.getDiasDelEjercicio()
+			aguinaldo.save failOnError:true
+
+		}
+		return aguinaldo
+	}
 
 	@NotTransactional
 	def calcular(Integer ejercicio){

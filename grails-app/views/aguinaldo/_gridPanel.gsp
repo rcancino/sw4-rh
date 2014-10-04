@@ -27,8 +27,8 @@
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td>${fieldValue(bean:row,field:"empleado.salario.periodicidad")}</td>
-				<td><g:formatNumber number="${row.totalAguinaldo}" format="####.####"/></td>
-				<td><g:formatNumber number="${row.totalBono}" format="####.####"/></td>
+				<td><g:formatNumber number="${row.aguinaldo}" format="####.####"/></td>
+				<td><g:formatNumber number="${row.bono}" format="####.####"/></td>
 				<td>
 					<g:if test="${row.nominaPorEmpleado}">
 						<g:link action="edit" id="${row.id}">
