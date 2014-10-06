@@ -38,7 +38,7 @@ class Aguinaldo {
 	BigDecimal aguinaldoExcento=0.0
 
 	//Datos para la retencion
-	BigDecimal promedioGravable=0.0 //
+	BigDecimal promedioGravable=0.0 // (Aguinaldo gravado + bono)*30.4
 	BigDecimal sueldoMensual=0.0 // salario*31 en semana y salario*32 en quincena
 	BigDecimal proporcionPromedioMensual=0.0
 	BigDecimal isrMensual=0.0  // datos de tablas
