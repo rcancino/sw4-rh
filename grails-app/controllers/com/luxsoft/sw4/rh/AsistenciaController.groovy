@@ -130,34 +130,8 @@ class AsistenciaController {
 			//render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 			redirect action:'show',params:[id:asistencia.id]
 		}
-	}
-
-	// def depurarAsistencias(Long id){
-	// 	def calendarioDet=CalendarioDet.get(id)
-	// 	asistenciaService.depurar(calendarioDet)
-	// 	def tipo=calendarioDet.calendario.tipo
-	// 	redirect action:'index',params:[tipo:tipo]
-	// }
+	}	
 	
-	def next(Long id,Long calendarioDetId){
-		def found=Asistencia.findAll(
-			"from Asistencia a where a.calendarioDet.id=? and a.id>? order by a.empleado.perfil.ubicacion.clave asc",
-			[calendarioDetId,id]
-			,[max:1])
-		//def found=Asistencia.findAll("from Asistencia a where id>? order by a.empleado.perfil.ubicacion.clave asc",[id],[max:1])
-		//def found=Asistencia.findAll(sort:'empleado',order:'asc',max:1){id>id}
-		def next=found?found.get(0):Asistencia.get(id)
-		redirect action:'show',params:[id:next.id]
-		//respond next,[view:'show']
-	}
-	
-	def previous(Long id){
-		
-		def found=Asistencia.findAll{id<id}
-		def next=found?found.get(0):Asistencia.get(id)
-		//redirect action:'show',params:[id:next.id]
-		respond next,[view:'show']
-	}
 	
 	def nomina(Long id){
 		def asistencia=Asistencia.get(id)
@@ -173,27 +147,19 @@ class AsistenciaController {
 	def jasperService
 	
 	def reporteMensual(){
-		println 'Ejecutando reporte mensual '+params
-		//println "Repote mensual: CalIni:${params.CAL_ID_INI} CalFin:${params.CAL_ID_FIN} empleado:${params.ID}"
 		def reportDef = new JasperReportDef(
 			name:'RetardoMensualPorEmpleado',
 			fileFormat:JasperExportFormat.PDF_FORMAT,
 			parameters:params
 			)
-		//jasperService
 	}
 
 	def getEmpleadosDeAsistencia(Long id) {
 		def term=params.term.trim()+'%'
 		term=term.toLowerCase()
-		
-		
 		def list=Asistencia
 			.executeQuery("from Asistencia a where a.calendarioDet.id=? and (lower(a.empleado.apellidoPaterno) like ? or lower(a.empleado.apellidoMaterno) like ? or lower(a.empleado.nombres) like ?)"
 				,[id,term,term,term])
-		
-		//println query.count()
-		
 		list=list.collect{ ne->
 			def emp=ne.empleado
 			def nombre="$emp.apellidoPaterno $emp.apellidoMaterno $emp.nombres"
@@ -218,12 +184,48 @@ class AsistenciaController {
 			rows.each{a->
 				a.delete flush:true
 			}
-			//AsistenciaDet.executeUpdate("delete AsistenciaDet  d where d.asistencia.calendarioDet=?",[det])
-			//Asistencia.executeUpdate("delete Asistencia a where a.calendarioDet=?",[det])
 			flash.message="Asistencias eliminadas"
 		}
 		redirect action:'index',params:params
 		
+	}
+	
+	def next(Asistencia a){
+		def found=Asistencia.findByCalendarioDetAndOrden(a.calendarioDet,a.orden+1)
+		if(!found){
+			found=Asistencia.findByCalendarioDetAndOrden(a.calendarioDet,1)
+		}
+		if(found){
+			redirect action:'show', params:[id:found.id]
+			return
+		}
+		redirect action:'index'
+	}
+	
+	def previous(Asistencia a){
+		def found=Asistencia.findByCalendarioDetAndOrden(a.calendarioDet,a.orden-1)
+		if(!found){
+			found=Asistencia.findByCalendarioDetAndOrden(a.calendarioDet,1)
+		}
+		if(found){
+			redirect action:'show', params:[id:found.id]
+			return
+		}
+		redirect action:'index'
+	}
+	
+	def depurar(CalendarioDet det){
+		def list=Asistencia.findAllByCalendarioDet(det)
+		list=list.sort{a,b ->
+			a.empleado.perfil.ubicacion.clave<=>b.empleado.perfil.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
+		}
+		for(int i=0;i<list.size();i++){
+			def a=list[i]
+			a.orden=i+1
+			a.save()
+		}
+		
+		redirect action:'index'
 	}
 	
 }

@@ -27,7 +27,7 @@
 <table id="" class="table table-striped table-bordered table-condensed asistenciaTable">
 	<thead>
 		<tr>
-			<th>Id</th>
+			<th>Orden</th>
 			<g:sortableColumn property="empleado" title="Empleado"/>
 			<g:sortableColumn property="empleado.perfil.ubicacion.clave" title="Sucursal"/>
 			
@@ -44,12 +44,12 @@
 		<g:each in="${partidasList}" var="row">
 			<tr>
 				<td>
-					<g:link action="show" id="${row.id}" target="_blank">
-						${fieldValue(bean:row,field:"empleado.id")}
+					<g:link action="show" id="${row.id}" >
+						${fieldValue(bean:row,field:"orden")}
 					</g:link>
 				</td>
 				<td>
-					<g:link action="show" id="${row.id}" target="_blank">
+					<g:link action="show" id="${row.id}" >
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>

@@ -6,6 +6,15 @@ import grails.plugin.springsecurity.annotation.Secured
 class OtraDeduccionController {
     static scaffold = true
 	
+	
+	def index(Long max){
+    	params.max = Math.min(max ?: 15, 100)
+		params.sort=params.sort?:'lastUpdated'
+		params.order='desc'
+		[otraDeduccionInstanceList:OtraDeduccion.list(params)
+		,otraDeduccionInstanceListTotal:OtraDeduccion.count()]
+    }
+	
 	def show(OtraDeduccion otraDeduccionInstance){
 		//chain action:'edit',params:[id:otraDeduccionInstance.id]
 		redirect action:'index'

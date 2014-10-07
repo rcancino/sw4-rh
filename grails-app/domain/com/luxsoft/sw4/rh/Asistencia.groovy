@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh
 
-import java.math.BigDecimal;
+
 import java.sql.Time
 
 import com.luxsoft.sw4.Periodo
@@ -82,6 +82,8 @@ class Asistencia {
 	String comentario
 	
 	Integer paternidad=0
+	
+	Integer orden=0
 	
 	Date dateCreated
 	Date lastUpdated

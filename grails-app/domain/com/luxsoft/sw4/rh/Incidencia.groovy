@@ -36,7 +36,7 @@ class Incidencia {
 	static constraints = {
 		comentario nullable:true,maxSize:250
 		autorizacion nullable:true
-		tipo inList:['FALTA','RETARDO','PERMISO','PATERNIDAD']
+		tipo inList:['FALTA','RETARDO','PERMISO','PATERNIDAD','PERMISO_P']
 	}
 	
 	//static hasMany = [dias:Date]

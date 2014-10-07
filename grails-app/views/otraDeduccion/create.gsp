@@ -7,7 +7,7 @@
 <body>
 
 	<content tag="header">
-		<h3>Alta de retención</h3>
+		<h3>Alta de otra deducción</h3>
 	</content>
 	
 	<content tag="operaciones">

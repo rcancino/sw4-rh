@@ -34,7 +34,7 @@ class ProcesadorDeFonacot {
 				neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				
 			}
-			def importeExcento=fonacot.retencionDiaria*ne.diasTrabajados
+			def importeExcento=fonacot.retencionDiaria*(ne.diasTrabajados+ne.vacaciones)
 			
 			println "Aplicando decucccon para FONACOT: ${fonacot.empleado}  ${fonacot.retencionDiaria} Deduccion calculada de: ${importeExcento}"
 			neDet.importeGravado=0

@@ -33,3 +33,6 @@
 		</g:each>
 	</tbody>
 </table>
+<div class="pagination">
+	<g:paginate total="${otraDeduccionInstanceListTotal ?: 0}" />
+</div>

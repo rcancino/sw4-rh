@@ -69,7 +69,14 @@
 								<span class="glyphicon glyphicon-trash"></span> Eliminar
 							</g:link>
 						</li>
-						
+						<li>
+							<g:link action="depurar" class="" 
+								onclick="return confirm('Depurar ? (${tipo} ${calendarioDet?.folio})');" 
+								id="${calendarioDet.id}"
+								params="[tipo:tipo]">
+								 Depurar
+							</g:link>
+						</li>
 					</ul>
 					
 				</div>
