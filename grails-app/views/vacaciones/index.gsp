@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="layout" content="operaciones"/>
 	<title>Vacaciones</title>
+	<r:require modules="datatables"/>
 </head>
 <body>
 	<content tag="header">
@@ -13,31 +14,44 @@
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 	</content>
-	<content tag="gridTitle">Solicitudes de vacaciones (${tipo})</content>
+	<content tag="gridTitle">Solicitudes de vacaciones </content>
 	
 	<content tag="gridTasks">
+		<div class="btn-group">
+			<input type='text' id="nombreField" placeholder="Empleado" class="form-control" autofocus="autofocus">
+		</div>
+		<div class="btn-group">
+			<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" >
+		</div>
 		<g:link action="index" class="btn btn-default">
 			<span class="glyphicon glyphicon-repeat"></span> Refrescar
 		</g:link>
 		<g:link action="create" class="btn btn-default">
 			<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
 		</g:link>
-			<button class="btn btn-default" data-toggle="modal" data-target="#searchForm">
-				<span class="glyphicon glyphicon-search"></span> Buscar
-			</button>
-		<g:link action="index" class="btn btn-default">
-			<span class="glyphicon glyphicon-filter"></span> Filtrar
-		</g:link>
-		<g:link action="index" class="btn btn-default ${tipo=='QUINCENAL'?'active':''}" params="[tipo:'QUINCENAL']">
-			<span class="glyphicon glyphicon-filter"></span> Quincenal
-		</g:link>
-		<g:link action="index" class="btn btn-default ${tipo=='SEMANAL'?'active':''}" params="[tipo:'SEMANAL']">
-			<span class="glyphicon glyphicon-filter"></span> Semanal
-		</g:link>
+		
 	</content>
 	
 	<content tag="gridPanel">
 		<g:render template="gridPanel"/>
+			<r:script>
+					$(function(){
+						var table=$("#vacacionesGrid").dataTable({
+					        "paging":   false,
+					        "ordering": false,
+					        "info":     false,
+					         "dom":'t'
+		    				});
+		    				
+		    				$("#ubicacionField").keyup(function(){
+		      					table.DataTable().column(2).search( $(this).val() ).draw();
+							});
+							$("#nombreField").keyup(function(){
+		      					table.DataTable().column(1).search( $(this).val() ).draw();
+							});
+							
+					});
+			</r:script>
 	</content>
 	
 	

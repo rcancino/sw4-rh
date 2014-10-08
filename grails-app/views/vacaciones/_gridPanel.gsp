@@ -1,10 +1,11 @@
 
 
-<table class="table table-striped table-bordered table-condensed">
+<table id="vacacionesGrid" class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
+			<th>Ubicación</th>
 			<th>Pagados</th>
 			<th>Días</th>
 			<%--<th>Comentario</th>
@@ -26,6 +27,7 @@
 						<g:fieldValue bean="${row}" field="empleado"/>
 					</g:link>
 				</td>
+				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td><g:fieldValue bean="${row}" field="pg"/></td>
 				<td><g:formatNumber number="${row.pg?row.diasPagados:row.dias.size()}" format="###"/></td>
 				<%-- 

@@ -1,8 +1,9 @@
-<table id="" class="table table-striped table-bordered table-condensed asistenciaTable">
+<table id="vacacionesGrid" class="table table-striped table-bordered table-condensed asistenciaTable">
 	<thead>
 		<tr>
-			<th>Folio</th>
+<%--			<th>Folio</th>--%>
 			<th>Empleado</th>
+			<th>Ubicación</th>
 			<th>Excento (ini)</th>
 			<th>Excento (real)</th>
 			<th>Gravado</th>
@@ -18,16 +19,17 @@
 		
 		<g:each in="${partidasList}" var="row">
 			<tr>
-				<td>
-					<g:link action="show" id="${row.id}" >
-						${row.id}
-					</g:link>
-				</td>
+<%--				<td>--%>
+<%--					<g:link action="show" id="${row.id}" >--%>
+<%--						${row.id}--%>
+<%--					</g:link>--%>
+<%--				</td>--%>
 				<td>
 					<g:link action="show" id="${row.id}" >
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>
+				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td><g:formatNumber number="${row.acumuladoExcento}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.acumuladoExcentoCalculado}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.acumuladoGravado}" format="###.##"/></td>
