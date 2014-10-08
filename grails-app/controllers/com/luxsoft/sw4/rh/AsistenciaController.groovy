@@ -113,15 +113,18 @@ class AsistenciaController {
 		
 		def asistencia=Asistencia.get(id)
 		def d=params.double('diasTrabajados')
+		def f=params['faltasManuales'] as BigDecimal
 		//println 'Dias trabajados: '+d
 		//println params
 		bindData(asistencia, params, [include: ['minutosPorDescontar']])
 		if(d>0.0){
-			log.info "Actualizando dias trabajados "+d
+			log.info "Actualizando dias trabajados: $d faltas manuales: $f"
 			asistencia.diasTrabajados=d
+			asistencia.faltasManuales=f
 			asistencia=asistencia.save flush:true
 			//render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 			redirect action:'show',params:[id:asistencia.id]
+			return
 		}
 		
 		if(asistencia){

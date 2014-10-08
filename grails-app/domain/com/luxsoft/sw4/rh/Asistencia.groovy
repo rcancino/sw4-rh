@@ -40,6 +40,8 @@ class Asistencia {
 	 */
 	Integer faltas=0
 	
+	BigDecimal faltasManuales=0
+	
 	/**
 	 * Es el acumulado de retardos diarios menores a 10 minutos
 	 *  - Si en el periodo sobrepasa los 10 minutos pierde incentivo

@@ -22,6 +22,7 @@
 			<f:field property="manual"/>
 			<f:field property="cancelarIncentivo"/>
 			<f:field property="pagarTiempoExtra"/>
+			
 		</f:with>
 </div>
 </div>	

@@ -56,7 +56,11 @@ class ProcesadorDeSueldo {
 		
 		//Calculo de dias trabajados y sueldo
 		if(asistencia.diasTrabajados>0.0){
-			ne.diasTrabajados=asistencia.diasTrabajados
+			
+			ne.faltas=asistencia.faltasManuales
+			
+			ne.fraccionDescanso=(1/6*ne.faltas)
+			ne.diasTrabajados=asistencia.diasTrabajados-ne.faltas-ne.fraccionDescanso
 		}else{
 			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades-asistencia.paternidad
 		}

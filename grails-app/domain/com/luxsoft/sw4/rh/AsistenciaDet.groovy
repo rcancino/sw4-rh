@@ -67,6 +67,8 @@ class AsistenciaDet {
 	
 	Boolean pagarTiempoExtra=false
 	
+	//Boolean empleadoNuevo=false
+	
 	TurnoDet turnoDet
 	
 	Date dateCreated

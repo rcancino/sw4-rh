@@ -43,7 +43,7 @@ class ProcesadorDeInfonavit {
 				default:
 					importeExcento=infonavit.cuotaDiaria*(ne.diasDelPeriodo-ne.faltas-ne.incapacidades)
 					if(ne.asistencia.diasTrabajados>0){
-						importeExcento=infonavit.cuotaDiaria*ne.asistencia.diasTrabajados
+						importeExcento=infonavit.cuotaDiaria*(ne.asistencia.diasTrabajados-ne.asistencia.faltasManuales)
 					}
 			}
 			

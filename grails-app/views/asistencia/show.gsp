@@ -109,6 +109,7 @@
 						<g:form class="form-inline" role="form" 
 							controller="asistencia" 
 							action="actualizar" id="${asistenciaInstance.id}">
+							
 							<label class="" for="diasTrabajadosField">Dias </label>
   							<div class="form-group">
     							<input type="text"
@@ -116,6 +117,15 @@
     								class="form-control" 
     								id="diasTrabajadosField" 
     								value="${asistenciaInstance.diasTrabajados}">
+  							</div>
+  							
+  							<label class="" for="faltasManualesField">Faltas manuales </label>
+  							<div class="form-group">
+    							<input type="text"
+    								name="faltasManuales" 
+    								class="form-control" 
+    								id="faltasManualesField" 
+    								value="${asistenciaInstance.faltasManuales}">
   							</div>
   							<div class="form-group">
   								<label class="" for="diasTrabajadosField">Min a desc </label>
