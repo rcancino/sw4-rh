@@ -8,9 +8,10 @@
 			<th>Ubicación</th>
 			<th>Pagados</th>
 			<th>Días</th>
+			<th>Modificado</th>
 			<%--<th>Comentario</th>
 			<th>Autorización</th>
-			<th>Creado</th>
+			
 			
 		--%></tr>
 	</thead>
@@ -30,6 +31,7 @@
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td><g:fieldValue bean="${row}" field="pg"/></td>
 				<td><g:formatNumber number="${row.pg?row.diasPagados:row.dias.size()}" format="###"/></td>
+				<td><g:formatDate date="${row.lastUpdated}" format="dd/MM/yyyy"/></td>
 				<%-- 
 				<td><g:formatDate date="${row.solicitud}" format="dd/MM/yyyy"/></td>
 				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
@@ -46,7 +48,7 @@
 					</g:link>
 					
 				</td>
-				<td><g:formatDate date="${row.dateCreated}" format="dd/MM/yyyy"/></td>
+				
 				--%>
 			</tr>
 		</g:each>
