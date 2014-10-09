@@ -123,6 +123,7 @@ navigation={
 				incapacidadesEmpleado()
 				faltasIncapacidades()
 				faltasIncapacidadesPeriodo()
+				minutosPorPagar()
 			}
 			
 			prestamos(controller:'reporte',titleText:'Prestamos'){

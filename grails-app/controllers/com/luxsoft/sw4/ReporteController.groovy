@@ -80,6 +80,25 @@ class ReporteController {
 			,fileName:repParams.reportName)
 	}
 	
+	def minutosPorPagar(){
+		if(request.method=='GET'){
+			return [reportCommand:new PeriodoCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'incapacidades',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['FECHA_INICIAL']=command.fechaInicial
+		repParams['FECHA_FINAL']=command.fechaFinal
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
 	def reportePorEmpleadoEjercicio(EmpleadoPorEjercicioCommand command){
 		if(command==null){
 			render 'No esta bien generado el gsp para el reporte falta el bean PorEmpleadoCommand'
