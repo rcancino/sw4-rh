@@ -18,9 +18,9 @@ class VacacionesController {
 		params.max = Math.min(max ?: 500, 1000)
 		//def tipo=params.tipo?:'QUINCENAL'
 		def list=Vacaciones.findAll("from Vacaciones i order by i.lastUpdated desc")
-		list=list.sort{a,b ->
+		/*list=list.sort{a,b ->
 			a.empleado.perfil.ubicacion.clave<=>b.empleado.perfil.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
-		}
+		}*/
 		[vacacionesList:list,vacacinesTotalCount:Vacaciones.count()]
 	}
 	
