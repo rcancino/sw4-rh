@@ -14,7 +14,7 @@ class Salario implements Serializable{
 	String clabe
 	String baseCotizacion
 	String periodicidad
-	
+	String numeroDeCuenta
 	SatBanco banco
 
     static constraints = {
@@ -25,6 +25,7 @@ class Salario implements Serializable{
 		clabe nullable:true
 		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','CATORCENAL','BIMESTRAL','UNIDAD DE OBRA','COMISION','PRECIO ALZADO']
 		banco nullable:true
+		numeroDeCuenta nullable:true
     }
 	
 	static transients=['salarioMensual']

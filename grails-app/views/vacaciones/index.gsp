@@ -9,12 +9,16 @@
 </head>
 <body>
 	<content tag="header">
-		<h3>Control de vacaciones</h3>
+		<h3>Control de vacaciones </h3>
 	</content>
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 	</content>
-	<content tag="gridTitle">Solicitudes de vacaciones </content>
+	<content tag="gridTitle"> 
+		<a href="" data-toggle="modal" data-target="#calendarioForm">
+			${calendarioDet.calendario.tipo}  ${calendarioDet.folio }  (${calendarioDet.asistencia })
+		</a>
+	</content>
 	
 	<content tag="gridTasks">
 		<div class="btn-group">
@@ -23,6 +27,12 @@
 		<div class="btn-group">
 			<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" >
 		</div>
+		<g:link action="index" class="btn ${tipo=='SEMANAL'?'btn-primary':'btn-default' } " params="[tipo:'SEMANAL']">
+			 Semanal
+		</g:link>
+		<g:link action="index" class="btn ${tipo=='QUINCENAL'?'btn-primary':'btn-default' } " params="[tipo:'QUINCENAL']">
+			 Quincenal
+		</g:link>
 		<g:link action="index" class="btn btn-default">
 			<span class="glyphicon glyphicon-repeat"></span> Refrescar
 		</g:link>
@@ -52,6 +62,7 @@
 							
 					});
 			</r:script>
+			<g:render template="/_common/calendarioForm"/>
 	</content>
 	
 	

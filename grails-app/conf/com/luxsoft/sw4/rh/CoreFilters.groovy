@@ -9,15 +9,23 @@ class CoreFilters {
             		session.ejercicio=2014
             	}
 				if(!session.calendarioSemana) {
-					
+					/*
 					def list=CalendarioDet
 					.findAll("from CalendarioDet d where d.calendario.tipo=?",['SEMANA'],[max:1])
 					session.calendarioSemana=list?list[0]:null
+					*/
+					def a=Asistencia.find("from Asistencia a where a.tipo='SEMANAL' order by dateCreated desc")
+					
+					session.calendarioSemana=a?.calendarioDet
+					
 				}
 				if(!session.calendarioQuincena) {
+					/*
 					def list=CalendarioDet
 					.findAll("from CalendarioDet d where d.calendario.tipo=?",['QUINCENA'],[max:1])
-					session.calendarioQuincena=list?list[0]:null
+					*/
+					def a=Asistencia.find("from Asistencia a where a.tipo='QUINCENAL' order by dateCreated desc")
+					session.calendarioQuincena=a?.calendarioDet
 				}
             }
             after = { Map model ->

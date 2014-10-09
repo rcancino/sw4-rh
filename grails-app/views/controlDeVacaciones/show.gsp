@@ -140,9 +140,16 @@
 		<div class="row">
 			<div class="col-md-6">
 				<div class="page-header">	
-					<h3> Percepciones de primas vacacionales</h3>
+					<h3> Percepciones por primas vacacionales</h3>
 				</div>
 				<g:render template="primasVacacionalesGrid"/>
+			</div>
+			
+			<div class="col-md-6">
+				<div class="page-header">	
+					<h3> Vacaciones tomadas</h3>
+				</div>
+				<g:render template="vacacionesTomadasGrid"/>
 			</div>
 		</div>
 		

@@ -18,4 +18,12 @@ class HomeController {
     def cambioDeEjercicio(Integer ejercicio){
     	session.ejercicio=ejercicio
     }
+	
+	def cambiarCalendario(CalendarioDet calendario){
+		if(calendario.calendario.tipo=='SEMANAL'){
+			session.calendarioSemana=calendarioDet
+		}else{
+			session.calendarioQuincena=calendarioDet
+		}
+	}
 }

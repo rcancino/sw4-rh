@@ -16,12 +16,30 @@ class VacacionesController {
 	def index(Integer max) {
 		
 		params.max = Math.min(max ?: 500, 1000)
-		//def tipo=params.tipo?:'QUINCENAL'
-		def list=Vacaciones.findAll("from Vacaciones i order by i.lastUpdated desc")
-		list=list.sort{a,b ->
+		def tipo=params.tipo?:'QUINCENAL'
+		
+		def calendarioDet=tipo=='QUINCENAL'?session.calendarioQuincena:session.calendarioSemana
+		if (!calendarioDet.isAttached()) {
+			calendarioDet.attach()
+		}
+		def ctipo=tipo=='SEMANAL'?'SEMANA':'QUINCENA'
+		def ejercicio=session.ejercicio
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==ctipo}
+		
+		def list=Vacaciones.findAll("from Vacaciones v  join v.dias d where d between ? and ?"
+			,[calendarioDet.inicio,calendarioDet.fin])
+		def set=new HashSet()
+		set.addAll(list)
+		
+		set=set.sort{a,b ->
 			a.empleado.perfil.ubicacion.clave<=>b.empleado.perfil.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
 		}
-		[vacacionesList:list,vacacinesTotalCount:Vacaciones.count()]
+		
+		[vacacionesList:set
+			,vacacinesTotalCount:Vacaciones.count()
+			,tipo:tipo
+			,calendarioDet:calendarioDet
+			,periodos:periodos]
 	}
 	
 	def create() {
@@ -163,6 +181,18 @@ class VacacionesController {
 			}
 			'*'{ render status: NOT_FOUND }
 		}
+	}
+	
+	def cambiarCalendario(Long calendarioDetId){
+		def calendarioDet=CalendarioDet.get(calendarioDetId)
+		
+		if(calendarioDet.calendario.tipo=='SEMANAL'){
+			session.calendarioSemana=calendarioDet
+		}else{
+			session.calendarioQuincena=calendarioDet
+		}
+		def tipo=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		redirect action:'index',params:[tipo:tipo]
 	}
     
 }

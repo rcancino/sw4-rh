@@ -42,7 +42,8 @@
 						input-readonly="true"
 						/>	
 					<f:field property="salario.formaDePago" input-class="form-control " />	
-					<f:field property="salario.clabe" input-class="form-control" input-autocomplete="off"/>	
+					<f:field property="salario.clabe" input-class="form-control" input-autocomplete="off" label="CLABE"/>
+					<f:field property="salario.numeroDeCuenta" input-class="form-control" input-autocomplete="off" />	
 					
 					<f:field property="salario.banco" input-class="form-control" />	
 				</f:with>

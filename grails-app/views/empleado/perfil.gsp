@@ -13,7 +13,7 @@
 	<g:if test="${!edit}">
 		<g:link class="btn btn-default" action="perfil" id="${empleadoInstance.id}" params="[edit:'true']">Modificar</g:link>
 	</g:if>
-	
+	<g:link class="btn btn-default" action="create" > Nuevo</g:link>
 </content>
 
 <content tag="content">

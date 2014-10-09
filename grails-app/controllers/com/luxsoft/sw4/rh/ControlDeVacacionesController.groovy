@@ -46,9 +46,14 @@ class ControlDeVacacionesController {
 				,[controlDeVacacionesInstance.empleado,'P024',controlDeVacacionesInstance.ejercicio.toInteger()])
 		def totalExcentoPrima=percepcionesPorPrimas.sum 0.0,{it.importeExcento}
 		def totalGravadoPrima=percepcionesPorPrimas.sum 0.0,{it.importeGravado}
+		
+		def nominas=NominaPorEmpleado
+			.findAll("from NominaPorEmpleado ne where ne.empleado=? and ne.nomina.ejercicio=? and ne.vacaciones>0"
+			,[controlDeVacacionesInstance.empleado,controlDeVacacionesInstance.ejercicio.toInteger()])
+		//def totalDias=percepcionesPorPrimas.sum 0.0,{it.vacaciones}
 		[controlDeVacacionesInstance:controlDeVacacionesInstance
 			,percepcionesPorPrimas:percepcionesPorPrimas
 			,totalExcentoPrima:totalExcentoPrima
-			,totalGravadoPrima:totalGravadoPrima]
+			,totalGravadoPrima:totalGravadoPrima,nominas:nominas]
 	}
 }

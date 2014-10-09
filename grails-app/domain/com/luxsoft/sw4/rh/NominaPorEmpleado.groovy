@@ -6,7 +6,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 
-@EqualsAndHashCode(includes='empleado')
+@EqualsAndHashCode(includes='empleado,nomina')
 @ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
 class NominaPorEmpleado {
 
