@@ -140,7 +140,7 @@
   			</div>
   			
   			<div class="form-group">
-   				<label class="col-sm-4 control-label">Incapacidades</label>
+   				<label class="col-sm-4 control-label">Incapacidad</label>
     			<div class="col-sm-8">
       				<p class="form-control-static">
       					${asistenciaInstance.incapacidades} 

@@ -45,9 +45,11 @@
  WHEN M.TURNO_ID in (9,8) AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN 'OK' 
 ELSE 'ERROR' END AS 'VALID'
 ,M.TURNO_ID,a.periodo_fecha_inicial,a.periodo_fecha_final
+,(case when dayofweek(d.fecha)=1 then 'DOM' when dayofweek(d.fecha)=2 then 'LUN' when dayofweek(d.fecha)=3 then 'MAR' when dayofweek(d.fecha)=4 then 'MIE' when dayofweek(d.fecha)=5 then 'JUE' when dayofweek(d.fecha)=6 then 'VIE' when dayofweek(d.fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 FROM asistencia a join asistencia_det d on (a.id=d.asistencia_id) join empleado e on (e.id=a.empleado_id) JOIN ubicacion U ON (U.ID=D.ubicacion_id)
 join perfil_de_empleado m on (m.EMPLEADO_id=e.id) join calendario_det  c on (a.calendario_det_id=c.id)
 where a.calendario_det_id=$P{CALENDARIODET} and D.tipo='ASISTENCIA' 
+and excentar_checadas is false
 AND
 ((CASE 
  WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=4 THEN 'OK' 
@@ -78,6 +80,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 	<field name="TURNO_ID" class="java.lang.Long"/>
 	<field name="periodo_fecha_inicial" class="java.sql.Timestamp"/>
 	<field name="periodo_fecha_final" class="java.sql.Timestamp"/>
+	<field name="diaSem" class="java.lang.String"/>
 
 
 		<group  name="UBICACION" isStartNewPage="true" >
@@ -259,9 +262,9 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="228"
+						x="256"
 						y="7"
-						width="64"
+						width="36"
 						height="11"
 						forecolor="#000000"
 						key="staticText-22"
@@ -279,7 +282,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="292"
+						x="301"
 						y="7"
 						width="50"
 						height="11"
@@ -299,7 +302,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="342"
+						x="351"
 						y="7"
 						width="50"
 						height="11"
@@ -319,7 +322,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="392"
+						x="401"
 						y="7"
 						width="50"
 						height="11"
@@ -339,7 +342,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="442"
+						x="451"
 						y="7"
 						width="50"
 						height="11"
@@ -359,9 +362,9 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="492"
+						x="502"
 						y="7"
-						width="56"
+						width="46"
 						height="11"
 						forecolor="#000000"
 						key="staticText-27"
@@ -376,13 +379,33 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 					</textElement>
 				<text><![CDATA[FALTANTES]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="228"
+						y="7"
+						width="28"
+						height="11"
+						forecolor="#000000"
+						key="staticText-28"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIA]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
 			<band height="16"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="6"
+						x="1"
 						y="0"
 						width="44"
 						height="11"
@@ -395,7 +418,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="51"
+						x="46"
 						y="0"
 						width="177"
 						height="11"
@@ -408,7 +431,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="292"
+						x="301"
 						y="0"
 						width="50"
 						height="11"
@@ -421,7 +444,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="342"
+						x="351"
 						y="0"
 						width="50"
 						height="11"
@@ -434,7 +457,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="392"
+						x="401"
 						y="0"
 						width="50"
 						height="11"
@@ -447,7 +470,7 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="442"
+						x="451"
 						y="0"
 						width="50"
 						height="11"
@@ -460,9 +483,9 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="492"
+						x="508"
 						y="0"
-						width="56"
+						width="40"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -473,9 +496,9 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="228"
+						x="251"
 						y="0"
-						width="64"
+						width="41"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -496,6 +519,19 @@ ORDER BY d.ubicacion_id,E.apellido_paterno]]></queryString>
 						key="line-7"/>
 					<graphicElement stretchType="NoStretch" fill="Solid" />
 				</line>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="223"
+						y="0"
+						width="28"
+						height="11"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{diaSem}]]></textFieldExpression>
+				</textField>
 			</band>
 		</detail>
 		<columnFooter>

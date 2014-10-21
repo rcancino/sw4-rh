@@ -91,13 +91,22 @@ class ProcesadorDeChecadas {
 		
 		//Medio dia (Sabado eje)
 		if(t.entrada2==null || t.salida2==null) {
-			if(lectura<t.salida1) {
+			if(lectura<t.salida1 && (ad.entrada1==null)) {
 				ad.entrada1=time
 				return
 			}
 			if(lectura>=t.salida1) {
 				ad.salida1=time
 				return
+			}
+			
+			if(ad.entrada1){
+				LocalTime checado=LocalTime.fromDateFields(ad.entrada1)
+				def dif=( ((lectura.getHourOfDay()*60)+lectura.getMinuteOfHour()) - ((checado.getHourOfDay()*60)+checado.getMinuteOfHour()) )
+				if(dif>60){
+					ad.salida1=time
+				}
+				
 			}
 			return
 		}

@@ -45,7 +45,7 @@
     						<g:select id="calendarioField" class="form-control"  
 								name="calendarioDet" 
 								from="${CalendarioDet
-									.findAll('from CalendarioDet d where d not in (select n.calendarioDet from RegistroDeComisiones n) order by d.calendario.tipo,d.folio')}" 
+									.findAll('from CalendarioDet  d order by d.calendario.tipo,d.folio')}" 
 								optionKey="id" 
 								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
 							/>

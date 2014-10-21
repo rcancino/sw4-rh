@@ -13,7 +13,8 @@ class EmpleadoRestController {
 	//@Cacheable('catalogoDeEmpleados')
 	def getEmpleados() {
 		def term=params.term.trim()+'%'
-		def query=Empleado.where{status=='ALTA'}
+		def query=Empleado.where{activo==true}
+		//def query=Empleado.findAll()
 		query=query.where{
 			apellidoPaterno=~term || apellidoMaterno=~term || nombres=~term
 		}

@@ -91,6 +91,7 @@ navigation={
 				tiempoExtra()
 				detallePorConcepto()
 				acumuladoDeNominasPorConcepto()
+				calificacionDeIncentivos()
 			}
 			salarios(controller:'reporte'){
 				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
@@ -124,6 +125,8 @@ navigation={
 				faltasIncapacidades()
 				faltasIncapacidadesPeriodo()
 				minutosPorPagar()
+				ausentismoPorDia()
+				
 			}
 			
 			prestamos(controller:'reporte',titleText:'Prestamos'){

@@ -72,6 +72,18 @@
 					    
 					</div>
 					
+					<div class="form-group">
+					    <label class="col-sm-4 control-label">Salario diario</label>
+					     <div class="col-sm-2">
+					     	<p class="form-control-static">${tiempoExtraInstance.empleado.salario.salarioDiario}</p>
+					    </div>
+					    
+					    <label class="col-sm-4 control-label">Total</label>
+					     <div class="col-sm-2">
+					     	<p class="form-control-static">${tiempoExtraInstance.partidas.sum(0.0,{it.total})}</p>
+					    </div>
+					    
+					</div>
 					
 				</g:form>
 			</div>

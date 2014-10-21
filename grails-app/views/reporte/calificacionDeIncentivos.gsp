@@ -2,12 +2,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="layout" content="reportes"/>
-<title>Incapacidades</title>
+<title>Calificación Para Incentivo</title>
 </head>
 <body>
 
 	<content tag="reporteTitle">
-		Incapacidades
+		Calificación Para Incentivo
 	</content>
 	
 	<content tag="reportForm">
@@ -18,8 +18,8 @@
         </g:hasErrors>
 		<div class="col-sm-8">
 		
-		<g:form action="incapacidades" class="form-horizontal">
-			<g:hiddenField name="reportName" value="Incapacidades"/>
+		<g:form action="calificacionDeIncentivos" class="form-horizontal">
+			<g:hiddenField name="reportName" value="CalificacionParaIncentivo"/>
 			<fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">

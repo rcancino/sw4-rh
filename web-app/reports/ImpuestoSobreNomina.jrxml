@@ -66,6 +66,7 @@ A.EMPRESA,A.RFC,A.REGISTRO_PATRONAL,A.NOM_ID
 ,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=A.NOM_ID and z.ubicacion_id=5)) as TAC_SUBS_E_APLIC
 ,A.empleadOS
 ,A.DESC_CONCEPTO,A.TIPO_CONCEPTO,A.CLASE
+,empleadoS_SEM,SEMANAS,empleadoS_QUIN,QUINCENAS
 FROM  (
 SELECT 
 case when c.id in (40,31,33) then "Y"else "X" end as control,b.mes, a.ejercicio,b.folio as folio_nom
@@ -77,6 +78,22 @@ case when c.id in (40,31,33) then "Y"else "X" end as control,b.mes, a.ejercicio,
 ,D.importe_gravado AS GRAVADO
 ,(SELECT count(*) FROM nomina_por_empleado r where r.nomina_id=e.nomina_id) as empleados
 ,C.CLASE,C.descripcion AS DESC_CONCEPTO,C.TIPO AS TIPO_CONCEPTO
+,(SELECT 
+count(*)
+FROM nomina n join nomina_por_empleado ne  on (n.id=ne.nomina_id) join calendario_det c on (c.id=n.calendario_det_id)
+where mes=$P{MES} and n.periodicidad='SEMANAL') AS empleadoS_SEM
+,(SELECT 
+count(*)
+FROM calendario_det  O JOIN calendario N ON (N.ID=O.calendario_id)
+where mes=$P{MES} and TIPO='SEMANA') AS SEMANAS
+,(SELECT 
+count(*)
+FROM nomina n join nomina_por_empleado ne  on (n.id=ne.nomina_id) join calendario_det c on (c.id=n.calendario_det_id)
+where mes=$P{MES} and n.periodicidad='QUINCENAL') AS empleadoS_QUIN
+,(SELECT 
+count(*)
+FROM calendario_det  O JOIN calendario N ON (N.ID=O.calendario_id)
+where mes=$P{MES} and TIPO='QUINCENA') AS QUINCENAS
 FROM 
 calendario a join calendario_det b on (b.calendario_id=a.id) join
 NOMINA N ON ( N.calendario_det_id= b.ID )
@@ -136,6 +153,10 @@ order by control]]></queryString>
 	<field name="DESC_CONCEPTO" class="java.lang.String"/>
 	<field name="TIPO_CONCEPTO" class="java.lang.String"/>
 	<field name="CLASE" class="java.lang.String"/>
+	<field name="empleadoS_SEM" class="java.lang.Long"/>
+	<field name="SEMANAS" class="java.lang.Long"/>
+	<field name="empleadoS_QUIN" class="java.lang.Long"/>
+	<field name="QUINCENAS" class="java.lang.Long"/>
 
 	<sortField name="control" />
 	<sortField name="CLAVE" />
@@ -286,6 +307,10 @@ $F{5FE_EXT}.doubleValue()+$F{5FE_GRV}.doubleValue()
 	</variable>
 	<variable name="IMPUESTO" class="java.lang.Double" resetType="Report" calculation="Nothing">
 		<variableExpression><![CDATA[new Double(($V{TOTAL_GRUPO_GRAVADO}.doubleValue()+$V{TOTAL_GRUPO_EXENTO}.doubleValue())*.03)]]></variableExpression>
+	</variable>
+	<variable name="PROMEDIO_EMPLEADOS" class="java.lang.Double" resetType="Report" calculation="Nothing">
+		<variableExpression><![CDATA[new Double(($F{empleadoS_SEM}.doubleValue()/$F{SEMANAS}.doubleValue())+
+($F{empleadoS_QUIN}.doubleValue()/$F{QUINCENAS}.doubleValue()))]]></variableExpression>
 	</variable>
 
 		<group  name="GRUPO1" >
@@ -979,6 +1004,38 @@ $F{5FE_EXT}.doubleValue()+$F{5FE_GRV}.doubleValue()
 						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false"/>
 					</textElement>
 				<text><![CDATA[IMPUESTO SOBRE NOMINAS: ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="282"
+						y="30"
+						width="100"
+						height="21"
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean ($F{control}.equals( "X" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{PROMEDIO_EMPLEADOS}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="128"
+						y="30"
+						width="150"
+						height="21"
+						key="staticText-212">
+							<printWhenExpression><![CDATA[new Boolean($F{control}.equals( "X" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[PROMEDIO DE EMPLEADOS: ]]></text>
 				</staticText>
 			</band>
 			</groupFooter>

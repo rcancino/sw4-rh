@@ -18,6 +18,7 @@
 			<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
 			<th>M</th>
 			<th>TE</th>
+			<th>CH</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -52,6 +53,15 @@
 				</td>
 				<td>
 					<g:if test="${row.pagarTiempoExtra }">
+						<span class="glyphicon glyphicon-ok"></span>
+					</g:if>
+					<g:else>
+						
+					</g:else>
+					 
+				</td>
+				<td>
+					<g:if test="${row.excentarChecadas }">
 						<span class="glyphicon glyphicon-ok"></span>
 					</g:if>
 					<g:else>

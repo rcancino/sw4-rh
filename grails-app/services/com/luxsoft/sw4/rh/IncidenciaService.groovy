@@ -17,12 +17,12 @@ class IncidenciaService {
 				,[asistencia.empleado,it.fecha])
 			if(found){
 				println 'Incedencia localizada: '+found
-				if(found.pagado && (found.tipo=='PERMISO' || found.tipo=='PERMISO_P')){
+				if(found.pagado && (found.tipo=='PERMISO' || found.tipo=='PERMISO_P' || found.tipo=='DESCANSO_P')){
 					it.comentario='INCIDENCIA '+found.tipo
 					it.tipo='INCIDENCIA'
 					pagadas++
 				}
-				if(!found.pagado && (found.tipo=='PERMISO' || found.tipo=='PERMISO_P'))	{
+				if(!found.pagado && (found.tipo=='PERMISO' || found.tipo=='PERMISO_P' || found.tipo=='DESCANSO_P'))	{
 					it.comentario='INCIDENCIA '+found.tipo
 					it.tipo='INCIDENCIA_F'
 					noPagadas++

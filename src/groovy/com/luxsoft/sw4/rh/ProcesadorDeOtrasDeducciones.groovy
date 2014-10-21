@@ -100,7 +100,7 @@ class ProcesadorDeOtrasDeducciones {
 	}
 	
 	private OtraDeduccion buscarOtraDeduccion(NominaPorEmpleado ne) {
-		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0 and o.empleado=? order by o.saldo desc"
+		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.saldo desc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}

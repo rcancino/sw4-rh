@@ -54,15 +54,17 @@ class NominaController {
 	}
 	
 	def actualizarPartidas(Long id) {
-		
+		//println 'Actualizando: '+id
 		def nomina=nominaService.actualizarPartidas(Nomina.get(id))
+		
 		//render view:'show',model:[nominaInstance:nomina]
-		redirect view:'show',params:[id:nomina.id]
+		redirect action:'depurar',params:[id:id]
 	}
 
 	def depurar(Long id){
-		def nomina=nominaService.depurar(id)
-		redirect action:'show',params:[id:nomina.id]	
+		//println 'Depurando...'+id
+		nominaService.depurar(id)
+		redirect action:'show',params:[id:id]	
 	}
 
     def delete(Nomina nominaInstance){

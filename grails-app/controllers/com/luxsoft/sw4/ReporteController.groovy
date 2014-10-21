@@ -306,6 +306,46 @@ class ReporteController {
 			,fileName:repParams.reportName)
 	}
 	
+	def ausentismoPorDia(FechaCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new FechaCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'ausentismoPorDia',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['FECHA']=command.fecha
+		
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
+	def calificacionDeIncentivos(PeriodoCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new PeriodoCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'calificacionDeIncentivos',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		
+		repParams['FECHA_INICIAL']=command.fechaInicial
+		repParams['FECHA_FINAL']=command.fechaFinal
+		
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
 	private runReport(Map repParams){
 		log.info 'Ejecutando reporte  '+repParams
 		def nombre=WordUtils.capitalize(repParams.reportName)
@@ -323,7 +363,11 @@ class ReporteController {
 		return grailsApplication.mainContext.getResource("/reports/$name").file
 	}
 	
+	
+	
 }
+
+
 
 class ImpuestoSobreNominaCommand{
 	Integer ejercicio
@@ -435,5 +479,14 @@ class AcumuladoDeNominaPorConceptoCommand{
 		periodicidad inList:['SEMANAL','QUINCENAL']
 		ejercicio inList:2014..2018
 		mes inList:Mes.getNombres()
+	}
+}
+
+@Validateable
+class FechaCommand{
+	Date fecha
+	static constraints={
+		fecha nullable:false
+		
 	}
 }

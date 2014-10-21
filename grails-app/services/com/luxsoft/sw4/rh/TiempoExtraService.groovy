@@ -147,7 +147,12 @@ class TiempoExtraService {
 	def calcularImportesMinutosDobles(TiempoExtra te){
 		def smg=67.29
 		def maximo=smg*5
-		def factor=(maximo<=te.empleado.salario.salarioDiario)?1.0:0.5
+		//def factor=(maximo<=te.empleado.salario.salarioDiario)?1.0:0.5
+		def salarioDiario=te.empleado.salario.salarioDiario
+		def factor=(salarioDiario<=smg)?1.0:0.5
+		
+		
+		def gravarUltimaSemana=true
 		
 		te.partidas.each{det->
 			def importeTotal=det.minutosDobles*det.getSalarioPorMinuto()*2
@@ -160,7 +165,15 @@ class TiempoExtraService {
 			}
 			
 			det.importeDoblesGravados=importeTotal-det.importeDoblesExcentos
-		}	
+			if(det.semana!=3 && det.total<=0.0){
+				gravarUltimaSemana=false
+			}
+			if(det.semana==3 && gravarUltimaSemana){
+				det.importeDoblesExcentos=0.0
+				det.importeDoblesGravados=importeTotal
+			}
+		}
+			
 	}
 	
 	def calcularImportesMinutosTriples(TiempoExtra te){

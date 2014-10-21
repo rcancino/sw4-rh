@@ -4,6 +4,7 @@ import com.luxsoft.sw4.Empresa
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.acu.AcumuladoPorConcepto
 
+import grails.transaction.NotTransactional
 import grails.transaction.Transactional
 import groovy.time.TimeCategory
 import grails.events.Listener
@@ -88,7 +89,7 @@ class NominaService {
 		return nomina
 	}
 	
-	
+	@Transactional
 	def actualizarPartidas(Nomina nomina) {
 		assert nomina,"Nomina nula no es valido"
 		validarParaModificacion(nomina)
@@ -164,7 +165,8 @@ class NominaService {
 		}
 		*/
 	}
-
+	
+	@Transactional
 	def depurar(Long id){
 		Nomina nomina=Nomina.get(id)
 		def calendarioDet=nomina.calendarioDet

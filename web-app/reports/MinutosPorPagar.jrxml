@@ -39,8 +39,7 @@
 FROM asistencia a JOIN asistencia_det d ON (a.id=d.asistencia_id) JOIN empleado e on (e.id= a.empleado_id) join perfil_de_empleado p on (p.empleado_id=e.id) join ubicacion u on (u.id=p.ubicacion_id)
 where d.fecha BETWEEN $P{FECHA_INICIAL} and $P{FECHA_FINAL} and (d.retardo_menor <>0 or d.retardo_menor_comida<>0)
 group by e.id HAVING sum(D.retardo_menor+ d.retardo_menor_comida)>10
-ORDER BY U.CLAVE,E.CLAVE
-]]></queryString>
+ORDER BY U.CLAVE,E.CLAVE]]></queryString>
 
 	<field name="SUCURSAL" class="java.lang.String"/>
 	<field name="id" class="java.lang.Long"/>
@@ -51,6 +50,12 @@ ORDER BY U.CLAVE,E.CLAVE
 	<field name="MINUTOS_DOBLES" class="java.math.BigDecimal"/>
 
 	<variable name="AUSENCIAS" class="java.lang.Integer" resetType="Report" calculation="Sum">
+	</variable>
+	<variable name="TOTAL_MINUTOS" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{MINUTOS}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_DOBLES" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{MINUTOS_DOBLES}]]></variableExpression>
 	</variable>
 
 		<group  name="SUCURSAL" isStartNewPage="true" >
@@ -73,7 +78,35 @@ ORDER BY U.CLAVE,E.CLAVE
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="16"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="271"
+						y="5"
+						width="44"
+						height="11"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_MINUTOS}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="315"
+						y="5"
+						width="46"
+						height="11"
+						key="textField"/>
+					<box>					<topPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{TOTAL_DOBLES}]]></textFieldExpression>
+				</textField>
 			</band>
 			</groupFooter>
 		</group>
@@ -227,7 +260,7 @@ ORDER BY U.CLAVE,E.CLAVE
 						mode="Opaque"
 						x="76"
 						y="12"
-						width="143"
+						width="195"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -245,7 +278,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="219"
+						x="271"
 						y="12"
 						width="44"
 						height="11"
@@ -265,7 +298,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="263"
+						x="315"
 						y="12"
 						width="46"
 						height="11"
@@ -285,7 +318,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="310"
+						x="362"
 						y="12"
 						width="86"
 						height="11"
@@ -305,12 +338,12 @@ ORDER BY U.CLAVE,E.CLAVE
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="18"  isSplitAllowed="true" >
+			<band height="13"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="76"
 						y="0"
-						width="143"
+						width="195"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -334,7 +367,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="219"
+						x="271"
 						y="0"
 						width="44"
 						height="11"
@@ -347,7 +380,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="263"
+						x="315"
 						y="0"
 						width="46"
 						height="11"
@@ -360,7 +393,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				</textField>
 				<staticText>
 					<reportElement
-						x="323"
+						x="375"
 						y="0"
 						width="72"
 						height="11"
@@ -374,7 +407,7 @@ ORDER BY U.CLAVE,E.CLAVE
 				</staticText>
 				<staticText>
 					<reportElement
-						x="400"
+						x="452"
 						y="0"
 						width="26"
 						height="11"
@@ -389,7 +422,7 @@ ORDER BY U.CLAVE,E.CLAVE
 			</band>
 		</detail>
 		<columnFooter>
-			<band height="46"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</columnFooter>
 		<pageFooter>

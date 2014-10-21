@@ -21,7 +21,7 @@ class AsistenciaDetController {
 		det.salida2=getDateTime(params.salida2,det.fecha)
 		//det.manual=params.manual
 		//det.pagarTiempoExtra=params.pagarTiempoExtra
-		bindData(det,params,[include:['pagarTiempoExtra','manual']])
+		bindData(det,params,[include:['pagarTiempoExtra','manual','excentarChecadas']])
 		det.save(flush:true)
 		
 		//asistenciaService.actualizarAsistencia(det.asistencia)
