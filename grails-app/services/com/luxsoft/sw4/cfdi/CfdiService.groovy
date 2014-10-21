@@ -121,7 +121,7 @@ class CfdiService {
 			//
 			if(empleado?.salario?.banco?.clave)
 				//banco=empleado.salario.banco.clave
-				banco=StringUtils.leftPad(empleado.salario.banco.clave.toString(), 3, '0')
+				setBanco(empleado.salario.banco.clave)
 				
 			//setBanco(?:null)
 		  }

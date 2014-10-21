@@ -9,7 +9,7 @@ class Salario implements Serializable{
 	BigDecimal salarioDiario
 	BigDecimal salarioDiarioIntegrado
 	BigDecimal salarioVariable=0.0
-	String formaDePago
+	String formaDePago='CHEQUE'
 	
 	String clabe
 	String baseCotizacion
