@@ -38,6 +38,20 @@
     		</div>
   		</div>
   		
+  		<div class="form-group">
+    		<label for="pago" class="col-sm-2 control-label">Mes</label>
+    		<div class="col-sm-10">
+      			<g:field type="text" class="form-control" id="mes" name="mes"/>
+    		</div>
+  		</div>
+  		
+  		<div class="form-group">
+    		<label for="pago" class="col-sm-2 control-label">Bimestre</label>
+    		<div class="col-sm-10">
+      			<g:field type="text" class="form-control" id="bimestre" name="bimestre"/>
+    		</div>
+  		</div>
+  		
   		<fieldset>
   		<legend>Periodo de asistencia:</legend>
   		<div class="form-group">

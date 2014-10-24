@@ -26,10 +26,13 @@ class NominaService {
 
 	@Transactional
 	def generar(Long calendarioDetId,String tipo,String formaDePago){
-		println 'Generando calendario: '+calendarioDetId
+		println 'Generando nomina: '+tipo+ " Cal:"+calendarioDetId
 		def calendarioDet=CalendarioDet.get(calendarioDetId)
-		//assert(calendarioDet,'ERROR caldnario det nulo')
+		
 		def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		if(calendariDet.calendario.tipo=='ESPECIAL'){
+			periodicidad='SEMANAL'
+		}
 		def periodo=calendarioDet.periodo()
 		Empresa empresa=Empresa.first()
 		def nomina=Nomina.find{calendarioDet==calendarioDet}
@@ -52,6 +55,8 @@ class NominaService {
 		nomina.save(failOnError:true)
 		return nomina
 	}
+	
+	
 	
 	@Transactional
 	def generarPartidas(Nomina nomina) {
@@ -217,6 +222,8 @@ class NominaService {
 			fraccionDescanso:0
 			)
 		ne.antiguedadEnSemanas=ne.getAntiguedad()
+		ne.salarioDiarioBase=empleado.salario.salarioDiario
+		ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
 		def asistencia=Asistencia.findByCalendarioDetAndEmpleado(nomina.calendarioDet,empleado)
 		ne.asistencia=asistencia
 		nomina.addToPartidas(ne)

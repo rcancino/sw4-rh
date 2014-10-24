@@ -26,9 +26,16 @@ class NominaController {
 		params.periodicidad=params.periodicidad?:'QUINCENAL'
 		params.sort=params.sort?:'folio'
 		params.order='asc'
+		def tipo=params.tipo?:'GENERAL'
 		
-		def query=Nomina.where{periodicidad==params.periodicidad}
-		[nominaInstanceList:query.list(params),nominaInstanceListTotal:query.count(params),periodicidad:params.periodicidad]
+		
+		def query=Nomina.where{periodicidad==params.periodicidad && tipo=='GENERAL'}
+		if(tipo=='ESPECIAL'){
+			println 'Tipo especial....'+tipo
+			query=Nomina.where{periodicidad==params.periodicidad && tipo==tipo}
+		}
+		[nominaInstanceList:query.list(params)
+			,nominaInstanceListTotal:query.count(params),periodicidad:params.periodicidad,tipo:tipo]
     }
 
     def show(Long id) {
@@ -48,8 +55,8 @@ class NominaController {
 	
 
 	def generar(Long calendarioDet){
-		def nominaInstance=nominaService.generar(calendarioDet,'GENERAL','TRANSFERENCIA')
-		//render view:'show',model:[nominaInstance:nominaInstance]
+		def tipo=params.tipo?:'GENERAL'
+		def nominaInstance=nominaService.generar(calendarioDet,tipo,'TRANSFERENCIA')
 		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	

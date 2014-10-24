@@ -11,7 +11,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info">
-					<h3>Lista de nóminas ${tipo=='ESPECIAL'?tipo:periodicidad }</h3>
+					<h3>Lista de nóminas ${periodicidad }</h3>
 				</div>
 			</div>
 		</div>
@@ -19,14 +19,14 @@
 		<div class="row">
 			<div class="col-md-12">
 				<ul class="nav nav-tabs">
-					<li class="${(periodicidad=='QUINCENAL' && tipo=='GENERAL')?'active':''}">
-						<g:link action="index" params="[periodicidad:'QUINCENAL',tipo:'GENERAL'	]" >Quincenal</g:link>
+					<li>
+						<g:link action="index" params="[periodicidad:'QUINCENAL']" >Quincenal</g:link>
 					</li>
-					<li class="${(periodicidad=='SEMANAL'&& tipo=='GENERAL')?'active':''}">
-						<g:link action="index" params="[periodicidad:'SEMANAL',tipo:'GENERAL']">Semanal</g:link>
+					<li >
+						<g:link action="index" params="[periodicidad:'SEMANAL']">Semanal</g:link>
 					</li>
-					<li class="${tipo=='ESPECIAL'?'active':''}">
-						<g:link action="index" params="[tipo:'ESPECIAL']">Especial</g:link>
+					<li class="active">
+						<g:link action="especiales" params="[tipo:'E']">Especial</g:link>
 					</li>
 				</ul>
 			</div>

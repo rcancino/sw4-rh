@@ -9,6 +9,7 @@
 				<h4 class="modal-title" id="myModalLabel">Agregar nomina</h4>
 			</div>
 			<g:form action="generar" class="form-horizontal" >
+				<g:hiddenField name="tipo" value="${tipo}"/>
 				<div class="modal-body">
 					<div class="form-group">
     					<label for="comentarioField" class="col-sm-3">Calendario</label>
