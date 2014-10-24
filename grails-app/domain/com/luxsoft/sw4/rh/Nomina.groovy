@@ -45,8 +45,7 @@ class Nomina {
 	static transients=['diasPagados']
 
     static constraints = {
-		tipo inList:['GENERAL','ESPECIAL','AGINALDO','UTILIDADES']
-		//diaDePago inList:['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES','SABADO']
+		tipo inList:['GENERAL','ESPECIAL','AGINALDO','PTU']
 		diaDePago maxSize:20
 		periodicidad inList:['SEMANAL','QUINCENAL','MENSUAL','ANUAL','ESPECIAL']
 		formaDePago inList:['CHEQUE','TRANSFERENCIA']

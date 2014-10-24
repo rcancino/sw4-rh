@@ -25,17 +25,14 @@ class NominaController {
         params.max = Math.min(max ?: 60, 100)
 		params.periodicidad=params.periodicidad?:'QUINCENAL'
 		params.sort=params.sort?:'folio'
-		params.order='asc'
-		def tipo=params.tipo?:'GENERAL'
+		params.order='desc'
+		def tipo=params.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
+		def periodos=CalendarioDet
+			.findAll('from CalendarioDet d where d.calendario.tipo=? and d not in (select n.calendarioDet from Nomina n)',[tipo])
 		
-		
-		def query=Nomina.where{periodicidad==params.periodicidad && tipo=='GENERAL'}
-		if(tipo=='ESPECIAL'){
-			println 'Tipo especial....'+tipo
-			query=Nomina.where{periodicidad==params.periodicidad && tipo==tipo}
-		}
+		def query=Nomina.where{periodicidad==params.periodicidad }
 		[nominaInstanceList:query.list(params)
-			,nominaInstanceListTotal:query.count(params),periodicidad:params.periodicidad,tipo:tipo]
+			,nominaInstanceListTotal:query.count(params),periodicidad:params.periodicidad,periodos:periodos]
     }
 
     def show(Long id) {
@@ -43,28 +40,18 @@ class NominaController {
 		Map partidasMap=nominaInstance.partidas.groupBy([{it.ubicacion.clave}])
 		[nominaInstance:nominaInstance,partidasMap:partidasMap]
 		        
-    }
-
-    def agregar(){
-		def nomina=Nomina.get(params.id)
-		params.periodicidad=nomina.periodicidad
-		params.folio=nomina.folio
-        redirect action:'agregarPartida', params:params
-    }
-	
+    }	
 	
 
 	def generar(Long calendarioDet){
-		def tipo=params.tipo?:'GENERAL'
-		def nominaInstance=nominaService.generar(calendarioDet,tipo,'TRANSFERENCIA')
+		def tipo=params.tipo
+		def formaDePago=params.formaDePago
+		def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago)
 		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	
 	def actualizarPartidas(Long id) {
-		//println 'Actualizando: '+id
 		def nomina=nominaService.actualizarPartidas(Nomina.get(id))
-		
-		//render view:'show',model:[nominaInstance:nomina]
 		redirect action:'depurar',params:[id:id]
 	}
 

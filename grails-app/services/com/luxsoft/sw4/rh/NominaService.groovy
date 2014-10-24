@@ -30,7 +30,7 @@ class NominaService {
 		def calendarioDet=CalendarioDet.get(calendarioDetId)
 		
 		def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
-		if(calendariDet.calendario.tipo=='ESPECIAL'){
+		if(calendarioDet.calendario.tipo=='ESPECIAL'){
 			periodicidad='SEMANAL'
 		}
 		def periodo=calendarioDet.periodo()

@@ -1,11 +1,11 @@
 
 
-<table class="table table-striped table-bordered table-condensed">
+<table id="nominaGrid" class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
 			<g:sortableColumn property="folio" title="Folio"/>
-			<th><g:message code="nomina.calendarioDet.label" encodeAs="html" default="Calendario"/></th>
 			<th><g:message code="nomina.tipo.label" default="Tipo" encodeAs="html"/></th>
+			<th><g:message code="nomina.calendarioDet.label" encodeAs="html" default="Forma de pago"/></th>
 			<th><g:message code="periodo" encodaAs="html" default="Periodo"/></th>
 			<th><g:message code="nomina.pago" default="Pago" encodeAs="html"/></th>
 			<th><g:message code="nomina.asistencia" encodaAs="html" default="Asistencia"/></th>
@@ -23,10 +23,10 @@
 				</td>
 				<td>
 					<g:link action="show" id="${row.id}">
-						${row.calendarioDet?.calendario?.tipo} ${row.calendarioDet?.folio}
+						${fieldValue(bean:row,field:"tipo")}
 					</g:link>
 				</td>
-				<td>${fieldValue(bean:row,field:"tipo")}</td>
+				<td>${row.formaDePago}</td>
 				<td>${fieldValue(bean:row,field:"periodo")}</td>
 				<td><g:formatDate date="${row.pago}" format="MMM dd"/></td>
 				<td>${fieldValue(bean:row.calendarioDet,field:"asistencia")}</td>

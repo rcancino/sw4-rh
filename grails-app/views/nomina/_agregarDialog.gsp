@@ -9,19 +9,39 @@
 				<h4 class="modal-title" id="myModalLabel">Agregar nomina</h4>
 			</div>
 			<g:form action="generar" class="form-horizontal" >
-				<g:hiddenField name="tipo" value="${tipo}"/>
+			
 				<div class="modal-body">
 					<div class="form-group">
-    					<label for="comentarioField" class="col-sm-3">Calendario</label>
+    					<label for="tipoField" class="col-sm-3">Tipo</label>
+    					<div class="col-sm-9">
+    						<g:select id="tipoField" class="form-control"  
+								name="tipo" 
+								from="${['GENERAL','ESPECIAL','AGINALDO','PTU']}" 
+								/>
+    					</div>
+  					</div>
+  					<div class="form-group">
+  						<label for="comentarioField" class="col-sm-3">Calendario</label>
     					<div class="col-sm-9">
     						<g:select id="periodoField" class="form-control"  
 								name="calendarioDet" 
-								from="${CalendarioDet.findAll('from CalendarioDet d where d not in (select n.calendarioDet from Nomina n)')}" 
+								from="${periodos}" 
 								optionKey="id" 
 								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
 							/>
     					</div>
   					</div>
+  					
+  					<div class="form-group">
+    					<label for="tipoField" class="col-sm-3">Forma de pago</label>
+    					<div class="col-sm-9">
+    						<g:select id="formaDePagoField" class="form-control"  
+								name="formaDePago" 
+								from="${['TRANSFERENCIA','CHEQUE']}" 
+								/>
+    					</div>
+  					</div>
+  					
 				</div>
 				
 				<div class="modal-footer">
