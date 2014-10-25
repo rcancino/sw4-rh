@@ -11,10 +11,10 @@
 		%{-- <g:link action="update" class="btn btn-primary" id="${empleadoInstance.id}">Salvar</g:link> --}%
 		<g:link class="btn btn-default" action="generales" id="${empleadoInstance.id}" params="[edit:'true']">Modificar</g:link>
 		<g:link class="btn btn-default" action="create" > Nuevo</g:link>
-		<g:if test="${!empleadoInstance.status=='ALTA'}">
+		<g:if test="${empleadoInstance.status=='ALTA'}">
 			<g:link class="btn btn-danger" action="create" > Registrar Baja</g:link>
 		</g:if>
-		<g:if test="${empleadoInstance.status=='ALTA'}">
+		<g:if test="${!empleadoInstance.status=='ALTA'}">
 			<g:link class="btn btn-success" action="reingreso" id="${empleadoInstance.id}"> Reingreso</g:link>
 		</g:if>
 	</g:if>

@@ -6,7 +6,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="myModalLabel">Agregar nomina </h4>
+				<h4 class="modal-title" id="myModalLabel">Agregar nomina</h4>
 			</div>
 			<g:form action="generar" class="form-horizontal" >
 			
@@ -25,8 +25,7 @@
     					<div class="col-sm-9">
     						<g:select id="periodoField" class="form-control"  
 								name="calendarioDet" 
-								from="${periodos}"
-								value="${calendarioActual}" 
+								from="${periodos}" 
 								optionKey="id" 
 								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
 							/>

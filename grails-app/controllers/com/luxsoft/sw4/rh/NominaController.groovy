@@ -24,15 +24,17 @@ class NominaController {
     def index(Integer max) {
         params.max = Math.min(max ?: 60, 100)
 		params.periodicidad=params.periodicidad?:'QUINCENAL'
-		params.sort=params.sort?:'folio'
+		params.sort=params.sort?:'lastUpdated'
 		params.order='desc'
 		def tipo=params.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
 		def periodos=CalendarioDet
-			.findAll('from CalendarioDet d where d.calendario.tipo=? and d not in (select n.calendarioDet from Nomina n)',[tipo])
+			.findAll('from CalendarioDet d where d.calendario.tipo=? ',[tipo])
 		
 		def query=Nomina.where{periodicidad==params.periodicidad }
 		[nominaInstanceList:query.list(params)
-			,nominaInstanceListTotal:query.count(params),periodicidad:params.periodicidad,periodos:periodos]
+			,nominaInstanceListTotal:query.count(params)
+			,periodicidad:params.periodicidad,periodos:periodos
+			,calendarioActual:tipo=='SEMANAL'?session.calendarioSemana:session.calendarioQuincena]
     }
 
     def show(Long id) {
@@ -47,7 +49,7 @@ class NominaController {
 		def tipo=params.tipo
 		def formaDePago=params.formaDePago
 		def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago)
-		redirect action:'show',params:[id:nominaInstance.id]
+		redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
 	}
 	
 	def actualizarPartidas(Long id) {
@@ -56,7 +58,6 @@ class NominaController {
 	}
 
 	def depurar(Long id){
-		//println 'Depurando...'+id
 		nominaService.depurar(id)
 		redirect action:'show',params:[id:id]	
 	}

@@ -10,7 +10,7 @@
 			<th><g:message code="nomina.pago" default="Pago" encodeAs="html"/></th>
 			<th><g:message code="nomina.asistencia" encodaAs="html" default="Asistencia"/></th>
 			<th><g:message code="nomina.status" default="Status" encodeAs="html"/></th>
-			
+			<th>Modificado</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -32,6 +32,7 @@
 				<td>${fieldValue(bean:row.calendarioDet,field:"asistencia")}</td>
 				
 				<td>${fieldValue(bean:row,field:"status")}</td>
+				<td><g:formatDate date="${row.lastUpdated}" format="dd/MM/yyyy hh:mm"/></td>
 			</tr>
 		</g:each>
 	</tbody>

@@ -151,6 +151,13 @@ class EmpleadoController {
     }
 	
 	
+	def registrarBaja(Empleado empleado){
+		
+	}
+	def registrarReingreso(Empleado empleado){
+		
+	}
+	
 
 }
 

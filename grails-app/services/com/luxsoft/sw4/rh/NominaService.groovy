@@ -26,16 +26,13 @@ class NominaService {
 
 	@Transactional
 	def generar(Long calendarioDetId,String tipo,String formaDePago){
-		println 'Generando nomina: '+tipo+ " Cal:"+calendarioDetId
+		log.info 'Generando nomina: '+tipo+ " Cal:"+calendarioDetId
 		def calendarioDet=CalendarioDet.get(calendarioDetId)
 		
 		def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
-		if(calendarioDet.calendario.tipo=='ESPECIAL'){
-			periodicidad='SEMANAL'
-		}
 		def periodo=calendarioDet.periodo()
 		Empresa empresa=Empresa.first()
-		def nomina=Nomina.find{calendarioDet==calendarioDet}
+		def nomina=Nomina.find{calendarioDet==calendarioDet && tipo==tipo && formaDePago==formaDePago}
 		if(nomina){
 			throw new NominaException(message:'Nomina ya generada calendario: '+calendarioDet)
 		}
@@ -62,8 +59,10 @@ class NominaService {
 	def generarPartidas(Nomina nomina) {
 		
 		def tipo=nomina.periodicidad
-		def asistencias=Asistencia.findAllByCalendarioDet(nomina.calendarioDet)
-		
+		//def asistencias=Asistencia.findAllByCalendarioDet(nomina.calendarioDet)
+		def asisencias=Asistencia
+			.findAll("from Asistencia a where a.calendarioDet=? and a.empleado.salario.formaDePago=?"
+				,[nomina.calendarioDet,nomina.formaDePago])
 		int orden=1
 		
 		for(def asistencia:asistencias) {

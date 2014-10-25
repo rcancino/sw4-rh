@@ -1,12 +1,14 @@
 package com.luxsoft.sw4.rh
 
+import com.luxsoft.sw4.Periodo
+
 class CoreFilters {
 
     def filters = {
         all(controller:'*', action:'*') {
             before = {
             	if(!session.ejercicion){
-            		session.ejercicio=2014
+            		session.ejercicio=Periodo.obtenerYear(new Date())
             	}
 				if(!session.calendarioSemana) {
 					/*
