@@ -151,9 +151,21 @@ class EmpleadoController {
     }
 	
 	
-	def registrarBaja(Empleado empleado){
+	def registrarBaja(Empleado empleadoInstance,BajaDeEmpleado baja){
+		if(request.method=='GET'){
+			return [empleadoInstance:empleadoInstance,bajaInstance:new BajaDeEmpleado()]
+		}
+		if(request.methd=="POST"){
+			println 'Salvando baja de empleado: '+empleadoInstance
+			baja.empleado=empleadoInstance
+			empleadoInstance=empleadoService.updateEmpleado(empleadoInstance)
+			flash.message="Baja registrada  ${empleadoInstance.clave} "
+			redirect action:'generales',params:[id:empleadoInstance.id]
+			//return
+		}
 		
 	}
+	
 	def registrarReingreso(Empleado empleado){
 		
 	}

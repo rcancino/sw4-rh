@@ -60,7 +60,7 @@ class NominaService {
 		
 		def tipo=nomina.periodicidad
 		//def asistencias=Asistencia.findAllByCalendarioDet(nomina.calendarioDet)
-		def asisencias=Asistencia
+		def asistencias=Asistencia
 			.findAll("from Asistencia a where a.calendarioDet=? and a.empleado.salario.formaDePago=?"
 				,[nomina.calendarioDet,nomina.formaDePago])
 		int orden=1

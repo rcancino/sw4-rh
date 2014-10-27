@@ -10,12 +10,7 @@
 	
 	<content tag="header">
 		<g:link action="index" id="${nominaInstance.id}" params="[periodicidad:nominaInstance.periodicidad]">
-			<g:if test="${nominaInstance.tipo=='GENERAL' }">
-				<h4>Nómina: ${nominaInstance.folio} ${nominaInstance.periodicidad} (${nominaInstance.periodo}) </h4>
-			</g:if>
-			<g:else>
-				<h4>Nómina: ${nominaInstance.tipo} ${nominaInstance.folio} (${nominaInstance.periodo}) </h4>
-			</g:else>
+			<h4>Nómina: ${nominaInstance.folio} ${nominaInstance.periodicidad}  ${nominaInstance.formaDePago } (${nominaInstance.periodo}) </h4>
 		</g:link>
 	</content>
 	
