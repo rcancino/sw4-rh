@@ -229,6 +229,10 @@ class IncentivoController {
 			incentivo=incentivoService.calcularIncentivoMensual(incentivo)
 			redirect action:'edit', params:[id:incentivo.id]
 			return
+		}else if(incentivo.tipo=='QUINCENAL'){
+			incentivo=incentivoService.calcularIncentivoQuincenal(incentivo)
+			redirect action:'edit', params:[id:incentivo.id]
+			return
 		}
 		
 	}

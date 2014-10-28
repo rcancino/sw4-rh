@@ -37,6 +37,10 @@ class ProcesadorDeTiempoExtra {
 				def neDet2=ne.conceptos.find(){
 					it.concepto==concepto2
 				}
+				if(!neDet2){
+					neDet2=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+					
+				}
 				neDet2.importeGravado=te.getTriplesGravados()
 				neDet2.importeExcento=0.0
 				if(!neDet2.id)

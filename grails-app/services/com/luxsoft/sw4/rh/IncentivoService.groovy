@@ -203,7 +203,7 @@ class IncentivoService {
 	
     
     def Incentivo calcularIncentivoQuincenal(Incentivo bono){
-    	log.debug 'Calculando bono quincenal '+bono
+    	log.info 'Calculando bono quincenal '+bono
 
     	def asistencia=bono.asistencia
     	
@@ -213,8 +213,6 @@ class IncentivoService {
 		def minutosNoLaborados=asistencia.minutosNoLaborados
     	def retardoMayor=asistencia.retardoMayor
     	def retardoMenor=asistencia.retardoMenor
-    	
-    	
 		
 		bono.tasaBono1=0.0
 		def retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida

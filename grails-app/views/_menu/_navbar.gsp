@@ -36,6 +36,9 @@
 				
 			<ul class="nav navbar-nav navbar-right">
 				<g:render template="/_menu/user"/>
+				<li><a>Semana: ${session.calendarioSemana.folio}</a></li>
+				<li><a>Quincena: ${session.calendarioQuincena.folio}</a></li>
+				<li><a>${session.ejercicio}</a></li>
 			</ul>
 		</div>
 		</g:if>
