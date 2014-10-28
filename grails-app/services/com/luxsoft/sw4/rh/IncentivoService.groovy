@@ -140,7 +140,7 @@ class IncentivoService {
     	def faltas=rows.sum 0.0,{it.tipo=='FALTA'?1:0}
     	def incapacidades=rows.sum 0.0,{it.tipo=='INCAPACIDAD'?1:0}
     	def incidenciaf=rows.sum 0.0,{it.tipo=='INCIDENCIA_F'?1:0}
-    	log.info "Dias: $rows.size Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
+    	log.info "Dias: ${rows.size()} Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
 		def checadasFaltantes=calcularChecadasFaltantes(rows)
 
     	faltas+=(incapacidades+incidenciaf)
@@ -214,6 +214,7 @@ class IncentivoService {
     	def retardoMayor=asistencia.retardoMayor
     	def retardoMenor=asistencia.retardoMenor
 		
+		
 		bono.tasaBono1=0.0
 		def retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
 		def retardoTotal=retardoMayor+retardoMenor+retardoComida
@@ -243,6 +244,17 @@ class IncentivoService {
 			bono.tasaBono1=0.05
 			bono.tasaBono2=0.05
 		}
+		def rows=asistencia.partidas
+		//log.info "Dias: ${rows.size()} Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
+		def checadasFaltantes=calcularChecadasFaltantes(rows)
+		log.info 'Checadas faltantes: '+checadasFaltantes
+		if(checadasFaltantes>0){
+			
+			bono.tasaBono2=0.0
+			bono.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
+			log.info 'Checadas faltantes $checadasFaltantes cancelando bono2'
+		}
+		
 		return bono
     }
 	

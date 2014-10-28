@@ -33,10 +33,21 @@ class ProcesadorDeTiempoExtra {
 				ne.addToConceptos(neDet)
 				
 			if(te.getTriplesGravados()>0){
-				def concepto2=ConceptoDeNomina.findByClave('P023')
-				def neDet2=ne.conceptos.find(){
-					it.concepto==concepto2
+				
+				def horasTriplesConcepto=ConceptoDeNomina.findByClave('P023')
+				def horasTriplesDet=ne.conceptos.find(){
+					it.concepto==horasTriplesConcepto
 				}
+				log.info 'Aplicando horas triples concepto: '+horasTriplesConcepto
+				if(!horasTriplesDet){
+					log.info 'No existia en la nomina el concepto generando uno nuevo'
+					horasTriplesDet=new NominaPorEmpleadoDet(concepto:horasTriplesConcepto
+						,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+					ne.addToConceptos(horasTriplesDet)
+				}
+				horasTriplesDet.importeGravado=te.getTriplesGravados()
+				horasTriplesDet.importeExcento=0.0
+				/*
 				if(!neDet2){
 					neDet2=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 					
@@ -45,6 +56,7 @@ class ProcesadorDeTiempoExtra {
 				neDet2.importeExcento=0.0
 				if(!neDet2.id)
 					ne.addToConceptos(neDet)
+					*/
 			}
 			
 			ne.actualizar()
