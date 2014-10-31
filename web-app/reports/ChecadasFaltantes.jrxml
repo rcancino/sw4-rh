@@ -34,6 +34,7 @@
 ,if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0) AS CHK
 ,(CASE 
  WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND D.FECHA =(SELECT FECHA FROM dia_festivo F WHERE F.FECHA=D.FECHA ) THEN 2
+ WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND M.TURNO_ID=9 THEN 2
  WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 THEN  4
  WHEN DAYOFWEEK(FECHA) =7 THEN 2 
  ELSE 4 END)-(if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0)) AS CHK_FLT

@@ -27,7 +27,7 @@
 		</div>
 
 		<div class="row">
-			<div class="col-md-3">
+			<div class="col-md-2">
 				<div class="panel panel-default">
   					<div class="panel-heading">Operaciones</div>
     				<div class="list-group">
@@ -56,6 +56,30 @@
 					</div>
 				</g:form>
 			</div>
+			
+			<div class="col-md-4">
+				<form action="" class="form-horizontal">
+					<div class="form-group">
+    					<label class="col-sm-3 control-label">Faltas</label>
+    					<div class="col-sm-9">
+      						<p class="form-control-static">${incentivoInstance.faltas}</p>
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Minutos</label>
+    					<div class="col-sm-9">
+      						<p class="form-control-static">${incentivoInstance.minutosNoLaborados}</p>
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label class="col-sm-3 control-label">Chec F</label>
+    					<div class="col-sm-9">
+      						<p class="form-control-static">${incentivoInstance.checadasFaltantes}</p>
+    					</div>
+  					</div>
+				</form>
+			</div>
+			
 		</div> <!-- end .row 1 -->
 
 		<div class="row">

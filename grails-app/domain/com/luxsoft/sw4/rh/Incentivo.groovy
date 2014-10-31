@@ -40,6 +40,11 @@ class Incentivo {
 	
 	String comentario	
 	
+	Integer checadasFaltantes=0
+	Integer minutosNoLaborados=0
+	Integer faltas=0
+	
+	
 	Date dateCreated
 	Date lastUpdated
 
@@ -52,8 +57,8 @@ class Incentivo {
 		mes nullable:true
 		fechaInicial nullable:true
 		fechaFinal nullable:true
-		tasaBono1 sacle:4
-		tasaBono2 scale:4
+		tasaBono1 sacle:6
+		tasaBono2 scale:6
     }
 
     static mapping = {

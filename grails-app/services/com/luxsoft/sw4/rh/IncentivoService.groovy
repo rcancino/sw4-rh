@@ -2,6 +2,7 @@ package com.luxsoft.sw4.rh
 
 import grails.transaction.Transactional
 import grails.transaction.NotTransactional
+
 import com.luxsoft.sw4.Mes
 import com.luxsoft.sw4.Periodo
 
@@ -104,76 +105,99 @@ class IncentivoService {
 
     		def empleado=asistencia.empleado
     		if(empleado.perfil.tipoDeIncentivo=='MENSUAL'){
-	    		Incentivo inc=Incentivo.find{tipo==tipo && ejercicio==ejercicio && mes==mes.nombre && empleado==empleado}
-	    		if(inc==null){
-					log.info 'Generando/actualizando incentivos mensuales usando asistencia: '+asistencia
-					inc=new Incentivo(
-						tipo:'MENSUAL',
-						asistencia:asistencia,
-						empleado:empleado,
-						ubicacion:empleado.perfil.ubicacion,
-						ejercicio:ejercicio,
-						mes:mes.nombre,
-						fechaInicial:periodo.fechaInicial,
-						fechaFinal:periodo.fechaFinal
-					)
-					
-					inc.save failOnError:true
-				}
-				calcularIncentivoMensual(inc)
 				
+				boolean valido=validarEmpleadoParaIncentivoMensual(empleado,ejercicio,mes)
+				if(valido){
+					Incentivo inc=Incentivo.find{tipo==tipo && ejercicio==ejercicio && mes==mes.nombre && empleado==empleado}
+					if(inc==null){
+						log.info 'Generando/actualizando incentivos mensuales usando asistencia: '+asistencia
+						inc=new Incentivo(
+							tipo:'MENSUAL',
+							asistencia:asistencia,
+							empleado:empleado,
+							ubicacion:empleado.perfil.ubicacion,
+							ejercicio:ejercicio,
+							mes:mes.nombre,
+							fechaInicial:periodo.fechaInicial,
+							fechaFinal:periodo.fechaFinal
+						)
+						
+						
+						inc.save failOnError:true
+					}
+					calcularIncentivoMensual(inc)
+				}
     		}
-    		
-
     	}
     }
 
     def calcularIncentivoMensual(Incentivo incentivo){
 		log.debug 'Calculando bono mensual: '+incentivo.empleado
+		
     	def bono1=incentivo.tasaBono1
+		def bonoOriginal=bono1
+		
 		def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
 		//def per=new Periodo('01/07/2014','21/07/2014')
+		def inicio=per.fechaInicial
+		if(incentivo.empleado.alta>inicio)
+			inicio=incentivo.empleado.alta
     	def rows=AsistenciaDet
     		.executeQuery("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?"
-    	                                               ,[incentivo.empleado,per.fechaInicial,per.fechaFinal])
+    	                                               ,[incentivo.empleado,inicio,per.fechaFinal])
     	def minutos=rows.sum 0.0,{(it.retardoMenor+it.retardoMayor+it.retardoComida+it.retardoMenorComida)}
     	def faltas=rows.sum 0.0,{it.tipo=='FALTA'?1:0}
     	def incapacidades=rows.sum 0.0,{it.tipo=='INCAPACIDAD'?1:0}
     	def incidenciaf=rows.sum 0.0,{it.tipo=='INCIDENCIA_F'?1:0}
-    	log.info "Dias: ${rows.size()} Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
+    	
 		def checadasFaltantes=calcularChecadasFaltantes(rows)
-
+		log.info "Dias: ${rows.size()} Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf Tasa bono 1:${bono1} Checadas faltantes:${checadasFaltantes}"
     	faltas+=(incapacidades+incidenciaf)
-
-    	if(!incentivo.otorgado){
-    	  bono1=0.0
-    	 
-    	}else if(faltas>2){
-    	  bono1=0.0
-    	}else if(faltas==2){
-    	  bono1=bono1/2
-    	}
-
-    	if(incentivo.calificacion=='REGULAR'){
-    		bono1=bono1*0.5
-    	}else if(incentivo.calificacion=='MALA'){
-    		bono1=0.0
-    	}
-
-    	def bono2=0.0
-
-    	if(bono1>0.0){
-    	  if(minutos>49){
-    	    bono2=bono1*0.875
-    	  }else
-    	  	bono2=bono1
-    	}
 		
-		if(checadasFaltantes>2){
-			bono2=0.0
-			incentivo.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
+		incentivo.checadasFaltantes=checadasFaltantes
+		incentivo.minutosNoLaborados=minutos
+		incentivo.faltas=faltas
+		
+		def bono2=0.0
+		
+		if(faltas>2){
+			incentivo.tasaBono2=0.0
+			return incentivo;
 		}
-    	incentivo.tasaBono2=bono2
+		if(incentivo.calificacion=='MALA'){
+			incentivo.tasaBono2=0.0
+			return incentivo;
+		}
+		if(incentivo.calificacion=='REGULAR'){
+			bono2=bono1/2
+		}
+		if(incentivo.calificacion=='BUENA'){
+			bono2=bono1
+		}
+		
+		def perdida=0.0
+		
+		if(faltas==2){
+			perdida=0.125
+		}
+		if(checadasFaltantes>2){
+			perdida+=0.05
+		}
+		if(minutos>49){
+			perdida+=0.125
+		}
+		log.info 'Perdida: '+perdida
+		bono2=bono2*(1-perdida)	
+		
+		def proporcion=calcularProporcion(incentivo)
+		
+    	incentivo.tasaBono2=bono2*proporcion
+		incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
+		incentivo.incentivo=incentivo.ingresoBase*bono2
+		
+		
+		
+		log.info "Perdida: ${perdida} Proporcion: $proporcion Ingreso base:${incentivo.ingresoBase} Bono2 :${bono2}"
 		return incentivo
     }
 	
@@ -181,7 +205,16 @@ class IncentivoService {
 		def faltantes=0
 		registros.each{ det->
 			
-			if(det.tipo=='ASISTENCIA'){
+			def diaFestivo=DiaFestivo.findByFecha(det.fecha)
+			if(diaFestivo){
+				log.info 'Evluando dia festivo: '+diaFestivo.fecha
+				if(diaFestivo.parcial){
+					if(det.entrada1 && det.salida1){
+						faltantes++;
+					}
+				}
+			}else{
+			if(det.tipo=='ASISTENCIA' && (diaFestivo==null)){
 				if(det.turnoDet.entrada1 && !det.entrada1)
 					faltantes++
 				if(det.turnoDet.salida1 && !det.salida1)
@@ -191,6 +224,9 @@ class IncentivoService {
 				if(det.turnoDet.salida2 && !det.salida2)
 					faltantes++
 			}
+			}
+			
+			
 			/*
 			if(det.asistencia.empleado.id==95){
 				println 'Procesando Dia: '+det.fecha+ ' Checadas faltantes: '+faltantes  
@@ -217,7 +253,7 @@ class IncentivoService {
 		
 		bono.tasaBono1=0.0
 		def retardoComida=asistencia.retardoComida+asistencia.retardoMenorComida
-		def retardoTotal=retardoMayor+retardoMenor+retardoComida
+		//def retardoTotal=retardoMayor+retardoMenor+retardoComida
 		if(asistencia.minutosNoLaborados==0){
 			if(asistencia.faltas+asistencia.incapacidades==0){
 				if( (asistencia.retardoMenor+asistencia.retardoMayor)<=10){
@@ -239,20 +275,21 @@ class IncentivoService {
 			bono.tasaBono2=0.0
 		}
 		
-		//Casos especiales
-		if([271l,255l].contains(asistencia.empleado.id)){
-			bono.tasaBono1=0.05
-			bono.tasaBono2=0.05
-		}
+		
 		def rows=asistencia.partidas
-		//log.info "Dias: ${rows.size()} Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf"
 		def checadasFaltantes=calcularChecadasFaltantes(rows)
 		log.info 'Checadas faltantes: '+checadasFaltantes
 		if(checadasFaltantes>0){
 			
 			bono.tasaBono2=0.0
-			bono.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
+			bono.comentario="CANCELADO POR $checadasFaltantes CHECADA(S) FALTANTES"
 			log.info 'Checadas faltantes $checadasFaltantes cancelando bono2'
+		}
+		
+		//Casos especiales
+		if([271l,255l].contains(asistencia.empleado.id)){
+			bono.tasaBono1=0.05
+			bono.tasaBono2=0.05
 		}
 		
 		return bono
@@ -343,6 +380,30 @@ class IncentivoService {
 				
 		}
 		return faltantes
+	}
+	
+	def boolean validarEmpleadoParaIncentivoMensual(Empleado e,Integer ejercicio,Mes mes){
+		def alta=e.alta
+		def inventario=CalendarioDet.find(
+			"from CalendarioDet det join det.calendario c where c.ejercicio=? and c.tipo=? and c.comentario=?",
+			[ejercicio,mes.nombre,'INVENTARIO'])
+		if(inventario){
+			log.info 'Evaluando calendario de inventario: '+inventario
+			return alta<=inventario.inicio
+		}
+		return true
+	}
+	
+	def calcularProporcion(Incentivo incentivo){
+		def alta=incentivo.empleado.alta
+		if(alta<incentivo.fechaInicial)
+			return 1.0;
+		else if(alta>incentivo.fechaInicial && alta<=incentivo.fechaFinal){
+			def diasTrabajados=incentivo.fechaFinal-alta
+			def totalDias=30
+			return diasTrabajados/totalDias //La parte proporcional
+		}else
+			return 0.0	
 	}
 
 }
