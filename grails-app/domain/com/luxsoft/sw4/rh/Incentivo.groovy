@@ -56,6 +56,7 @@ class Incentivo {
 		nominaPorEmpleadoDet nullable:true
 		mes nullable:true
 		fechaInicial nullable:true
+		asistencia nullable:true
 		fechaFinal nullable:true
 		tasaBono1 sacle:6
 		tasaBono2 scale:6

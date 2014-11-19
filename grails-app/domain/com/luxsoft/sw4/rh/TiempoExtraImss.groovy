@@ -19,6 +19,7 @@ class TiempoExtraImss {
 	
 	BigDecimal total=0.0
 	BigDecimal integra=0.0
+	BigDecimal integraTriples=0.0
 	
 	TiempoExtraDet tiempoExtraDet
 	

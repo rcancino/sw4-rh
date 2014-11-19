@@ -38,6 +38,7 @@ class ProcesadorDeAjusteISPT {
 	}
 	
 	def procesarAjusteMensualISPT(NominaPorEmpleadoDet det){
+		log.info 'Ajuste mensual para: '+det
 		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
 		if(found){
 			NominaPorEmpleado ne=det.parent

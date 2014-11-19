@@ -1,6 +1,26 @@
 package com.luxsoft.sw4
 
+import java.util.List;
+
 class Bimestre {
+	
+	Integer clave
+	String descripcion
+	
+	String toString(){
+		return "$clave ($descripcion)"
+	}
+	
+	static List getBimestres(){
+		[
+			new Bimestre(clave:1,descripcion:'Enero - Febrero'),
+			new Bimestre(clave:2,descripcion:'Marzo - Abril'),
+			new Bimestre(clave:3,descripcion:'Mayo - Junio'),
+			new Bimestre(clave:4,descripcion:'Julio - Agosto'),
+			new Bimestre(clave:5,descripcion:'Septiembre - Octubre'),
+			new Bimestre(clave:6,descripcion:'Noviembre - Diciembre'),
+		]
+	}
 	
 	static Integer getCurrentBimestre(){
 		return getBimestre(new Date())

@@ -83,37 +83,35 @@ class IncentivoService {
     }
 
     @NotTransactional
-    def generarIncentivosMensuales(CalendarioDet calendarioDet,Mes mes) {
+	//def generarIncentivosMensuales(CalendarioDet calendarioDet,Mes mes) {
+    def generarIncentivosMensuales(Integer ejercicio,Mes mes) {
 
-    	//def asistencias=Asistencia.findAll{calendarioDet==calendarioDet} 
+    	//def asistencias=Asistencia.findAll{calendarioDet==calendarioDet}
+		/*
     	def asistencias=Asistencia.executeQuery("from Asistencia a where a.calendarioDet=? and a.empleado.perfil.tipoDeIncentivo=?"
     		,[calendarioDet,'MENSUAL'])
     	if(!asistencias){
     		throw new RuntimeException("No se han generado y procesado asistencias para la quincena $calendarioDet.folio")
     	}
+    	*/
     	if(mes==null){
     		throw new RuntimeException("Se requiere el mes para el calculo")	
     	}
-		
-		asistencias=asistencias.sort{a,b ->
-			a.empleado.perfil.ubicacion.clave<=>b.empleado.perfil.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
-		}
-		def ejercicio=calendarioDet.calendario.ejercicio
+		//def ejercicio=calendarioDet.calendario.ejercicio
 
 		def periodo = Periodo.getPeriodoEnUnMes(mes.clave,ejercicio)
-    	asistencias.each{ asistencia->
-
-    		def empleado=asistencia.empleado
+		def empleados=Empleado.findAll ("from Empleado e where e.perfil.tipoDeIncentivo=? and e.status in('ALTA','REINGRESO')"
+			,['MENSUAL'])
+    	empleados.each{ empleado->
     		if(empleado.perfil.tipoDeIncentivo=='MENSUAL'){
 				
 				boolean valido=validarEmpleadoParaIncentivoMensual(empleado,ejercicio,mes)
 				if(valido){
 					Incentivo inc=Incentivo.find{tipo==tipo && ejercicio==ejercicio && mes==mes.nombre && empleado==empleado}
 					if(inc==null){
-						log.info 'Generando/actualizando incentivos mensuales usando asistencia: '+asistencia
+						log.info 'Generando incentivo mensuales : '+empleado
 						inc=new Incentivo(
 							tipo:'MENSUAL',
-							asistencia:asistencia,
 							empleado:empleado,
 							ubicacion:empleado.perfil.ubicacion,
 							ejercicio:ejercicio,
@@ -125,7 +123,7 @@ class IncentivoService {
 						
 						inc.save failOnError:true
 					}
-					calcularIncentivoMensual(inc)
+					//calcularIncentivoMensual(inc)
 				}
     		}
     	}

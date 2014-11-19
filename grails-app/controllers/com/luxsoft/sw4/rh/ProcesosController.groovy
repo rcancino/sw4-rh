@@ -1,6 +1,9 @@
 package com.luxsoft.sw4.rh
 
+import grails.validation.Validateable
+
 import grails.plugin.springsecurity.annotation.Secured;
+
 import com.luxsoft.sw4.Periodo
 
 @Secured(['ROLE_ADMIN'])
@@ -24,30 +27,50 @@ class ProcesosController {
 		[empleadoInstanceList:res,empleadoInstanceCount:total]
 	}
 	
-	def salarioDiarioIntegrado(){
-		def cal=session.calendarioSemana
-		def bimestre=4
-		def ejercicio=session.ejercicio
-		//def res=CalendarioDet.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=?",[bimestre])
+	
+	def cambiarBimestre(CalculoBimestralCommand command){
+		def bimestre=command.bimestre
+		if(!session.bimestre)
+			session.bimestre=command.bimestre
+		def ejercicio=command.ejercicio
+		render view:'salarioDiarioIntegrado',model:[rows:[],bimestre:bimestre,ejercicio:ejercicio]
 		
-		//def inicio=res.get(0)[0]
-		//def fin=res.get(0)[1]
-		//def periodo=new Periodo(inicio,fin)
-		[rows:[],bimestre:bimestre]
 	}
 	
-	def calcularSalarioDiarioIntegrado(){
-		//def periodo=new Periodo('01/01/2014','02/03/2014')
-		//def rows=empleadoService.calcularSalarioDiarioIntegrado(periodo)
-		def rows=salarioService.calcularSalarioDiario(2014,4)		
-		render view:'salarioDiarioIntegrado',model:[rows:rows]
+	def salarioDiarioIntegrado(){
+		[rows:[],bimestre:session.bimestre,ejercicio:session.ejercicio]
+	}
+	
+	def calcularSalarioDiarioIntegrado(CalculoBimestralCommand command){
+		//def ejercicio=params.ejercicio
+		//def bimestre=params.bimestre
+		session.bimestre=command.bimestre
+		def rows=salarioService.calcularSalarioDiarioOld(command.ejercicio,command.bimestre)		
+		render view:'salarioDiarioIntegrado',model:[rows:rows,bimestre:command.bimestre,ejercicio:command.ejercicio]
 	}
 	
 	def aplicarSalarioDiarioIntegrado(){
-		def periodo=new Periodo('01/01/2014','02/03/2014')
-		empleadoService.actualizarSalarioDiarioIntegrado(periodo)
-		redirect action:'empleados'
+		//def rows=salarioService.aplicarCalculoDeSalarioDiario(session.ejercicio,session.bimestre)
+		//def periodo=new Periodo('01/01/2014','02/03/2014')
+		//empleadoService.actualizarSalarioDiarioIntegrado(periodo)
+		//redirect action:'empleados'
+		render view:'salarioDiarioIntegrado',model:[rows:rows,bimestre:session.bimestre,ejercicio:session.ejercicio]
 	}
+	
+	
+}
+
+@Validateable
+class CalculoBimestralCommand{
+	
+	Integer ejercicio
+	Integer bimestre
+	
+	static constraints = {
+		ejercicio inList:2014..2018
+		bimestre inList:1..6
+		
+    }
 	
 	
 }

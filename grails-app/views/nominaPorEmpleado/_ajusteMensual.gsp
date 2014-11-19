@@ -24,20 +24,20 @@
 								<td ><g:formatNumber number="${ajuste.baseGravable}" type="currency"/></td>
 							</tr>
 							<tr>
-								<td> Cuota Fija</td>
-								<td ><g:formatNumber number="${ajuste.cuotaFija}" format="#,###.##"/></td>
-							</tr>
-							<tr>
 								<td> Limite Inferior</td>
 								<td ><g:formatNumber number="${ajuste.limiteInferior}" format="#,###.##"/></td>
 							</tr>
 							<tr>
-								<td> Limite Superior</td>
-								<td ><g:formatNumber number="${ajuste.limiteSuperior}" format="#,###.##"/></td>
+								<td> Excedente del L.I.</td>
+								<td ><g:formatNumber number="${ajuste.baseGravable-ajuste.limiteInferior}" format="#,###.##"/></td>
 							</tr>
 							<tr>
 								<td> Tarifa</td>
 								<td ><g:formatNumber number="${ajuste.tarifa}" format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Cuota Fija</td>
+								<td ><g:formatNumber number="${ajuste.cuotaFija}" format="#,###.##"/></td>
 							</tr>
 							<tr>
 								<td> Impuesto Determinado</td>

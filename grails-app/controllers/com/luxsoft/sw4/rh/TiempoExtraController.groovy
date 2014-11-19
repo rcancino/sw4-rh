@@ -13,7 +13,14 @@ class TiempoExtraController {
     static scaffold = true
 	
 	def tiempoExtraService
-	
+
+	def index(){
+		params.max?:100
+		params.sort='lastUpdated'
+		params.order='desc'
+		[tiempoExtraInstanceList:TiempoExtra.list(params),tiempoExtraInstanceCount:TiempoExtra.count()]
+	}
+		
 	def actualizar(ActualizarCmd cmd){
 		log.info 'Actualizando tiempo exstra: '+cmd
 		tiempoExtraService.actualizar(cmd.ejercicio,cmd.tipo,cmd.numero)

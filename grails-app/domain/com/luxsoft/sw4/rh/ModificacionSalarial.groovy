@@ -23,6 +23,8 @@ class ModificacionSalarial {
 
 	BigDecimal sdiNuevo
 	
+	CalculoSdi calculoSdi
+	
 	String comentario
 
 	Date dateCreated

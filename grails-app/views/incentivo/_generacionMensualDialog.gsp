@@ -16,7 +16,7 @@
     						<p class="form-control-static">${mes}</p>
     					</div>
   					</div>
-					<div class="form-group">
+					<%--<div class="form-group">
     					<label for="calendarioIni" class="col-sm-2">Calendario</label>
     					<div class="col-sm-10">
     						<g:select id="calendarioField" class="form-control"  
@@ -29,7 +29,7 @@
 								
     					</div>
   					</div>
-				</div>
+				--%></div>
 				
 				
 				<div class="modal-footer">

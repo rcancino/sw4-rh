@@ -346,6 +346,27 @@ class ReporteController {
 			,fileName:repParams.reportName)
 	}
 	
+	def incentivoMensual(IncentivoMensualCommand command){
+		println 'Reporte: '+command
+		if(request.method=='GET'){
+			return []
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			redirect controller:'incentivo', action:'mensual',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['EJERCICO']=command.ejercicio
+		repParams['MES']=command.mes
+		repParams['TIPO']='MENSUAL'
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
 	private runReport(Map repParams){
 		log.info 'Ejecutando reporte  '+repParams
 		def nombre=WordUtils.capitalize(repParams.reportName)
@@ -487,6 +508,20 @@ class FechaCommand{
 	Date fecha
 	static constraints={
 		fecha nullable:false
+		
+	}
+}
+
+@Validateable
+class IncentivoMensualCommand{
+	
+	
+	String mes
+	Integer ejercicio
+	
+	static constraints={
+		ejercicio inList:2014..2018
+		mes inList:Mes.getNombres()
 		
 	}
 }

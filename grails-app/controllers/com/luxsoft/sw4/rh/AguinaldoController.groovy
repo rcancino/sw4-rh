@@ -39,6 +39,12 @@ class AguinaldoController {
     	aguinaldoService.calcular(ejercicio)
     	redirect action:'index'
     }
+	
+	def recalcular(Aguinaldo a){
+		a=aguinaldoService.calcular(a)
+		redirect action:'edit',params:[id:a.id]
+		
+	}
 }
 
 

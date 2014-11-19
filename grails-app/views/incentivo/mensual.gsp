@@ -66,7 +66,7 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="#">Pendiente</a>
+							<a href="#reporteIncentivoMensualDialog" data-toggle="modal">Incentivo</a>
 						</li>
 					</ul>
 				</div><%-- end .btn-group reportes --%>
@@ -82,6 +82,7 @@
 		<g:render template="mesesDialog"/>
 		<g:render template="generacionMensualDialog" />
 		<g:render template="calculoMensualDialog" />
+		<g:render template="reporteIncentivoMensualDialog" />
 		
 		<r:script>
 			$(function(){

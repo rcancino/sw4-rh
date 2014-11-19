@@ -48,7 +48,9 @@
 FROM EMPLEADO E JOIN perfil_de_empleado P ON(E.ID=P.empleado_id) JOIN asistencia A ON(A.empleado_id=E.ID) JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
 LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
-WHERE E.ID LIKE $P{ID} AND C.ID=$P{CALENDARIO_ID} AND E.ALTA<=C.asistencia_fecha_inicial AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></queryString>
+WHERE E.ID LIKE $P{ID} AND C.ID=$P{CALENDARIO_ID} 
+AND E.ALTA<=C.asistencia_fecha_final 
+AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></queryString>
 
 	<field name="asistencia_fecha_inicial" class="java.sql.Timestamp"/>
 	<field name="ID" class="java.lang.Long"/>

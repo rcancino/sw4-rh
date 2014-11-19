@@ -71,7 +71,8 @@ navigation={
 		}
 		procesos(){
 			empleados()
-			salarioDiarioIntegrado()
+			//salarioDiarioIntegrado()
+			calculoSdi(controller:'calculoSdi',action:'index',titleText:'Calculo bimestral SDI')
 			acumulados(controller:'acumuladoPorConcepto',action:'index')
 			modificacionSalarial(controller:'modificacionSalarial',action:'index')
 			aguinaldo(controller:'aguinaldo',action:'index')

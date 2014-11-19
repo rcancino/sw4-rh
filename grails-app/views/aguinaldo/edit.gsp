@@ -15,6 +15,10 @@
 							( <g:formatDate date="${aguinaldoInstance.fechaInicial}" format="dd/MM/yyyy"/> al
 							 <g:formatDate date="${aguinaldoInstance.fechaFinal}" format="dd/MM/yyyy"/> )
 						</small>
+						<p>
+						<small>
+							Salario diario: <g:formatNumber number="${aguinaldoInstance.salario}" type="currency"/> 
+						</small>
 					</h3>
 					<g:if test="${ flash.message }">
 						<span class="label label-warning text-center">${flash.message}</span>
@@ -39,7 +43,7 @@
 						<g:link action="create" class="btn btn-default">
 							<span class="glyphicon glyphicon-plus"></span> Agregar
 					    </g:link>
-					    <g:link action="recalcular" class="btn btn-default">
+					    <g:link action="recalcular" class="btn btn-default" id="${aguinaldoInstance.id}">
 							<span class="glyphicon glyphicon-cog"></span> Recalcular
 					    </g:link>
 					</div>

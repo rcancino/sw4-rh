@@ -1,5 +1,6 @@
 package com.luxsoft.sw4.rh
 
+import com.luxsoft.sw4.Bimestre;
 import com.luxsoft.sw4.Periodo
 
 class CoreFilters {
@@ -28,6 +29,9 @@ class CoreFilters {
 					*/
 					def a=Asistencia.find("from Asistencia a where a.tipo='QUINCENAL' order by dateCreated desc")
 					session.calendarioQuincena=a?.calendarioDet
+				}
+				if(!session.bimestre){
+					session.bimestre=Bimestre.getBimestre(new Date())
 				}
             }
             after = { Map model ->

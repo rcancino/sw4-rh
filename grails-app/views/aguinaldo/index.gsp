@@ -5,7 +5,7 @@
 	<r:require modules="datatables"/> 
 </head>
 <body>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info">
@@ -76,7 +76,21 @@
 		
 		<div class="row">
 			<div class="col-md-12">
-				<g:render template="gridPanel"/>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+  					<li role="presentation" class="active"><a href="#aguinaldo" role="tab" data-toggle="tab">Aguinaldo</a></li>
+  					<li role="presentation"><a href="#calculo" role="tab" data-toggle="tab">Calculo</a></li>
+  					<li role="presentation"><a href="#impuesto" role="tab" data-toggle="tab">Impuesto</a></li>
+				</ul>
+				<!-- Tab panes -->
+				<div class="tab-content">
+  					<div role="tabpanel" class="tab-pane active" id="aguinaldo">
+  						<g:render template="aguinaldoGrid"/>
+  					</div>
+  					<div role="tabpanel" class="tab-pane" id="calculo">...</div>
+  					<div role="tabpanel" class="tab-pane" id="impuesto">...</div>
+  					
+				</div>
 			</div>
 			
 		</div><!--  end .row 3 Grid -->

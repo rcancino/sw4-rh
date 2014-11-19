@@ -3,13 +3,13 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	
+	<meta name="layout" content="procesos"/>
 	<title>SDI</title>
 	<r:require modules="datatables"/> 
 </head>
 <body>
 	<content tag="header">
-		<h3>Salario diario integrado Bimestre: ${bimestre} (${ejercicio })</h3>
+		<h3>Salario diario integrado Bimestre: ${session.bimestre} (${session.ejercicio })</h3>
 	</content>
 	
 	<conente tag="buttonBar">
@@ -18,12 +18,11 @@
 	
 	<content tag="content">
 		<div class="col-md-2">
-			<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" autofocus="autofocus">
-			
+			<input type='text' id="nombreField" placeholder="Empleado" class="form-control">
 		</div>
 		<div class="col-md-2">
+			<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" autofocus="autofocus">
 			
-			<input type='text' id="nombreField" placeholder="Empleado" class="form-control">
 		</div>
 		<div class="btn-group ">
 			<a href="#cambioDeBimestreDialog" class="btn btn-default" data-toggle="modal">
@@ -36,13 +35,16 @@
 				 Calcular
 			</g:link>
 			<g:link action="aplicarSalarioDiarioIntegrado" 
-				onclick="return confirm('Seguro que desa aplicar el SDI a todos los empleados?');" class="btn btn-default" target="_blank"
-				params="[bimestre:bimestre,ejercicio:ejercicio]">
+				onclick="return confirm('Seguro que desa aplicar el SDI a todos los empleados bimestre:${session.bimestre}? ejercicio:${session.ejercicio }');" 
+				class="btn btn-default">
 				 Aplicar
+			</g:link>
+			<g:link action="print" class="btn btn-default" >
+				 <span class="glyphicon glyphicon-print"></span> Imprimir
 			</g:link>
 		</div>
 		
-		<g:render template="sdiGrid"/>
+		<g:render template="gridPanel"/>
 		<g:render template="cambioDeBimestreDialog"/>
 		<r:script>
 			$(function(){
@@ -53,12 +55,14 @@
 			         "dom":'t'
     				});
     				
-    				$("#ubicacionField").keyup(function(){
-      					table.DataTable().column(2).search( $(this).val() ).draw();
+    				$("#nombreField").keyup(function(){
+      					table.DataTable().column(0).search( $(this).val() ).draw();
 					});
-					$("#nombreField").keyup(function(){
+					
+    				$("#ubicacionField").keyup(function(){
       					table.DataTable().column(1).search( $(this).val() ).draw();
 					});
+					
 			});
 		</r:script>
 	</content>

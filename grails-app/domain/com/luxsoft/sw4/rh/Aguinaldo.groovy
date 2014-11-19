@@ -20,15 +20,16 @@ class Aguinaldo {
 
 	NominaPorEmpleado nominaPorEmpleado
 
-	Integer diasDelEjercicio
+	Integer diasDelEjercicio=0
 	Integer diasDeAguinaldo=15
 	Integer diasDeBono=30
 	Integer faltas=0
 	Integer incapacidades=0
+	Integer permisoEspecial=0
 
-	Integer diasParaAguinaldo
-	Integer diasParaBono
-	Integer antiguedad
+	Integer diasParaAguinaldo=0
+	Integer diasParaBono=0
+	Integer antiguedad=0
 
 	BigDecimal salario=0.0
 	BigDecimal aguinaldo=0.0
@@ -82,10 +83,13 @@ class Aguinaldo {
 
 	public Integer getAntiguedad(){
     	if(!antiguedad && empleado){
-    		use(TimeCategory){
-    			def duration= fechaInicial-empleado.alta+1.day
-    			antiguedad=duration.days
-    		}
+			
+			def fecha=fechaFinal
+			if(empleado.baja && (empleado.alta<empleado.baja.fecha)){
+				if(fechaFinal>empleado.baja.fecha)
+					fecha=empleado.baja.fecha
+			}
+			return (fecha-empleado.alta)+1
     	}
     	return antiguedad
 		

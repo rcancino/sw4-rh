@@ -57,6 +57,17 @@ class AguinaldoService {
 
     def calcular(Aguinaldo aguinaldo) {
     	log.info "Calculando aguinaldo: "+aguinaldo
-    	aguinaldo.save failOnError:true
+		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
+		aguinaldo.diasParaAguinaldo=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades
+		def factor=(aguinaldo.diasDeAguinaldo/aguinaldo.diasDelEjercicio)*aguinaldo.diasParaAguinaldo
+		aguinaldo.aguinaldo=factor*aguinaldo.salario
+		
+		log.info "Aguinaldo factor: ${factor} Salario:${aguinaldo.empleado.salario.salarioDiario} Aguinaldo:${aguinaldo.aguinaldo}"
+    	
+		aguinaldo.diasParaBono=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades-aguinaldo.permisoEspecial
+		def factorBono=(aguinaldo.diasDeBono/aguinaldo.diasDelEjercicio)*aguinaldo.diasParaBono
+		aguinaldo.bono=factorBono*aguinaldo.salario
+		
+		aguinaldo.save failOnError:true
     }
 }

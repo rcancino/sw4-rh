@@ -186,58 +186,102 @@ class TiempoExtraService {
 	def calcularImportesImss(TiempoExtra te){
 		
 		def horaPorDia=9
-		def diasPorSemana=3
+		
+		
 		
 		te.partidas.each{det->
 			def found=det.tiempoExtraImss
 			if(found==null){
 				found=new TiempoExtraImss(tiempoExtraDet:det,semana:det.semana)
 			}
+			def minutosMax=540
+			def minutosAcumulados=0
+			def diasTrabajados=0
+			def importeIntegra=0.0
+			def minutosIntegra=0.0
+			def minutosIntegraTripes=0.0
+			
 			Dias.NOMBRES.each{dd->
+				
 				def dia=dd.toLowerCase()
-				found[dia]=det[dia]*det.getSalarioPorMinuto()
+				def minutos=det[dia]
+				
+				if(minutos>0){
+					diasTrabajados++
+					if(diasTrabajados>3){
+						
+						if( (minutosAcumulados+minutos)>540){
+							def dobles=540-minutosAcumulados
+							def triples=(minutosAcumulados+minutos)-540
+							minutosIntegra+=dobles
+							minutosIntegraTripes+=triples
+							//println dia+' Dobles: '+dobles
+							//println dia+' Triples: '+triples
+						}else{
+							minutosIntegra+=minutos
+						}
+					}else{
+						if(minutos>180){
+							if( (minutosAcumulados+minutos)>540){
+								//def dobles=540-minutosAcumulados
+								//def triples=(minutosAcumulados+minutos)-540
+								
+								//minutosIntegra+=dobles
+								minutosIntegraTripes+=(minutos-180)                        
+								
+							}else{
+								minutosIntegra+=(minutos-180)
+							}
+						}
+					}
+					
+					minutosAcumulados+=minutos
+					found[dia]=minutos
+				}
+				
 			}
+			//println "Semana: ${det.semana} Dias:${diasTrabajados}  MinutosIntegra: ${minutosIntegra} MinIntegra Tribles:${ minutosIntegraTripes}"
+			found.integra=minutosIntegra*det.getSalarioPorMinuto()*2
+			found.integraTriples= minutosIntegraTripes*det.getSalarioPorMinuto()*3
 			det.tiempoExtraImss=found
 		}
 		
-		//Calculo del integrado por criterio de 3 o mas dias
+		
 		te.partidas.each{det->
-			def integraPorDias=0.0
-			def dias=0
-			def total=0.0
+			def found=det.tiempoExtraImss
+			def minutosAcumulados=0
+			
+			
 			Dias.NOMBRES.each{dd->
 				
-				def found=det.tiempoExtraImss
+				def minutosDobles=0.0
+				def minutosTriples=0.0
+				
 				def dia=dd.toLowerCase()
-				if(found[dia])
-					dias++
-				if(dias>3){
-					integraPorDias+=found[dia]
+				def minutos=det[dia]
+				
+				if(minutos>0){
+					if( (minutosAcumulados+minutos)>540){
+							def dobles=540-minutosAcumulados
+							def triples=(minutosAcumulados+minutos)-540
+							minutosDobles+=dobles
+							minutosTriples+=triples
+							
+					}else{
+						minutosDobles+=minutos
+					}
+					minutosAcumulados+=minutos
+					//found[dia]=minutos
+					println "Semana: ${det.semana} ${dia} MinutosDobles: ${minutosDobles} MinTribles:${ minutosTriples}"
+					found[dia]=(minutosDobles*det.getSalarioPorMinuto()*2)+(minutosTriples*det.getSalarioPorMinuto()*3)
+					
 				}
-				total+=found[dia]
-				found.integra=integraPorDias
-				log.info "Integra para la semana $found.semana: "+integraPorDias
+				
 			}
-			det.tiempoExtraImss.total=total
+			
+			
 		}
 		
-		//Calculo de integrado por criterio de 9 horas o mas por dia
-		te.partidas.each{ det->
-			def integraPorHoras=0.0
-			def dias=0
-			def total=det.tiempoExtraImss.total
-			
-			Dias.NOMBRES.each{dd->
-				def minutos=det[dd.toLowerCase()]
-				if(minutos>MINUTOS_EXTRAS_POR_DIA){
-					log.info "Integra por horas excedidas: "+minutos+"  para:"+dd
-					def ex=det.getSalarioPorMinuto()*(minutos-MINUTOS_EXTRAS_POR_DIA)
-					integraPorHoras+=ex
-				}
-			}
-			det.tiempoExtraImss.integra+=integraPorHoras
-			
-		}
 	}
 	
 	

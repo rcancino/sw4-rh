@@ -39,7 +39,7 @@
 E.ID,U.CLAVE AS ubicacion,concat(ifnull(e.apellido_paterno,''),' ',ifnull(e.apellido_materno,''),' ',ifnull(e.nombres,'')) AS nombre,E.CLAVE AS EMP,P.numero_de_trabajador,S.FECHA,DAYOFWEEK(S.FECHA)AS DIA
 ,(case when dayofweek(S.fecha)=1 then 'DOM' when dayofweek(S.fecha)=2 then 'LUN' when dayofweek(S.fecha)=3 then 'MAR' when dayofweek(S.fecha)=4 then 'MIE' when dayofweek(S.fecha)=5 
 then 'JUE' when dayofweek(S.fecha)=6 then 'VIE' when dayofweek(S.fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
-,S.tipo,(SELECT REFERENCIA_IMMS FROM incapacidad I WHERE I.EMPLEADO_ID=E.ID AND S.FECHA BETWEEN I.FECHA_INICIAL AND I.FECHA_FINAL  ) AS REFERENCIA_IMMS
+,S.tipo,(SELECT DISTINCT(REFERENCIA_IMMS) FROM incapacidad I WHERE I.EMPLEADO_ID=E.ID AND S.FECHA BETWEEN I.FECHA_INICIAL AND I.FECHA_FINAL  ) AS REFERENCIA_IMMS
 ,1 AS COUNTER
 , A.periodo_fecha_inicial, A.periodo_fecha_final
 FROM
@@ -239,7 +239,7 @@ ORDER BY u.id,E.clave,S.FECHA]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[FECHA FINALK :]]></text>
+				<text><![CDATA[FECHA FINAL: ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -252,7 +252,7 @@ ORDER BY u.id,E.clave,S.FECHA]]></queryString>
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{periodo_fecha_inicial}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INICIAL}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -265,7 +265,7 @@ ORDER BY u.id,E.clave,S.FECHA]]></queryString>
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{periodo_fecha_final}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FINAL}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>

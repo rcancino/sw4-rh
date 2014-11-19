@@ -13,7 +13,7 @@
 					<div class="alert alert-info">
 						<g:pageProperty name="page.header"/>
 						<g:if test="${flash.message}">
-							<div class="message" role="status">
+							<div class="alert alert-warning" role="status">
 								<strong>${flash.message}</strong>
 							</div>
 						</g:if>

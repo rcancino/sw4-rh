@@ -83,9 +83,9 @@ class ProcesadorDeISTP {
 			log.info 'ISTP : '+importeGravado+ '- Subsidio: '+subsidio.subsidio
 			nominaPorEmpleadoDet.importeExcento=importeGravado-subsidio.subsidio
 			nominaPorEmpleadoDet.importeGravado=0.0
-			if(nominaPorEmpleadoDet.id){
+			//if(nominaPorEmpleadoDet.id){
 				procesarAjusteMensualISPT(nominaPorEmpleadoDet)
-			}
+			//}
 		}
 		procesarAjusteSubsidioAplicado(nominaEmpleado)
 		nominaEmpleado.actualizar()
@@ -95,13 +95,14 @@ class ProcesadorDeISTP {
 	def procesarAjusteMensualISPT(NominaPorEmpleadoDet det){
 		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
 		if(found){
-			/*def ajuste=det.importeExcento+found.resultadoImpuesto
-			if(ajuste>0.0){
-				det.importeExcento=ajuste*/
+			
 			NominaPorEmpleado ne=det.parent
 			def ajuste=found.resultadoImpuesto
 			if(ajuste>0.0){
 				det.importeExcento=ajuste
+				if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
+					det.importeExcento=ajuste+found.resultadoSubsidio.abs()
+				}
 			}else if(ajuste<0.0){
 				def concepto=ConceptoDeNomina.findByClave('P019')
 				det.concepto=concepto
@@ -114,17 +115,26 @@ class ProcesadorDeISTP {
 				def subc= null
 				if(found.resultadoSubsidio<0.0){
 					subc=ConceptoDeNomina.findByClave('P021')
-				}else{
+					def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+					nominaPorEmpleadoDet.concepto=subc
+					nominaPorEmpleadoDet.importeGravado=0.0
+					nominaPorEmpleadoDet.importeExcento=found.resultadoSubsidio.abs()
+					ne.addToConceptos(nominaPorEmpleadoDet)
+				}
+				/*else{
 					subc=ConceptoDeNomina.findByClave('D013')
-				} 
+				}
+				 
 				if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
 					subc=ConceptoDeNomina.findByClave('D002')
 				}
+				
 				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				nominaPorEmpleadoDet.concepto=subc
 				nominaPorEmpleadoDet.importeGravado=0.0
 				nominaPorEmpleadoDet.importeExcento=found.resultadoSubsidio.abs()
 				ne.addToConceptos(nominaPorEmpleadoDet)
+				*/
 			}
 		}
 		
@@ -153,8 +163,13 @@ class ProcesadorDeISTP {
 			}
 			if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
 				det.concepto=ConceptoDeNomina.findByClave('D002')
-				det.importeExcento=found.resultadoSubsidio.abs()
+				det.importeExcento=found.resultadoSubsidio.abs()+found.resultadoImpuesto
 				//ne.addToConceptos(nominaPorEmpleadoDet)
+			}
+			if(ajuste==0.0){
+				
+				det.concepto=ConceptoDeNomina.findByClave('D002')
+				det.importeExcento=found.resultadoImpuesto
 			}
 		}
 	}

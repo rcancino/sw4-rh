@@ -109,10 +109,11 @@ class IncentivoController {
 	def generarIncencivoMensual(){
 		
 		Long calendarioDetId=params.long('calendarioDetId')
-		CalendarioDet calendarioDet=CalendarioDet.get(calendarioDetId)
+		//CalendarioDet calendarioDet=CalendarioDet.get(calendarioDetId)
+		def ejercicio=session.ejercicio
 		def mes=Mes.findMesByNombre(params.mes)
 		try {
-			incentivoService.generarIncentivosMensuales(calendarioDet,mes)
+			incentivoService.generarIncentivosMensuales(ejercicio,mes)
 			flash.message="Incentivos mensuales generados exitosamente $mes"
 		}
 		catch(Exception e) {

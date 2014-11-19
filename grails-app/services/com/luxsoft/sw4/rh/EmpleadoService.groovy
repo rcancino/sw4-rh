@@ -138,7 +138,7 @@ class EmpleadoService {
 		Sql sql=new Sql(dataSource)
 		return sql.rows(query)
 	}
-	
+	/*
 	def actualizarSalarioDiarioIntegrado(Periodo periodo){
 		log.info 'Actualizando salario diari integrado para: '+periodo
 		def query=sdiSQL.replaceAll('@FECHA_INI',periodo.fechaInicial.format('yyyy/MM/dd'))
@@ -169,7 +169,7 @@ class EmpleadoService {
 		}
 		return res
 	}
-	
+	*/
 	String sdiSQL="""
 		SELECT X.STATUS,x.ID,X.CLAVE,x.NOMBRES,x.APELLIDO_PATERNO,X.APELLIDO_MATERNO,X.ALTA,N.PERIODICIDAD,MIN(N.PERIODO_FECHA_INICIAL) AS FECHA_INI,MAX(N.PERIODO_FECHA_FINAL) AS FECHA_FIN,S.SALARIO_DIARIO AS SDB,S.SALARIO_DIARIO_INTEGRADO AS SDI_CAT
 ,ROUND((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN X.ALTA=X.ALTA THEN N.PERIODO_FECHA_FINAL ELSE '@FECHA_INI' END )),X.ALTA)/60)/24)/365,0)  AS YEARS

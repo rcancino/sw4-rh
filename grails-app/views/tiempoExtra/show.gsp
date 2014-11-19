@@ -115,7 +115,8 @@
 									<th>Sábado</th>
 									<th>Domingo</th>
 									<th>Total</th>
-									<th>Integra</th>
+									<th>Integra Dobles</th>
+									<th>Integra Triples</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -131,6 +132,7 @@
 										<td><g:formatNumber number="${row.tiempoExtraImss.domingo}" format="#,###.##"/></td>
 										<td><g:formatNumber number="${row.tiempoExtraImss.total}" format="#,###.##"/></td>
 										<td><g:formatNumber number="${row.tiempoExtraImss.integra}" format="#,###.##"/></td>
+										<td><g:formatNumber number="${row.tiempoExtraImss.integraTriples}" format="#,###.##"/></td>
 									</tr>
 								</g:each>
 							</tbody>
