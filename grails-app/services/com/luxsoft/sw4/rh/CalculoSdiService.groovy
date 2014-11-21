@@ -1,126 +1,123 @@
 package com.luxsoft.sw4.rh
 
 import grails.transaction.Transactional
+import groovy.sql.Sql
+import com.luxsoft.sw4.Periodo
+import com.luxsoft.sw4.rh.tablas.ZonaEconomica;
 
 @Transactional
 class CalculoSdiService {
+	
+	def dataSource
 
     def calcularSdi(ModificacionSalarial m) {
-
-    	log.info "Calculando SDI para empledo: $m.empleado"
-    	def rows=[]
-    	["QUINCENA","SEMANA"].each{
-    		
-    		log.info "SDI para $ejercicio  bimestre $bimestre tipo $it"
-    		
-    		def res=CalendarioDet
-    		.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=? and d.calendario.tipo=? and d.calendario.ejercicio=?"
-    		,[bimestre,it,ejercicio])
-    	
-    		def inicio=res.get(0)[0]
-    		def fin=res.get(0)[1]
-    		log.info "Periodo: $inicio al $fin"
-    		
-    		def zona=ZonaEconomica.findByClave('A')
-    	
-    		def query=sqlPorBimestre_old
-    			.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
-    			.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
-    			.replaceAll('@FECHA_ULT_MODIF',fin.format('yyyy/MM/dd'))
-    			.replaceAll('@TIPO', it=='SEMANA'? 'S.periodicidad=\'SEMANAL\'' : 'S.periodicidad<>\'QUINCENAL\'')
-    			.replaceAll('@PERIODO',it+'L')
-    								
-    		//println query
-    			Sql sql=new Sql(dataSource)
-    			sql.eachRow(query){ row->
-    				
-    				def empleado=Empleado.findById(row.id)
-    				if(empleado){
-    					//println 'SDI para: '+empleado
-    					def found=CalculoSdi.findByEmpleadoAndEjercicioAndBimestreAndTipo(empleado,ejercicio,bimestre,'CALCULO_SDI')
-    					if(!found){
-    						found=new CalculoSdi(
-    							empleado:empleado,
-    							ejercicio:ejercicio,
-    							bimestre:bimestre,
-    							tipo:'CALCULO_SDI',
-    							fechaIni:inicio,
-    							fechaFin:fin
-    							
-    							).save flush:true
-    					}
-    					
-    						found.sdiAnterior=empleado.salario.salarioDiarioIntegrado
-    						found.sdb=empleado.salario.salarioDiario
-    						found.years=( (fin-empleado.alta)/365)
-    						found.dias=fin-empleado.alta+1
-    						found.vacDias=row.VAC_DIAS
-    						found.vacPrima=row.VAC_PRIMA
-    						found.agndoDias=row.AGNDO_DIAS
-    						found.factor=row.FACTOR
-    						found.sdiF=found.sdb*found.factor
-    						found.diasLabBim=row.DIAS_LAB_BIM
-    						
-    						
-    						
-    						
-    						
-    						found.compensacion=0.0
-    						found.incentivo=0.0
-    						found.bonoPorDesemp=0.0
-    						found.hrsExtrasDobles=0.0
-    						found.hrsExtrasTriples=0.0
-    						found.comisiones=0.0
-    						found.primaDom=0.0
-    						found.vacacionesP=0.0
-    						actualizarVariables(found)
-    						registrarTiempoExtraDoble(found)
-    						found.with{
-    							variable=compensacion+incentivo+bonoPorDesemp+hrsExtrasDobles+hrsExtrasTriples+comisiones+primaDom+vacacionesP
-    						}
-    						
-    						
-    						
-    						found.varDia=found.variable/found.diasLabBim
-    						
-    						def sdiNvo=found.sdiF+found.varDia
-    						found.sdiCalc=sdiNvo
-    						
-    						if(found.sdb==0.0){
-    							sdiNvo=found.varDia*found.factor
-    						}
-    						
-    						def topoSalarial=25*zona.salario
-    						found.topeSmg=topoSalarial
-    						
-    						if(sdiNvo>topoSalarial)
-    							found.sdiNvo=topoSalarial
-    						else{
-    							found.sdiNvo=sdiNvo
-    						}
-    						
-    						found.smg=zona.salario
-    						if(found.sdiAnterior==found.sdiNvo){
-    							found.sdiInf=0.0
-    						}else{
-    							found.sdiInf=found.sdiNvo
-    						}
-    						if(empleado.alta>inicio){
-    							found.diasBim=fin-empleado.alta
-    						}else{
-    							found.diasBim=fin-inicio
-    						}
-    						found.incapacidades=row.INCAPACIDADES
-    						found.faltas=row.FALTAS
-    						
-    				
-    					
-    				}
-    				
-    			}
-    	}
-    	
-    	return rows
+		
+		def ejercicio=Periodo.obtenerYear(m.fecha)
+		
+		def val=CalendarioDet.executeQuery("select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin",[m.fecha])
+		def bimestre=val.get(0)-1
+		
+		if(bimestre==0){
+			bimestre=6
+			ejercicio=ejercicio-1
+		}
+		def tipo=m.empleado.salario.periodicidad
+		
+		def stipo=tipo=='SEMANAL'?'SEMANA':'QUINCENA'
+		def res=CalendarioDet
+		.executeQuery(
+			"select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=? and d.calendario.tipo=? and d.calendario.ejercicio=?"
+		,[bimestre,stipo,ejercicio])
+	
+		def inicio=res.get(0)[0]
+		def fin=res.get(0)[1]
+		println 'Res: '+res
+		println 'Inicio: '+inicio+ 'Fin: '+fin+ ' Tipo: '+stipo+ '  Ejercicio: '+ejercicio+' bBimestre: '+bimestre
+		def zona=ZonaEconomica.findByClave('A')
+		
+		log.info "Calculo SDI para $m.empleado $ejercicio  bimestre $bimestre tipo $tipo ${inicio.format('dd/MM/yyyy')} a ${fin.format('dd/MM/yyyy')}"
+		
+		def query=sqlPorBimestre
+		.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
+		.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
+		.replaceAll('@FECHA_ULT_MODIF',m.fecha.format('yyyy/MM/dd'))
+		.replaceAll('@TIPO'," S.periodicidad=\'SEMANAL\'")
+		.replaceAll('@PERIODO',tipo)
+		//println query
+		Sql sql=new Sql(dataSource)
+		sql.eachRow(query,[m.empleado.id]){ row->
+			def empleado=m.empleado
+			def found=CalculoSdi.findByEmpleadoAndEjercicioAndBimestreAndTipo(empleado,ejercicio,bimestre,m.tipo)
+			if(!found){
+				found=new CalculoSdi(
+					empleado:empleado,
+					ejercicio:ejercicio,
+					bimestre:bimestre,
+					tipo:m.tipo,
+					fechaIni:inicio,
+					fechaFin:fin
+					
+					).save flush:true
+			}
+			found.sdiAnterior=empleado.salario.salarioDiarioIntegrado
+			found.sdbAnterior=empleado.salario.salarioDiario
+			found.sdb=m.salarioNuevo
+			found.years=( (m.fecha-empleado.alta)/365)
+			found.dias=m.fecha-empleado.alta+1
+			found.vacDias=row.VAC_DIAS
+			found.vacPrima=row.VAC_PRIMA
+			found.agndoDias=row.AGNDO_DIAS
+			found.factor=row.FACTOR
+			found.sdiF=found.sdb*found.factor
+			found.diasLabBim=row.DIAS_LAB_BIM
+			
+			found.compensacion=0.0
+			found.incentivo=0.0
+			found.bonoPorDesemp=0.0
+			found.hrsExtrasDobles=0.0
+			found.hrsExtrasTriples=0.0
+			found.comisiones=0.0
+			found.primaDom=0.0
+			found.vacacionesP=0.0
+			actualizarVariables(found)
+			registrarTiempoExtraDoble(found)
+			found.with{
+				variable=compensacion+incentivo+bonoPorDesemp+hrsExtrasDobles+hrsExtrasTriples+comisiones+primaDom+vacacionesP
+			}
+			found.varDia=found.variable/found.diasLabBim
+			
+			def sdiNvo=found.sdiF+found.varDia
+			found.sdiCalc=sdiNvo
+			
+			if(found.sdb==0.0){
+				sdiNvo=found.varDia*found.factor
+			}
+			
+			def topoSalarial=25*zona.salario
+			found.topeSmg=topoSalarial
+			
+			if(sdiNvo>topoSalarial)
+				found.sdiNvo=topoSalarial
+			else{
+				found.sdiNvo=sdiNvo
+			}
+			found.smg=zona.salario
+			if(found.sdiAnterior==found.sdiNvo){
+				found.sdiInf=0.0
+			}else{
+				found.sdiInf=found.sdiNvo
+			}
+			if(empleado.alta>inicio){
+				found.diasBim=fin-empleado.alta+1
+			}else{
+				found.diasBim=fin-inicio+1
+			}
+			found.incapacidades=row.INCAPACIDADES
+			found.faltas=row.FALTAS
+			m.calculoSdi=found
+			m.sdiNuevo=found.sdiNvo
+			m.save failOnError:true
+		}
 
     }
 
@@ -206,7 +203,7 @@ class CalculoSdiService {
 		JOIN salario S ON(S.EMPLEADO_ID=X.ID)
 		JOIN perfil_de_empleado P ON(P.EMPLEADO_ID=X.ID)
 		LEFT JOIN baja_de_empleado B ON(B.empleado_id=X.id)
-		WHERE S.periodicidad='@PERIODO' AND date(n.periodo_fecha_inicial)>='@FECHA_INI' and date(n.periodo_fecha_final)<='@FECHA_FIN'  AND (B.ID IS NULL OR ( X.ALTA>DATE(B.FECHA) AND X.STATUS<>'BAJA') )
+		WHERE X.ID=? AND S.periodicidad='@PERIODO' AND date(n.periodo_fecha_inicial)>='@FECHA_INI' and date(n.periodo_fecha_final)<='@FECHA_FIN'  AND (B.ID IS NULL OR ( X.ALTA>DATE(B.FECHA) AND X.STATUS<>'BAJA') )
 		GROUP BY X.ID
 
 	"""

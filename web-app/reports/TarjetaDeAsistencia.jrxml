@@ -919,7 +919,7 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					<reportElement
 						x="254"
 						y="27"
-						width="53"
+						width="64"
 						height="11"
 						key="textField-49"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -935,7 +935,7 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="307"
+						x="318"
 						y="27"
 						width="16"
 						height="11"
@@ -954,9 +954,9 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd-MMM-yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="323"
+						x="335"
 						y="27"
-						width="53"
+						width="64"
 						height="11"
 						key="textField-50"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>

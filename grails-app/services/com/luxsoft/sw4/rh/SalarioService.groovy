@@ -16,7 +16,7 @@ class SalarioService {
 
 	def dataSource
 
-	@Listener(namespace='gorm')
+	//@Listener(namespace='gorm')
     def afterInsert(ModificacionSalarial modificacion) {
     	
     	def salario=modificacion.empleado.salario
@@ -28,11 +28,18 @@ class SalarioService {
 
    @Listener(namespace='gorm')
     def beforeDelete(ModificacionSalarial modificacion){
-    	
-    	def salario=modificacion.empleado.salario
-    	salario.salarioDiario=modificacion.salarioAnterior
-		salario.salarioDiarioIntegrado=modificacion.sdiAnterior
-    	log.info "${modificacion} detectada Salario ${salario} actualizado"
+		def calculoSdi=modificacion.calculoSdi
+		if(calculoSdi){
+			if(calculoSdi.status=='APLICADO')
+				throw new RuntimeException("Modificacion aplicada no se puede eliminar")
+			else{
+				calculoSdi.delete()
+			}
+		}
+    	//def salario=modificacion.empleado.salario
+    	//salario.salarioDiario=modificacion.salarioAnterior
+		//salario.salarioDiarioIntegrado=modificacion.sdiAnterior
+    	//log.info "${modificacion} detectada Salario ${salario} actualizado"
     }
 	
 	@NotTransactional
@@ -125,7 +132,7 @@ class SalarioService {
 			
 			
 			
-			println query
+			//println query
 		Sql sql=new Sql(dataSource)
 		def rows= sql.rows(query,[empleado.id])
 	}
@@ -139,7 +146,7 @@ class SalarioService {
 		def query=sdiPorEmpleadoNuevo
 			.replaceAll('@TIPO', periodicidad)
 			.replaceAll('@SALARIO', salarioNuevo.toString())
-			println query
+			//println query
 		Sql sql=new Sql(dataSource)
 		def rows= sql.rows(query,[empleado.id])
 	}
@@ -162,14 +169,14 @@ class SalarioService {
 			
 			def zona=ZonaEconomica.findByClave('A')
 		
-			def query=sqlPorBimestre_old
+			def query=sqlPorBimestre
 				.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
 				.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
 				.replaceAll('@FECHA_ULT_MODIF',fin.format('yyyy/MM/dd'))
 				.replaceAll('@TIPO', it=='SEMANA'? 'S.periodicidad=\'SEMANAL\'' : 'S.periodicidad<>\'QUINCENAL\'')
 				.replaceAll('@PERIODO',it+'L')
 									
-			println query
+			//println query
 				Sql sql=new Sql(dataSource)
 				sql.eachRow(query){ row->
 					
@@ -190,6 +197,7 @@ class SalarioService {
 						}
 						
 							found.sdiAnterior=empleado.salario.salarioDiarioIntegrado
+							found.sdbAnterior=empleado.salario.salarioDiario
 							found.sdb=empleado.salario.salarioDiario
 							found.years=( (fin-empleado.alta)/365)
 							found.dias=fin-empleado.alta+1
@@ -245,9 +253,9 @@ class SalarioService {
 								found.sdiInf=found.sdiNvo
 							}
 							if(empleado.alta>inicio){
-								found.diasBim=fin-empleado.alta
+								found.diasBim=fin-empleado.alta+1
 							}else{
-								found.diasBim=fin-inicio
+								found.diasBim=fin-inicio+1
 							}
 							found.incapacidades=row.INCAPACIDADES
 							found.faltas=row.FALTAS

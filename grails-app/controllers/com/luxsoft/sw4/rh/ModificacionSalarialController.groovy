@@ -10,6 +10,8 @@ import grails.transaction.Transactional
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class ModificacionSalarialController {
 	
+	def calculoSdiService
+	
 	def jasperService
     
     def index(Long max){
@@ -26,7 +28,7 @@ class ModificacionSalarialController {
 
     @Transactional
     def save(ModificacionSalarial modificacionInstance){
-    	//modificacionInstance.sdiNuevo=0.0
+    	modificacionInstance.sdiNuevo=0.0
     	modificacionInstance.validate()
     	if(modificacionInstance.hasErrors()){
     		flash.message="Errores de validacion en modificacion salarial"
@@ -34,9 +36,21 @@ class ModificacionSalarialController {
     	}
 		
     	modificacionInstance.save failOnError:true
+		calculoSdiService.calcularSdi(modificacionInstance)
     	redirect action:'show',params:[id:modificacionInstance.id]
 
     }
+	
+	@Transactional
+	def aplicar(ModificacionSalarial modificacion){
+		modificacion.empleado.salario.salarioDiario=modificacion.salarioNuevo
+		modificacion.empleado.salario.salarioDiarioIntegrado=modificacion.sdiNuevo
+		modificacion.calculoSdi.status='APLICADO'
+		modificacion.save flush:true
+		modificacion.empleado.save()
+		modificacion.calculoSdi.save()
+		redirect action:'show',params:[id:modificacion.id]
+	}
     
     @Transactional
     def delete(Long id){

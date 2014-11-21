@@ -148,7 +148,7 @@ ORDER BY U.CLAVE,E.CLAVE]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="483"
+						x="471"
 						y="40"
 						width="25"
 						height="11"
@@ -161,7 +161,7 @@ ORDER BY U.CLAVE,E.CLAVE]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="413"
+						x="394"
 						y="40"
 						width="25"
 						height="11"
@@ -174,7 +174,7 @@ ORDER BY U.CLAVE,E.CLAVE]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="373"
+						x="354"
 						y="40"
 						width="40"
 						height="11"
@@ -187,9 +187,9 @@ ORDER BY U.CLAVE,E.CLAVE]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="441"
+						x="419"
 						y="40"
-						width="42"
+						width="52"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -200,9 +200,9 @@ ORDER BY U.CLAVE,E.CLAVE]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="508"
+						x="496"
 						y="40"
-						width="44"
+						width="54"
 						height="11"
 						key="textField"/>
 					<box></box>

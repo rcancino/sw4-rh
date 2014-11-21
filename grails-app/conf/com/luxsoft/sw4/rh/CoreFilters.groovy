@@ -18,8 +18,14 @@ class CoreFilters {
 					session.calendarioSemana=list?list[0]:null
 					*/
 					def a=Asistencia.find("from Asistencia a where a.tipo='SEMANAL' order by dateCreated desc")
+					if(!a){
+						
+						session.calendarioSemana=CalendarioDet.find("from CalendarioDet c where c.calendario.tipo=?",['SEMANA'])
+					}else{
+						session.calendarioSemana=a?.calendarioDet
+					}
 					
-					session.calendarioSemana=a?.calendarioDet
+					
 					
 				}
 				if(!session.calendarioQuincena) {
@@ -28,7 +34,13 @@ class CoreFilters {
 					.findAll("from CalendarioDet d where d.calendario.tipo=?",['QUINCENA'],[max:1])
 					*/
 					def a=Asistencia.find("from Asistencia a where a.tipo='QUINCENAL' order by dateCreated desc")
-					session.calendarioQuincena=a?.calendarioDet
+					if(!a){
+						
+						session.calendarioQuincena=CalendarioDet.find("from CalendarioDet c where c.calendario.tipo=?",['QUINCENA'])
+					}else{
+						session.calendarioQuincena=a?.calendarioDet
+					}
+					
 				}
 				if(!session.bimestre){
 					session.bimestre=Bimestre.getBimestre(new Date())

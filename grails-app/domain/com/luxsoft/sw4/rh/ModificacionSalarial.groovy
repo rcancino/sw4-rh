@@ -34,6 +34,7 @@ class ModificacionSalarial {
     	tipo inList:['CALCULO_SDI','AUMENTO','ALTA']
     	comentario nullable:true
     	bimestre nullable:true
+		calculoSdi nullable:true
     }
 
     static mapping = {

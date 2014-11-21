@@ -67,6 +67,12 @@
 				    </div>
 				</div>
 
+				<g:if test="${modificacionInstance?.calculoSdi?.status=='APLICADO' }">
+					<div class="col-sm-9">
+				      <div class="aler alert-danger"> APLICADO </div>
+				    </div>
+				</g:if>
+				
 				
 		
 			</div>

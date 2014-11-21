@@ -33,12 +33,12 @@
 							input-type="text"
 							input-autocomplete="off"/>
 					
-					<f:field property="sdiNuevo">
+					<%--<f:field property="sdiNuevo">
 							<g:field id="sdiNuevoField" class="form-control" 
 								name="sdiNuevo" type="text" readonly="" autocomplete="off"/>
 					</f:field>
 
-					<f:field property="comentario" input-class="form-control"/>
+					--%><f:field property="comentario" input-class="form-control"/>
 				</f:with>
 			</div>
 			
@@ -68,6 +68,7 @@ $(function(){
 			}
 	});
 	$(".numerico").autoNumeric();
+	/*
 	$("#salarioNuevo").blur(function(){
 		var sdi=$(this).val();
 		var empleadoId=$("#empleadoId").val();
@@ -91,6 +92,7 @@ $(function(){
 		}
 		
 	});
+	*/
 });
 
 
