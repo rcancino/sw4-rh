@@ -1,10 +1,15 @@
 <table class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
-			<g:sortableColumn property="id" title="Folio"/>
-			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
+			<th>Folio</th>
+			<th>Empleado</th>
+			<th>Fecha</th>
 			<th>Tipo</th>
-			<th>Modificado</th>
+			<th>SB Ant</th>
+			<th>SB Nvo</th>
+			<th>SDI Ant</th>
+			<th>SDI Nvo</th>
+			
 		</tr>
 	</thead>
 	<tbody>
@@ -20,8 +25,13 @@
 						${fieldValue(bean:row,field:"empleado")}
 					</g:link>
 				</td>
+				<td><g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/></td>
 				<td><g:fieldValue bean="${row}" field="tipo"/></td>
-				<td><g:formatDate date="${row.lastUpdated}" format="dd/MM/yyyy hh:mm"/></td>
+				<td><g:formatNumber number="${row.salarioAnterior}" format="####.##"/></td>
+				<td><g:formatNumber number="${row.salarioNuevo}" format="####.##"/></td>
+				<td><g:formatNumber number="${row.sdiNuevo}" type="currency"/></td>
+				<td><g:formatNumber number="${row.sdiAnterior}" type="currency"/></td>
+				
 			</tr>
 		</g:each>
 	</tbody>

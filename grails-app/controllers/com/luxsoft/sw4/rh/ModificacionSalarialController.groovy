@@ -5,6 +5,10 @@ import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef;
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
+import grails.validation.Validateable;
+
+
+import org.grails.databinding.BindingFormat
 
 @Transactional(readOnly = true)
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
@@ -14,12 +18,28 @@ class ModificacionSalarialController {
 	
 	def jasperService
     
+	def search(ModificacionSearch command){
+		//println 'Filtrando con parametros: '+command
+		
+		def list=ModificacionSalarial.findAllWhere(empleado:command.empleado)
+		render view:'index',model:[modificacionInstanceList:list
+		,modificacionInstanceListTotal:0]
+		
+	}
+	
+	def cambiarBimestre(CalculoBimestralCommand command){
+		
+		session.bimestre=command.bimestre
+		redirect action:'index'
+		
+	}
     def index(Long max){
     	params.max = Math.min(max ?: 15, 100)
-		params.sort=params.sort?:'id'
+		params.sort=params.sort?:'lastUpdated'
 		params.order='desc'
-		[modificacionInstanceList:ModificacionSalarial.list(params)
-		,modificacionInstanceListTotal:ModificacionSalarial.count()]
+		def list=ModificacionSalarial.findAllByBimestre(session.bimestre,params)
+		[modificacionInstanceList:list
+		,modificacionInstanceListTotal:ModificacionSalarial.countByBimestre(session.bimestre)]
     }
 
     def create(){
@@ -98,4 +118,23 @@ class ModificacionSalarialController {
 		//chain controller:'jasper',action:'index',params:params
 	}
 
+}
+
+
+
+import groovy.transform.ToString
+import grails.validation.Validateable
+
+@ToString(includeNames=true,includePackage=false)
+@Validateable
+class ModificacionSearch{
+	
+	Empleado empleado
+	
+	@BindingFormat('dd/MM/yyyy')
+	Date fechaInicial
+	
+	@BindingFormat('dd/MM/yyyy')
+	Date fechaFinal
+	
 }

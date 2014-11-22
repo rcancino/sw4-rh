@@ -116,6 +116,7 @@ class CalculoSdiService {
 			found.faltas=row.FALTAS
 			m.calculoSdi=found
 			m.sdiNuevo=found.sdiNvo
+			m.bimestre=found.bimestre
 			m.save failOnError:true
 		}
 

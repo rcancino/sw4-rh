@@ -43,7 +43,13 @@ class CoreFilters {
 					
 				}
 				if(!session.bimestre){
-					session.bimestre=Bimestre.getBimestre(new Date())
+					def bim=Bimestre.getBimestre(new Date())
+					if(bim==1){
+						bim=6
+					}else{
+						bim--
+					}
+					session.bimestre=bim
 				}
             }
             after = { Map model ->

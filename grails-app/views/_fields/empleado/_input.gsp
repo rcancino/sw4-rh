@@ -10,7 +10,8 @@ $(function(){
 			select:function(e,ui){
 				console.log('Valor seleccionado: '+ui.item.id);
 				$("#empleadoId").val(ui.item.id);
-			}
+			},
+			appendTo: "#proveedorPanel"
 	});
 });
 </r:script>
