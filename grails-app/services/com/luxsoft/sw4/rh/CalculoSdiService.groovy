@@ -31,19 +31,19 @@ class CalculoSdiService {
 	
 		def inicio=res.get(0)[0]
 		def fin=res.get(0)[1]
-		println 'Res: '+res
-		println 'Inicio: '+inicio+ 'Fin: '+fin+ ' Tipo: '+stipo+ '  Ejercicio: '+ejercicio+' bBimestre: '+bimestre
+		//println 'Res: '+res
+		//println 'Inicio: '+inicio+ 'Fin: '+fin+ ' Tipo: '+stipo+ '  Ejercicio: '+ejercicio+' bBimestre: '+bimestre
 		def zona=ZonaEconomica.findByClave('A')
 		
-		log.info "Calculo SDI para $m.empleado $ejercicio  bimestre $bimestre tipo $tipo ${inicio.format('dd/MM/yyyy')} a ${fin.format('dd/MM/yyyy')}"
+		//log.info "Calculo SDI para $m.empleado $ejercicio  bimestre $bimestre tipo $tipo ${inicio.format('dd/MM/yyyy')} a ${fin.format('dd/MM/yyyy')}"
 		
 		def query=sqlPorBimestre
-		.replaceAll('@FECHA_INI',inicio.format('yyyy/MM/dd'))
-		.replaceAll('@FECHA_FIN',fin.format('yyyy/MM/dd'))
-		.replaceAll('@FECHA_ULT_MODIF',m.fecha.format('yyyy/MM/dd'))
-		.replaceAll('@TIPO'," S.periodicidad=\'SEMANAL\'")
-		.replaceAll('@PERIODO',tipo)
-		//println query
+		.replaceAll('@FECHA_INI'.toLowerCase(),inicio.format('yyyy/MM/dd'))
+		.replaceAll('@FECHA_FIN'.toLowerCase(),fin.format('yyyy/MM/dd'))
+		.replaceAll('@FECHA_ULT_MODIF'.toLowerCase(),m.fecha.format('yyyy/MM/dd'))
+		.replaceAll('@TIPO'.toLowerCase()," S.periodicidad=\'semanal\'")
+		.replaceAll('@PERIODO'.toLowerCase(),tipo)
+		println query
 		Sql sql=new Sql(dataSource)
 		sql.eachRow(query,[m.empleado.id]){ row->
 			def empleado=m.empleado
@@ -114,6 +114,8 @@ class CalculoSdiService {
 			}
 			found.incapacidades=row.INCAPACIDADES
 			found.faltas=row.FALTAS
+			found.save failOnError:true
+			log.info 'Calculo SDI Generado: '+found.id
 			m.calculoSdi=found
 			m.sdiNuevo=found.sdiNvo
 			m.bimestre=found.bimestre
