@@ -41,7 +41,7 @@ class CalculoSdiService {
 		.replaceAll('@FECHA_INI'.toLowerCase(),inicio.format('yyyy/MM/dd'))
 		.replaceAll('@FECHA_FIN'.toLowerCase(),fin.format('yyyy/MM/dd'))
 		.replaceAll('@FECHA_ULT_MODIF'.toLowerCase(),m.fecha.format('yyyy/MM/dd'))
-		.replaceAll('@TIPO'.toLowerCase()," S.periodicidad=\'SEMANAL\'")
+		.replaceAll('@TIPO'.toLowerCase()," s.periodicidad=\'SEMANAL\'")
 		.replaceAll('@PERIODO'.toLowerCase(),tipo)
 		println query
 		Sql sql=new Sql(dataSource)
