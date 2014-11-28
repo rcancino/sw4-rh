@@ -12,7 +12,7 @@
 			<th>Minutos NL</th>
 			<th>Obtenido </th>
 			<th>Incentivo($)</th>
-			<th>Nómina</th>
+			<th>Pag</th>
 			
 			
 		</tr>
@@ -39,7 +39,7 @@
 				<td><g:formatNumber number="${row.tasaBono2 }" type="percent" maxFractionDigits="3"/></td>
 				
 				<td><g:formatNumber number="${row.incentivo }" type="currency" /></td>
-				<td>${fieldValue(bean:row,field:"nominaPorEmpleadoDet.nomina.folio")}</td>
+				<td>${fieldValue(bean:row,field:"asistencia.calendarioDet.folio")}</td>
 				
 				
 			</tr>

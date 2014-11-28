@@ -73,6 +73,12 @@
 				    </div>
 				</g:if>
 				
+				<g:if test="${!modificacionInstance.calculoSdi}">
+					<div class="col-sm-9">
+				      <div class="aler alert-danger"> APLICADO </div>
+				    </div>
+				</g:if>
+				
 				
 		
 			</div>

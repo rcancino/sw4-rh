@@ -79,8 +79,9 @@ class ProcesadorDeIncentivo {
 
 	BigDecimal calcularImporteMensual(NominaPorEmpleado ne,Incentivo i){
 		def importe=0.0
-		def salario=ne.empleado.salario.salarioDiario
-		importe=(salario*30)*i.tasaBono2
+		//def salario=ne.empleado.salario.salarioDiario
+		//importe=(salario*30)*i.tasaBono2
+		importe=i.incentivo
 		return importe
 
 	}

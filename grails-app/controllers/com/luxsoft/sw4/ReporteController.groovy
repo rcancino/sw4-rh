@@ -358,7 +358,7 @@ class ReporteController {
 			return
 		}
 		def repParams=[:]
-		repParams['EJERCICO']=command.ejercicio
+		repParams['EJERCICIO']=command.ejercicio
 		repParams['MES']=command.mes
 		repParams['TIPO']='MENSUAL'
 		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'

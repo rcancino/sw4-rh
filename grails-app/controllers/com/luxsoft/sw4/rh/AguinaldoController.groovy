@@ -1,7 +1,10 @@
 package com.luxsoft.sw4.rh
 
 import com.luxsoft.sw4.*
+import grails.plugin.springsecurity.annotation.Secured
+import grails.converters.JSON
 
+@Secured(['ROLE_ADMIN'])
 class AguinaldoController {
 
     static scaffold = true

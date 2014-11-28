@@ -194,8 +194,23 @@ class IncentivoController {
 			render view:'edit',model:[incentivoInstance:incentivoInstance]
 		}
 		incentivoInstance.save flush:true
+		
+		switch(incentivoInstance.tipo) {
+			case 'SEMANAL':
+				incentivoInstance=incentivoService.calcularIncentivoSemanal(incentivoInstance)
+				break
+			case 'QUINCENAL':
+				incentivoInstance=incentivoService.calcularIncentivoQuincenal(incentivoInstance)
+				break
+			case 'MENSUAL':
+				incentivoInstance=incentivoService.calcularIncentivoMensual(incentivoInstance)
+				break
+			default:
+				break
+		}
 		flash.message="Solicitud de incentivo actualizada: "+incentivoInstance.id
-		redirect action:'index',params:[tipo:incentivoInstance.tipo]
+		redirect action:'edit',params:[id:incentivoInstance.id]
+		//redirect action:'index',params:[tipo:incentivoInstance.tipo]
 	}
 	
 
@@ -236,6 +251,27 @@ class IncentivoController {
 			return
 		}
 		
+	}
+	
+	@Transactional
+	def asignarCalendarioDeIncentivoMensual(Integer ejercicio,String mes){
+		def calendarioDet=CalendarioDet.get(params.calendarioDetId)
+		println 'Aplicando calendario : '+calendarioDet
+		if(calendarioDet){
+			def incentivos=Incentivo.findAllByEjercicioAndMes(ejercicio,mes)
+			incentivos.each{
+				def a=Asistencia.findByCalendarioDet(calendarioDet)
+				println 'Asistencia: '+a
+				if(a){
+					it.asistencia=a
+					it.save failOnError:true
+					println 'Calendario asignado a: '+it
+				}
+				
+			}
+			
+		}
+		redirect action:'mensual' 
 	}
 	
 	

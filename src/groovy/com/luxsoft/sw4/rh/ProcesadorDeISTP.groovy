@@ -112,8 +112,10 @@ class ProcesadorDeISTP {
 			}
 			
 			if(found.resultadoSubsidio!=0.0){
+				//println '*********************************** SUBSIDIO: '+found.resultadoSubsidio
 				def subc= null
 				if(found.resultadoSubsidio<0.0){
+					
 					subc=ConceptoDeNomina.findByClave('P021')
 					def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 					nominaPorEmpleadoDet.concepto=subc
@@ -121,20 +123,23 @@ class ProcesadorDeISTP {
 					nominaPorEmpleadoDet.importeExcento=found.resultadoSubsidio.abs()
 					ne.addToConceptos(nominaPorEmpleadoDet)
 				}
-				/*else{
-					subc=ConceptoDeNomina.findByClave('D013')
+				/** Se activo nuevamtente ???????? no sabemos que paso **/
+				else{
+					//subc=ConceptoDeNomina.findByClave('D013')
+					if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
+						subc=ConceptoDeNomina.findByClave('D002')
+					}
+					
+					def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+					nominaPorEmpleadoDet.concepto=subc
+					nominaPorEmpleadoDet.importeGravado=0.0
+					nominaPorEmpleadoDet.importeExcento=found.resultadoSubsidio.abs()
+					ne.addToConceptos(nominaPorEmpleadoDet)
 				}
 				 
-				if(found.subsidioAcumuladoFinal.abs()>found.subsidioFinal.abs()){
-					subc=ConceptoDeNomina.findByClave('D002')
-				}
 				
-				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				nominaPorEmpleadoDet.concepto=subc
-				nominaPorEmpleadoDet.importeGravado=0.0
-				nominaPorEmpleadoDet.importeExcento=found.resultadoSubsidio.abs()
-				ne.addToConceptos(nominaPorEmpleadoDet)
-				*/
+				
+				/** Se activo nuevamtente ???????? no sabemos que paso **/
 			}
 		}
 		

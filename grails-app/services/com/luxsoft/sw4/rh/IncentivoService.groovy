@@ -155,15 +155,26 @@ class IncentivoService {
 		incentivo.checadasFaltantes=checadasFaltantes
 		incentivo.minutosNoLaborados=minutos
 		incentivo.faltas=faltas
-		
+		println 'Incentivo manual: '+incentivo.manual
+		if(incentivo.manual){
+			//def proporcion=calcularProporcion(incentivo)
+			//incentivo.tasaBono2=incentivo.tasaBono2*proporcion
+			incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
+			incentivo.incentivo=(incentivo.ingresoBase)*incentivo.tasaBono2
+			log.info "Incentivo manual proporcion  tasa: ${incentivo.tasaBono2}"
+			return incentivo
+		}
 		def bono2=0.0
 		
 		if(faltas>2){
 			incentivo.tasaBono2=0.0
+			incentivo.incentivo=0.0
 			return incentivo;
 		}
+		
 		if(incentivo.calificacion=='MALA'){
 			incentivo.tasaBono2=0.0
+			incentivo.incentivo=0.0
 			return incentivo;
 		}
 		if(incentivo.calificacion=='REGULAR'){
@@ -191,9 +202,17 @@ class IncentivoService {
 		
     	incentivo.tasaBono2=bono2*proporcion
 		incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
-		incentivo.incentivo=incentivo.ingresoBase*bono2
+		//incentivo.incentivo=incentivo.ingresoBase*bono2
+		incentivo.incentivo=(incentivo.ingresoBase*proporcion)*bono2
 		
-		
+		//Es valido
+		def mes=Mes.findMesByNombre(incentivo.mes)
+		boolean valido=validarEmpleadoParaIncentivoMensual(incentivo.empleado,incentivo.ejercicio,mes)
+		if(!valido){
+			incentivo.tasaBono2=0.0
+			incentivo.incentivo=0.0
+			incentivo.comentario='NO PARTICIPO INVENTARIO'
+		}
 		
 		log.info "Perdida: ${perdida} Proporcion: $proporcion Ingreso base:${incentivo.ingresoBase} Bono2 :${bono2}"
 		return incentivo
@@ -238,7 +257,9 @@ class IncentivoService {
     
     def Incentivo calcularIncentivoQuincenal(Incentivo bono){
     	log.info 'Calculando bono quincenal '+bono
-
+		if(bono.manual){
+			return bono
+		}
     	def asistencia=bono.asistencia
     	
     	//Aplicando reglas
@@ -295,7 +316,9 @@ class IncentivoService {
 	
 	def Incentivo calcularIncentivoSemanal(Incentivo bono){
 		log.debug 'Calculando bono semanal '+bono
-
+		if(bono.manual){
+			return bono
+		}
     	def asistencia=bono.asistencia
     	
     	//Aplicando reglas
@@ -335,12 +358,12 @@ class IncentivoService {
 		def checadasFaltantesComida=calcularChecadasFaltantesComida(asistencia.partidas)
 		if(checadasFaltantesComida>0){
 			bono.tasaBono2=0.0
-			bono.comentario="CANCELADO POR $checadasFaltantesComida CHECADAS FALTANTES"
+			bono.comentario+="B1 (CANCELADO POR $checadasFaltantesComida CHEC FALTANTES)"
 		}
 		def checadasFaltantes=calcularChecadasFaltantesPrincipales(asistencia.partidas)
 		if(checadasFaltantes>0){
 			bono.tasaBono1=0.0
-			bono.comentario="CANCELADO POR $checadasFaltantes CHECADAS FALTANTES"
+			bono.comentario+=" B2 (CANCELADO POR $checadasFaltantes CHEC FALTANTES)"
 		}
 		
 		 return bono
@@ -383,8 +406,9 @@ class IncentivoService {
 	def boolean validarEmpleadoParaIncentivoMensual(Empleado e,Integer ejercicio,Mes mes){
 		def alta=e.alta
 		def inventario=CalendarioDet.find(
-			"from CalendarioDet det join det.calendario c where c.ejercicio=? and c.tipo=? and c.comentario=?",
-			[ejercicio,mes.nombre,'INVENTARIO'])
+			"from CalendarioDet det  where det.calendario.ejercicio=? and det.mes=? and det.calendario.tipo=? and det.calendario.comentario=?",
+			[ejercicio,mes.nombre,'ESPECIAL','INVENTARIO'])
+		//println 'Validando participacion en inventario: '+inventario
 		if(inventario){
 			log.info 'Evaluando calendario de inventario: '+inventario
 			return alta<=inventario.inicio

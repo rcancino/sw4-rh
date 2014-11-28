@@ -62,6 +62,12 @@ class ModificacionSalarialController {
     }
 	
 	@Transactional
+	def recalcular(ModificacionSalarial m){
+		calculoSdiService.calcularSdi(m)
+		redirect action:'show',params:[id:m.id]
+	}
+	
+	@Transactional
 	def aplicar(ModificacionSalarial modificacion){
 		modificacion.empleado.salario.salarioDiario=modificacion.salarioNuevo
 		modificacion.empleado.salario.salarioDiarioIntegrado=modificacion.sdiNuevo

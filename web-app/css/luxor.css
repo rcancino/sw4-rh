@@ -138,3 +138,7 @@ body{
     padding: 2px;
   	line-height: 1.42857143;
 }
+
+.table-small-font{
+	font-size: 12px;
+}

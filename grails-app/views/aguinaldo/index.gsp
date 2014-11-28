@@ -81,14 +81,22 @@
   					<li role="presentation" class="active"><a href="#aguinaldo" role="tab" data-toggle="tab">Aguinaldo</a></li>
   					<li role="presentation"><a href="#calculo" role="tab" data-toggle="tab">Calculo</a></li>
   					<li role="presentation"><a href="#impuesto" role="tab" data-toggle="tab">Impuesto</a></li>
+  					<li role="presentation"><a href="#pago" role="tab" data-toggle="tab">Pago</a></li>
 				</ul>
 				<!-- Tab panes -->
 				<div class="tab-content">
   					<div role="tabpanel" class="tab-pane active" id="aguinaldo">
   						<g:render template="aguinaldoGrid"/>
   					</div>
-  					<div role="tabpanel" class="tab-pane" id="calculo">...</div>
-  					<div role="tabpanel" class="tab-pane" id="impuesto">...</div>
+  					<div role="tabpanel" class="tab-pane" id="calculo">
+  						<g:render template="aguinaldoCalculoGrid"/>
+  					</div>
+  					<div role="tabpanel" class="tab-pane" id="impuesto">
+  						<g:render template="aguinaldoCalculoImpuestoGrid"/>
+  					</div>
+  					<div role="tabpanel" class="tab-pane" id="pago">
+  						<g:render template="aguinaldoPagoGrid"/>
+  					</div>
   					
 				</div>
 			</div>
@@ -100,21 +108,23 @@
 	
 	<r:script>
 			$(function(){
-				var table=$("#aguinaldoGrid").dataTable({
+				var table=$(".aguinaldoGrid").dataTable({
 			        "paging":   false,
 			        "ordering": false,
 			        "info":     false,
 			         "dom":'t'
     				});
     				
-    				$("#ubicacionField").keyup(function(){
-      					table.DataTable().column(2).search( $(this).val() ).draw();
+    				$("#nombreField").keyup(function(){
+      					table.DataTable().column(0).search( $(this).val() ).draw();
 					});
-					$("#nombreField").keyup(function(){
+					
+    				$("#ubicacionField").keyup(function(){
       					table.DataTable().column(1).search( $(this).val() ).draw();
 					});
+					
 					$("#tipoField").keyup(function(){
-      					table.DataTable().column(3).search( $(this).val() ).draw();
+      					table.DataTable().column(2).search( $(this).val() ).draw();
 					});
 					
 			});

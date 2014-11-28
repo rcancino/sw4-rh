@@ -44,6 +44,7 @@ class Incentivo {
 	Integer minutosNoLaborados=0
 	Integer faltas=0
 	
+	Boolean manual
 	
 	Date dateCreated
 	Date lastUpdated
@@ -60,6 +61,7 @@ class Incentivo {
 		fechaFinal nullable:true
 		tasaBono1 sacle:6
 		tasaBono2 scale:6
+		manual nullable:true
     }
 
     static mapping = {

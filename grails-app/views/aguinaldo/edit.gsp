@@ -46,6 +46,9 @@
 					    <g:link action="recalcular" class="btn btn-default" id="${aguinaldoInstance.id}">
 							<span class="glyphicon glyphicon-cog"></span> Recalcular
 					    </g:link>
+					    <g:link action="create" class="btn btn-default" id="${aguinaldoInstance.id}">
+							<span class="glyphicon glyphicon-pencil"></span> Editar
+					    </g:link>
 					</div>
 					<div class="btn-group">
 						<button type="button" name="reportes"

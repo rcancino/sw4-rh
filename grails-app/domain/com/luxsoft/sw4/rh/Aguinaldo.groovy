@@ -33,10 +33,16 @@ class Aguinaldo {
 
 	BigDecimal salario=0.0
 	BigDecimal aguinaldo=0.0
+	
+	BigDecimal bonoPreliminar=0.0
+	BigDecimal porcentajeBono=1.00
 	BigDecimal bono=0.0 // (30/365)*diasParaBono*salario  Es la parte proporcianal de 30 dias de salario 
-
+	
+	
 	BigDecimal aguinaldoGravado=0.0
 	BigDecimal aguinaldoExcento=0.0
+	
+	BigDecimal totalGravable=0.0
 
 	//Datos para la retencion
 	BigDecimal promedioGravable=0.0 // (Aguinaldo gravado + bono)*30.4
@@ -47,8 +53,21 @@ class Aguinaldo {
 	BigDecimal difIsrMensualPromedio=0.0 //isrPromedio-isrMensual
 	BigDecimal tasa=0.0 //si difIsrMensualPrmedio<=0?0:(difIsrMensualPromedio/promedioGravable)
 	BigDecimal isrPorRetener=0.0 //tasa*(aguinaldoGravado+bono)
+	
+	BigDecimal subsidio=0.0
+	BigDecimal isrOSubsidio=0.0
 
 	BigDecimal resultadoIsrSubsidio=0.0
+	
+	BigDecimal tablaNormalIsrSub=0.0 
+	BigDecimal beneficioPerjuicio=0.0
+	
+	BigDecimal isrEjerAnt=0.0
+	BigDecimal subTotal=0.0
+	BigDecimal pensionA=0.0
+	BigDecimal otrasDed=0.0
+	BigDecimal prestamo=0.0
+	BigDecimal netoPagado=0.0
 
 	Date dateCreated
 	Date lastUpdated
@@ -57,6 +76,7 @@ class Aguinaldo {
     static constraints = {
 		empleado unique:['ejercicio']
 		nominaPorEmpleado nullable:true
+		tasa scale:4
     }
 
     static mapping = {

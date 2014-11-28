@@ -19,11 +19,21 @@
 					<g:link action="create" class="list-group-item">
 						<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
 					</g:link>
-					<g:if test="${modificacionInstance?.calculoSdi?.status!='APLICADO' }">
-						<g:link action="aplicar" class="list-group-item" id="${modificacionInstance.id}">
-						Aplicar
-						</g:link>
+					<g:if test="${modificacionInstance.calculoSdi}">
+						<g:if test="${modificacionInstance.calculoSdi.status!='APLICADO' }">
+							<g:link action="aplicar" class="list-group-item" id="${modificacionInstance.id}">
+							Aplicar
+							</g:link>
+						</g:if>
+						<%-- 
+						<g:if test="${modificacionInstance.calculoSdi.status!='APLICADO' }">
+							<g:link action="recalcular" class="list-group-item" id="${modificacionInstance.id}">
+								Recalcular
+							</g:link>
+						</g:if>
+						--%>
 					</g:if>
+					
 					
 					<a href="#sdiPorForm" class="list-group-item" data-toggle="modal" >
 						<span class="glyphicon glyphicon-check"></span> Reporte

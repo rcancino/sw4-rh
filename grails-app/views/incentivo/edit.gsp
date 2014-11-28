@@ -16,7 +16,9 @@
 					<h5>${incentivoInstance.asistencia.periodo.fechaInicial?.format('dd/MM/yyyy')} al 
 					${incentivoInstance.asistencia.periodo.fechaFinal?.format('dd/MM/yyyy')}</h5>
 				</g:else>
-				
+				<g:if test="${flash.message}">
+					<span class="label label-warning">${flash.message }</span>
+				</g:if>
 
 			</div>
 			<g:hasErrors bean="${incentivoInstance}">
@@ -31,8 +33,8 @@
 				<div class="panel panel-default">
   					<div class="panel-heading">Operaciones</div>
     				<div class="list-group">
-    					<g:link action="recalcular" class="list-group-item" id="${incentivoInstance.id}">
-    						<span class="glyphicon glyphicon-wrench"></span> Re calcular
+    					<g:link action="index" class="list-group-item" params="[tipo:incentivoInstance.tipo]">
+    						<span class="glyphicon glyphicon-th-list"></span> Incentivos
     					</g:link>
     				</div>
 				</div>
@@ -41,11 +43,26 @@
 				<g:form action="update" id="${incentivoInstance.id}" class="form-horizontal">
 					<f:with bean="${incentivoInstance}">
 						<f:field property="otorgado" input-class="form-control"/>
-						<f:field property="calificacion" input-class="form-control"/>
+						
+						<g:if test="${incentivoInstance.tipo=='MENSUAL'}">
+							<f:field property="calificacion" input-class="form-control"/>
+						</g:if>
+						
+						
 						<f:field property="tasaBono1" input-class="form-control" input-type="text"
 							label="${incentivoInstance.tipo=='MENSUAL'?'Autorizado':'Entrada'}"/>
 						<f:field property="tasaBono2" input-class="form-control" input-type="text"
 							label="${incentivoInstance.tipo=='MENSUAL'?'Asignado':'Comida'}"/>
+						<g:if test="${incentivoInstance.tipo=='MENSUAL'}">
+							<f:field property="ingresoBase" input-class="form-control" input-type="text"
+								input-disabled="disabled" />
+							<f:field property="incentivo" input-class="form-control" input-type="text"
+								input-disabled="disabled" />
+						</g:if>
+						
+						<f:field property="comentario" input-class="form-control" input-type="text"/>
+						<f:field property="manual" input-class="form-control" />
+						
 					</f:with>
 					
 					<div class="form-group">

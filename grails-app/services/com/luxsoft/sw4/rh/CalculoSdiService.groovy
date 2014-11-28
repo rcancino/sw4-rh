@@ -179,7 +179,7 @@ class CalculoSdiService {
     	sdi.hrsExtrasTriples=triples
     
     }
-
+/*
     String sqlPorBimestre="""
 		SELECT x.ID,X.CLAVE,X.ALTA
 		,(SELECT MAX(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0)+1 BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_DIAS	
@@ -208,4 +208,35 @@ class CalculoSdiService {
 		GROUP BY X.ID
 
 	"""
+	*/
+	
+	String sqlPorBimestre=
+"""
+select x.id,x.clave,x.alta
+		,(select max(f.vac_dias) from factor_de_integracion f 	where round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta ) as vac_dias	
+		,(select max(f.vac_prima) from factor_de_integracion f where round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta ) as vac_prima	
+		,(select max(case 	when x.id=245 then f.cob_dias+2 		
+							when x.id in(274,273) then f.cob_dias when  @tipo then f.sem_dias	else f.qna_dias end	) 
+			from factor_de_integracion f 	where f.tipo=(case when year(x.alta)=year('@fecha_fin') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_fin') then 0 else 2 end) and
+			round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta 	) as agndo_dias
+		,(select max(case 	when x.id=245 then 1+round((((f.vac_dias*f.vac_prima)+f.cob_dias+2)/365),4) 
+							when x.id in(274,273) then f.cob_factor when  @tipo then f.sem_factor else f.qna_factor end) 		
+			from factor_de_integracion f where f.tipo=(case when year(x.alta)=year('@fecha_fin') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_fin') then 0 else 2 end) and 	
+			round((-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24),0)+1 between f.dias_de and f.dias_hasta ) as factor	
+		,ifnull((case	when x.control_de_asistencia is false then  sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )) 
+				when x.alta<='@fecha_ini' then sum(e.faltas) else round((-(timestampdiff(minute,'@fecha_fin',x.alta)/60)/24)+1,0)-round(sum(e.dias_trabajados),0) end),0) as faltas 
+		,sum(e.incapacidades) as incapacidades
+		,(case	when x.control_de_asistencia is false then  ifnull(round(sum(e.dias_trabajados),0)-sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) 
+				when x.alta<='@fecha_ini' then (round(((-(timestampdiff(minute,'@fecha_fin',(case when x.alta>'@fecha_ini' then x.alta else '@fecha_ini' end))/60)/24)+1),0)  -   sum(e.faltas)	-sum(e.incapacidades))  
+				else  ifnull(round(sum(e.dias_trabajados),0)-sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) end) as dias_lab_bim 
+		from nomina n 						
+		join nomina_por_empleado e on(e.nomina_id=n.id)
+		join empleado x on(x.id=e.empleado_id)
+		join salario s on(s.empleado_id=x.id)
+		join perfil_de_empleado p on(p.empleado_id=x.id)
+		left join baja_de_empleado b on(b.empleado_id=x.id)
+		where x.id=? and s.periodicidad='@periodo' and date(n.periodo_fecha_inicial)>='@fecha_ini' and date(n.periodo_fecha_final)<='@fecha_fin'  and (b.id is null or ( x.alta>date(b.fecha) and x.status<>'baja') )
+		group by x.id
+
+"""
 }
