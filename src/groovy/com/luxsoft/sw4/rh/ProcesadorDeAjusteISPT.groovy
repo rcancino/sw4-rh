@@ -13,34 +13,23 @@ class ProcesadorDeAjusteISPT {
 	
 	private static final log=LogFactory.getLog(this)
 	
-	def procesar(NominaPorEmpleado ne) {
+	def procesar(NominaPorEmpleado nominaEmpleado) {
 		
-		def ispt=IsptMensual.findByNominaPorEmpleado(ne)
-		
-		if(ispt){
-			log.info 'Generando ajuste mensual ISPT'
-			clean(ne)
-			ne.actualizar()
-		}
-		
-		
-	}
-	
-	def clean(NominaPorEmpleado ne){
-		['D002','P021'].each{
-			def found=ne.conceptos.find{it.concepto.clave==it}
-			if(found){
-				println 'Eliminando basura...'+found
-				ne.removeFromConceptos(found)
-			}
-		}
+		log.info "Procesando Ajuste meunsual ISTP para ${nominaEmpleado.empleado}"
+
+		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
+		if(! found) return
+
+		def resultadoImpuesto=found.resultadoImpuesto
+		def resultadoSubsidio=found.resultadoSubsidio
+
 		
 	}
 	
 	def procesarAjusteMensualISPT(NominaPorEmpleadoDet det){
-		log.info 'Ajuste mensual para: '+det
-		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
+		
 		if(found){
+			
 			NominaPorEmpleado ne=det.parent
 			def ajuste=found.resultadoImpuesto
 			if(ajuste>0.0){
@@ -95,46 +84,6 @@ class ProcesadorDeAjusteISPT {
 	def getModel(NominaPorEmpleadoDet det) {
 		def nominaEmpleado=det.parent
 		def model=[:]
-		
-		model.percepciones=nominaEmpleado.getPercepcionesGravadas()
-		if(model.percepciones<=0){
-			return model
-		}
-		model.diasTrabajados=nominaEmpleado.diasDelPeriodo
-		
-		model.tarifa =TarifaIsr.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
-		model.subsidio=Subsidio.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
-		
-		model.baseGravable=model.percepciones-model.tarifa.limiteInferior
-		model.tarifaPorcentaje=model.tarifa.porcentaje/100
-		model.importeGravado=model.baseGravable*model.tarifaPorcentaje
-		model.cuotaFija=model.tarifa.cuotaFija
-		
-		model.istp=(model.importeGravado+model.cuotaFija).setScale(2,RoundingMode.HALF_EVEN)
-		model.importeSubsidio=model.istp-model.subsidio.subsidio
-		model.importeExcento=model.importeSubsidio<0?model.subsidio.abs():0.0
-		model.importeISTP=model.importeSubsidio<0?0.0:model.istp
-		
-		
-		/*
-		importeGravado*=tarifa.porcentaje
-		importeGravado/=100
-		importeGravado+=tarifa.cuotaFija
-		importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
-		
-		def sub=importeGravado-subsidio.subsidio
-		nominaEmpleado.subsidioEmpleoAplicado=subsidio.subsidio
-		
-		if(sub<0){
-			 sub=sub.abs()
-			 nominaPorEmpleadoDet.concepto=ConceptoDeNomina.findByClave('P021')
-			 nominaPorEmpleadoDet.importeGravado=0.0
-			 nominaPorEmpleadoDet.importeExcento=sub
-		}else{
-			 nominaPorEmpleadoDet.importeGravado=importeGravado
-			 nominaPorEmpleadoDet.importeExcento=0.0
-		}
-		*/
 		return model
 	}
 	
@@ -143,7 +92,7 @@ class ProcesadorDeAjusteISPT {
 	}
 	
 	String toString() {
-		"Procesador de ISTP "
+		"Procesador de ajuste mensual ISTP "
 	}
 
 }
