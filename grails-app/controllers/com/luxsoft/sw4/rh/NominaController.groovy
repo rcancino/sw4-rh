@@ -47,9 +47,15 @@ class NominaController {
 
 	def generar(Long calendarioDet){
 		def tipo=params.tipo
-		def formaDePago=params.formaDePago
-		def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago)
-		redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
+		if(tipo=='AGUINALDO'){
+			flash.message="Aguinaldo pendiente..."
+			redirect action:'index'
+		}else{
+			def formaDePago=params.formaDePago
+			def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago)
+			redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
+		}
+		
 	}
 	
 	def actualizarPartidas(Long id) {
@@ -90,7 +96,7 @@ class NominaController {
 		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	
-	def importar(ImportacionCmd cmd) {
+	/*def importar(ImportacionCmd cmd) {
 		if(request.method=='GET') {
 			render view:'importar',model:[importacionCmd:new ImportacionCmd()]
 		}else {
@@ -122,7 +128,7 @@ class NominaController {
 			
 		}
 		
-	}
+	}*/
 
     protected void notFound() {
 		request.withFormat {

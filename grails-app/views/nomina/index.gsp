@@ -14,6 +14,10 @@
 				<div class="alert alert-info">
 					<h3>Lista de nóminas ${periodicidad }</h3>
 				</div>
+				
+				<g:if test="flash.message">
+					<span class="label label-warning">${flash.message }</span>
+				</g:if>
 			</div>
 		</div>
 

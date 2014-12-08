@@ -23,6 +23,11 @@ class NominaService {
 		//nominaInstance.attach()
 		nomina.delete()
 	}
+	
+	@Transactional
+	def generarAguinaldo(Integer ejercicio,String formaDePago){
+		log.info 'Generando nómina de aguinaldo'
+	}
 
 	@Transactional
 	def generar(Long calendarioDetId,String tipo,String formaDePago){
