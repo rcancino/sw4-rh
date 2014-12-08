@@ -91,7 +91,7 @@
 							</tr>
 							<tr>
 								<td> Subsidio Empleo Aplicado</td>
-								<td ><g:formatNumber number="${nominaPorEmpleadoInstance.subsidioEmpleoAplicado}" format="#,###.##"/></td>
+								<td ><g:formatNumber number="${ajuste.resultadoSubsidioAplicado}" format="#,###.##"/></td>
 							</tr>
 						</tbody>
 						<tfoot>

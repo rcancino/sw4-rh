@@ -28,6 +28,13 @@ class AguinaldoService {
 			aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
 			aguinaldo.salario=empleado.salario.salarioDiario
 			aguinaldo.sueldoMensual=empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
+			if(empleado.alta>aguinaldo.fechaInicial){
+				
+				aguinaldo.fechaInicial=empleado.alta
+				aguinaldo.fechaFinal=periodo.fechaFinal
+				
+			}
+			
 			aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 			aguinaldo.diasParaBono=aguinaldo.getDiasDelEjercicio()
 			aguinaldo.save failOnError:true
@@ -67,7 +74,18 @@ class AguinaldoService {
 
     def calcular(Aguinaldo aguinaldo) {
 		
-		
+		def periodo=Periodo.getPeriodoAnual(aguinaldo.ejercicio)
+		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
+		def empleado =aguinaldo.empleado
+		aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+		aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		if(empleado.alta>aguinaldo.fechaInicial){
+			
+			aguinaldo.fechaInicial=empleado.alta
+			aguinaldo.fechaFinal=periodo.fechaFinal
+			
+		}
+		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
 		aguinaldo.sueldoMensual=aguinaldo.empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
 		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
@@ -76,7 +94,7 @@ class AguinaldoService {
     	log.info "Calculando aguinaldo: "+aguinaldo
 		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
 		aguinaldo.diasParaAguinaldo=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades
-		def factor=(aguinaldo.diasDeAguinaldo/aguinaldo.diasDelEjercicio)*aguinaldo.diasParaAguinaldo
+		def factor=(aguinaldo.diasDeAguinaldo/diasDelEjercicioReales)*aguinaldo.diasParaAguinaldo
 		aguinaldo.aguinaldo=factor*aguinaldo.salario
 		
 		log.info "Aguinaldo factor: ${factor} Salario:${aguinaldo.empleado.salario.salarioDiario} Aguinaldo:${aguinaldo.aguinaldo}"
@@ -84,13 +102,13 @@ class AguinaldoService {
 			
 		}else{
 			aguinaldo.porcentajeBono=1.0
-			if(aguinaldo.antiguedad<aguinaldo.diasDelEjercicio){
+			if(aguinaldo.antiguedad<diasDelEjercicioReales){
 				aguinaldo.porcentajeBono=0.0
 			}
 		}
 		
 		aguinaldo.diasParaBono=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades-aguinaldo.permisoEspecial
-		def factorBono=(aguinaldo.diasDeBono/aguinaldo.diasDelEjercicio)*aguinaldo.diasParaBono
+		def factorBono=(aguinaldo.diasDeBono/diasDelEjercicioReales)*aguinaldo.diasParaBono
 		aguinaldo.bonoPreliminar=factorBono*aguinaldo.salario
 		aguinaldo.bono=aguinaldo.bonoPreliminar*aguinaldo.porcentajeBono
 		registrarCalculo(aguinaldo)

@@ -231,6 +231,7 @@ class NominaPorEmpleadoController {
 		def found=IsptMensual.findByNominaPorEmpleado(ne)
 		if(found){
 			found.delete flush:true
+			
 			nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
 			flash.message="Ajuste mensual ISTP eliminado"
 		}

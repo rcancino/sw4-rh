@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory
 import com.luxsoft.sw4.rh.imss.*
 import com.luxsoft.sw4.rh.acu.*
 
-class ProcesadorDeISTP {
+class ProcesadorDeISTP_Bak {
 	
 	def conceptoClave='D002'
 	  

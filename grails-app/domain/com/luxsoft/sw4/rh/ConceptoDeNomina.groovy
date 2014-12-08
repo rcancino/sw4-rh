@@ -3,7 +3,7 @@ package com.luxsoft.sw4.rh
 import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 
-@EqualsAndHashCode(includes='clave,tipo')
+@EqualsAndHashCode(includes='clave')
 class ConceptoDeNomina {
 	
 	String clave

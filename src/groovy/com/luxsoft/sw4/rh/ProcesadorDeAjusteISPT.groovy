@@ -13,73 +13,66 @@ class ProcesadorDeAjusteISPT {
 	
 	private static final log=LogFactory.getLog(this)
 	
-	def procesar(NominaPorEmpleado nominaEmpleado) {
+	def procesar(NominaPorEmpleado ne) {
 		
-		log.info "Procesando Ajuste meunsual ISTP para ${nominaEmpleado.empleado}"
+		log.info "Procesando Ajuste meunsual ISTP para ${ne.empleado}"
 
-		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
-		if(! found) return
-
-		def resultadoImpuesto=found.resultadoImpuesto
-		def resultadoSubsidio=found.resultadoSubsidio
-
+		def ajuste=IsptMensual.findByNominaPorEmpleado(ne)
+		if(! ajuste) return
+		
+		ne.subsidioEmpleoAplicado=ajuste.resultadoSubsidioAplicado
+		
+		def subsidio=ne.conceptos.find{it.concepto.clave=='P021'}
+		if(subsidio){
+			impuesto.importeGravado=0.0
+			impuesto.importeExcento=0.0
+			
+		}
+		def impuesto=ne.conceptos.find{it.concepto.clave=='D002'}
+		if(impuesto){
+			//println 'Eliminando impuesto*************************** '+impuesto
+			impuesto.importeGravado=0.0
+			impuesto.importeExcento=0.0
+			ne.save flush:true
+			
+		}
+		
+		if(ajuste.resultadoImpuesto<0.0){
+			def concepto=ConceptoDeNomina.findByClave('P019')
+			def devo=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+			devo.importeGravado=0.0
+			devo.importeExcento=ajuste.resultadoImpuesto.abs()
+			ne.addToConceptos(devo)
+		}else{
+			if(!impuesto){
+				def concepto=ConceptoDeNomina.findByClave('D002')
+				impuesto=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				ne.addToConceptos(impuesto)
+			}
+			impuesto.importeGravado=0.0
+			impuesto.importeExcento=ajuste.resultadoImpuesto.abs()
+			
+		}
+		if(ajuste.resultadoSubsidio<0.0){
+			if(!subsidio){
+				def concepto=ConceptoDeNomina.findByClave('P021')
+				subsidio=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+				ne.addToConceptos(subsidio)
+			}
+			subsidio.importeGravado=0.0
+			subsidio.importeExcento=ajuste.resultadoSubsidio.abs()
+		}
+		
+		
+		
 		
 	}
 	
-	def procesarAjusteMensualISPT(NominaPorEmpleadoDet det){
-		
-		if(found){
-			
-			NominaPorEmpleado ne=det.parent
-			def ajuste=found.resultadoImpuesto
-			if(ajuste>0.0){
-				det.importeExcento=ajuste
-			}else if(ajuste<0.0){
-				def concepto=ConceptoDeNomina.findByClave('P019')
-				det.concepto=concepto
-				det.importeExcento=ajuste.abs()
-			}else{
-				ne.removeFromConceptos(det)
-			}
-			
-			if(found.resultadoSubsidio!=0.0){
-				def subc= null
-				if(found.resultadoSubsidio<0.0){
-					subc=ConceptoDeNomina.findByClave('P021')
-				}else{
-					subc=ConceptoDeNomina.findByClave('D013')
-				}
-				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				nominaPorEmpleadoDet.concepto=subc
-				nominaPorEmpleadoDet.importeGravado=0.0
-				nominaPorEmpleadoDet.importeExcento=found.resultadoSubsidio.abs()
-				ne.addToConceptos(nominaPorEmpleadoDet)
-			}
-		}
-		
-	}
 	
-	def  procesarAjusteMensualSubsidio(NominaPorEmpleadoDet det){
-		
-		def found=IsptMensual.findByNominaPorEmpleado(det.parent)
-		if(found){
-			//def ajuste=det.importeExcento-found.resultadoSubsidio
-			def ajuste=found.resultadoSubsidio
-			if(ajuste){
-				det.importeExcento=ajuste
-			}
-		}
-	}
 	
-	def procesarAjusteSubsidioAplicado(NominaPorEmpleado ne){
-		def found=IsptMensual.findByNominaPorEmpleado(ne)
-		if(found){
-			
-			def ajuste=ne.subsidioEmpleoAplicado+found.resultadoSubsidioAplicado
-			println 'Ajustando subsidio aplicado en nomina empleado: '+ne + '  Subsidio aplicado nuevo: '+ajuste
-			ne.subsidioEmpleoAplicado=ajuste
-		}
-	}
+	
+	
+	
 	
 	def getModel(NominaPorEmpleadoDet det) {
 		def nominaEmpleado=det.parent
@@ -88,7 +81,7 @@ class ProcesadorDeAjusteISPT {
 	}
 	
 	def getTemplate() {
-		return "/nominaPorEmpleado/conceptoInfo/deduccionISTP"
+		return "/nominaPorEmpleado/conceptoInfo/ajusteMensualISTP"
 	}
 	
 	String toString() {

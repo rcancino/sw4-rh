@@ -116,8 +116,8 @@ class NominaPorEmpleado {
 	
 	def actualizar() {
 		total=percepciones-deducciones
-		totalGravado=percepcionesGravadas-deduccionesGravadas
-		totalExcento=percepcionesGravadas-percepcionesExcentas
+		totalGravado=percepcionesGravadas
+		totalExcento=percepcionesExcentas
 	}
 
 	/*
@@ -131,7 +131,12 @@ class NominaPorEmpleado {
 	
 	def beforeUpdate() {
 		this.baseGravable=getPercepcionesGravadas()
+		actualizar()
 		
+	}
+	def beforeInsert(){
+		this.baseGravable=getPercepcionesGravadas()
+		actualizar()
 	}
 	
 }

@@ -11,11 +11,11 @@
 			<div class="col-md-12">
 				<div class="well">
 					<h3>Aguinaldo de ${aguinaldoInstance.empleado} ${aguinaldoInstance.ejercicio}
-						<small>
+						<small><%--
 							( <g:formatDate date="${aguinaldoInstance.fechaInicial}" format="dd/MM/yyyy"/> al
 							 <g:formatDate date="${aguinaldoInstance.fechaFinal}" format="dd/MM/yyyy"/> )
 						</small>
-						<p>
+						--%><p>
 						<small>
 							Salario diario: <g:formatNumber number="${aguinaldoInstance.salario}" type="currency"/> 
 						</small>
@@ -46,7 +46,7 @@
 					    <g:link action="recalcular" class="btn btn-default" id="${aguinaldoInstance.id}">
 							<span class="glyphicon glyphicon-cog"></span> Recalcular
 					    </g:link>
-					    <g:link action="create" class="btn btn-default" id="${aguinaldoInstance.id}">
+					    <g:link action="edit" class="btn btn-default" id="${aguinaldoInstance.id}">
 							<span class="glyphicon glyphicon-pencil"></span> Editar
 					    </g:link>
 					</div>
@@ -69,6 +69,7 @@
 		</div><!-- end .row 2 -->
 
 		<div class="row">
+		
 			<g:render template="aguinaldoResumen" bean="${aguinaldoInstance}"/>
 			
 		</div><!-- end .row 3 -->

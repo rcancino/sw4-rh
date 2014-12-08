@@ -71,9 +71,43 @@ class AjusteIsr {
   
 		
   
-	    def resultadoImpuesto=impuestoFinal-impuestoAcumuladoFinal
-	    def resultadoSubsidio=subsidioFinal-subsidioAcumuladoFinal
-  
+	    //def resultadoImpuesto=impuestoFinal-impuestoAcumuladoFinal
+	    //def resultadoSubsidio=subsidioFinal-subsidioAcumuladoFinal
+		
+		def resultadoImpuesto=0.0
+		def resultadoSubsidio=0.0
+		def resultadoDevolucion=0.0
+		
+		def d1=(impuestoFinal+subsidioFinal)+subsidioAcumulado
+		def d2=(impuestoFinal+subsidioFinal)+subsidioAcumulado-impuestoAcumulado 
+		
+		if(impuestoFinal>0.0){
+			if(impuestoFinal>0.0){
+				resultadoImpuesto=d2
+			}else if(subsidioAcumulado==0.0){
+				resultadoImpuesto=d2
+			}
+			
+		}else{
+			if(d2.abs()>impuestoAcumulado && impuestoAcumulado>0.0){
+				resultadoImpuesto=-impuestoAcumulado
+				resultadoSubsidio=d1
+			}else if(d2<0.0 && impuestoAcumulado>0.0){
+				resultadoImpuesto=d2
+			}else if(d2<0.0 && impuestoAcumulado==0.0){
+				resultadoSubsidio=d2
+			}
+		
+		}
+		
+		/*if(subsidioFinal>0.0 && impuestoAcumulado>0.0){
+			resultadoImpuesto=d1
+		}else if(d1<0.0){
+			resultadoSubsidio=d1
+		}else{
+			resultadoImpuesto=d1
+		}
+  */
         //println " Resultado impuesto final $resultadoImpuesto subsidio final: $resultadoSubsidio"
   
 	     def istpMensual=IsptMensual
@@ -83,8 +117,9 @@ class AjusteIsr {
 		 //Calcular el subsidio aplicado
 		 def subsidioAplicado=NominaPorEmpleado
 				.executeQuery("select sum(ne.subsidioEmpleoAplicado) from NominaPorEmpleado ne "
-					+" where ne.empleado=? and ne.nomina.calendarioDet.mes=? "
+					+" where ne.empleado=? and ne.nomina.calendarioDet.mes=? and ne.cfdi is not null"
 					,[ne.empleado,mes])[0]?:0.0
+			println "Aplicado"+subsidioAplicado +"Mensual"+subsidioMensual
 				
 		 def resultadoSubsidioAplicado=subsidioMensual-subsidioAplicado
 		 

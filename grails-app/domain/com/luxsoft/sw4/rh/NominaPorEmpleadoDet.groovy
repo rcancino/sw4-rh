@@ -9,6 +9,7 @@ class NominaPorEmpleadoDet {
 	BigDecimal importeGravado=0.00
 	BigDecimal importeExcento=0.00
 	String comentario
+	NominaPorEmpleado parent
 
 	Date dateCreated
 	Date lastUpdated

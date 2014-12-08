@@ -20,7 +20,7 @@ class ProcesadorDeISTP {
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
-		
+		println "******************************Procesando ISTP para ${nominaEmpleado.empleado}"
 		log.info "Procesando ISTP para ${nominaEmpleado.empleado}"
 		
 		def percepciones=nominaEmpleado.getPercepcionesGravadas()
@@ -116,8 +116,8 @@ class ProcesadorDeISTP {
 		return "/nominaPorEmpleado/conceptoInfo/deduccionISTP"
 	}
 	
-	String toString() {
+	/*String toString() {
 		"Procesador de ISTP "
-	}
+	}*/
 
 }
