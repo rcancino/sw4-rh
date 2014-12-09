@@ -282,8 +282,10 @@ class NominaService {
 	}
 	
 	def generarAguinaldo(Nomina nomina){
-		def aguinaldos=Aguinaldo.findAll ("from Aguinaldo a where a.ejercicio=? and a.empleado.salario.periodicidad=?"
-			,[nomina.ejercicio,nomina.periodicidad])
+		def aguinaldos=Aguinaldo
+			.findAll (
+				"from Aguinaldo a where a.ejercicio=? and a.empleado.salario.periodicidad=? and a.salario.formaDePago=?"
+			,[nomina.ejercicio,nomina.periodicidad,nomina.formaDePago])
 		
 		aguinaldos.each{
 			def empleado=it.empleado
