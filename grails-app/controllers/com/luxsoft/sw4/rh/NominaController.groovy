@@ -30,6 +30,13 @@ class NominaController {
 		def periodos=CalendarioDet
 			.findAll('from CalendarioDet d where d.calendario.tipo=? ',[tipo])
 		
+			def aguinaldos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.comentario='AGUINALDO' and d.calendario.ejercicio=?",[2014])
+			if(aguinaldos){
+				periodos.addAll(aguinaldos)
+			}
+			//println 'Aguinaldo: '+aguinaldo
+		//
+		
 		def query=Nomina.where{periodicidad==params.periodicidad }
 		[nominaInstanceList:query.list(params)
 			,nominaInstanceListTotal:query.count(params)
@@ -47,14 +54,10 @@ class NominaController {
 
 	def generar(Long calendarioDet){
 		def tipo=params.tipo
-		if(tipo=='AGUINALDO'){
-			flash.message="Aguinaldo pendiente..."
-			redirect action:'index'
-		}else{
-			def formaDePago=params.formaDePago
-			def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago)
-			redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
-		}
+		def periodicidad=params.periodicidad
+		def formaDePago=params.formaDePago
+		def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago,periodicidad)
+		redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
 		
 	}
 	

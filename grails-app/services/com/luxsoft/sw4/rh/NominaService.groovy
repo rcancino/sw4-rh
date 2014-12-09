@@ -24,17 +24,39 @@ class NominaService {
 		nomina.delete()
 	}
 	
-	@Transactional
-	def generarAguinaldo(Integer ejercicio,String formaDePago){
-		log.info 'Generando nómina de aguinaldo'
-	}
+	/*@Transactional
+	def generarAguinaldo(Long calendarioDetId,String formaDePago){
+		log.info 'Generando nomina de aguinaldo'
+		def calendarioDet=CalendarioDet.get(calendarioDetId)
+		def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		Empresa empresa=Empresa.first()
+		def nomina=Nomina.find{calendarioDet==calendarioDet && tipo==tipo && formaDePago==formaDePago}
+		if(nomina){
+			throw new NominaException(message:'Nomina ya generada calendario: '+calendarioDet)
+		}
+		nomina=new Nomina(tipo:'AGUINALDO',
+			periodicidad:periodicidad,
+			folio:calendarioDet.folio,
+			status:"PENDIENTE",
+			periodo:periodo,
+			calendarioDet:calendarioDet,
+			ejercicio:calendarioDet.calendario.ejercicio)
+		nomina.pago=calendarioDet.fechaDePago
+		nomina.diaDePago=calendarioDet.fechaDePago.format('EEEE')
+		nomina.formaDePago=formaDePago
+		nomina.empresa=empresa
+		nomina.total=0.0
+		generarPartidas nomina
+		nomina.save(failOnError:true)
+		return nomina
+	}*/
 
 	@Transactional
-	def generar(Long calendarioDetId,String tipo,String formaDePago){
+	def generar(Long calendarioDetId,String tipo,String formaDePago,String periodicidad){
 		log.info 'Generando nomina: '+tipo+ " Cal:"+calendarioDetId
 		def calendarioDet=CalendarioDet.get(calendarioDetId)
 		
-		def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
+		//def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		def periodo=calendarioDet.periodo()
 		Empresa empresa=Empresa.first()
 		def nomina=Nomina.find{calendarioDet==calendarioDet && tipo==tipo && formaDePago==formaDePago}
@@ -63,6 +85,10 @@ class NominaService {
 	@Transactional
 	def generarPartidas(Nomina nomina) {
 		
+		if(nomina.tipo=='AGUINALDO'){
+			nomina=generarAguinaldo(nomina)
+			return nomina
+		}
 		def tipo=nomina.periodicidad
 		//def asistencias=Asistencia.findAllByCalendarioDet(nomina.calendarioDet)
 		def asistencias=Asistencia
@@ -102,6 +128,10 @@ class NominaService {
 	def actualizarPartidas(Nomina nomina) {
 		assert nomina,"Nomina nula no es valido"
 		validarParaModificacion(nomina)
+		if(nomina.tipo=='AGUINALDO'){
+			actualizarAguinaldo(nomina)
+			return nomina
+		}
 		generarPartidas(nomina)
 		nomina=procesadorDeNomina.procesar(nomina)
 		return nomina
@@ -140,6 +170,10 @@ class NominaService {
 			log.info 'Timbrando Ne id:'+ne.id
 			try{
 				cfdiService.generarComprobante(ne.id)
+				if(ne.nomina.tipo=='AGUINALDO'){
+					actualizarPrestamo(ne)
+					actualizarOtrasDeducciones(ne)
+				}
 			}catch(Exception ex){
 				ex.printStackTrace()
 				log.error ex
@@ -245,6 +279,130 @@ class NominaService {
 			ne.orden=i+1
 			//ne.save()
 		}
+	}
+	
+	def generarAguinaldo(Nomina nomina){
+		def aguinaldos=Aguinaldo.findAll ("from Aguinaldo a where a.ejercicio=? and a.empleado.salario.periodicidad=?"
+			,[nomina.ejercicio,nomina.periodicidad])
+		
+		aguinaldos.each{
+			def empleado=it.empleado
+			def ne=new NominaPorEmpleado(
+			empleado:empleado,
+			ubicacion:empleado.perfil.ubicacion,
+			antiguedadEnSemanas:0,
+			nomina:nomina,
+			vacaciones:0,
+			fraccionDescanso:0
+			
+			)
+			ne.antiguedadEnSemanas=ne.getAntiguedad()
+			ne.salarioDiarioBase=empleado.salario.salarioDiario
+			ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
+			//def asistencia=Asistencia.findByCalendarioDetAndEmpleado(nomina.calendarioDet,empleado)
+			//ne.asistencia=asistencia
+			nomina.addToPartidas(ne)
+			
+			it.nominaPorEmpleado=ne
+		}
+		nomina.save failOnError:true
+		ordenar(nomina)
+		return nomina
+	}
+	 
+	def actualizarAguinaldo(Nomina nomina)	{	
+		nomina.partidas.each{ ne ->
+			ne.conceptos.clear()
+			def aguinaldo=Aguinaldo.findByNominaPorEmpleado(ne)
+			if(aguinaldo){
+				log.info 'Actualizando aguinaldo: '+aguinaldo
+				//Percepcion 1
+				def p1=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('P002')
+					,importeGravado:aguinaldo.aguinaldoGravado
+					,importeExcento:aguinaldo.aguinaldoExcento
+					,comentario:'PENDIENTE')
+				ne.addToConceptos(p1)
+				
+				def p2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('P011')
+					,importeGravado:aguinaldo.bono
+					,importeExcento:0.0
+					,comentario:'PENDIENTE')
+				ne.addToConceptos(p2)
+				
+				
+				def d1=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D002')
+					,importeGravado:0.0
+					,importeExcento:aguinaldo.isrPorRetener
+					,comentario:'PENDIENTE')
+				ne.addToConceptos(d1)
+				
+				if(aguinaldo.pensionA){
+					def d2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D007')
+						,importeGravado:0.0
+						,importeExcento:aguinaldo.pensionA
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
+				if(aguinaldo.otrasDed){
+					def d2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D005')
+						,importeGravado:0.0
+						,importeExcento:aguinaldo.otrasDed
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
+				if(aguinaldo.prestamo){
+					def d2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D004')
+						,importeGravado:0.0
+						,importeExcento:aguinaldo.prestamo
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
+				
+			}
+			
+		}
+	}
+	
+	def actualizarPrestamo(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='D004'}
+		if(neDet){
+			def prestamo=buscarPrestamo(ne)
+			if(prestamo){
+				log.info 'Generando abono nuevo '
+				def abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
+						,importe:neDet.importeExcento
+						,nominaPorEmpleadoDet:neDet)
+				prestamo.addToAbonos(abono)
+				//prestamo.save()
+			}
+		}
+	}
+	
+	def actualizarOtrasDeducciones(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='D005'}
+		if(neDet){
+			def deduccion=buscarOtraDeduccion(ne)
+			if(deduccion){
+				log.info 'Generando abono nuevo '
+				def abono=new OtraDeduccionAbono(
+							fecha:neDet.parent.nomina.pago
+							,importe:neDet.importeExcento
+							,nominaPorEmpleadoDet:neDet)
+					deduccion.addToAbonos(abono)
+				//prestamo.save()
+			}
+		}
+	}
+	
+	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
+			,[ne.empleado],[max:1])
+		return prestamos?prestamos[0]:null
+	}
+	private OtraDeduccion buscarOtraDeduccion(NominaPorEmpleado ne) {
+		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.saldo desc"
+			,[ne.empleado],[max:1])
+		return prestamos?prestamos[0]:null
 	}
 }
 
