@@ -21,6 +21,15 @@ class NominaService {
 	def eliminarNomina(Long id){
 		def nomina=Nomina.get(id)
 		//nominaInstance.attach()
+		if(nomina.tipo=='AGUINALDO'){
+			//def res=Aguinaldo.executeUpdate("update Aguinaldo a set a.nominaPorEmpleado=null where a.nominaPorEmpleado.nomina=?",[nomina])
+			def aguinaldos=Aguinaldo.findAll("from Aguinaldo a where a.nominaPorEmpleado.nomina=?",[nomina])
+			aguinaldos.each {
+				it.nominaPorEmpleado=null
+				it.save flush:true
+			}
+			
+		}
 		nomina.delete()
 	}
 	
@@ -284,7 +293,7 @@ class NominaService {
 	def generarAguinaldo(Nomina nomina){
 		def aguinaldos=Aguinaldo
 			.findAll (
-				"from Aguinaldo a where a.ejercicio=? and a.empleado.salario.periodicidad=? and a.salario.formaDePago=?"
+				"from Aguinaldo a where a.ejercicio=? and a.empleado.salario.periodicidad=? and a.empleado.salario.formaDePago=?"
 			,[nomina.ejercicio,nomina.periodicidad,nomina.formaDePago])
 		
 		aguinaldos.each{

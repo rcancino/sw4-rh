@@ -247,7 +247,7 @@ class CfdiPrintUtils {
 		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd")
 		
 		parametros['CLABE']=nomina.CLABE
-		parametros['TOTAL']=comprobante.getTotal() as String
+		parametros['TOTAL']=comprobante.getTotal() //as String
 		parametros['COMENTARIO_NOM']='Nómina'
 		def img=QRCodeUtils.generarQR(comprobante)
 		parametros.put("QR_CODE",img);
