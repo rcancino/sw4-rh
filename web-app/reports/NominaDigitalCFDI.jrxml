@@ -36,7 +36,7 @@
 	<parameter name="RFC" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="FECHA" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="NFISCAL" isForPrompting="false" class="java.lang.String"/>
-	<parameter name="TOTAL" isForPrompting="false" class="java.math.BigDecimal"/>
+	<parameter name="TOTAL" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="GRUPO" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="DESTINATARIO" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="COMENTARIO_NOM" isForPrompting="false" class="java.lang.String"/>
@@ -1504,7 +1504,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{TOTAL}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TOTAL}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -1863,7 +1863,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<text><![CDATA[FIRMA DEL TRABAJADOR]]></text>
+				<text><![CDATA[NOMBRE Y FIRMA DEL TRABAJADOR]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

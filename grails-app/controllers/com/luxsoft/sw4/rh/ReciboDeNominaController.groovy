@@ -284,7 +284,7 @@ class ReciboDeNominaController {
 		repParams['EMISOR_NOMBRE']=Empresa.first().nombre
 		repParams['PERIOCIDAD_PAGO']=n.periodicidad
 		repParams['IMP_CON_LETRA']=com.luxsoft.sw4.cfdi.ImporteALetra.aLetra(ne.getTotal())
-		repParams['TOTAL']=ne.total //as String
+		repParams['TOTAL']=ne.total as String
 		
 		def deducciones=ne.conceptos.findAll{it.concepto.tipo=='DEDUCCION'}
 		def percepciones=ne.conceptos.findAll{it.concepto.tipo=='PERCEPCION'}
