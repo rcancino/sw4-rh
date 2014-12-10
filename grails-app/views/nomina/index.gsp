@@ -49,8 +49,14 @@
 						<span class="glyphicon glyphicon-repeat"></span> Refrescar
 					</g:link>
 							
-							<button class="btn btn-default" data-toggle="modal" data-target="#agregarNominaForm">
+							<button class="btn btn-default" data-toggle="modal" 
+								data-target="#agregarNominaForm">
 								<span class="glyphicon glyphicon-calendar"></span> Agregar
+							</button>
+
+							<button class="btn btn-default" data-toggle="modal" 
+								data-target="#reporteDeNominaForm">
+								<span class="glyphicon glyphicon-print"></span> Reporte
 							</button>
 							
 							</div>
@@ -60,6 +66,7 @@
 		</div>
 		
 		<g:render template="agregarDialog"/>
+		<g:render template="reporteDeNomina"/>
 	
 	<r:script>
 			$(function(){

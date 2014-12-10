@@ -345,6 +345,17 @@ class ReporteController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:repParams.reportName)
 	}
+
+	def nomina(ReporteDeNominaCommand command){
+		def repParams=[:]
+		repParams['TIPO']=command.tipo
+		repParams['FOLIO']=command.folio
+		repParams['PERIODICIDAD']=command.periodicidad
+		repParams.reportName=command.periodicidad=='QUINCENAL'?'NominaConcentradaQ':'NominaConcentradaS'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
 	
 	def incentivoMensual(IncentivoMensualCommand command){
 		println 'Reporte: '+command

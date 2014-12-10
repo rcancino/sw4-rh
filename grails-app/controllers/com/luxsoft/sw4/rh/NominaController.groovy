@@ -185,3 +185,21 @@ class ImportacionCmd{
 	} 
 }
 
+@Validateable
+class ReporteDeNominaCommand{
+	
+	String tipo
+	Integer ejercicio
+	Integer folio
+	String periodicidad
+
+	static constraints = {
+		ejercicio inList:2014..2018
+		tipo inList:['GENERAL','ESPECIAL','AGUINALDO','PTU']
+		folio range:1..200
+		periodicidad inList:['SEMANAL','QUINCENAL']
+		
+	}
+	
+}
+

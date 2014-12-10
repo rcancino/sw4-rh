@@ -44,8 +44,12 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li>
-							<g:jasperReport jasper="Aguinaldo" format="PDF" name="Aguinaldo">
-							</g:jasperReport>
+							%{-- <g:jasperReport jasper="Aguinaldo" format="PDF" name="Aguinaldo">
+							</g:jasperReport> --}%
+							<g:link action="reporte" params="[tipo:'BASE']"> Aguinaldo Base</g:link>
+							<g:link action="reporte" params="[tipo:'CALCULO']"> Aguinaldo Cálculo</g:link>
+							<g:link action="reporte" params="[tipo:'IMPUESTO']"> Aguinaldo Impuesto</g:link>
+							<g:link action="reporte" params="[tipo:'PAGO']"> Aguinaldo Pago</g:link>
 						</li>
 					</ul>
 				</div>

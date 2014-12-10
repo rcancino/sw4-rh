@@ -3,6 +3,8 @@ package com.luxsoft.sw4.rh
 import com.luxsoft.sw4.*
 import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.JSON
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 
 @Secured(['ROLE_ADMIN'])
 class AguinaldoController {
@@ -10,6 +12,8 @@ class AguinaldoController {
     static scaffold = true
 
     def aguinaldoService
+
+    def jasperService
 
     def index(){
     	def ejercicio=session.ejercicio
@@ -53,6 +57,49 @@ class AguinaldoController {
 		a=aguinaldoService.calcular(a)
 		redirect action:'edit',params:[id:a.id]
 	}
+
+    def reporte(){
+        def tipo=params.tipo
+        def re=''
+        switch(tipo) {
+            case 'BASE':
+                re='AguinaldoBase'
+                break;
+            case 'CALCULO':
+                re='AguinaldoCalculo'
+                break;
+            case 'IMPUESTO':
+                re='AguinaldoImpuesto'
+                break;
+            case 'PAGO':
+                re='AguinaldoPago'
+                break;
+            break
+        }
+        if(re){
+            params.reportName=re
+            params['EJERCICIO']=session.ejercicio
+            ByteArrayOutputStream  pdfStream=runReport(params)
+            render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:params.reportName)
+        }else{
+            flash.message="Reporte incorrecto: "+re
+            redirect action:'index'
+
+        }
+    }
+
+    private runReport(Map repParams){
+        log.info 'Ejecutando reporte  '+repParams
+        def nombre=repParams.reportName
+        def reportDef=new JasperReportDef(
+            name:nombre
+            ,fileFormat:JasperExportFormat.PDF_FORMAT
+            ,parameters:repParams
+            )
+        ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+        return pdfStream
+        
+    }
 }
 
 
