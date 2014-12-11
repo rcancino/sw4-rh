@@ -351,6 +351,7 @@ class ReporteController {
 		repParams['TIPO']=command.tipo
 		repParams['FOLIO']=command.folio
 		repParams['PERIODICIDAD']=command.periodicidad
+		repParams['EJERCICIO']=command.ejercicio
 		repParams.reportName=command.periodicidad=='QUINCENAL'?'NominaConcentradaQ':'NominaConcentradaS'
 		ByteArrayOutputStream  pdfStream=runReport(repParams)
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'

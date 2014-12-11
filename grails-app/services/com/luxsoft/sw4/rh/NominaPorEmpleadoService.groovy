@@ -23,6 +23,11 @@ class NominaPorEmpleadoService {
 		log.info 'Eliminar nomina por empleado: '+ne		
 		//prestamoService.beforeDelete(ne)
 		def nomina=ne.nomina
+		if(nomina.tipo=='AGUINALDO'){
+			def aguinaldo=Aguinaldo.findByNominaPorEmpleado(ne)
+			aguinaldo.nominaPorEmpleado=null
+			//aguinaldo.save flush:true
+		}
 		nomina.removeFromPartidas(ne)
 		nomina.save flush:true		
 		return nomina
