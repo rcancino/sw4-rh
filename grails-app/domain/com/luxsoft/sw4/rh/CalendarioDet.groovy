@@ -49,4 +49,8 @@ class CalendarioDet {
 	def periodo(){
 		return new Periodo(inicio,fin)
 	}
+
+	String toString(){
+		return "$calendario.tipo $folio  $calendario.ejercicio $calendario.comentario?:''"
+	}
 }

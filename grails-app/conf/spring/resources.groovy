@@ -22,6 +22,8 @@ import com.luxsoft.sw4.rh.ProcesadorDePagoDeComisiones
 import com.luxsoft.sw4.rh.ProcesadorDeAjusteISPT
 import com.luxsoft.sw4.rh.ProcesadorDeTiempoExtra
 import com.luxsoft.sw4.rh.procesadores.*
+import com.luxsoft.sw4.rh.ProcesadorDePercepcionGenerica
+import com.luxsoft.sw4.rh.ProcesadorDeDeduccionGenerica
 
 
 
@@ -57,12 +59,14 @@ beans = {
 		reglas=[
 			ref('procesadorDeSueldo'),
 			ref('procesadorDePagoDeComisiones'),
+			ref('procesadorDePercepcionGenerica'),
 			ref('procesadorDePaternidad'),
 			ref('procesadorDeVacaciones'),
 			ref('procesadorDePrimaVacacional'),
 			ref('procesadorDeIncentivo'),
 			ref('procesadorDeTiempoExtra'),
 			ref('procesadorSeguroSocial'),
+			ref('procesadorDeDeduccionGenerica'),
 			ref('procesadorDeISTP'),
 			ref('procesadorDeAjusteISPT'),
 			ref('procesadorRetardoPermiso'),
@@ -93,6 +97,7 @@ beans = {
 	}
 	
 	procesadorDeSueldo(ProcesadorDeSueldo){}
+
 	procesadorDeISTP(ProcesadorDeISTP){}
 	procesadorSeguroSocial(ProcesadorSeguroSocial){}
 	procesadorDeIncentivo(ProcesadorDeIncentivo){}
@@ -110,4 +115,7 @@ beans = {
 	procesadorDeAjusteISPT(ProcesadorDeAjusteISPT){}
 	procesadorDeTiempoExtra(ProcesadorDeTiempoExtra){}
 	ajusteIsr(AjusteIsr){}
+
+	procesadorDePercepcionGenerica(ProcesadorDePercepcionGenerica){}
+	procesadorDeDeduccionGenerica(ProcesadorDeDeduccionGenerica){}
 }

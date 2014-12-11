@@ -68,6 +68,7 @@ navigation={
 			tiempoExtra(controller:'tiempoExtra',action:'index')
 			otrasDeducciones(controller:'otraDeduccion',action:'index')
 			registroDeComisiones(controller:'registroDeComisiones',action:'index')
+			genericas(controller:'operacionGenerica',action:'index')
 		}
 		procesos(){
 			empleados()
