@@ -21,7 +21,7 @@ class OperacionGenerica {
 	Date lastUpdated
 
     static constraints = {
-		tipo inList:['PRECEPCION','DEDUCCION']
+		tipo inList:['PERCEPCION','DEDUCCION']
 		nominaPorEmpleadoDet nullable:true
 		comentario nullable:true,maxSize:250
     }

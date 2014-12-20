@@ -4,7 +4,7 @@ import org.apache.commons.logging.LogFactory
 
 class ProcesadorDeDeduccionGenerica {
 	
-	def conceptoClave='D032'
+	
 	
 	def concepto
 	
@@ -13,11 +13,11 @@ class ProcesadorDeDeduccionGenerica {
 	def procesar(NominaPorEmpleado ne) {
 		
 		def calendarioDet=ne.nomina.calendarioDet
-		def generica=OperacionGenerica.findByCalendarioDetAndTipo(calendarioDet,'DEDUCCION')
+		def generica=OperacionGenerica.findByEmpleadoAndCalendarioDetAndTipo(ne.empleado,calendarioDet,'DEDUCCION')
+		//println 'Deduccion generic detectada: '+generica
 		if(generica){
-			if(!concepto) {
-				concepto=ConceptoDeNomina.findByClave(conceptoClave)
-			}
+			concepto=generica.concepto
+			
 			log.info "Procesando percepcion generica para ${ne.empleado}"
 			//Localizar el concepto
 			def nominaPorEmpleadoDet=ne.conceptos.find(){ 
@@ -30,7 +30,7 @@ class ProcesadorDeDeduccionGenerica {
 				ne.addToConceptos(nominaPorEmpleadoDet)
 			}
 			nominaPorEmpleadoDet.importeGravado=0.0
-			nominaPorEmpleadoDet.importeExcento=generica.importeGravado
+			nominaPorEmpleadoDet.importeExcento=generica.importeExcento
 		}
 	}
 	

@@ -19,7 +19,7 @@ class CalendarioDetController {
 		def query=CalendarioDet.where{
 			calendario.tipo=~term || folio.toString()=~term 
 		}
-		def list=query.list(max:20, sort:"folio")
+		def list=query.list(max:100, sort:"folio",order:'desc')
 		//println query.count()
 		println list.size()
 		list=list.collect{ calDet->

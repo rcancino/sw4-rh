@@ -58,7 +58,7 @@ class ProcesadorDeISTP {
 				ne2.concepto=subc
 				ne2.importeGravado=0.0
 				ne2.importeExcento=sub.abs()
-				procesarAjusteMensualSubsidio(ne2)
+				//procesarAjusteMensualSubsidio(ne2)
 			}else{
 				def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				nominaPorEmpleadoDet.concepto=subc

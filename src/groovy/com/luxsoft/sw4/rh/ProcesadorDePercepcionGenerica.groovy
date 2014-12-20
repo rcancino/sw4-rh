@@ -4,7 +4,7 @@ import org.apache.commons.logging.LogFactory
 
 class ProcesadorDePercepcionGenerica {
 	
-	def conceptoClave='P032'
+	
 	
 	def concepto
 	
@@ -13,11 +13,11 @@ class ProcesadorDePercepcionGenerica {
 	def procesar(NominaPorEmpleado ne) {
 		
 		def calendarioDet=ne.nomina.calendarioDet
-		def generica=OperacionGenerica.findByCalendarioDetAndTipo(calendarioDet,'PERCEPCION')
+		def generica=OperacionGenerica.findByEmpleadoAndCalendarioDetAndTipo(ne.empleado,calendarioDet,'PERCEPCION')
+		//println 'Operacion detectada: '+generica
 		if(generica){
-			if(!concepto) {
-				concepto=ConceptoDeNomina.findByClave(conceptoClave)
-			}
+			concepto=generica.concepto
+			
 			log.info "Procesando percepcion generica para ${ne.empleado}"
 			//Localizar el concepto
 			def nominaPorEmpleadoDet=ne.conceptos.find(){ 
@@ -29,8 +29,8 @@ class ProcesadorDePercepcionGenerica {
 				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				ne.addToConceptos(nominaPorEmpleadoDet)
 			}
-			nominaPorEmpleadoDet.importeGravado=generica.importeExcento
-			nominaPorEmpleadoDet.importeExcento=generica.importeGravado
+			nominaPorEmpleadoDet.importeGravado=generica.importeGravado
+			nominaPorEmpleadoDet.importeExcento=generica.importeExcento
 		}
 	}
 	

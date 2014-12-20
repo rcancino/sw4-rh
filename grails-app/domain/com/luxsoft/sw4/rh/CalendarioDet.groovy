@@ -51,6 +51,13 @@ class CalendarioDet {
 	}
 
 	String toString(){
-		return "$calendario.tipo $folio  $calendario.ejercicio $calendario.comentario?:''"
+		//return "$calendario.tipo $folio  $calendario.ejercicio $calendario.comentario?:'NOMINA'"
+		return "Calendario Det: $folio "
+	//	return "CALENDARIODET  "
 	}
+	
+	String toString2(){
+		return "$calendario.tipo $folio  $calendario.ejercicio $calendario.comentario?:'NOMINA'"
+	}
+	
 }
