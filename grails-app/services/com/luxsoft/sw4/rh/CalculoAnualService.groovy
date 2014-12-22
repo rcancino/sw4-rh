@@ -57,7 +57,7 @@ class CalculoAnualService {
 	}
 
     def calcular(CalculoAnual calculo) {
-		
+		log.info 'Actualizando :'+calculo
 		def periodo=Periodo.getPeriodoAnual(calculo.ejercicio)
 		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
 		def empleado =calculo.empleado
