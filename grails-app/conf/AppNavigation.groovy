@@ -77,6 +77,7 @@ navigation={
 			acumulados(controller:'acumuladoPorConcepto',action:'index')
 			modificacionSalarial(controller:'modificacionSalarial',action:'index')
 			aguinaldo(controller:'aguinaldo',action:'index')
+			calculoAnual(controller:'calculoAnual',action:'index')
 			exportador(controller:'exportador',action:'index',titleText:'Layouts')
 		}
 		configuracion(){
