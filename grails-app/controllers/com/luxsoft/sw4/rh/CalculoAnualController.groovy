@@ -22,15 +22,19 @@ class CalculoAnualController {
     	[calculoAnualInstanceList:list]
     }
 
+    def edit(CalculoAnual calculoAnualInstance){
+        [calculoAnualInstance:calculoAnualInstance]
+    }
+
     def actualizar(){
     	def ejercicio=session.ejercicio
     	calculoAnualService.calcular(ejercicio)
     	redirect action:'index'
     }
 	
-	def recalcular(Aguinaldo a){
-		a=calculoAnualService.calcular(a)
-		redirect action:'edit',params:[id:a.id]
+	def recalcular(CalculoAnual c){
+		c=calculoAnualService.calcular(c)
+		redirect action:'edit',params:[id:c.id]
 		
 	}
 

@@ -2,6 +2,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Calculo anual ${calculoAnualInstance.id}</title>
+	
+	
 </head>
 <body>
 

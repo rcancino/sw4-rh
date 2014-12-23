@@ -19,27 +19,7 @@ import java.math.RoundingMode
 @Transactional
 class CalculoAnualService {
 
-	/*
-    def generar(Empleado empleado ,Integer ejercicio){
-		def calculo=CalculoAnual.find{ejercicio==ejercicio && empleado==empleado}
-		
-		if(!calculo){
-			log.info "Generando calculo anual para $empleado ($ejercicio)"
-			calculo=new CalculoAnual(empleado:empleado,ejercicio:ejercicio)
-			def periodo=Periodo.getPeriodoAnual(ejercicio)
-			calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-			calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
-			calculo.salario=empleado.salario.salarioDiario
-			//calculo.sueldoMensual=empleado.salario.periodicidad=='SEMANAL'?calculo.salario*31:calculo.salario*32
-			if(empleado.alta>calculo.fechaInicial){
-				calculo.fechaInicial=empleado.alta
-				calculo.fechaFinal=periodo.fechaFinal
-			}
-			calculo.save failOnError:true
-		}
-		return calculo
-	}
-*/
+	
 	@NotTransactional
 	def calcular(Integer ejercicio){
 		CalculoAnual.executeUpdate("delete from CalculoAnual c where c.ejercicio=?",[ejercicio])
@@ -188,11 +168,11 @@ class CalculoAnualService {
 	
 	private BigDecimal calcularImpuesto(BigDecimal percepciones){
 		def tarifa =TarifaIsr.obtenerTabla(30.4)
-		.find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
-		def importeGravado=percepciones-tarifa.limiteInferior
+		.find(){( percepciones>(it.limiteInferior*12) && percepciones<=(it.limiteSuperior*12) )}
+		def importeGravado=percepciones-(tarifa.limiteInferior*12)
 		importeGravado*=tarifa.porcentaje
 		importeGravado/=100
-		importeGravado+=tarifa.cuotaFija
+		importeGravado+=(tarifa.cuotaFija*12)
 		importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
 		return importeGravado
 	}

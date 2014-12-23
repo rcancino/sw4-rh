@@ -13,10 +13,7 @@
 			<td>Días del ejercicio</td>
 			<td><g:formatNumber number="${it.diasDelEjercicio}"/></td>
 		</tr>
-		<tr>
-			<td>Días de Aguinaldo</td>
-			<td><g:formatNumber number="${it.diasDeAguinaldo}"/></td>
-		</tr>
+		
 		<tr>
 			<td>Faltas</td>
 			<td><g:formatNumber number="${it.faltas}"/></td>
@@ -29,6 +26,11 @@
 			<td>Permiso p</td>
 			<td><g:formatNumber number="${it.permisoEspecial}"/></td>
 		</tr>
+		<tr>
+			<td>Impuesto del ejercicio</td>
+			<td><g:formatNumber number="${it.impuestoDelEjercicio}" type="currency"/></td>
+		</tr>
+		
 	</tbody>
 	<tfoot>
 		

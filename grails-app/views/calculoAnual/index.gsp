@@ -75,14 +75,25 @@
   					<li role="presentation" 
   						class="active"><a href="#general" role="tab" 
   						data-toggle="tab">General </a></li>
-  					%{-- <li role="presentation"><a href="#calculo" role="tab" data-toggle="tab">Calculo</a></li>
-  					<li role="presentation"><a href="#impuesto" role="tab" data-toggle="tab">Impuesto</a></li>
-  					<li role="presentation"><a href="#pago" role="tab" data-toggle="tab">Pago</a></li> --}%
+  					<li role="presentation">
+  						<a href="#percepciones" role="tab" data-toggle="tab">Percepciones</a>
+  					</li>
+  					<li role="presentation">
+  						<a href="#deducciones" role="tab" data-toggle="tab">Deducciones</a>
+  					</li>
+  					%{-- <li role="presentation"><a href="#impuesto" role="tab" data-toggle="tab">Impuesto</a></li>
+  					<li role="presentation"><a href="#pago" role="tab" data-toggle="tab">Pago</a></li>  --}%
 				</ul>
 				<!-- Tab panes -->
 				<div class="tab-content">
   					<div role="tabpanel" class="tab-pane active" id="general">
   						<g:render template="calculoAnualGrid"/>
+  					</div>
+  					<div role="tabpanel" class="tab-pane " id="percepciones">
+  						<g:render template="calculoAnualPercepcionesGrid"/>
+  					</div>
+  					<div role="tabpanel" class="tab-pane " id="deducciones">
+  						<g:render template="calculoAnualDeduccionesGrid"/>
   					</div>
   					%{-- <div role="tabpanel" class="tab-pane" id="calculo">
   						<g:render template="aguinaldoCalculoGrid"/>
@@ -103,24 +114,45 @@
 	<g:render template="/_common/cambioDeEjercicioDialog"/>
 	
 	<r:script>
+		
 			$(function(){
-				var table=$("#calculoAnualGrid").dataTable({
+				var table1=$("#calculoAnualGrid").dataTable({
 			        "paging":   false,
 			        "ordering": false,
 			        "info":     false,
 			         "dom":'t'
     				});
+
+				
+				// var table2=$("#calculoAnualPercepcionesGrid").dataTable({
+			 //        // "paging":   false,
+			 //        // "ordering": false,
+			 //        // "info":     false,
+			 //        //  "dom":'t'
+    // 				});
+				// var table3=$("#calculoAnualDeduccionesGrid").dataTable({
+			 //        "paging":   false,
+			 //        "ordering": false,
+			 //        "info":     false,
+			 //         "dom":'t'
+    // 				});
     				
     				$("#nombreField").keyup(function(){
-      					table.DataTable().column(0).search( $(this).val() ).draw();
+      					table1.DataTable().column(0).search( $(this).val() ).draw();
+      					//table2.DataTable().column(0).search( $(this).val() ).draw();
+      					//table3.DataTable().column(0).search( $(this).val() ).draw();
 					});
 					
     				$("#ubicacionField").keyup(function(){
-      					table.DataTable().column(1).search( $(this).val() ).draw();
+      					table1.DataTable().column(1).search( $(this).val() ).draw();
+      					//table2.DataTable().column(1).search( $(this).val() ).draw();
+      					//table3.DataTable().column(1).search( $(this).val() ).draw();
 					});
 					
 					$("#tipoField").keyup(function(){
-      					table.DataTable().column(2).search( $(this).val() ).draw();
+      					table1.DataTable().column(2).search( $(this).val() ).draw();
+      					//table2.DataTable().column(2).search( $(this).val() ).draw();
+      					//table3.DataTable().column(2).search( $(this).val() ).draw();
 					});
 					
 			});
