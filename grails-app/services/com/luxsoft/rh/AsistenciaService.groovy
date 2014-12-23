@@ -24,6 +24,7 @@ import com.luxsoft.sw4.rh.CalendarioDet
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.LocalTime
+import com.luxsoft.sw4.rh.Vacaciones
 
 import grails.events.Listener
 
@@ -122,6 +123,24 @@ class AsistenciaService {
 				}
 			}
 		}
+		
+		//Buscar vacaciones de cierre anual
+		def calendarioFinal=CalendarioDet
+			.executeQuery("select max(c.folio) from CalendarioDet c where c.calendario.tipo=? and c.calendario.ejercicio=? and c.calendario.comentario like ? and c.folio!=108"
+				,[empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA',cal.calendario.ejercicio,'%NOMINA%']) 
+		println 'Calendario id: '+calendarioFinal.get(0)
+		if(calendarioFinal.get(0) ==cal.folio){
+			def ejercicio=cal.calendario.ejercicio
+			def cierre=Vacaciones.executeQuery("from Vacaciones v where v.empleado=? and  year(v.solicitud)=? and cierreAnual=true",[empleado,ejercicio])
+			cierre.each{ ci->
+				ci.dias.each{
+					def asistenciaDet=new AsistenciaDet(fecha:it,ubicacion:empleado.perfil.ubicacion,tipo:'VACACIONES')
+					asistencia.addToPartidas(asistenciaDet)
+				}
+				
+			}
+		}
+		
 		if(!empleado.controlDeAsistencia){
 			def periodoPago=new Periodo(cal.inicio,cal.fin)
 			def diasPagados=periodoPago.getListaDeDias().size()

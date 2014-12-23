@@ -32,6 +32,8 @@ class Vacaciones {
 	int diasPagados=0
 
 	CalendarioDet calendarioDet
+	
+	boolean cierreAnual
 
 	Date dateCreated
 	Date lastUpdated
@@ -42,6 +44,7 @@ class Vacaciones {
 		autorizacion nullable:true
 		acreditada nullable:true
 		calendarioDet nullable:true
+		cierreAnual nullable:true
 	}
 	
 	static hasMany = [dias:Date]

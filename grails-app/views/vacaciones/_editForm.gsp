@@ -63,6 +63,11 @@
 							</div>
 						</div>
 						
+						<f:field input-id="cierreAnualField" 
+							property="cierreAnual" 
+							input-class="form-control" label="Cierre anual"
+						 	/>
+						
 
 					</f:with>
 					<div class="col-sm-offset-3 col-sm-9">
