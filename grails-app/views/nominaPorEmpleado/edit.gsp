@@ -113,7 +113,7 @@
 								action="aplicarCalculoAnual" 
 								onClick="return confirm('Aplicar ajuste anual?');"
 								id="${nominaPorEmpleadoInstance.id}" >
-								<span class="glyphicon glyphicon-wrench"></span> Ajuste anual
+								<span class="glyphicon glyphicon-wrench"></span> Cálculo anual
 							</g:link>
 						</g:if>
 						

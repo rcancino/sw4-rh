@@ -20,6 +20,8 @@ class NominaController {
 	def importarNominaService
 	
 	def ajusteIsr
+
+	def nominaPorEmpleadoService
     
     def index(Integer max) {
         params.max = Math.min(max ?: 60, 100)
@@ -152,6 +154,16 @@ class NominaController {
 			ajusteIsr.ajusteMensual(it)
 		}
 		nominaService.actualizarPartidas(Nomina.get(id))
+		redirect action:'show',params:[id:nomina.id]
+	}
+
+	def aplicarCalculoAnual(Long id){
+		
+		Nomina nomina=Nomina.get(id)
+		nomina.partidas.each{
+			nominaPorEmpleadoService.aplicar(it)
+		}
+		//nominaService.actualizarPartidas(Nomina.get(id))
 		redirect action:'show',params:[id:nomina.id]
 	}
     

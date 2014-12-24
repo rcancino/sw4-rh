@@ -95,6 +95,13 @@
 						</g:link>
 					</li>
 					<li>
+						<g:link  action="aplicarCalculoAnual" 
+							onClick="return confirm('Aplicar calculo anual ISR?');"
+							id="${nominaInstance.id}" >
+							 Calculo anual
+						</g:link>
+					</li>
+					<li>
 						<g:link  controller="reciboDeNomina"
 							action="imprimirCfdis" 
 							onClick="return confirm('Imprimir todos los recibos de nómina?');"
