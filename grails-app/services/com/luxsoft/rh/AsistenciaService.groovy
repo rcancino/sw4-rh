@@ -133,9 +133,13 @@ class AsistenciaService {
 			def ejercicio=cal.calendario.ejercicio
 			def cierre=Vacaciones.executeQuery("from Vacaciones v where v.empleado=? and  year(v.solicitud)=? and cierreAnual=true",[empleado,ejercicio])
 			cierre.each{ ci->
-				ci.dias.each{
-					def asistenciaDet=new AsistenciaDet(fecha:it,ubicacion:empleado.perfil.ubicacion,tipo:'VACACIONES')
-					asistencia.addToPartidas(asistenciaDet)
+				ci.dias.each{ dia->
+					def ffound=asistencia.partidas.find{dd->dd.fecha.format('dd/MM/yyyy')==dia.format('dd/MM/yyyy') }
+					if(!ffound){
+						def asistenciaDet=new AsistenciaDet(fecha:dia,ubicacion:empleado.perfil.ubicacion,tipo:'VACACIONES')
+						asistencia.addToPartidas(asistenciaDet)
+					}
+					
 				}
 				
 			}

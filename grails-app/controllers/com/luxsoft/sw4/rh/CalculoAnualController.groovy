@@ -33,7 +33,7 @@ class CalculoAnualController {
     }
 	
 	def recalcular(CalculoAnual c){
-		c=calculoAnualService.calcular(c)
+		c=calculoAnualService.calcular(c.empleado,c.ejercicio)
 		redirect action:'edit',params:[id:c.id]
 		
 	}

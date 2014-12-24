@@ -22,19 +22,14 @@ class CalculoAnualService {
 	
 	@NotTransactional
 	def calcular(Integer ejercicio){
-		CalculoAnual.executeUpdate("delete from CalculoAnual c where c.ejercicio=?",[ejercicio])
+		//CalculoAnual.executeUpdate("delete from CalculoAnual c where c.ejercicio=?",[ejercicio])
 		def ids=NominaPorEmpleado.executeQuery(
 			"select distinct(n.empleado.id) from NominaPorEmpleado n where n.nomina.ejercicio=? and n.empleado.status!='BAJA'",[ejercicio])
 		log.info "Generando calculando anual para $ids.size empleados del ejercicio $ejercicio"
 		ids.each{ 
 			def empleado=Empleado.get(it)
 			try {
-				def calculo=CalculoAnual.findOrCreateWhere(ejercicio: ejercicio,empleado:empleado)
-				def periodo=Periodo.getPeriodoAnual(calculo.ejercicio)
-				calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-				calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
-				calculo.empleado=empleado
-				calcular(calculo)
+				calcular(empleado,ejercicio)
 			}
 			catch(Exception e) {
 				log.error "Error calculando calculo de $empleado ($ejercicio)",e
@@ -43,9 +38,19 @@ class CalculoAnualService {
 			
 		}
 	}
+	
+	def calcular(Empleado e,Integer ejercicio){
+		CalculoAnual.executeUpdate("delete from CalculoAnual c where c.empleado=? and c.ejercicio=?",[e,ejercicio])
+		def calculo=CalculoAnual.findOrCreateWhere(ejercicio: ejercicio,empleado:e)
+		def periodo=Periodo.getPeriodoAnual(calculo.ejercicio)
+		calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+		calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		calculo.empleado=e
+		calcular(calculo)
+	}
 
 	def calcular(CalculoAnual calculo) {
-		log.info 'Actualizando :'+calculo
+		log.info 'Actualizando :'+calculo+ 'Empleado.id:'+calculo.empleado.id
 		def periodo=Periodo.getPeriodoAnual(calculo.ejercicio)
 		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
 		def empleado =calculo.empleado
@@ -161,18 +166,22 @@ class CalculoAnualService {
 			ingresoTotal=total-devISPTAnt-retardos
 
 		}
-		anual.impuestoDelEjercicio=calcularImpuesto(anual.totalGravado)
+		def dias=anual.empleado.salario.periodicidad=='QUINCENAL'?16:17
+		anual.proyectado=anual.salario*dias
+		anual.impuestoDelEjercicio=calcularImpuesto(anual.totalGravado+anual.proyectado)
+		
+		anual.resultado=anual.ISR-anual.impuestoDelEjercicio
 
 	}
 	
 	
 	private BigDecimal calcularImpuesto(BigDecimal percepciones){
-		def tarifa =TarifaIsr.obtenerTabla(30.4)
-		.find(){( percepciones>(it.limiteInferior*12) && percepciones<=(it.limiteSuperior*12) )}
-		def importeGravado=percepciones-(tarifa.limiteInferior*12)
+		def tarifa =TarifaAnualIsr.buscar(percepciones)
+		println 'Tarifa seleccionada: '+tarifa+ ' Para un ingreso de: '+percepciones
+		def importeGravado=percepciones-(tarifa.limiteInferior)
 		importeGravado*=tarifa.porcentaje
 		importeGravado/=100
-		importeGravado+=(tarifa.cuotaFija*12)
+		importeGravado+=(tarifa.cuotaFija)
 		importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
 		return importeGravado
 	}
