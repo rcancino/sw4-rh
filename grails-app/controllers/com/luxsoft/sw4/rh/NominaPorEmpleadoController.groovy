@@ -18,6 +18,8 @@ class NominaPorEmpleadoController {
 	def conceptoDeNominaRuleResolver
 	
 	def ajusteIsr
+
+	def calculoAnualService
 	
 
     def index() { }
@@ -241,12 +243,24 @@ class NominaPorEmpleadoController {
 	def mostrarAjusteIspt(NominaPorEmpleado ne){
 		def found=IsptMensual.findByNominaPorEmpleado(ne)
 		if(!found){
-			flash.message 'No existe ajuste mejsual para este empleado'
+			flash.message='No existe ajuste mejsual para este empleado'
 			redirect action:'edit',params:[id:ne.id]
 		}
 		println found
 		//redirect action:'edit',params:[id:ne.id]
 		[nominaPorEmpleadoInstance:ne]
+	}
+
+	@Transactional
+	def aplicarCalculoAnual(NominaPorEmpleado ne){
+		def found=IsptMensual.findByNominaPorEmpleado(ne)
+		if(!found){
+			flash.message='No existe ajuste mensual para este empleado'
+			redirect action:'edit',params:[id:ne.id]
+		}
+		calculoAnualService.aplicar(ne)
+		flash.message="Calculo anual aplicado"
+		redirect action:'edit',params:[id:ne.id]
 	}
     
 }

@@ -108,6 +108,16 @@
 							<span class="glyphicon glyphicon-trash"></span> Eliminar ajuste ISR 
 						</g:link>
 						
+						<g:if test="${ajuste}">
+							<g:link class="list-group-item" 
+								action="aplicarCalculoAnual" 
+								onClick="return confirm('Aplicar ajuste anual?');"
+								id="${nominaPorEmpleadoInstance.id}" >
+								<span class="glyphicon glyphicon-wrench"></span> Ajuste anual
+							</g:link>
+						</g:if>
+						
+						
 						<g:link class="list-group-item" action="depurar"
 							id="${nominaPorEmpleadoInstance.id}" >
 							<span class="glyphicon glyphicon-"></span> Depurar  

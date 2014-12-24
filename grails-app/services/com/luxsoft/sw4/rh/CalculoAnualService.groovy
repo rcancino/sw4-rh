@@ -185,6 +185,39 @@ class CalculoAnualService {
 		importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
 		return importeGravado
 	}
+
+
+	public aplicar(NominaPorEmpleado ne) {
+		
+		def ajuste=IsptMensual.findByNominaPorEmpleado(ne)
+		if(!ajuste) 
+			return
+
+		def calculo=CalculoAnual.findByEmpleadoAndEjercicio(ne.empleado,ne.nomina.ejercicio)
+		if(calculo){
+			log.info 'Aplicando calculo anual: '+calculo+ " Resultado: "+calculo.resultado
+			def resultado=calculo.resultado
+			def impuestoDet=ne.conceptos.find(){ 
+				it.concepto.clave=='D002'
+			}
+			if(impuestoDet){
+				def importeExcento=0.0
+				def concepto=ConceptoDeNomina.findByClave('P019')
+				if(resultado>impuestoDet.importeExcento){
+					importeExcento=impuestoDet.importeGravado
+				}else{
+					importeExcento=resultado
+				}
+				def ca=new NominaPorEmpleadoDet(
+					concepto:concepto
+					,importeGravado:0.0
+					,importeExcento:importeExcento
+					,comentario:'CALCULO ANUAL')
+				ne.addToConceptos(ca)
+			}
+		}
+		ne.actualizar()
+	}
 	
 	
     
