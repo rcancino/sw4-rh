@@ -41,7 +41,7 @@ class CalculoAnual {
 	
 	BigDecimal comisiones=0.0
 	
-	Integer vacaciones=0
+	BigDecimal vacaciones=0.0
 	
 	BigDecimal vacacionesPagadas=0.0
 	
