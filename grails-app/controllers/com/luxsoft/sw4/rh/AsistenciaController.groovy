@@ -22,6 +22,7 @@ class AsistenciaController {
 
     def index() {
     	def tipo=params.tipo?:'SEMANA'
+		def ejercicio=session.ejercicio
     	def calendarioDet
     	if(tipo=='SEMANA'){
     		calendarioDet=session.calendarioSemana
@@ -35,10 +36,15 @@ class AsistenciaController {
     		def list=Asistencia.findAll{calendarioDet==calendarioDet}
     		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
     	}
-    	def periodos=CalendarioDet.findAll{calendario.ejercicio==2014 && calendario.tipo==tipo}
+    	def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
     	
     	[calendarioDet:calendarioDet,partidasMap:partidasMap,tipo:tipo,periodos:periodos]
     	//redirect action:'asistenciaQuincenal'
+	}
+	def cambiarEjercicio(Integer ejercicio){
+		//println 'Cambiando ejercicio: '+ejercicio
+		session.ejercicio=ejercicio
+		redirect action:'index'
 	}
 
 	def cambiarCalendario(Long calendarioDetId){

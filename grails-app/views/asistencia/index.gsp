@@ -8,7 +8,12 @@
 </head>
 <body>
 	<content tag="header">
-		<h3>Control de asistencia</h3>
+		
+		<a href="" data-toggle="modal" data-target="#cambioDeEjercicioForm">
+			<h3>Control de asistencia (${session.ejercicio})</h3>
+		</a>
+		
+		
 	</content>
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
@@ -155,6 +160,7 @@
 		</div>
   		
   		<g:render template="calendarioPeriodoDialog" model="[periodos:periodos]"/>
+  		<g:render template="/_common/cambioDeEjercicioDialog"/>
   		
 	</content><!-- end .gridTask -->
 	

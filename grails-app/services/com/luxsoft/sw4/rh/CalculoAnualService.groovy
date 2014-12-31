@@ -65,6 +65,7 @@ class CalculoAnualService {
 		calculo.salario=calculo.empleado.salario.salarioDiario
 		calculo.resultado=0.0
 		actualizarConceptos(calculo)
+		validarAplicacion(calculo)
 		calculo.save failOnError:true
 	}
 	
@@ -72,12 +73,15 @@ class CalculoAnualService {
 	private actualizarConceptos(CalculoAnual anual){
 		
 		def partidas=NominaPorEmpleadoDet
-		.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? "+
+		.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=?"+
 			" and d.concepto.id in(13,41,37,44,36,22,14,40,38,19,15,23,24,31,42,20,45,34,35,33,2,12,43) "+
 			" and d.parent.nomina.ejercicio=? "
 				,[anual.empleado,anual.ejercicio])
 		
+		
+		
 		partidas.each{it->
+			
 			switch(it.concepto.id){
 				case 13:
 					anual.sueldo+=it.importeGravado
@@ -156,24 +160,68 @@ class CalculoAnualService {
 			}
 			
 		}
+		def subEmpAplic=0.0
+		
+		def nominasEmpleado=NominaPorEmpleado.findAll("from NominaPorEmpleado n where empleado=? and n.nomina.ejercicio=? "+
+			"  ",[anual.empleado,anual.ejercicio]).each {nom->
+			subEmpAplic+=nom.subsidioEmpleoAplicado
+		}
+				
+		anual.SubsEmpAplicado=subEmpAplic
 		anual.totalGravado=0.0
 		def netoGravado=0.0
 		anual.with{
 			totalGravado=sueldo+comisiones+vacaciones+vacacionesPagadas+primaVacacionalGravada+incentivo+aguinaldoGravable+indemnizacionGravada+primaDeAntiguedadGravada+compensacion+ptuGravada+bonoDeProductividad+bonoPorDesempeno+primaDominicalGravada+gratificacion+permisoPorPaternidad+tiempoExtraDobleGravado+tiempoExtraTripleGravado
-			totalExento=primaVacacionalExenta+aguinaldoExento+indemnizacionExenta+primaDeAntiguedadExenta+ptuExenta+devISPT+primaDominicalExenta+tiempoExtraDobleExento+SubsEmpPagado
+			totalExento=primaVacacionalExenta+aguinaldoExento+indemnizacionExenta+primaDeAntiguedadExenta+ptuExenta+primaDominicalExenta+tiempoExtraDobleExento  
 			total=totalGravado+totalExento
 			netoGravado=totalGravado-retardos
 			ingresoTotal=total-devISPTAnt-retardos
 
 		}
-		def dias=anual.empleado.salario.periodicidad=='QUINCENAL'?16:17
-		anual.proyectado=anual.salario*dias
-		anual.impuestoDelEjercicio=calcularImpuesto(anual.totalGravado+anual.proyectado)
-		
-		anual.resultado=anual.ISR-anual.impuestoDelEjercicio
+		def diasProyectados=calcularDiasProyectados(anual)
+		//def dias=anual.empleado.salario.periodicidad=='QUINCENAL'?16:0
+		anual.proyectado=anual.salario*diasProyectados
 
+		anual.impuestoDelEjercicio=calcularImpuesto(netoGravado+anual.proyectado)
+		
+		def ResISPT177=anual.impuestoDelEjercicio-anual.SubsEmpAplicado
+		if(anual.impuestoDelEjercicio<anual.subsEmpAplicado){
+			ResISPT177=0.0
+		}		
+		
+		anual.resultado=anual.ISR-anual.devISPT-ResISPT177
 	}
 	
+	/**
+	 * @Todo Falta implementar la logica para determinar los dias de proyectado
+	 * @param anual
+	 * @return
+	 */
+	private calcularDiasProyectados(CalculoAnual anual){
+		return anual.empleado.salario.periodicidad=='QUINCENAL'?0:0
+	}
+	
+	public void validarAplicacion(CalculoAnual anual){
+		if(anual.ingresoTotal>=400000.00){
+			anual.calculoAnual=false
+			return
+		}
+		if(anual.empleado.perfil.declaracionAnual==true){
+			anual.calculoAnual=false
+			return
+		}
+		def periodo=Periodo.getPeriodoAnual(anual.ejercicio)
+		def diciembre=Periodo.getPeriodoEnUnMes(11,anual.ejercicio)
+		if(anual.empleado.alta>periodo.fechaInicial ){
+			anual.calculoAnual=false
+			return
+		
+		}
+		if(anual.empleado.baja && anual.empleado.baja<diciembre.fechaInicial){
+			anual.calculoAnual=false
+			return
+		}
+	}
 	
 	private BigDecimal calcularImpuesto(BigDecimal percepciones){
 		def tarifa =TarifaAnualIsr.buscar(percepciones)
@@ -194,7 +242,7 @@ class CalculoAnualService {
 			return
 
 		def calculo=CalculoAnual.findByEmpleadoAndEjercicio(ne.empleado,ne.nomina.ejercicio)
-		if(calculo){
+		if(calculo && calculo.calculoAnual){
 			log.info 'Aplicando calculo anual: '+calculo+ " Resultado: "+calculo.resultado
 			def resultado=calculo.resultado
 			def impuestoDet=ne.conceptos.find(){ 
@@ -202,7 +250,7 @@ class CalculoAnualService {
 			}
 			if(impuestoDet){
 				def importeExcento=0.0
-				def concepto=ConceptoDeNomina.findByClave('P019')
+				def concepto=ConceptoDeNomina.findByClave('P033')
 				if(resultado>impuestoDet.importeExcento){
 					importeExcento=impuestoDet.importeGravado
 				}else{

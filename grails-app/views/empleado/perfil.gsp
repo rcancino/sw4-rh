@@ -51,6 +51,7 @@
 						value="${value?:com.luxsoft.sw4.rh.sat.SatRiesgoPuesto.findByClave(3) }" />
 					<f:field property="perfil.turno" input-class="form-control" />
 					<f:field property="perfil.tipoDeIncentivo" input-class="form-control" />
+					<f:field property="perfil.declaracionAnual" label="Presenta Declaracion" input-class="form-control" />
 				</f:with>
 			</fieldset>
 		

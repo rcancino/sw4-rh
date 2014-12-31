@@ -8,7 +8,7 @@ class CoreFilters {
     def filters = {
         all(controller:'*', action:'*') {
             before = {
-            	if(!session.ejercicion){
+            	if(!session.ejercicio){
             		session.ejercicio=Periodo.obtenerYear(new Date())
             	}
 				if(!session.calendarioSemana) {

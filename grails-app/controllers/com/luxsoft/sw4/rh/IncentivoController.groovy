@@ -256,16 +256,16 @@ class IncentivoController {
 	@Transactional
 	def asignarCalendarioDeIncentivoMensual(Integer ejercicio,String mes){
 		def calendarioDet=CalendarioDet.get(params.calendarioDetId)
-		println 'Aplicando calendario : '+calendarioDet
+		//println 'Aplicando calendario : '+calendarioDet
 		if(calendarioDet){
 			def incentivos=Incentivo.findAllByEjercicioAndMes(ejercicio,mes)
-			incentivos.each{
-				def a=Asistencia.findByCalendarioDet(calendarioDet)
-				println 'Asistencia: '+a
+			incentivos.each{incentivo->
+				def a=Asistencia.findByCalendarioDetAndEmpleado(calendarioDet,incentivo.empleado)
+				//println 'Asistencia: '+a
 				if(a){
-					it.asistencia=a
-					it.save failOnError:true
-					println 'Calendario asignado a: '+it
+					incentivo.asistencia=a
+					incentivo.save failOnError:true
+					//println 'Calendario asignado a: '+incentivo
 				}
 				
 			}

@@ -24,8 +24,8 @@ class ProcesadorDeAjusteISPT {
 		
 		def subsidio=ne.conceptos.find{it.concepto.clave=='P021'}
 		if(subsidio){
-			impuesto.importeGravado=0.0
-			impuesto.importeExcento=0.0
+			subsidio.importeGravado=0.0
+			subsidio.importeExcento=0.0
 			
 		}
 		def impuesto=ne.conceptos.find{it.concepto.clave=='D002'}

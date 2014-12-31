@@ -96,6 +96,13 @@ class AjusteIsr {
 				resultadoImpuesto=d2
 			}else if(d2<0.0 && impuestoAcumulado==0.0){
 				resultadoSubsidio=d2
+			}else if(d1>0.0 && impuestoAcumulado==0.0){
+				resultadoSubsidio=subsidioFinal+subsidioAcumulado
+				if(resultadoSubsidio>0.0){
+					resultadoImpuesto=resultadoSubsidio.abs()
+					resultadoSubsidio=0.0
+				}
+					
 			}
 		
 		}

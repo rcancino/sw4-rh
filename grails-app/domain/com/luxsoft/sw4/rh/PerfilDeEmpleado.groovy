@@ -25,6 +25,8 @@ class PerfilDeEmpleado implements Serializable{
 	
 	SatRegimenContratacion regimenContratacion
 	SatRiesgoPuesto riesgoPuesto
+	
+	Boolean declaracionAnual=false
 
 	Date dateCreated
 	Date lastUpdated

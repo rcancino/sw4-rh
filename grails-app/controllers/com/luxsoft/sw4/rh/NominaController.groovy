@@ -22,6 +22,8 @@ class NominaController {
 	def ajusteIsr
 
 	def nominaPorEmpleadoService
+	
+	def calculoAnualService
     
     def index(Integer max) {
         params.max = Math.min(max ?: 60, 100)
@@ -161,7 +163,7 @@ class NominaController {
 		
 		Nomina nomina=Nomina.get(id)
 		nomina.partidas.each{
-			nominaPorEmpleadoService.aplicar(it)
+			calculoAnualService.aplicar(it)
 		}
 		//nominaService.actualizarPartidas(Nomina.get(id))
 		redirect action:'show',params:[id:nomina.id]
