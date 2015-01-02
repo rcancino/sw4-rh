@@ -7,7 +7,7 @@
 <body>
 
 	<content tag="reporteTitle">
-		Induccion de empleado
+		Generación de layout para nómina Banamex
 	</content>
 	
 	<content tag="reportForm">
@@ -16,15 +16,25 @@
                 <g:renderErrors bean="${reportCommand}" as="list" />
             </div>
         </g:hasErrors>
-		<div class="col-sm-8">
+		<div class="col-sm-12">
 		
-		<g:form action="reportePorEmpleado" class="form-horizontal">
-			<g:hiddenField name="reportName" value="Induccion"/>
+		<g:form action="generarNominaBanamex" class="form-horizontal">
 			<fieldset>
 				<legend> Parámetros</legend>
-				<f:with bean="${reportCommand}">
-					<f:field property="empleado" input-class="form-control"/>
-				</f:with>
+				<div class="form-group">
+					<label for="cantidad" class="col-sm-2 control-label">Nómina</label>
+					<div class="col-sm-10">
+						<g:select class="form-control"  
+							name="id" 
+							value="com.luxsoft.sw4.rh.Nomina.last()"
+							from="${com.luxsoft.sw4.rh.Nomina.findAll("from Nomina n order by n.lastUpdated desc")}" 
+							optionKey="id" 
+							noSelection="[null:'Seleccione una nómina']"
+							/>
+					</div>
+				</div>
+
+				
 			</fieldset>
 			<div class="form-group">
 		    	<div class="col-sm-offset-2 col-sm-3">

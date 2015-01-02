@@ -8,7 +8,7 @@ import org.grails.databinding.BindingFormat
 import com.luxsoft.sw4.Empresa
 import com.luxsoft.sw4.Periodo
 
-@ToString(includes='tipo,periodicidad,folio,periodo',includeNames=true,includePackage=false)
+@ToString(includes='tipo,ejercicio,periodicidad,folio',includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes='empresa,tipo,folio')
 class Nomina {
 	

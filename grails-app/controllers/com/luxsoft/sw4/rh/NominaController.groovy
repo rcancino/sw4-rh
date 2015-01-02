@@ -168,6 +168,27 @@ class NominaController {
 		//nominaService.actualizarPartidas(Nomina.get(id))
 		redirect action:'show',params:[id:nomina.id]
 	}
+
+
+	// def getNominasAsJSON() {
+	// 	def term=params.term.trim()+'%'
+	// 	def query=Nomina.where{
+	// 		calendario.tipo=~term || folio.toString()=~term 
+	// 	}
+	// 	def list=query.list(max:100, sort:"folio",order:'desc')
+	// 	//println query.count()
+	// 	println list.size()
+	// 	list=list.collect{ calDet->
+	// 		def nombre="$calDet.calendario.tipo $calDet.folio  $calDet.calendario.ejercicio"
+	// 		[id:calDet.id
+	// 			,label:nombre
+	// 			,value:nombre
+	// 		]
+	// 	}
+	// 	def res=list as JSON
+		
+	// 	render res
+	// }
     
 }
 
