@@ -31,10 +31,12 @@ class NominaController {
 		params.sort=params.sort?:'lastUpdated'
 		params.order='desc'
 		def tipo=params.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
+		def ejercicio=session.ejercicio
 		def periodos=CalendarioDet
-			.findAll('from CalendarioDet d where d.calendario.tipo=? ',[tipo])
+			.findAll('from CalendarioDet d where d.calendario.tipo=? and d.calendario.ejercicio=?',[tipo,ejercicio])
 		
-			def aguinaldos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.comentario='AGUINALDO' and d.calendario.ejercicio=?",[2014])
+			def aguinaldos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.comentario='AGUINALDO' and d.calendario.ejercicio=?"
+				,[ejercicio])
 			if(aguinaldos){
 				periodos.addAll(aguinaldos)
 			}

@@ -18,7 +18,9 @@ class ExportadorController {
 
     def generarNominaBanamex(Nomina nomina){
     	def temp = File.createTempFile('temp', '.txt') 
-		temp.write('Prueba de Nomina banamex: '+nomina.toString())  
+		temp.write('Prueba de Nomina banamex: '+nomina.toString())
+		
+		  
 		String name="NominaBanamex_"+"$nomina.ejercicio"+"_$nomina.tipo"+"_$nomina.periodicidad"+"_$nomina.folio"+".txt"
 		response.setContentType("application/octet-stream")
 		response.setHeader("Content-disposition", "attachment; filename=\"$name\"")

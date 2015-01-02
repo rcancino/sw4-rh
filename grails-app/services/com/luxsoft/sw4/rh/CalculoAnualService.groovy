@@ -240,7 +240,14 @@ class CalculoAnualService {
 		def ajuste=IsptMensual.findByNominaPorEmpleado(ne)
 		if(!ajuste) 
 			return
-
+			
+			
+		def found=ne.conceptos.find{it.concepto.clave=='P033'}
+		if(found){
+			log.info "Calculo anual ya aplicado"
+			return
+		}
+			
 		def calculo=CalculoAnual.findByEmpleadoAndEjercicio(ne.empleado,ne.nomina.ejercicio)
 		if(calculo && calculo.calculoAnual){
 			log.info 'Aplicando calculo anual: '+calculo+ " Resultado: "+calculo.resultado
@@ -252,16 +259,19 @@ class CalculoAnualService {
 				def importeExcento=0.0
 				def concepto=ConceptoDeNomina.findByClave('P033')
 				if(resultado>impuestoDet.importeExcento){
-					importeExcento=impuestoDet.importeGravado
+					importeExcento=impuestoDet.importeExcento
 				}else{
 					importeExcento=resultado
 				}
-				def ca=new NominaPorEmpleadoDet(
-					concepto:concepto
-					,importeGravado:0.0
-					,importeExcento:importeExcento
-					,comentario:'CALCULO ANUAL')
-				ne.addToConceptos(ca)
+				if(importeExcento>0.0){
+					def ca=new NominaPorEmpleadoDet(
+						concepto:concepto
+						,importeGravado:0.0
+						,importeExcento:importeExcento
+						,comentario:'CALCULO ANUAL')
+					ne.addToConceptos(ca)
+				}
+				
 			}
 		}
 		ne.actualizar()

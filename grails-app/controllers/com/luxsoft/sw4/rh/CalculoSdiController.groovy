@@ -28,6 +28,7 @@ class CalculoSdiController {
 	def cambiarBimestre(CalculoBimestralCommand command){
 		
 		session.bimestre=command.bimestre
+		session.ejercicio=command.ejercicio
 		redirect action:'index'
 		
 	}
