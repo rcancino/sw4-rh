@@ -29,7 +29,8 @@ class InfonavitService {
 		det.cuota=infonavit.cuotaFija
 		det.seguroDeVivienda=15.00
 		det.salarioDiarioIntegrado=infonavit.empleado.salario.salarioDiarioIntegrado
-		det.salarioMinimoGeneral=67.29
+		//det.salarioMinimoGeneral=67.29
+		det.salarioMinimoGeneral=70.10
 		det.faltas=0
 		det.incapacidades=0
 		det.saldo=infonavit.ultimaDiferencia
@@ -80,7 +81,7 @@ class InfonavitService {
 		det.cuota=infonavit.cuotaFija
 		det.seguroDeVivienda=15.00
 		det.salarioDiarioIntegrado=infonavit.empleado.salario.salarioDiarioIntegrado
-		det.salarioMinimoGeneral=67.29
+		det.salarioMinimoGeneral=70.1
 		det.faltas=0
 		det.incapacidades=0
 		det.saldo=infonavit.ultimaDiferencia

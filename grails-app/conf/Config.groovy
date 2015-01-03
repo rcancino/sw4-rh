@@ -142,7 +142,7 @@ log4j = {
 			off 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
 			off 'com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas'
 			info 'com.luxsoft.sw4.rh.procesadores.AjusteMensualISR'
-			info 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
+			debug 'com.luxsoft.sw4.rh.ProcesadorSeguroSocial'
 			off 'com.luxsoft.sw4.rh.ProcesadorDeISTP'
 			info 'com.luxsoft.sw4.rh.ProcesadorDeVacaciones'
 			info 'com.luxsoft.sw4.rh.ProcesadorDePrestamosPersonales'

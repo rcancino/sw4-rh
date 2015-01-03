@@ -24,6 +24,11 @@ class ProcesadorDeISTP {
 		log.info "Procesando ISTP para ${nominaEmpleado.empleado}"
 		
 		def percepciones=nominaEmpleado.getPercepcionesGravadas()
+		
+		def retardoPermiso=nominaEmpleado.conceptos.find{it.concepto.clave=='D012'}
+		if(retardoPermiso){
+			percepciones-=retardoPermiso.importeExcento
+		}
 		if(percepciones<=0)
 			return
 			

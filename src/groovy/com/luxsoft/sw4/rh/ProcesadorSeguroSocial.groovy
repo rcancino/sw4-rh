@@ -29,6 +29,7 @@ class ProcesadorSeguroSocial {
 		}
 		
 		def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+		log.debug 'Salario minimo: '+salarioMinimo
 		def empleado=nominaPorEmpleado.empleado
 		if(salarioMinimo==empleado.salario.salarioDiario){
 			nominaPorEmpleado.removeFromConceptos(nominaPorEmpleadoDet)
@@ -41,11 +42,13 @@ class ProcesadorSeguroSocial {
 		def faltas=nominaPorEmpleado.faltas
 		faltas=faltas+(faltas*factorDescanso)
 		log.debug 'Faltas: '+faltas
-	
-		def diasTrabajados=nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones+nominaPorEmpleado.asistencia.paternidad
+		
+		
+		def diasTrabajados=nominaPorEmpleado.diasTrabajados+(nominaPorEmpleado.fraccionDescanso as BigDecimal)
+			+nominaPorEmpleado.vacaciones+nominaPorEmpleado.asistencia.paternidad
 		def diasDelPeriodo=nominaPorEmpleado.diasDelPeriodo-nominaPorEmpleado.incapacidades
 		if(nominaPorEmpleado.asistencia.diasTrabajados>0 && (nominaPorEmpleado.empleado.controlDeAsistencia) ){
-			diasDelPeriodo=nominaPorEmpleado.asistencia.diasTrabajados
+			diasDelPeriodo=nominaPorEmpleado.asistencia.diasTrabajados		
 			
 		}
 		log.debug 'Dias trabajados: '+diasTrabajados
