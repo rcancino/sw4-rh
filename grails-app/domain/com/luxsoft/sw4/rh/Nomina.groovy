@@ -68,7 +68,13 @@ class Nomina {
 		}
 	}
 
-	
+	def beforeUpdate() {
+		total=partidas.sum 0.0,{it.total}
+	}
+
+	def beforeInsert() {
+		total=partidas.sum 0.0,{it.total}
+	}
 	
 	
 }

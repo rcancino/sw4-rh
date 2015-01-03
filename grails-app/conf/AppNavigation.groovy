@@ -140,6 +140,9 @@ navigation={
 		}
 		exportadores(controller:'exportador'){
 			nominaBanamex()
+			altasBajasImss()
+			idse(titleText:'IDSE')
+			sua(titleText:'SUA')
 		}
 		 
 	}
