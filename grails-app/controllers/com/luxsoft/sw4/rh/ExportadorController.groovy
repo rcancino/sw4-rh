@@ -8,6 +8,7 @@ import grails.validation.Validateable
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import org.apache.commons.lang.StringUtils
+import java.io.BufferedWriter
 
 @Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
@@ -78,7 +79,7 @@ SimpleDateFormat df = new SimpleDateFormat("ddMMyy")
 	n.partidas.each{
       
       // Creacion de registro abono individual
-       if(it.empleado.id==280 || it.empleado.id==260 || it.empleado.id==246 || it.empleado.id==245)
+   //    if(it.empleado.id==280 || it.empleado.id==260 || it.empleado.id==246 || it.empleado.id==245)
 
       
      def registroIndividual
@@ -97,7 +98,7 @@ SimpleDateFormat df = new SimpleDateFormat("ddMMyy")
      def blanco2=StringUtils.leftPad("",24)
      def ultimo="0000000000"
      
-      def registroIndividual=tipoRegInd+tipoOpInd+claveMoneda+importeAbono+tipoCtaInd+claveSucInd+numCtaInd+referencia+beneficiario+blanco1+blanco2+ultimo
+       registroIndividual=tipoRegInd+tipoOpInd+claveMoneda+importeAbono+tipoCtaInd+claveSucInd+numCtaInd+referencia+beneficiario+blanco1+blanco2+ultimo
       append(registroIndividual+"\n")
   		numAbonos=numAbonos+1
 	}
@@ -126,6 +127,21 @@ SimpleDateFormat df = new SimpleDateFormat("ddMMyy")
 		response.outputStream << temp.newInputStream()	
     	
     }
+	
+	
+	def altasBajasImss(){
+		
+	}
+	
+	def generarAltasBajasImss(){
+		File temp = File.createTempFile('temp', '.txt')
+		BufferedWriter writer= temp.newWriter()
+		writer.writeLine("Modificaciones del immss")
+		String name="ModificacionesIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
+		response.setContentType("application/octet-stream")
+		response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+		response.outputStream << temp.newInputStream()
+	}
 }
 
 @Validateable
