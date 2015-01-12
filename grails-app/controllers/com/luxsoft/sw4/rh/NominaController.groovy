@@ -10,6 +10,7 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 
 import org.grails.databinding.BindingFormat
+import com.luxsoft.sw4.rh.acu.IsptMensual
 
 //@Transactional(readOnly = true)
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
@@ -68,8 +69,22 @@ class NominaController {
 	}
 	
 	def actualizarPartidas(Long id) {
-		def nomina=nominaService.actualizarPartidas(Nomina.get(id))
-		redirect action:'depurar',params:[id:id]
+		//def nomina=nominaService.actualizarPartidas(Nomina.get(id))
+		def nomina =Nomina.get(id)
+		nomina.partidas.each{
+			
+			def ajuste=IsptMensual.find("from IsptMensual i where i.nominaPorEmpleado.id=?",[it.id])
+			if(ajuste){
+				flash.message="Nomina con ajuste mensual ISPT (NO SE PUEDE RECALCULAR)"
+				redirect action:'show',params:[id:id]
+				return
+			}else{
+				def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(it.id)
+				nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
+			}
+		}
+		flash.message="Actualización exitosa"
+		redirect action:'show',params:[id:id]
 	}
 
 	def depurar(Long id){

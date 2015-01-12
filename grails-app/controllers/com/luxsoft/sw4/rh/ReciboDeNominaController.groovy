@@ -274,7 +274,7 @@ class ReciboDeNominaController {
 		repParams['DEPARTAMENTO']=empleado.perfil.departamento.clave
 		repParams['SALARIO_DIARIO_BASE']=ne.salarioDiarioBase as String
 		repParams['SALARIO_DIARIO_INTEGRADO']=ne.salarioDiarioIntegrado as String
-		repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.diasTrabajados)) as String
+		repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.diasDelPeriodo)) as String
 		def faltas=(com.luxsoft.sw4.MonedaUtils.round(ne.faltas+ne.incapacidades)) as String
 		repParams['FALTAS']=faltas
 		repParams['FECHA_INGRESO_LABORAL']=empleado.alta.format("yyyy-MM-dd")

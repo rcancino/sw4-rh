@@ -2,39 +2,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="layout" content="exportadores"/>
-<title>Exportacion</title>
+<title>Aviso de Modificaciones IMSS</title>
 </head>
 <body>
 
 	<content tag="reporteTitle">
-		Generación de layout para nómina Banamex
+		Aviso de Modificaciones Imss
 	</content>
-	
 	<content tag="reportForm">
 		<g:hasErrors bean="${reportCommand}">
             <div class="alert alert-danger">
                 <g:renderErrors bean="${reportCommand}" as="list" />
             </div>
         </g:hasErrors>
-		<div class="col-sm-12">
+		<div class="col-sm-6">
 		
-		<g:form action="generarNominaBanamex" class="form-horizontal">
-			<fieldset>
+		<g:form action="generarModificacionesImss" class="form-horizontal">
+			<%--<g:hiddenField name="reportName" value="Aviso"/>
+			--%><fieldset>
 				<legend> Parámetros</legend>
-				<div class="form-group">
-					<label for="cantidad" class="col-sm-2 control-label">Nómina</label>
-					<div class="col-sm-10">
-						<g:select class="form-control"  
-							name="id" 
-							value="com.luxsoft.sw4.rh.Nomina.last()"
-							from="${com.luxsoft.sw4.rh.Nomina.findAll("from Nomina n order by n.lastUpdated desc")}" 
-							optionKey="id" 
-							noSelection="[null:'Seleccione una nómina']"
-							/>
-					</div>
-				</div>
-
-				
+				<f:with bean="${reportCommand}">
+					<f:field property="ejercicio" input-class="form-control"/>
+					<f:field property="bimestre" input-class="form-control"/>
+				</f:with>
 			</fieldset>
 			<div class="form-group">
 		    	<div class="col-sm-offset-2 col-sm-3">

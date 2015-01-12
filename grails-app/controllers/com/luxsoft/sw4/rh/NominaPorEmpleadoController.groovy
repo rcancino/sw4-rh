@@ -115,6 +115,7 @@ class NominaPorEmpleadoController {
 			redirect action:'edit',params:[id:id]
 			return
 		}else{
+			
 			def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(id)
 			nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
 			redirect action:'edit',params:[id:ne.id]

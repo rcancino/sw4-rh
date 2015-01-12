@@ -41,17 +41,17 @@ class ProcesadorSeguroSocial {
 	
 		def faltas=nominaPorEmpleado.faltas
 		faltas=faltas+(faltas*factorDescanso)
-		log.debug 'Faltas: '+faltas
+		log.debug "Faltas $nominaPorEmpleado.faltas  FactorDescanso: $factorDescanso"
 		
 		
 		def diasTrabajados=nominaPorEmpleado.diasTrabajados+(nominaPorEmpleado.fraccionDescanso as BigDecimal)
-			+nominaPorEmpleado.vacaciones+nominaPorEmpleado.asistencia.paternidad
+			diasTrabajados+=nominaPorEmpleado.vacaciones+nominaPorEmpleado.asistencia.paternidad
 		def diasDelPeriodo=nominaPorEmpleado.diasDelPeriodo-nominaPorEmpleado.incapacidades
 		if(nominaPorEmpleado.asistencia.diasTrabajados>0 && (nominaPorEmpleado.empleado.controlDeAsistencia) ){
 			diasDelPeriodo=nominaPorEmpleado.asistencia.diasTrabajados		
 			
 		}
-		log.debug 'Dias trabajados: '+diasTrabajados
+		log.debug 'Dias trabajados: '+diasTrabajados+ ' Vacaciones: '+nominaPorEmpleado.vacaciones
 		log.debug 'Dias del periodo: '+diasDelPeriodo
 	
 		def prima=0.5 //Numer magico por el momento

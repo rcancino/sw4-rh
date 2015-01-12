@@ -72,7 +72,7 @@ class ProcesadorDePrestamosPersonales {
 				
 				
 				//Actualizar el saldo del prestamo
-				println 'neDet.id: '+neDet?.id
+				/*
 				def abono=prestamo.abonos.find{
 					if(it.nominaPorEmpleadoDet){
 						return it.nominaPorEmpleadoDet.id==neDet?.id
@@ -90,7 +90,7 @@ class ProcesadorDePrestamosPersonales {
 					prestamo.addToAbonos(abono)
 						//prestamo.save()
 				}
-				
+				*/
 				
 			}
 			

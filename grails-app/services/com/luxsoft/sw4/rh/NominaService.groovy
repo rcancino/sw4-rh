@@ -17,6 +17,11 @@ class NominaService {
 	
 	def procesadorDeNomina
 	
+	def prestamoService
+	
+	def otraDeduccionService
+	
+	
 	@Transactional
 	def eliminarNomina(Long id){
 		def nomina=Nomina.get(id)
@@ -232,7 +237,7 @@ class NominaService {
 			}
 			//Localisando modiificaciones de ubicacion
 			if(empleado.perfil.ubicacion!=ne.ubicacion){
-				log.info 'Re asignando ubicacion...'+ne
+				log.debug 'Re asignando ubicacion...'+ne
 				ne.ubicacion=empleado.perfil.ubicacion
 			}
 
@@ -242,12 +247,12 @@ class NominaService {
 				//Tratando de localizar prestamo
 				def abono=PrestamoAbono.findByNominaPorEmpleadoDet(it)
 				if(abono){
-					log.info 'Eliminando abono a prestamo...'+abono
+					log.debug 'Eliminando abono a prestamo...'+abono
 					abono.delete()
 				}
 			}
 			nomina.removeFromPartidas(ne)
-			log.info 'Depuranda por baja nomina de : '+ne.empleado +' NominaPorEmpleado: '+ne.id+ ' Ubicacion: '+ne.ubicacion
+			log.debug 'Depuranda por baja nomina de : '+ne.empleado +' NominaPorEmpleado: '+ne.id+ ' Ubicacion: '+ne.ubicacion
 
 
 		}

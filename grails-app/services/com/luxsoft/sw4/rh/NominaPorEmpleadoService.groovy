@@ -51,13 +51,14 @@ class NominaPorEmpleadoService {
 	
 	@Transactional
 	def actualizarNominaPorEmpleado(NominaPorEmpleado ne) {
+		
 		return procesadorDeNomina.procesar(ne)
 	}
 	
 	@Transactional
 	def actualizarNominaPorEmpleado(Long id) {
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
-		
+		log.info 'Actualizando nomina '+ne.empleado
 		ne.conceptos.clear()
 		ne.save flush:true
 		
@@ -80,8 +81,8 @@ class NominaPorEmpleadoService {
 			if(it.getTotal()<=0.0)
 				togo.add(it)
 		}
-		log.info "Depurando ${togo.size()} conceptos de la nomina por empleado $ne.id"
-		println "Depurando ${togo.size()} conceptos de la nomina por empleado $ne.id"
+		log.debug "Depurando ${togo.size()} conceptos de la nomina por empleado $ne.id"
+		
 		togo.each{det->
 			ne.removeFromConceptos(det)
 		}

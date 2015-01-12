@@ -28,6 +28,7 @@
 	<thead>
 		<tr>
 			<th>Orden</th>
+			<th>Clave</th>
 			<g:sortableColumn property="empleado" title="Empleado"/>
 			<g:sortableColumn property="empleado.perfil.ubicacion.clave" title="Sucursal"/>
 			
@@ -46,6 +47,11 @@
 				<td>
 					<g:link action="show" id="${row.id}" >
 						${fieldValue(bean:row,field:"orden")}
+					</g:link>
+				</td>
+				<td>
+					<g:link action="show" id="${row.id}" >
+						${fieldValue(bean:row,field:"empleado.clave")}
 					</g:link>
 				</td>
 				<td>

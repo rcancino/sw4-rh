@@ -537,3 +537,21 @@ class IncentivoMensualCommand{
 		
 	}
 }
+
+
+@Validateable
+class EjercicioBimestreCommand{
+	
+	Integer ejercicio
+	Integer bimestre
+	
+	static constraints = {
+		ejercicio inList:2014..2018
+		bimestre inList:01..06
+		
+		
+	}
+	String toString(){
+		return "$ejercicio"
+	}
+}

@@ -8,14 +8,14 @@ class OtraDeduccionService {
 	
 	static String CONCEPTO='D005'
 	
-	@Listener(namespace='gorm')
+	//@Listener(namespace='gorm')
 	def beforeDelete(NominaPorEmpleado ne){
 		ne.conceptos.each{
 			beforeDelete(it)
 		}
 	}
 
-    @Listener(namespace='gorm')
+    //@Listener(namespace='gorm')
 	def beforeDelete(NominaPorEmpleadoDet neDet){
 		if(neDet.concepto.clave==CONCEPTO){
 			OtraDeduccionAbono.withNewSession{

@@ -5,7 +5,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import groovy.time.TimeCategory
 
-@EqualsAndHashCode(includes='ejercicio,bimestre')
+@EqualsAndHashCode(includes='ejercicio,bimestre,cuota')
 @ToString(excludes="dateCreated,lastUpdated,infonavit",includeNames=true,includePackage=false)
 class InfonavitDet {
 	
@@ -52,6 +52,7 @@ class InfonavitDet {
     static constraints = {
     	ejercicio range:2014..2020
     	bimestre range:1..6
+		cuota scale:6
     }
 
     static mapping = {

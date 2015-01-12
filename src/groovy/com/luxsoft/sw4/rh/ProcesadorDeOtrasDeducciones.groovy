@@ -69,6 +69,7 @@ class ProcesadorDeOtrasDeducciones {
 				
 				
 				//Actualizar el saldo del prestamo
+				/*
 				def abono=deduccion.abonos.find{
 					if(it.nominaPorEmpleadoDet){
 						return it.nominaPorEmpleadoDet.id==neDet?.id
@@ -86,6 +87,7 @@ class ProcesadorDeOtrasDeducciones {
 							,nominaPorEmpleadoDet:neDet)
 					deduccion.addToAbonos(abono)
 				}
+				*/
 			}
 		}else{
 			def neDet=ne.conceptos.find(){
@@ -100,7 +102,7 @@ class ProcesadorDeOtrasDeducciones {
 	}
 	
 	private OtraDeduccion buscarOtraDeduccion(NominaPorEmpleado ne) {
-		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.saldo desc"
+		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.id asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}
@@ -126,6 +128,7 @@ class ProcesadorDeOtrasDeducciones {
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}
+	
 	
 	
 	def getModel(NominaPorEmpleadoDet det) {

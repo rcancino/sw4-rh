@@ -87,7 +87,7 @@ class CfdiService {
 		  c.setCantidad(1);
 		  c.setUnidad("Servicio");
 		  c.setNoIdentificacion('CARGO');
-		  c.setDescripcion('Pago de Nómina');
+		  c.setDescripcion('Pago de Nomina');
 		  c.setValorUnitario(nominaEmpleado.percepciones);
 		  c.setImporte(nominaEmpleado.percepciones);
 		
@@ -108,7 +108,8 @@ class CfdiService {
 			setFechaPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.pago).getCalendarValue())
 			setFechaInicialPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaInicial).getCalendarValue())
 			setFechaFinalPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaFinal).getCalendarValue())
-			setNumDiasPagados(nominaEmpleado.nomina.diasPagados as BigDecimal)
+			//setNumDiasPagados(nominaEmpleado.nomina.diasPagados as BigDecimal)
+			setNumDiasPagados(nominaEmpleado.diasDelPeriodo as BigDecimal)
 			setDepartamento(empleado.perfil.departamento.clave)
 			//setBanco(empleado.salario.banco?.clave)
 			setTipoJornada(empleado.perfil.jornada)

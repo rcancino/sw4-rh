@@ -56,5 +56,15 @@ class InfonavitController {
 		redirect action:'index'
 	}
 	
-	
+	def update(Infonavit infonavitInstance){
+		log.info 'Actualizacion credito infonavit: '+infonavitInstance
+		def bimestre=Bimestre.getCurrentBimestre()
+		infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		infonavitInstance.validate()
+		if(infonavitInstance.hasErrors()){
+			render view:'edit' ,model:[infonavitInstance:infonavitInstance]
+		}
+		flash.message="Credito infonavit modificado :"+infonavitInstance
+		redirect action:'show',params:[id:infonavitInstance.id]
+	}
 }
