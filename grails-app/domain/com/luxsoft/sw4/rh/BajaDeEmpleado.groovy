@@ -1,5 +1,8 @@
 package com.luxsoft.sw4.rh
 
+import groovy.transform.ToString
+
+@ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
 class BajaDeEmpleado implements Serializable{
 	
 	Empleado empleado
@@ -14,4 +17,6 @@ class BajaDeEmpleado implements Serializable{
 		comentario nullable:true
 		
     }
+	
+	
 }

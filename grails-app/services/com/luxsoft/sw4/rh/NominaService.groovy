@@ -205,23 +205,7 @@ class NominaService {
 	  nomina.status='CERRADA'
 	}
 	
-	def actualizarSaldos(Nomina nomina){
-		
-		//Actualiza los saldos de prima vacacional
-		/*
-		long ejercicio=nomina.calendarioDet.calendario.ejercicio
-		def rows=NominaPorEmpleadoDet.findAll("from NominaPorEmpleadoDet d where d.parent.nomina=? and d.concepto.clave=?",[nomina,'P024'])
-		rows.each{
-			def control=ControlDeVacaciones.find("from ControlDeVacaciones v where v.ejercicio=? and v.empleado=?",[ejercicio,it.parent.empleado])
-			if(it.importeExcento>0){
-				control.acumuladoExcento=control.acumuladoExcento+it.importeExcento
-				control.
-				log.info "Acumulado actualizado de prima vacacional para $it.parent.empleado Excento:$it.importeExcento Acu: ${control?.acumuladoExcento}"
-			  	
-			}
-		}
-		*/
-	}
+	
 	
 	@Transactional
 	def depurar(Long id){
@@ -384,12 +368,14 @@ class NominaService {
 		if(neDet){
 			def prestamo=buscarPrestamo(ne)
 			if(prestamo){
-				log.info 'Generando abono nuevo '
+			//if(prestamo && (ne.cfdi==null)){
+				
 				def abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
 						,importe:neDet.importeExcento
 						,nominaPorEmpleadoDet:neDet)
 				prestamo.addToAbonos(abono)
-				//prestamo.save()
+				prestamo.save failOnError:true
+				log.info "Generando abono de $abono.importe para prestamo: "+prestamo
 			}
 		}
 	}
@@ -398,14 +384,16 @@ class NominaService {
 		def neDet=ne.conceptos.find{it.concepto.clave=='D005'}
 		if(neDet){
 			def deduccion=buscarOtraDeduccion(ne)
-			if(deduccion){
-				log.info 'Generando abono nuevo '
+			//if(deduccion && (ne.cfdi==null) ){
+			if(deduccion  ){
+				
 				def abono=new OtraDeduccionAbono(
 							fecha:neDet.parent.nomina.pago
 							,importe:neDet.importeExcento
 							,nominaPorEmpleadoDet:neDet)
 					deduccion.addToAbonos(abono)
-				//prestamo.save()
+				deduccion.save failOnError:true
+				log.info "Abono generado abono de $abono.importe para "+deduccion.toString()
 			}
 		}
 	}
@@ -416,9 +404,17 @@ class NominaService {
 		return prestamos?prestamos[0]:null
 	}
 	private OtraDeduccion buscarOtraDeduccion(NominaPorEmpleado ne) {
-		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.saldo desc"
+		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.id asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
+	}
+	
+	def actualizarSaldos(Nomina nomina){
+		nomina.partidas.each{ne->
+			//println 'Actualizando saldos para :'+ne
+			actualizarOtrasDeducciones(ne)
+			actualizarPrestamo(ne)
+		}
 	}
 }
 

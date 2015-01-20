@@ -142,11 +142,11 @@ class SalarioService {
 	def calcularSalarioDiarioIntegradoNuevo(Empleado empleado,def salarioNuevo,String periodicidad){
 		
 		log.info 'Calculando salario diari integrado para: '+empleado+ '  Salario nuevo: '+salarioNuevo+ ' Tipo: '+periodicidad
-		
+		def tipoFactor=periodicidad=="SEMANAL"?" F.SEM_FACTOR ":" F.QNA_FACTOR"
 		def query=sdiPorEmpleadoNuevo
-			.replaceAll('@TIPO', periodicidad)
+			.replaceAll('@TIPO_FACTOR', tipoFactor)
 			.replaceAll('@SALARIO', salarioNuevo.toString())
-			//println query
+			println query
 		Sql sql=new Sql(dataSource)
 		def rows= sql.rows(query,[empleado.id])
 	}
@@ -362,7 +362,7 @@ SELECT (CASE WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A'
 
 
     String sdiPorEmpleadoNuevo="""		 
-	SELECT ROUND(((SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='@TIPO' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
+	SELECT ROUND(((SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR ELSE @TIPO_FACTOR END) 		
 	FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR(DATE(NOW())) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR(DATE(NOW())) THEN 0 ELSE 2 END) AND 	
 	ROUND((-(TIMESTAMPDIFF(MINUTE,DATE(MAX( CASE WHEN B.FECHA<DATE(NOW()) AND B.FECHA>X.ALTA THEN B.FECHA ELSE DATE(NOW()) END )),X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )	
 	* @SALARIO),2) AS SDI_NVO

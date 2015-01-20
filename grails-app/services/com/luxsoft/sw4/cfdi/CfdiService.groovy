@@ -107,9 +107,15 @@ class CfdiService {
 			setFechaInicioRelLaboral(CFDIUtils.toXmlDate(empleado.alta).getCalendarValue())
 			setFechaPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.pago).getCalendarValue())
 			setFechaInicialPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaInicial).getCalendarValue())
-			setFechaFinalPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaFinal).getCalendarValue())
+			setFechaFinalPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaFinal).getCalendarValue())			
+			
 			//setNumDiasPagados(nominaEmpleado.nomina.diasPagados as BigDecimal)
-			setNumDiasPagados(nominaEmpleado.diasDelPeriodo as BigDecimal)
+			if(nominaEmpleado?.asistencia?.diasTrabajados>0){
+				setNumDiasPagados(nominaEmpleado.asistencia.diasTrabajados as BigDecimal)
+			}else{
+				setNumDiasPagados(nominaEmpleado.diasDelPeriodo as BigDecimal)
+			}			
+			
 			setDepartamento(empleado.perfil.departamento.clave)
 			//setBanco(empleado.salario.banco?.clave)
 			setTipoJornada(empleado.perfil.jornada)

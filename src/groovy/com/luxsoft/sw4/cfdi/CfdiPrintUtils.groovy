@@ -166,7 +166,12 @@ class CfdiPrintUtils {
 			parametros['DEPARTAMENTO']=nomina.departamento
 			
 			
-			parametros['DIAS_TRABAJADOS']=nominaPorEmpleado.diasTrabajados
+			if(nominaPorEmpleado?.asistencia?.diasTrabajados>0){
+				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.asistencia.diasTrabajados)) as String
+			}else{
+				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasDelPeriodo)) as String
+			}			
+
 			parametros['FALTAS']=nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades
 		}
 		
@@ -266,9 +271,13 @@ class CfdiPrintUtils {
 			parametros['SUCURSAL']=nominaPorEmpleado.empleado.perfil.ubicacion.clave
 			parametros['PUESTO']=nomina.puesto
 			parametros['DEPARTAMENTO']=nomina.departamento
-			
-			
-			parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasTrabajados)) as String
+
+			if(nominaPorEmpleado?.asistencia?.diasTrabajados>0){
+				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.asistencia.diasTrabajados)) as String
+			}else{
+				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasDelPeriodo)) as String
+			}			
+
 			def faltas=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades)) as String
 			parametros['FALTAS']=faltas
 		}

@@ -116,7 +116,12 @@
 								<span class="glyphicon glyphicon-wrench"></span> Cálculo anual
 							</g:link>
 						</g:if>
-						
+						<g:link class="list-group-item" 
+								action="aplicarCalculoAnualConSaldo" 
+								onClick="return confirm('Aplicar ajuste anual con saldo?');"
+								id="${nominaPorEmpleadoInstance.id}" >
+								<span class="glyphicon glyphicon-wrench"></span> Saldar cálculo anual
+							</g:link>
 						
 						<g:link class="list-group-item" action="depurar"
 							id="${nominaPorEmpleadoInstance.id}" >

@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header">
-				<h2>Recibos de nómina <strong>2014</strong></h2>
+				<h2>Recibos de nómina <strong>session.ejercicio</strong></h2>
 				</div>
 			</div>
 			

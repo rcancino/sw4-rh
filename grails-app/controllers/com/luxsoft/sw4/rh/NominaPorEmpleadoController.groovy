@@ -264,6 +264,23 @@ class NominaPorEmpleadoController {
 		redirect action:'edit',params:[id:ne.id]
 	}
     
+	@Transactional
+	def aplicarCalculoAnualConSaldo(NominaPorEmpleado ne){
+		
+		def ejercicio=ne.nomina.ejercicio-1
+		def calculo=CalculoAnual.findByEjercicioAndEmpleado(ejercicio,ne.empleado)
+		if(calculo){
+			if(calculo.saldo){
+				calculoAnualService.aplicarCalculoAnualConSaldo(ne,calculo)
+			}else{
+				flash.message="No hay saldo disponible del calculo anual para el "+ejercicio
+			}
+			
+		}else{
+			flash.message="No hay calculo anual registrado en el ejercicio "+ejercicio
+		}
+		redirect action:'edit',params:[id:ne.id]
+	}
 }
 
 class AgregarEmpleadoCommand{

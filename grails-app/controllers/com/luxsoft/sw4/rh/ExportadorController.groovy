@@ -36,7 +36,7 @@ class ExportadorController {
 
 			def tipoRegistro=1
 			def numIdentCte="000005139464"
-			def fechaPago= df.format(n.getPago())
+			def fechaPago= df.format(n.getPago()+1)
 			def secuenciaArch="0001"
 			def nombreEmpresa=emp.getNombre().padRight(36)
 			def descripcion=StringUtils.rightPad("Pago de nomina",20)
@@ -71,10 +71,10 @@ class ExportadorController {
 			def blanco=StringUtils.leftPad("",20)
 
 			registroGlobal=tipoReg+tipoOp+claveMoneda+importeCargo+tipoCta+claveSuc+numCta+blanco
-			append(registroGlobal+"\r\n")
+			append(registroGlobal+"\n")
 
 			def numAbonos=0
-			n.partidas.each{
+			n.partidas.sort{it.empleado.apellidoPaterno}.each{
 
 				// Creacion de registro abono individual
 			
@@ -103,7 +103,7 @@ class ExportadorController {
 				def ultimo="0000000000"
 
 				registroIndividual=tipoRegInd+tipoOpInd+claveMoneda+importeAbono+tipoCtaInd+claveSucInd+numCtaInd+referencia+beneficiario+blanco1+blanco2+ultimo
-				append(registroIndividual+"\r\n")
+				append(registroIndividual+"\n")
 				numAbonos=numAbonos+1
 			}
 
@@ -115,7 +115,7 @@ class ExportadorController {
 			def numCargos="000001"
 
 			registroTotales=tipoRegTotal+claveMoneda+abonos+importeCargo+numCargos+importeCargo
-			append(registroTotales+"\r\n")
+			append(registroTotales+"\n")
 
 
 			println absolutePath
@@ -206,9 +206,9 @@ def generarAltasImss(PeriodoCommand command){
 		numeroDeMovs=numeroDeMovs+1
 		
 	  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-	  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.padRight(27) : StringUtils.leftPad("",27)
-	  def apellidoMaterno=calculo.empleado.apellidoMaterno ? calculo.empleado.apellidoMaterno.padRight(27) : StringUtils.leftPad("",27)
-	  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
+	  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.padRight(27) : calculo.empleado.apellidoMaterno.padRight(27)
+	  def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.padRight(27) : StringUtils.leftPad("",27)
+	   def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
 	  def salarioBase= calculo.sdiNuevo.toString().replace('.','').padLeft(6,"0")
 	  def filler= StringUtils.leftPad("",6)
 	  def tipoTrabajador="1"
@@ -249,39 +249,40 @@ def generarBajasImss(PeriodoCommand command){
 	def temp = File.createTempFile('temp', '.txt')
 	
 	temp.with {
-      Empresa emp=Empresa.first()
-	def registroPatronal=emp.registroPatronal
-	def numeroDeMovs=0
-	Date fechaIni=command.fechaInicial
-	Date fechaFin=command.fechaFinal
-	def bajas=BajaDeEmpleado.findAll("from BajaDeEmpleado e where   e.fecha between ? and ?",[fechaIni,fechaFin]).each{calculo ->
-	SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
-		  
-		numeroDeMovs=numeroDeMovs+1
+		Empresa emp=Empresa.first()
+		def registroPatronal=emp.registroPatronal
+		def numeroDeMovs=0
+		Date fechaIni=command.fechaInicial
+		Date fechaFin=command.fechaFinal
+		def bajas=BajaDeEmpleado.findAll("from BajaDeEmpleado e where   e.fecha between ? and ?",[fechaIni,fechaFin]).each{calculo ->
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+			  
+			numeroDeMovs=numeroDeMovs+1
+			
+		  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+		  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.padRight(27) : StringUtils.leftPad("",27)
+		  def apellidoMaterno=calculo.empleado.apellidoMaterno ? calculo.empleado.apellidoMaterno.padRight(27) : StringUtils.leftPad("",27)
+		  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
+		  def salarioBase= "000000"   //calculo.empleado.salario.salarioDiarioIntegrado.toString().replace('.','').padLeft(6,"0") //calculo.sdiNuevo.toString().replace('.','').padLeft(6,"0")
+		  def filler= "000000"
+		  def tipoTrabajador="0"
+		  def fillerBlanco= "00" //StringUtils.leftPad("0",2)
+		  def fechaMov=df.format(calculo.fecha)
+		  def unidadMedica= StringUtils.leftPad("",3)  //calculo.empleado.seguridadSocial.unidadMedica? calculo.empleado.seguridadSocial.unidadMedica.padLeft(3,"0") :"000"
+		  def filler2=StringUtils.leftPad("",2)
+		  def tipoMov="02"
+		  def guia="11400"
+		  def claveTrab= StringUtils.leftPad("",10)  //StringUtils.leftPad("",10)
+		  def causaBaja=calculo.motivo.clave
+	  
+		  def curp= StringUtils.leftPad("",18) //calculo.empleado.curp?:calculo.empleado.rfc.padLeft(18," ")
+		  def identificador="9"
+			
+		   println numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+causaBaja+curp+identificador
+		   def registro=registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+fillerBlanco+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+causaBaja+curp+identificador
+		   append(registro+"\r\n","UTF8")	  
+		}
 		
-	  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-	  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.padRight(27) : StringUtils.leftPad("",27)
-	  def apellidoMaterno=calculo.empleado.apellidoMaterno ? calculo.empleado.apellidoMaterno.padRight(27) : StringUtils.leftPad("",27)
-	  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
-	  def salarioBase= calculo.empleado.salario.salarioDiarioIntegrado.toString().replace('.','').padLeft(6,"0") //calculo.sdiNuevo.toString().replace('.','').padLeft(6,"0")
-	  def filler= StringUtils.leftPad("",6)
-	  def tipoTrabajador="1"
-	  def fillerBlanco= StringUtils.leftPad("",2)
-	  def fechaMov=df.format(calculo.fecha)
-	  def unidadMedica= StringUtils.leftPad("",3) 
-	  def filler2=StringUtils.leftPad("",2)
-	  def tipoMov="02"
-	  def guia="11400"
-	  def claveTrab= StringUtils.leftPad("",10) 
-	  def filler3=StringUtils.leftPad("",1)
-	  def curp= StringUtils.leftPad("",18) 
-	  def identificador="9"
-	 
-	   def registro=registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+filler3+curp+identificador
-	   append(registro+"\r\n","UTF8")
-	  
-	  
-	}
   }
 	String name="BajasIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
 	response.setContentType("application/octet-stream")

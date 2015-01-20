@@ -113,6 +113,8 @@ class CalculoAnual {
 	
 	BigDecimal impuestoDelEjercicio=0.0  
 	
+	BigDecimal aplicado=0.0
+	
 		
 	Date dateCreated
 	
@@ -129,7 +131,7 @@ class CalculoAnual {
 		fechaFinal type:'date'
 	}
 
-	static transients = ['diasDelEjercicio','antiguedad']
+	static transients = ['diasDelEjercicio','antiguedad','saldo']
 
     String toString(){
     	return "Calaculo andual $empleado - $ejercicio"
@@ -161,7 +163,9 @@ class CalculoAnual {
 	}
 
 	
-
+	public BigDecimal getSaldo(){
+		return this.resultado-this.aplicado
+	}
 
 }
 

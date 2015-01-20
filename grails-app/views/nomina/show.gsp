@@ -103,6 +103,20 @@
 						</g:link>
 					</li>
 					<li>
+						<g:link  action="actualizarSaldos" 
+							onClick="return confirm('Actualizar saldos de entidades relacionadas?');"
+							id="${nominaInstance.id}" >
+							 Actualizar saldos
+						</g:link>
+					</li>
+					<li>
+						<g:link  action="aplicarCalculoAnualConSaldo" 
+							onClick="return confirm('Aplicar calculo anual ISR con saldo pendiente de aplicar?');"
+							id="${nominaInstance.id}" >
+							Aplicación de  calculo anual con saldo pendiente
+						</g:link>
+					</li>
+					<li>
 						<g:link  controller="reciboDeNomina"
 							action="imprimirCfdis" 
 							onClick="return confirm('Imprimir todos los recibos de nómina?');"

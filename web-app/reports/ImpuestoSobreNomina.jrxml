@@ -69,7 +69,7 @@ A.EMPRESA,A.RFC,A.REGISTRO_PATRONAL,A.NOM_ID
 ,empleadoS_SEM,SEMANAS,empleadoS_QUIN,QUINCENAS
 FROM  (
 SELECT 
-case when c.id in (40,31,33) then "Y"else "X" end as control,b.mes, a.ejercicio,b.folio as folio_nom
+case when c.id in (40,31,33,47) then "Y"else "X" end as control,b.mes, a.ejercicio,b.folio as folio_nom
 ,Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO
 ,E.UBICACION_ID,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
@@ -81,7 +81,7 @@ case when c.id in (40,31,33) then "Y"else "X" end as control,b.mes, a.ejercicio,
 ,(SELECT 
 count(*)
 FROM nomina n join nomina_por_empleado ne  on (n.id=ne.nomina_id) join calendario_det c on (c.id=n.calendario_det_id)
-where mes=$P{MES} and n.periodicidad='SEMANAL') AS empleadoS_SEM
+where mes=$P{MES} and n.periodicidad='SEMANAL' AND NE.TOTAL<>0 AND TIPO='GENERAL') AS empleadoS_SEM
 ,(SELECT 
 count(*)
 FROM calendario_det  O JOIN calendario N ON (N.ID=O.calendario_id)
@@ -89,11 +89,11 @@ where mes=$P{MES} and TIPO='SEMANA') AS SEMANAS
 ,(SELECT 
 count(*)
 FROM nomina n join nomina_por_empleado ne  on (n.id=ne.nomina_id) join calendario_det c on (c.id=n.calendario_det_id)
-where mes=$P{MES} and n.periodicidad='QUINCENAL') AS empleadoS_QUIN
+where mes=$P{MES} and n.periodicidad='QUINCENAL' AND NE.TOTAL<>0 AND TIPO='GENERAL') AS empleadoS_QUIN
 ,(SELECT 
 count(*)
 FROM calendario_det  O JOIN calendario N ON (N.ID=O.calendario_id)
-where mes=$P{MES} and TIPO='QUINCENA') AS QUINCENAS
+where mes=$P{MES} and TIPO='QUINCENA' ) AS QUINCENAS
 FROM 
 calendario a join calendario_det b on (b.calendario_id=a.id) join
 NOMINA N ON ( N.calendario_det_id= b.ID )

@@ -35,9 +35,13 @@ class EmpleadoController {
 		params.max = 20
 		params.sort='apellidoPaterno'
 		params.order='asc'
-		def query=Empleado.where{apellidoPaterno=~apellidoPaterno+"%"}
+		//def query=Empleado.where{apellidoPaterno=~apellidoPaterno+"%"}
 		//println 'Encontrados: '+query.list(params).size()
-		def model=[empleadoInstanceList:query.list(params),empleadoInstanceCount:query.count()]
+		//def model=[empleadoInstanceList:query.list(params),empleadoInstanceCount:query.count()]
+		
+		def list=Empleado.findAll("from Empleado e where lower(e.apellidoPaterno)=? or lower(e.apellidoMaterno)=? order by e.apellidoPaterno asc"
+			,[apellidoPaterno?.toLowerCase(),apellidoMaterno?.toLowerCase()],params)
+		def model=[empleadoInstanceList:list,empleadoInstanceCount:list.size()]
 		render view:'index',model:model
 	}
 	
@@ -151,17 +155,23 @@ class EmpleadoController {
     }
 	
 	
-	def registrarBaja(Empleado empleadoInstance,BajaDeEmpleado baja){
+	def registrarBaja(BajaDeEmpleado baja){
+		
 		if(request.method=='GET'){
+			def empleadoInstance=Empleado.get(params.id)
 			return [empleadoInstance:empleadoInstance,bajaInstance:new BajaDeEmpleado()]
 		}
-		if(request.methd=="POST"){
-			println 'Salvando baja de empleado: '+empleadoInstance
-			baja.empleado=empleadoInstance
-			empleadoInstance=empleadoService.updateEmpleado(empleadoInstance)
+		if(request.method=="POST"){
+			println 'Salvando baja de empleado: '+baja
+			//baja.empleado=empleadoInstance
+			
+			def empleadoInstance=empleadoService.registrarBaja(baja)
 			flash.message="Baja registrada  ${empleadoInstance.clave} "
-			redirect action:'generales',params:[id:empleadoInstance.id]
-			//return
+			
+			//redirect action:'show',params:[id:empleadoInstance.id]
+			//redirect action:'index'
+			redirect action:'show',params:[id:empleadoInstance.id]
+			
 		}
 		
 	}

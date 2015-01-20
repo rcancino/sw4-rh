@@ -42,7 +42,7 @@ class Nomina {
 	
 	static embedded = ['periodo']
 	
-	static transients=['diasPagados']
+	static transients=['diasPagados','totalCalculado']
 
     static constraints = {
 		tipo inList:['GENERAL','ESPECIAL','AGUINALDO','PTU']
@@ -74,6 +74,11 @@ class Nomina {
 
 	def beforeInsert() {
 		total=partidas.sum 0.0,{it.total}
+	}
+	
+	BigDecimal getTotalCalculado(){
+		def tot= partidas.sum 0.0,{it.total}
+		return tot
 	}
 	
 	

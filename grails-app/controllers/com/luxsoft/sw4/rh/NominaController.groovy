@@ -10,6 +10,7 @@ import groovy.transform.ToString
 import grails.plugin.springsecurity.annotation.Secured
 
 import org.grails.databinding.BindingFormat
+
 import com.luxsoft.sw4.rh.acu.IsptMensual
 
 //@Transactional(readOnly = true)
@@ -101,6 +102,8 @@ class NominaController {
     	flash.message="Nomina ${nominaInstance.id} eliminada"
     	redirect action:'index',params:[periodicidad:nominaInstance.periodicidad]
     }
+	
+	
 
     private List findEmpleadosDisponibles(Long nominaId,String periodicidad){
         def res=Empleado.findAll(
@@ -117,6 +120,12 @@ class NominaController {
 			nominaService.timbrar(it.id)
 		}
 		
+		redirect action:'show',params:[id:nominaInstance.id]
+	}
+	
+	def actualizarSaldos(Nomina nominaInstance){
+		nominaService.actualizarSaldos(nominaInstance)
+		flash.message="Saldos actualizados"
 		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	
@@ -183,6 +192,22 @@ class NominaController {
 			calculoAnualService.aplicar(it)
 		}
 		//nominaService.actualizarPartidas(Nomina.get(id))
+		redirect action:'show',params:[id:nomina.id]
+	}
+	
+	@Transactional
+	def aplicarCalculoAnualConSaldo(Long id){
+		Nomina nomina=Nomina.get(id)
+		def ejercicio=nomina.ejercicio-1
+		nomina.partidas.each{ne->
+			
+			def calculo=CalculoAnual.findByEjercicioAndEmpleado(ejercicio,ne.empleado)
+			if(calculo && calculo.saldo && calculo.calculoAnual){
+				calculoAnualService.aplicarCalculoAnualConSaldo(ne,calculo)
+				
+			}
+		}
+		flash.message="Aplicacion de saldos para el calculo anual "+ejercicio+ " generado"
 		redirect action:'show',params:[id:nomina.id]
 	}
 

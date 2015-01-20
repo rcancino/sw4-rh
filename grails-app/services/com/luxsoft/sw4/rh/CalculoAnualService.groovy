@@ -233,6 +233,29 @@ class CalculoAnualService {
 		importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
 		return importeGravado
 	}
+	
+	public aplicarCalculoAnualConSaldo(NominaPorEmpleado ne,CalculoAnual calculo){
+		assert calculo.saldo, "No se puede aplicar calculo anual sin saldo"
+		def impuestoDet=ne.conceptos.find{it.concepto.clave=='D002'}
+		if(impuestoDet && impuestoDet.total>0){
+			def importeExcento=0.0
+			def concepto=ConceptoDeNomina.findByClave('P033')
+			if(calculo.saldo>impuestoDet.importeExcento){
+				importeExcento=impuestoDet.importeExcento
+			}else{
+				importeExcento=calculo.saldo
+			}
+			if(importeExcento>0.0){
+				def ca=new NominaPorEmpleadoDet(
+					concepto:concepto
+					,importeGravado:0.0
+					,importeExcento:importeExcento
+					,comentario:'CALCULO ANUAL')
+				ne.addToConceptos(ca)
+			}
+		}
+		
+	}
 
 
 	public aplicar(NominaPorEmpleado ne) {

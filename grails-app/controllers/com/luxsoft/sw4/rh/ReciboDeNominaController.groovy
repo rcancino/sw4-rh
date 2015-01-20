@@ -65,8 +65,8 @@ class ReciboDeNominaController {
 		def nominasPorMes=[:]
 		Mes.getMeses().each{
 			nominasPorMes[it.nombre]=Nomina.findAll(
-			"from Nomina n where n.periodicidad='SEMANAL' and month(n.periodo.fechaInicial)=? order by n.folio"
-			,[it.clave+1])
+			"from Nomina n where n.periodicidad='SEMANAL' and month(n.periodo.fechaInicial)=? and n.ejercicio=? order by n.folio"
+			,[it.clave+1,session.ejercicio])
 		}
 		
 		def nominasList=[]
@@ -274,7 +274,12 @@ class ReciboDeNominaController {
 		repParams['DEPARTAMENTO']=empleado.perfil.departamento.clave
 		repParams['SALARIO_DIARIO_BASE']=ne.salarioDiarioBase as String
 		repParams['SALARIO_DIARIO_INTEGRADO']=ne.salarioDiarioIntegrado as String
-		repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.diasDelPeriodo)) as String
+		if(ne?.asistencia?.diasTrabajados>0){
+			repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.asistencia.diasTrabajados)) as String
+		}else{
+			repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.diasDelPeriodo)) as String
+		}
+		
 		def faltas=(com.luxsoft.sw4.MonedaUtils.round(ne.faltas+ne.incapacidades)) as String
 		repParams['FALTAS']=faltas
 		repParams['FECHA_INGRESO_LABORAL']=empleado.alta.format("yyyy-MM-dd")

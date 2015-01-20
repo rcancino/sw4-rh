@@ -32,7 +32,16 @@ class EmpleadoService {
 		return empleado
 	}
 	
-	
+	def Empleado registrarBaja(BajaDeEmpleado baja){
+		assert baja.empleado,"Baja sin empleado asignados"
+		//def empleado=baja.empleado
+		//empleado.status='BAJA'
+		//empleado.save failOnError:true
+		baja.save failOnError:true
+		baja.empleado.status='BAJA'
+		return baja.empleado
+		
+	}
 
     Empleado updateEmpleado(Empleado empleado) {
     	

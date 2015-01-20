@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header">
-				<h2>Recibos de nómina <strong>2014</strong></h2>
+				<h2>Recibos de nómina <strong>${session.ejercicio}</strong></h2>
 				</div>
 			</div>
 			
@@ -34,7 +34,7 @@
 								<ul class="nav nav-pills nav-stacked">
 									<g:each in="${nominasPorMesInstanceMap[mes.nombre]}" var="nomina">
 										<li class="${nomina.id==nominaInstance?.id?'active':'' }">
-											<g:link action='semanal' params="[nominaId:nomina.id,mesInstance:mes.nombre]" >Folio: ${nomina.folio} (${nomina.tipo})</g:link>
+											<g:link action='semanal' params="[nominaId:nomina.id,mesInstance:mes.nombre]" >Folio: ${nomina.folio} (${nomina.tipo}/ ${nomina.formaDePago })</g:link>
 										</li>
 									</g:each>
 								</ul>
