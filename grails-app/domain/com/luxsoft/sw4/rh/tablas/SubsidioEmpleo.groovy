@@ -1,6 +1,6 @@
 package com.luxsoft.sw4.rh.tablas
 
-
+import java.math.RoundingMode
 
 class SubsidioEmpleo {
 	

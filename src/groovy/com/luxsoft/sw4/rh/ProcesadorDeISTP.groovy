@@ -43,9 +43,10 @@ class ProcesadorDeISTP {
 			.find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
 		assert tarifa,"No encontro TarifaIsr para los parametros: Dias: ${diasTrabajados} Perc:${percepciones} Empleado: ${nominaEmpleado.empleado}"
 		//def subsidio=Subsidio.obtenerTabla(diasTrabajados).find(){(percepciones>it.desde && percepciones<=it.hasta)}
-		def subsidio=SubsidioEmpleo.obtenerTabla(ejercicio,diasTrabajados)
+		def subsidio=SubsidioEmpleo.obtenerTabla(diasTrabajados,ejercicio)
 			.find(){(percepciones>it.desde && percepciones<=it.hasta)}
-		
+		assert subsidio,'No existe registro en tabla de subsidio para el empleo'
+		println 'Subsidio localizado: '+subsidio
 		def importeGravado=percepciones-tarifa.limiteInferior
 		importeGravado*=tarifa.porcentaje
 		importeGravado/=100
@@ -108,8 +109,8 @@ class ProcesadorDeISTP {
 		}
 		model.diasTrabajados=nominaEmpleado.diasDelPeriodo
 		
-		model.tarifa =TarifaIsr.obtenerTabla(ejercicio,model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
-		model.subsidio=SubsidioEmpleo.obtenerTabla(ejercicio,model.diasTrabajados).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
+		model.tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
+		model.subsidio=SubsidioEmpleo.obtenerTabla(model.diasTrabajados,ejercicio).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
 		
 		model.baseGravable=model.percepciones-model.tarifa.limiteInferior
 		model.tarifaPorcentaje=model.tarifa.porcentaje/100
@@ -117,10 +118,10 @@ class ProcesadorDeISTP {
 		model.cuotaFija=model.tarifa.cuotaFija
 		
 		model.istp=(model.importeGravado+model.cuotaFija).setScale(2,RoundingMode.HALF_EVEN)
-		model.importeSubsidio=model.istp-model.subsidio.subsidio
+		model.importeSubsidio=model.istp-model.subsidio?.subsidio
 		model.importeExcento=model.importeSubsidio<0?model.subsidio.abs():0.0
-		model.importeISTP=model.importeSubsidio<0?0.0:model.istp
-		
+		//model.importeISTP=model.importeSubsidio<0?0.0:model.istp
+		model.importeISTP=det.total
 		return model
 	}
 	

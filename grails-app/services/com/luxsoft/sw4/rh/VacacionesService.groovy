@@ -40,7 +40,7 @@ class VacacionesService {
 		
 		def periodo=Periodo.getPeriodoAnual(ejercicio)
 		def query=controlAltaSql.replaceAll('@FECHA_INI',periodo.fechaInicial.format('yyyy/MM/dd'))
-		//log.info query
+		log.info query
 		Sql sql=new Sql(dataSource)
 		sql.eachRow(query){row-> 
 			log.info 'Procesando: '+ row

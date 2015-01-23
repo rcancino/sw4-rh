@@ -78,6 +78,7 @@ class IncentivoController {
 		def tipo='MENSUAL'
 		def mes=session.mes?:'Enero'
 		def ejercicio=session.ejercicio
+		//def ejercicio=2014
 		def asistenciaId=session.asistenciaSemanalId
 		def list=Incentivo.findAll("from Incentivo i where i.ejercicio=? and i.mes=?",[ejercicio,mes])
 		def meses=Mes.getMeses()
