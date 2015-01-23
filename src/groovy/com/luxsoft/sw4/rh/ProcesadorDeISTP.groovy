@@ -4,7 +4,8 @@ import java.math.RoundingMode;
 
 import org.apache.commons.logging.LogFactory
 
-import com.luxsoft.sw4.rh.imss.*
+//import com.luxsoft.sw4.rh.imss.*
+import com.luxsoft.sw4.rh.tablas.*
 import com.luxsoft.sw4.rh.acu.*
 
 class ProcesadorDeISTP {
@@ -36,10 +37,14 @@ class ProcesadorDeISTP {
 		
 		if(diasTrabajados<=0)
 			return
-		
-		def tarifa =TarifaIsr.obtenerTabla(diasTrabajados).find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
+		def ejercicio=nominaEmpleado.nomina.ejercicio
+		//def tarifa =TarifaIsr.obtenerTabla(diasTrabajados).find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
+		def tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',diasTrabajados)
+			.find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
 		assert tarifa,"No encontro TarifaIsr para los parametros: Dias: ${diasTrabajados} Perc:${percepciones} Empleado: ${nominaEmpleado.empleado}"
-		def subsidio=Subsidio.obtenerTabla(diasTrabajados).find(){(percepciones>it.desde && percepciones<=it.hasta)}
+		//def subsidio=Subsidio.obtenerTabla(diasTrabajados).find(){(percepciones>it.desde && percepciones<=it.hasta)}
+		def subsidio=SubsidioEmpleo.obtenerTabla(ejercicio,diasTrabajados)
+			.find(){(percepciones>it.desde && percepciones<=it.hasta)}
 		
 		def importeGravado=percepciones-tarifa.limiteInferior
 		importeGravado*=tarifa.porcentaje
@@ -95,14 +100,16 @@ class ProcesadorDeISTP {
 		def nominaEmpleado=det.parent
 		def model=[:]
 		
+		def ejercicio=nominaEmpleado.nomina.ejercicio
+		
 		model.percepciones=nominaEmpleado.getPercepcionesGravadas()
 		if(model.percepciones<=0){
 			return model
 		}
 		model.diasTrabajados=nominaEmpleado.diasDelPeriodo
 		
-		model.tarifa =TarifaIsr.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
-		model.subsidio=Subsidio.obtenerTabla(model.diasTrabajados).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
+		model.tarifa =TarifaIsr.obtenerTabla(ejercicio,model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
+		model.subsidio=SubsidioEmpleo.obtenerTabla(ejercicio,model.diasTrabajados).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
 		
 		model.baseGravable=model.percepciones-model.tarifa.limiteInferior
 		model.tarifaPorcentaje=model.tarifa.porcentaje/100

@@ -22,8 +22,12 @@
 					<div class="panel-heading">Tablas</div>
 	  				
 					<div class="list-group">
-						<g:link action="tarifaIsr" class="list-group-item ${tabla=='tarifaIsr'?'active':'' }">Tarifa ISR</g:link>
-						<g:link action="subsidio" class="list-group-item ${tabla=='subsidio'?'active':'' }">Subsidio</g:link>
+						<g:link controller="tarifaIsr" 
+							action="index" class="list-group-item ${tabla=='tarifaIsr'?'active':'' }">
+							Tarifa ISR
+						</g:link>
+						<g:link controller="subsidioEmpleo"
+							action="index" class="list-group-item ${tabla=='subsidio'?'active':'' }">Subsidio</g:link>
 						<g:link action="factorDeIntegracion" class="list-group-item ${tabla=='factorDeIntegracion'?'active':'' }">
 							Factor de Integración
 						</g:link>
