@@ -125,7 +125,7 @@ class AsistenciaController {
 		//println 'Dias trabajados: '+d
 		//println params
 		bindData(asistencia, params, [include: ['minutosPorDescontar']])
-		if(d>0.0){
+		if(d>=0.0){
 			log.info "Actualizando dias trabajados: $d faltas manuales: $f"
 			asistencia.diasTrabajados=d
 			asistencia.faltasManuales=f
@@ -136,7 +136,7 @@ class AsistenciaController {
 		}
 		
 		if(asistencia){
-			asistencia.diasTrabajados=0.0
+			//asistencia.diasTrabajados=0.0
 			asistencia=asistenciaService.actualizarAsistencia(asistencia)
 			//render view:'show',model:[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha}]
 			redirect action:'show',params:[id:asistencia.id]

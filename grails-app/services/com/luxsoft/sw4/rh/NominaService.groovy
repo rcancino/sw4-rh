@@ -365,35 +365,62 @@ class NominaService {
 	
 	def actualizarPrestamo(NominaPorEmpleado ne){
 		def neDet=ne.conceptos.find{it.concepto.clave=='D004'}
+		
 		if(neDet){
+			log.info 'Deduccion de prestamo personal detectado D004 '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			
 			def prestamo=buscarPrestamo(ne)
+			
 			if(prestamo){
 			//if(prestamo && (ne.cfdi==null)){
 				
-				def abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
+				
+				def found=prestamo.abonos.find{a->
+					//println 'Evaluando:'+a
+					a?.nominaPorEmpleadoDet?.id==neDet?.id
+				}
+				
+				if(!found){
+					log.info "Generando abono de $neDet.importeExcento para prestamo: "+prestamo
+					
+					def abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
 						,importe:neDet.importeExcento
 						,nominaPorEmpleadoDet:neDet)
-				prestamo.addToAbonos(abono)
-				prestamo.save failOnError:true
-				log.info "Generando abono de $abono.importe para prestamo: "+prestamo
+					prestamo.addToAbonos(abono)
+					
+					//prestamo.save failOnError:true
+					
+				}
+				
+				prestamo.actualizarSaldo()
 			}
+			
 		}
 	}
 	
 	def actualizarOtrasDeducciones(NominaPorEmpleado ne){
 		def neDet=ne.conceptos.find{it.concepto.clave=='D005'}
 		if(neDet){
+			log.info 'Otra Deduccion  detectado D005 '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
 			def deduccion=buscarOtraDeduccion(ne)
 			//if(deduccion && (ne.cfdi==null) ){
 			if(deduccion  ){
-				
-				def abono=new OtraDeduccionAbono(
-							fecha:neDet.parent.nomina.pago
-							,importe:neDet.importeExcento
-							,nominaPorEmpleadoDet:neDet)
+				def found=deduccion.abonos.find{a->
+					a.nominaPorEmpleadoDet.id==neDet.id
+				}
+				if(!found){
+					log.info "Generando abono de $neDet.importeExcento para prestamo: "+deduccion
+					def abono=new OtraDeduccionAbono(
+						fecha:neDet.parent.nomina.pago
+						,importe:neDet.importeExcento
+						,nominaPorEmpleadoDet:neDet)
 					deduccion.addToAbonos(abono)
-				deduccion.save failOnError:true
-				log.info "Abono generado abono de $abono.importe para "+deduccion.toString()
+					deduccion.actualizarSaldo()
+					//deduccion.save failOnError:true
+					//log.info "Abono generado abono de $abono.importe para "+deduccion.toString()
+				}
+				deduccion.actualizarSaldo()
+				
 			}
 		}
 	}

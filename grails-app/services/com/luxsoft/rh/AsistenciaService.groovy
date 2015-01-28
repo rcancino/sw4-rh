@@ -98,7 +98,8 @@ class AsistenciaService {
 			log.debug 'Generando registro nuevo de asistencia para '+empleado+" Periodo: "+cal.asistencia
 			asistencia=new Asistencia(empleado:empleado,tipo:tipo,periodo:periodo,calendarioDet:cal)
 		}
-		if(asistencia.diasTrabajados>0){
+		//println 'Dias trabajados: '+asistencia.diasTrabajados
+		if(asistencia.diasTrabajados){
 			return asistencia
 		}
 		

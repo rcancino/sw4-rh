@@ -143,6 +143,7 @@ navigation={
 			altasImss()
 			bajasImss()
 			modificacionesImss()
+			modificacionIndividualImss()
 			idse(titleText:'IDSE')
 			sua(titleText:'SUA')
 		}

@@ -190,7 +190,7 @@ class IncentivoService {
 			perdida=0.125
 		}
 		if(checadasFaltantes>2){
-			perdida+=0.05
+			perdida+=0.5
 		}
 		if(minutos>49){
 			perdida+=0.125
@@ -199,7 +199,7 @@ class IncentivoService {
 		bono2=bono2*(1-perdida)	
 		
 		def proporcion=calcularProporcion(incentivo)
-		
+		log.info 'Proporcion: '+proporcion
     	incentivo.tasaBono2=bono2*proporcion
 		incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
 		//incentivo.incentivo=incentivo.ingresoBase*bono2
@@ -222,24 +222,38 @@ class IncentivoService {
 		def faltantes=0
 		registros.each{ det->
 			
+			//println "Calculando chcadas faltantes: "+det.asistencia.empleado.nombres
 			def diaFestivo=DiaFestivo.findByFecha(det.fecha)
 			if(diaFestivo){
 				log.info 'Evluando dia festivo: '+diaFestivo.fecha
 				if(diaFestivo.parcial){
-					if(det.entrada1 && det.salida1){
+					if(det.salida1 && !det.entrada1 ){
+						//println "Checada faltante en dia festivo :"+det.fecha
+						faltantes++;
+					}
+					if(det.entrada1 && !det.salida1 ){
+						//println "Checada faltante en dia festivo :"+det.fecha
 						faltantes++;
 					}
 				}
 			}else{
 			if(det.tipo=='ASISTENCIA' && (diaFestivo==null)){
-				if(det.turnoDet.entrada1 && !det.entrada1)
+				if(det.turnoDet.entrada1 && !det.entrada1){
 					faltantes++
-				if(det.turnoDet.salida1 && !det.salida1)
+					//println "Checada faltante en entrada 1: "+det.fecha
+				}
+				if(det.turnoDet.salida1 && !det.salida1){
 					faltantes++
-				if(det.turnoDet.entrada2 && !det.entrada2)
+					//println "Checada faltante en salida 1: "+det.fecha
+				}
+				if(det.turnoDet.entrada2 && !det.entrada2){
 					faltantes++
-				if(det.turnoDet.salida2 && !det.salida2)
+					//println "Checada faltante en entrada 2: "+det.fecha
+				}
+				if(det.turnoDet.salida2 && !det.salida2){
 					faltantes++
+					//println "Checada faltante en salida 2: "+det.fecha
+				}
 			}
 			}
 			
@@ -418,14 +432,16 @@ class IncentivoService {
 	
 	def calcularProporcion(Incentivo incentivo){
 		def alta=incentivo.empleado.alta
-		if(alta<incentivo.fechaInicial)
+		if(alta<=incentivo.fechaInicial)
 			return 1.0;
 		else if(alta>incentivo.fechaInicial && alta<=incentivo.fechaFinal){
 			def diasTrabajados=incentivo.fechaFinal-alta
 			def totalDias=30
 			return diasTrabajados/totalDias //La parte proporcional
-		}else
+		}else{
+			log.info 'La proporcion calculada para este incentivo es de cero'
 			return 0.0	
+		}
 	}
 
 }

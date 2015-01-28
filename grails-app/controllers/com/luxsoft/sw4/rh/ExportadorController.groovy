@@ -34,7 +34,7 @@ class ExportadorController {
 			// Creacion del registro de control
 			def registroControl
 
-			def tipoRegistro=1
+			def tipoRegistro="1"
 			def numIdentCte="000005139464"
 			def fechaPago= df.format(n.getPago()+1)
 			def secuenciaArch="0001"
@@ -42,11 +42,11 @@ class ExportadorController {
 			def descripcion=StringUtils.rightPad("Pago de nomina",20)
 			def naturaleza ="05"
 			def instrucciones=StringUtils.leftPad("",40)
-			def version="B"
+			def vers="B"
 			def volumen="0"
 			def caracteristicas="0"
 
-			registroControl= tipoRegistro+numIdentCte+fechaPago+secuenciaArch+nombreEmpresa+descripcion+naturaleza+instrucciones+version+volumen+caracteristicas
+			registroControl= tipoRegistro+numIdentCte+fechaPago+secuenciaArch+nombreEmpresa+descripcion+naturaleza+instrucciones+vers+volumen+caracteristicas
 			append(registroControl+"\r\n")
 
 			// Creacion del registro global
@@ -215,8 +215,10 @@ def generarAltasImss(PeriodoCommand command){
 	  def tipoSalario="0"
 	  
 	  def tipoJornada="0"
-		if(calculo.empleado.perfil.jornada=="MEDIA" || calculo.empleado.perfil.jornada=="REDUCIDA")
+		if(calculo.empleado.perfil.jornada=="MEDIA" || calculo.empleado.perfil.jornada=="REDUCIDA"){
+		 tipoSalario=2
 		 tipoJornada=6
+		}
 	  def fechaMov=df.format(calculo.fecha)
 	  def unidadMedica= StringUtils.leftPad("",3) 
 	  def filler2=StringUtils.leftPad("",2)
@@ -240,6 +242,61 @@ def generarAltasImss(PeriodoCommand command){
 	response.outputStream << temp.newInputStream()
 }
 
+def modificacionIndividualImss(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarModificacionIndividualImss(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+	temp.with {
+	 Date fechaIni=command.fechaInicial
+	 Date fechaFin=command.fechaFinal
+	 Empresa emp=Empresa.first()
+	 def registroPatronal=emp.registroPatronal
+	 def numeroDeMovs=0
+	 
+	 
+	 def calculosSdi=ModificacionSalarial.findAll("from ModificacionSalarial m where m.fecha between ? and  ? and tipo=\'AUMENTO\'",[fechaIni,fechaFin]).each{calculo ->
+	   if(calculo.calculoSdi.sdiInf!=0.0){
+	
+		   numeroDeMovs=numeroDeMovs+1
+		   
+	   def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.calculoSdi.empleado).numero.replace('-','')
+	   def apellidoPaterno=calculo.calculoSdi.empleado.apellidoPaterno ? calculo.calculoSdi.empleado.apellidoPaterno.padRight(27) : calculo.calculoSdi.empleado.apellidoMaterno.padRight(27)
+	   def apellidoMaterno=calculo.calculoSdi.empleado.apellidoPaterno ? calculo.calculoSdi.empleado.apellidoMaterno.padRight(27) : StringUtils.leftPad("",27)
+	   def nombres= calculo.calculoSdi.empleado.nombres ? calculo.calculoSdi.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
+	   def salarioBase=calculo.calculoSdi.sdiInf.toString().replace('.','').padLeft(6,"0")
+	   def filler= StringUtils.leftPad("",6)
+	   def tipoTrabajador="1"
+	   def tipoSalario="2"
+		 if(calculo.calculoSdi.empleado.id==273 || calculo.calculoSdi.empleado.id==274)
+		 tipoSalario=1
+	   def tipoJornada=0
+		 if(calculo.calculoSdi.empleado.perfil.jornada=="MEDIA" || calculo.calculoSdi.empleado.perfil.jornada=="REDUCIDA")
+		  tipoJornada=6
+	   def fechaMov=df.format(calculo.fecha) 
+	   def unidadMedica=   StringUtils.leftPad("",3)   //   calculo.empleado.seguridadSocial.unidadMedica? calculo.empleado.seguridadSocial.unidadMedica.padLeft(3,"0") :"000"
+	   def filler2=StringUtils.leftPad("",2)
+	   def tipoMov="07"
+	   def guia="11400"
+	   def claveTrab=StringUtils.leftPad("",10)
+	   def filler3=StringUtils.leftPad("",1)
+	   def curp=StringUtils.leftPad("",18)  //calculo.empleado.curp?:calculo.empleado.rfc.padLeft(18," ")
+	   def identificador="9"
+
+		def registro= registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+tipoSalario+tipoJornada+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+filler3+curp+identificador
+		append(registro+"\r\n","UTF8")
+	   }
+	
+  }
+	String name="ModificacionSalarialIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+}
+}
 def bajasImss(){
 	[reportCommand:new PeriodoCommand()]
 }

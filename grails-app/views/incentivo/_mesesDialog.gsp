@@ -11,6 +11,17 @@
 				<g:hiddenField name="tipo" value="${mes}"/>
 				<div class="modal-body">
 					<div class="form-group">
+    					<label for="calendarioIni" class="col-sm-3">Ejercicio</label>
+    					<div class="col-sm-9">
+    						<g:select id="ejercicioField" class="form-control"  
+								name="ejercicio" 
+								value="${session.ejercicio}"
+								from="${(2014..2020)}"
+								/>
+								
+    					</div>
+  					</div>
+					<div class="form-group">
     					<label for="calendarioIni" class="col-sm-3">Mes</label>
     					<div class="col-sm-9">
     						<g:select id="mesField" class="form-control"  
@@ -23,7 +34,6 @@
 								
     					</div>
   					</div>
-					
 				</div>
 				
 				<div class="modal-footer">

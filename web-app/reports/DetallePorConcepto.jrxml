@@ -38,7 +38,7 @@
 ,ND.importe_gravado,ND.importe_excento,ND.importe_gravado+ND.importe_excento AS TOTAL
 ,N.folio,N.periodicidad,N.periodo_fecha_inicial,N.periodo_fecha_final
 ,C.CLASE,C.DESCRIPCION,C.CLAVE_SAT,C.TIPO
-,N.EJERCICIO,N.TIPO,N.forma_de_pago
+,N.EJERCICIO,N.TIPO AS FORM,N.forma_de_pago
 FROM nomina N JOIN nomina_por_empleado NE ON (NE.nomina_id=N.ID) JOIN nomina_por_empleado_det ND ON (ND.parent_id=NE.ID)
 JOIN empleado E ON (NE.empleado_id=E.ID)JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) JOIN ubicacion U ON  (P.ubicacion_id=U.ID)
 JOIN concepto_de_nomina C ON (C.ID=ND.concepto_id)
@@ -62,6 +62,7 @@ order by u.id,e.clave]]></queryString>
 	<field name="CLAVE_SAT" class="java.lang.Integer"/>
 	<field name="TIPO" class="java.lang.String"/>
 	<field name="EJERCICIO" class="java.lang.Integer"/>
+	<field name="FORM" class="java.lang.String"/>
 	<field name="forma_de_pago" class="java.lang.String"/>
 
 	<variable name="TOTAL_EXC_SUC" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
@@ -299,7 +300,7 @@ order by u.id,e.clave]]></queryString>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
 					</textElement>
-				<text><![CDATA[TIPO :]]></text>
+				<text><![CDATA[TIPO NOMINA:]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -312,7 +313,7 @@ order by u.id,e.clave]]></queryString>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{FORM}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

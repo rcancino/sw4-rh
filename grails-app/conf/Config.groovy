@@ -133,7 +133,7 @@ log4j = {
 			info 'grails.app.services.com.luxsoft.sw4'
 			info 'grails.app.services.com.luxsoft.rh'
 			info 'grails.app.services.com.luxsoft.rh.AsistenciaService'
-			info 'grails.app.services.com.luxsoft.rh.AsistenciaService'
+			info 'grails.app.services.com.luxsoft.rh.IncentivoService'
 			info 'grails.app.services.com.luxsoft.rh.NominaService'
 			info 'grails.app.services.com.luxsoft.sw4.rh.IncentivoService'
 			info 'grails.app.services.com.luxsoft.sw4.rh.InfonavitService'

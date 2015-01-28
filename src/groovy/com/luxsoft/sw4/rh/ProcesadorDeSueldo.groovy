@@ -66,7 +66,7 @@ class ProcesadorDeSueldo {
 		}
 		
 		def sueldo=salarioDiario*ne.diasTrabajados
-		if(sueldo>0){
+		if(sueldo>0.0){
 			nominaPorEmpleadoDet.importeGravado=sueldo
 			nominaPorEmpleadoDet.importeExcento=0
 			

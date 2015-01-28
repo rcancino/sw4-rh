@@ -14,6 +14,10 @@ class ProcesadorSeguroSocial {
 	
 	def procesar(NominaPorEmpleado nominaPorEmpleado) {
 		
+		
+		if(!nominaPorEmpleado.getPercepciones()){
+			return
+		}
 		if(!concepto) {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}

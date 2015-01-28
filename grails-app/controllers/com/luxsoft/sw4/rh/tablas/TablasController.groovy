@@ -1,11 +1,17 @@
 package com.luxsoft.sw4.rh.tablas
 
+
 import org.springframework.security.access.annotation.Secured;
 
-@Secured(['ROLE_ADMIN','RH_MANAGER'])
+
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class TablasController {
 
     def index() { }
+	
+	def factorDeIntegracion(){
+		[tabla:'factorDeIntegracion',factorDeIntegracionInstanceList:FactorDeIntegracion.list()]
+	}
 	
 	def tarifaIsr(){
 		
@@ -16,7 +22,5 @@ class TablasController {
 		[tabla:'subsidio',subsidioEmpleoInstanceList:SubsidioEmpleo.list()]
 	}
 	
-	def factorDeIntegracion(){
-		[tabla:'factorDeIntegracion',factorDeIntegracionInstanceList:FactorDeIntegracion.list()]
-	}
+	
 }

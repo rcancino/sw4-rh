@@ -75,10 +75,12 @@ class IncentivoController {
 	}
 
 	def mensual(){
+		
 		def tipo='MENSUAL'
 		def mes=session.mes?:'Enero'
-		def ejercicio=session.ejercicio
+		def ejercicio=session.ejercicioIncentivoMensual?:session.ejercicio
 		//def ejercicio=2014
+		println 'Ejercicio: '+ejercicio+ " Tipo:"+ejercicio.class.name
 		def asistenciaId=session.asistenciaSemanalId
 		def list=Incentivo.findAll("from Incentivo i where i.ejercicio=? and i.mes=?",[ejercicio,mes])
 		def meses=Mes.getMeses()
@@ -88,6 +90,7 @@ class IncentivoController {
 
 	def actualizarPeriodoMensual(){
 		session.mes=params.mes
+		session.ejercicioIncentivoMensual=params.ejercicio as Integer
 		redirect action:'mensual' 
 	}
 	
@@ -111,7 +114,7 @@ class IncentivoController {
 		
 		Long calendarioDetId=params.long('calendarioDetId')
 		//CalendarioDet calendarioDet=CalendarioDet.get(calendarioDetId)
-		def ejercicio=session.ejercicio
+		def ejercicio=session.ejercicioIncentivoMensual
 		def mes=Mes.findMesByNombre(params.mes)
 		try {
 			incentivoService.generarIncentivosMensuales(ejercicio,mes)

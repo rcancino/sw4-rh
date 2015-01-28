@@ -1,5 +1,9 @@
 package com.luxsoft.sw4.rh.tablas
 
+import grails.plugin.springsecurity.annotation.Secured
+
+
+@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class SubsidioEmpleoController {
     static scaffold = true
 

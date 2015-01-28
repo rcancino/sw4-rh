@@ -85,7 +85,7 @@ class NominaController {
 			}
 		}
 		flash.message="Actualización exitosa"
-		redirect action:'show',params:[id:id]
+		redirect action:'depurar',params:[id:id]
 	}
 
 	def depurar(Long id){
