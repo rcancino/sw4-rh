@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="page-header">
-					<h3>Control de vacaciones</h3>
+					<h3>Control de vacaciones ${session.ejercicio }</h3>
 					<g:if test="${flash.message}">
 						<span class="label label-warning text-center">${flash.message}</span>
 					</g:if>

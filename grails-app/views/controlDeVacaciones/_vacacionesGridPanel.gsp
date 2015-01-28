@@ -2,6 +2,7 @@
 	<thead>
 		<tr>
 <%--			<th>Folio</th>--%>
+
 			<th>Empleado</th>
 			<th>Ubicación</th>
 			<th>Excento (ini)</th>
