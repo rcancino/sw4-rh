@@ -9,7 +9,8 @@
 </head>
 <body>
 	<content tag="header">
-		<h3>Control de incentivos</h3>
+	
+				<h3>Control de incentivos</h3>
 	</content>
 	<content tag="consultas">
 		<%--<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>

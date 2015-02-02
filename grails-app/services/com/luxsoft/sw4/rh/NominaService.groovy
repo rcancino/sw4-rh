@@ -438,9 +438,43 @@ class NominaService {
 	
 	def actualizarSaldos(Nomina nomina){
 		nomina.partidas.each{ne->
-			//println 'Actualizando saldos para :'+ne
-			actualizarOtrasDeducciones(ne)
-			actualizarPrestamo(ne)
+			
+			//actualizarOtrasDeducciones(ne)
+			//actualizarPrestamo(ne)
+			actualizarCalculoAnual(ne)
+			//actualizarVacaciones(ne)
+		}
+	}
+	
+	def actualizarVacaciones(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='P024'}
+		if(neDet){
+			log.info 'Actualizando vacaciones detectada P024 para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			def control=ControlDeVacaciones.find("from ControlDeVacaciones v where v.ejercicio=? and v.empleado=?"
+				,[ne.nomina.ejercicio.toLong(),ne.empleado])
+			def data=NominaPorEmpleadoDet.executeQuery(
+				"select sum(d.importeExcento),sum(d.importeGravado) from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.concepto.clave=? and d.parent.cfdi!=null",
+				[ne.empleado,ne.nomina.ejercicio,neDet.concepto.clave])
+			control.acumuladoExcento=data.get(0)[0]?:0.0
+			control.acumuladoGravado=data.get(0)[1]?:0.0
+		}
+	}
+	
+	def actualizarCalculoAnual(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='P033'}
+		if(neDet){
+			log.info 'Percepcion por calculo anual P003 detectada para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			def calculo=CalculoAnual.find (
+				"from CalculoAnual c where c.ejercicio=? and c.empleado=?  "
+				,[ne.nomina.ejercicio-1,ne.empleado])
+			
+			if(calculo){
+				def aplicado=NominaPorEmpleadoDet.executeQuery(
+					"select sum(d.importeExcento) from NominaPorEmpleadoDet d where  d.parent.empleado=? and d.concepto.clave=?",
+					[ne.empleado,"P033"])
+				calculo.aplicado=aplicado.get(0)?:0.0
+				
+			}
 		}
 	}
 }

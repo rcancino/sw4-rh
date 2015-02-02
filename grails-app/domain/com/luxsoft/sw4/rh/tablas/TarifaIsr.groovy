@@ -54,7 +54,7 @@ class TarifaIsr {
 	}
 	
 	static TarifaIsr buscar(def ejercicio,def tipo,def valor){
-		def valores=obtenerTabla(ejercicio,tipo)
+		def valores=TarifaIsr.findAllByEjercicioAndTipo(ejercicio,tipo)
 		return valores.find(){ it ->
 			(valor>it.limiteInferior && valor<=it.limiteSuperior)
 		}

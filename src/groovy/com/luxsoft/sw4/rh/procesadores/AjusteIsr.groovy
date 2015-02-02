@@ -5,8 +5,9 @@ import java.math.RoundingMode
 import org.apache.commons.logging.LogFactory
 
 import com.luxsoft.sw4.rh.*
-import com.luxsoft.sw4.rh.imss.*
+//import com.luxsoft.sw4.rh.imss.*
 import com.luxsoft.sw4.rh.acu.*
+import com.luxsoft.sw4.rh.tablas.*
 
 class AjusteIsr {
 	
@@ -17,9 +18,7 @@ class AjusteIsr {
 		
 		def mes=ne.nomina.calendarioDet.mes
 		def ejercicio=ne.nomina.calendarioDet.calendario.ejercicio
-		//println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
-		//println 'Ajuste mensual de ISR para '+ne.id  +' Mes: '+mes
-
+		
 		
 		def baseGravable=NominaPorEmpleadoDet
 		.executeQuery("select sum(d.baseGravable) from NominaPorEmpleado d "
@@ -29,10 +28,12 @@ class AjusteIsr {
 		
 		if(baseGravable<=0.0)
 			return
-		def tarifa =TarifaIsr.buscar(baseGravable)
 		
-	    def subsidio=Subsidio.buscar(baseGravable)
-		
+		log.info "Base gravable $baseGravable"
+		def tarifa =TarifaIsr.buscar(ne.nomina.ejercicio,'MENSUAL',baseGravable)
+		log.info "Tariafa ISR localizada $tarifa"
+	    def subsidio=SubsidioEmpleo.buscar(ne.nomina.ejercicio,baseGravable)
+		log.info "Subsidio $subsidio "
   
 	    def importeGravado=baseGravable-tarifa.limiteInferior
 	    def impuestoMensual=(importeGravado*tarifa.porcentaje)/100
@@ -71,9 +72,7 @@ class AjusteIsr {
   
 		
   
-	    //def resultadoImpuesto=impuestoFinal-impuestoAcumuladoFinal
-	    //def resultadoSubsidio=subsidioFinal-subsidioAcumuladoFinal
-		
+	   
 		def resultadoImpuesto=0.0
 		def resultadoSubsidio=0.0
 		def resultadoDevolucion=0.0
@@ -126,7 +125,7 @@ class AjusteIsr {
 				.executeQuery("select sum(ne.subsidioEmpleoAplicado) from NominaPorEmpleado ne "
 					+" where ne.empleado=? and ne.nomina.calendarioDet.mes=? and ne.cfdi is not null"
 					,[ne.empleado,mes])[0]?:0.0
-			println "Aplicado"+subsidioAplicado +"Mensual"+subsidioMensual
+			log.info "Aplicado"+subsidioAplicado +"Mensual"+subsidioMensual
 				
 		 def resultadoSubsidioAplicado=subsidioMensual-subsidioAplicado
 		 

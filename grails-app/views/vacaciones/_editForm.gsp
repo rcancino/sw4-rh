@@ -55,7 +55,7 @@
 									value="${vacacionesInstance?.calendarioDet?.id}"
 									from="${periodos}" 
 									optionKey="id" 
-									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
+									optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('yyyy-MMM-dd')+' al '+it.fin.format('yyyy-MMM-dd')+ ' )'}}"
 									disabled="${vacacionesInstance.diasPagados<=0}?'':'disabled'"
 									noSelection="['':'Seleccione un calendario']"
 									autocomplete="off"

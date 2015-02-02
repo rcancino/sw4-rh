@@ -107,12 +107,30 @@
 					</div>
 					
 					<div class="form-group">
+						<label class="control-label col-sm-4">Dias P</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control"
+								value="${controlDeVacacionesInstance.diasPagados}" />
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label col-sm-4">Total (Tomados)</label>
+						<div class="col-sm-6">
+							<input type="text" class="form-control"
+								value="${controlDeVacacionesInstance.totalTomados}" />
+						</div>
+					</div>
+					
+					<div class="form-group">
 						<label class="control-label col-sm-4">Dias disponibles</label>
 						<div class="col-sm-6">
 							<input type="text" class="form-control"
 								value="${controlDeVacacionesInstance.diasDisponibles}" />
 						</div>
 					</div>
+					
+					
 					
 					
 					<div class="form-group">

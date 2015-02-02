@@ -46,7 +46,7 @@ class ProcesadorDeISTP {
 		def subsidio=SubsidioEmpleo.obtenerTabla(diasTrabajados,ejercicio)
 			.find(){(percepciones>it.desde && percepciones<=it.hasta)}
 		assert subsidio,'No existe registro en tabla de subsidio para el empleo'
-		println 'Subsidio localizado: '+subsidio
+		log.info 'Subsidio localizado: '+subsidio
 		def importeGravado=percepciones-tarifa.limiteInferior
 		importeGravado*=tarifa.porcentaje
 		importeGravado/=100

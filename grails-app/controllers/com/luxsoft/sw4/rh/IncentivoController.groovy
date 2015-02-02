@@ -7,7 +7,9 @@ import com.luxsoft.sw4.Mes
 
 import grails.plugin.springsecurity.annotation.Secured;
 import grails.transaction.Transactional
+
 import org.apache.commons.lang.exception.ExceptionUtils
+
 import groovy.transform.ToString
 
 
@@ -79,12 +81,17 @@ class IncentivoController {
 		def tipo='MENSUAL'
 		def mes=session.mes?:'Enero'
 		def ejercicio=session.ejercicioIncentivoMensual?:session.ejercicio
+		
 		//def ejercicio=2014
-		println 'Ejercicio: '+ejercicio+ " Tipo:"+ejercicio.class.name
+		//log. 'Ejercicio: '+ejercicio+ " Tipo:"+ejercicio.class.name
 		def asistenciaId=session.asistenciaSemanalId
 		def list=Incentivo.findAll("from Incentivo i where i.ejercicio=? and i.mes=?",[ejercicio,mes])
 		def meses=Mes.getMeses()
-		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo=='SEMANA'}
+		def ejercicioPeriodos=ejercicio
+		if(mes=='Diciembre'){
+			ejercicioPeriodos++
+		}
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicioPeriodos && calendario.tipo=='SEMANA'}
 		[incentivoInstanceList:list,ejercicio:ejercicio,tipo:tipo,mes:mes,meses:meses,periodos:periodos]
 	}
 
@@ -270,7 +277,8 @@ class IncentivoController {
 					incentivo.asistencia=a
 					incentivo.save failOnError:true
 					//println 'Calendario asignado a: '+incentivo
-				}
+				}else
+				println "No encontre la asistencia para " +incentivo.empleado +"mes-year"+ mes+"-"+ejercicio+"en el calendario"+ calendarioDet.id
 				
 			}
 			
@@ -278,6 +286,7 @@ class IncentivoController {
 		redirect action:'mensual' 
 	}
 	
+
 	
 
 }

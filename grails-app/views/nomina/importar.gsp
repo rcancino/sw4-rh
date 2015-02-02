@@ -42,6 +42,7 @@
 				
 				<f:field property="folio" input-class="form-control"/>
 				<f:field property="tipo" input-class="form-control"/>
+				<f:field property="ejercicio" input-class="form-control"/>
 				<legend> Periodo</legend>
 				<f:field property="fechaInicial" input-class="form-control"/>
 				<f:field property="fechaFinal" input-class="form-control"/>

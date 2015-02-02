@@ -150,6 +150,7 @@ log4j = {
 			off 'com.luxsoft.sw4.rh.ProcesadorDeIncentivo'
 			off 'com.luxsoft.sw4.rh.ProcesadorDePensionAlimenticia'
 			off 'com.luxsoft.sw4.rh.ProcesadorDeOtrasDeducciones'
+			info 'com.luxsoft.sw4.rh.procesadores.AjusteIsr'
 			
 			
 			

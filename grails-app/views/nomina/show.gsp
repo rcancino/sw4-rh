@@ -94,6 +94,12 @@
 							id="${nominaInstance.id}" >
 							 Ajuste mensual ISR 
 						</g:link>
+						
+						<g:link  action="eliminarAjusteMensualIsr" 
+							onClick="return confirm('Eliminar ajuste mensual ISR?');"
+							id="${nominaInstance.id}" >
+							 Eliminar ajuste mensual ISR 
+						</g:link>
 					</li>
 					<li>
 						<g:link  action="aplicarCalculoAnual" 

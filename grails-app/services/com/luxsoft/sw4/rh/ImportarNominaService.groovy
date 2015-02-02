@@ -7,9 +7,9 @@ import com.luxsoft.sw4.Empresa
 class ImportarNominaService {
 
 
-	def importarQuincena(def file, def folio,def periodo,def pago,String diaPago){
+	def importarQuincena(def file, def folio,def periodo,def pago,String diaPago,def ejercicio){
 
-		def nomina =Nomina.findWhere(folio:folio,periodicidad:'QUINCENAL')
+		def nomina =Nomina.findWhere(folio:folio,periodicidad:'QUINCENAL',ejercicio:ejercicio)
 		if(nomina) {
 			nomina.partidas.each{
 				if(it.cfdi)
@@ -29,7 +29,8 @@ class ImportarNominaService {
 					formaDePago:'TRANSFERENCIA',
 					periodicidad:'QUINCENAL',
 					total:0.0,
-					status:'PENDIENTE'
+					status:'PENDIENTE',
+					ejercicio:ejercicio
 			)
 		}
 
@@ -111,9 +112,9 @@ class ImportarNominaService {
 	}
 	
 	
-	def importarSemana(def file, def folio,def periodo,def pago,String diaPago){
+	def importarSemana(def file, def folio,def periodo,def pago,String diaPago,def ejercicio){
 		
-		def nomina =Nomina.findWhere(folio:folio,periodicidad:'SEMANAL')
+		def nomina =Nomina.findWhere(folio:folio,periodicidad:'SEMANAL',ejercicio:ejercicio)
 		if(nomina) {
 			nomina.partidas.each{
 				if(it.cfdi)
@@ -133,7 +134,8 @@ class ImportarNominaService {
 					formaDePago:'TRANSFERENCIA',
 					periodicidad:'SEMANAL',
 					total:0.0
-					,status:'PENDIENTE'
+					,status:'PENDIENTE',
+					ejercicio:ejercicio
 			)
 		}
 

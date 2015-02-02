@@ -145,7 +145,8 @@ class TiempoExtraService {
 	}
 	
 	def calcularImportesMinutosDobles(TiempoExtra te){
-		def smg=67.29
+	//	def smg=67.29
+		def smg=70.1
 		def maximo=smg*5
 		//def factor=(maximo<=te.empleado.salario.salarioDiario)?1.0:0.5
 		def salarioDiario=te.empleado.salario.salarioDiario

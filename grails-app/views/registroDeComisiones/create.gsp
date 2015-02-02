@@ -47,7 +47,7 @@
 								from="${CalendarioDet
 									.findAll('from CalendarioDet  d order by d.calendario.tipo,d.folio')}" 
 								optionKey="id" 
-								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
+								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('yyyy-MMM-dd')+' al '+it.fin.format('yyyy-MMM-dd')+ ' )'}}"
 							/>
     					</div>
   				</div>

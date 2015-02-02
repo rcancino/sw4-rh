@@ -76,7 +76,8 @@ class VacacionesService {
 		def vacaciones=Vacaciones.findAllByControl(control)
 		def pagados=vacaciones.sum 0,{it.diasPagados}
 		def normales=vacaciones.sum 0,{it.dias.size()}
-		control.diasTomados=normales+pagados
+		control.diasTomados=normales
+		control.diasPagados=pagados
 		control.save failOnError:true
 	}
 

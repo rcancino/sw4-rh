@@ -58,6 +58,11 @@
 								data-target="#reporteDeNominaForm">
 								<span class="glyphicon glyphicon-print"></span> Reporte
 							</button>
+							<g:link action="importar" class="btn btn-default" params="[periodicidad:periodicidad]" 
+								>
+								<span class="glyphicon glyphicon-filter"></span> Importar
+							</g:link>
+							
 							
 							</div>
 						</div>

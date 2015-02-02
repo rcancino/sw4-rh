@@ -120,7 +120,8 @@ class NominaController {
 			nominaService.timbrar(it.id)
 		}
 		
-		redirect action:'show',params:[id:nominaInstance.id]
+		//redirect action:'show',params:[id:nominaInstance.id]
+		redirect action:'actualizarSaldos',params:[id:nominaInstance.id]
 	}
 	
 	def actualizarSaldos(Nomina nominaInstance){
@@ -129,7 +130,7 @@ class NominaController {
 		redirect action:'show',params:[id:nominaInstance.id]
 	}
 	
-	/*def importar(ImportacionCmd cmd) {
+	def importar(ImportacionCmd cmd) {
 		if(request.method=='GET') {
 			render view:'importar',model:[importacionCmd:new ImportacionCmd()]
 		}else {
@@ -146,12 +147,12 @@ class NominaController {
 				def periodo=new Periodo(cmd.fechaInicial,cmd.fechaFinal)
 				if(cmd.tipo=='QUINCENAL') {
 					def file=new ByteArrayInputStream(cmd.archivo)
-					importarNominaService.importarQuincena(file,cmd.folio,periodo,cmd.fechaDePago,cmd.diaDePago)
+					importarNominaService.importarQuincena(file,cmd.folio,periodo,cmd.fechaDePago,cmd.diaDePago,cmd.ejercicio)
 					params.periodicidad='QUINCENAL'
 					redirect action:'index',params:params
 				}else if(cmd.tipo=='SEMANAL') {
 					def file=new ByteArrayInputStream(cmd.archivo)
-					importarNominaService.importarSemana(file,cmd.folio,periodo,cmd.fechaDePago,cmd.diaDePago)
+					importarNominaService.importarSemana(file,cmd.folio,periodo,cmd.fechaDePago,cmd.diaDePago,cmd.ejercicio)
 					params.periodicidad='SEMANAL'
 					redirect action:'index',params:params
 				}
@@ -161,7 +162,7 @@ class NominaController {
 			
 		}
 		
-	}*/
+	}
 
     protected void notFound() {
 		request.withFormat {
@@ -182,6 +183,26 @@ class NominaController {
 			ajusteIsr.ajusteMensual(it)
 		}
 		nominaService.actualizarPartidas(Nomina.get(id))
+		redirect action:'show',params:[id:nomina.id]
+	}
+	
+	@Transactional
+	def eliminarAjusteMensualIsr(Long id){
+		
+		Nomina nomina=Nomina.get(id)
+		nomina.partidas.each{ne ->
+			if(ne.cfdi==null){
+				def found=IsptMensual.findByNominaPorEmpleado(ne)
+				if(found){
+					log.info 'Eliminando ajuste mensual '+ne
+					found.delete flush:true
+					nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
+					
+				}
+			}
+		}
+		nominaService.actualizarPartidas(Nomina.get(id))
+		flash.message="Ajuste mensual ISTP eliminado"
 		redirect action:'show',params:[id:nomina.id]
 	}
 
@@ -241,6 +262,8 @@ class ImportacionCmd{
 	
 	Integer folio
 	
+	Integer ejercicio
+	
 	String tipo
 	
 	@BindingFormat('dd/MM/yyyy')
@@ -259,6 +282,7 @@ class ImportacionCmd{
 		diaDePago inList:['LUNES','MARTES','MIERCOLES','JUEVES','VIERNES']
 		archivo nullable:false
 		folio minSize:1
+		ejercicio inList:[2015,2016,2017,2018,2019,2020]
 	} 
 }
 

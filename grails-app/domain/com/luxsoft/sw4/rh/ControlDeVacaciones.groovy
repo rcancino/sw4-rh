@@ -23,6 +23,8 @@ class ControlDeVacaciones {
 	int diasTrasladados=0
 
 	int diasTomados
+	
+	int diasPagados
 
 	int diasDisponibles
 
@@ -38,8 +40,12 @@ class ControlDeVacaciones {
     static transients = ['diasDisponibles','vigencia','acumuladoExcentoCalculado']
 
     int getDiasDisponibles(){
-    	return diasVacaciones+diasTrasladados-diasTomados
+    	return diasVacaciones+diasTrasladados-getTotalTomados()
     }
+	
+	def getTotalTomados(){
+		return diasTomados+diasPagados
+	}
 
     String toString(){
     	"$ejercicio $empleado $diasDisponibles"

@@ -49,8 +49,8 @@ class SubsidioEmpleo {
 		return res
 	}
 	
-	static SubsidioEmpleo buscar(def valor){
-		def valores=obtenerTabla()
+	static SubsidioEmpleo buscar(def ejercicio,def valor){
+		def valores=SubsidioEmpleo.findAllByEjercicio(ejercicio)
 		return valores.find(){ it ->
 			(valor>it.desde && valor<=it.hasta)
 		}
