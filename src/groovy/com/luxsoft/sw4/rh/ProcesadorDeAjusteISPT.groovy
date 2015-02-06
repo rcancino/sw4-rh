@@ -64,7 +64,7 @@ class ProcesadorDeAjusteISPT {
 		}
 		
 		
-		
+		ne.actualizar()
 		
 	}
 	

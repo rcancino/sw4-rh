@@ -140,12 +140,21 @@ navigation={
 		}
 		exportadores(controller:'exportador'){
 			nominaBanamex()
+			imss(titleText:'IMSS')
 			altasImss()
 			bajasImss()
 			modificacionesImss()
 			modificacionIndividualImss()
-			idse(titleText:'IDSE')
 			sua(titleText:'SUA')
+			trabajadoresSua()
+			bajasSua()
+			modificacionBimestralSua()
+			modificacionIndividualSua()
+			ausentismoSua()
+			incapacidadesSua()
+			dimm(titleText:'DIMM')
+			
+			
 		}
 		 
 	}

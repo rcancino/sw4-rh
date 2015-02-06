@@ -38,12 +38,24 @@ class ProcesadorDeISTP {
 		if(diasTrabajados<=0)
 			return
 		def ejercicio=nominaEmpleado.nomina.ejercicio
+		
+		def calDet=nominaEmpleado.nomina.calendarioDet
+		//def periodos=calDet.calendario.periodos.findAll{it.mes==calDet.mes}
+		//periodos.sort{it.folio}
+		def dias=calDet.calendario.periodos.sum 0,{
+			if(it.mes==calDet.mes){
+				(it.fin-it.inicio)+1
+			}else 0
+		}
+		//dias++
+		
+		println 'Dias contemplados en el mes: '+dias
 		//def tarifa =TarifaIsr.obtenerTabla(diasTrabajados).find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
-		def tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',diasTrabajados)
+		def tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',diasTrabajados,dias)
 			.find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
 		assert tarifa,"No encontro TarifaIsr para los parametros: Dias: ${diasTrabajados} Perc:${percepciones} Empleado: ${nominaEmpleado.empleado}"
 		//def subsidio=Subsidio.obtenerTabla(diasTrabajados).find(){(percepciones>it.desde && percepciones<=it.hasta)}
-		def subsidio=SubsidioEmpleo.obtenerTabla(diasTrabajados,ejercicio)
+		def subsidio=SubsidioEmpleo.obtenerTabla(diasTrabajados,ejercicio,dias)
 			.find(){(percepciones>it.desde && percepciones<=it.hasta)}
 		assert subsidio,'No existe registro en tabla de subsidio para el empleo'
 		log.info 'Subsidio localizado: '+subsidio
@@ -107,10 +119,21 @@ class ProcesadorDeISTP {
 		if(model.percepciones<=0){
 			return model
 		}
+		
+		def calDet=nominaEmpleado.nomina.calendarioDet
+		def dias=calDet.calendario.periodos.sum 0,{
+			if(it.mes==calDet.mes){
+				(it.fin-it.inicio)+1
+			}else 0
+		}
 		model.diasTrabajados=nominaEmpleado.diasDelPeriodo
 		
-		model.tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',model.diasTrabajados).find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
-		model.subsidio=SubsidioEmpleo.obtenerTabla(model.diasTrabajados,ejercicio).find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
+		model.tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',model.diasTrabajados,dias)
+		.find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
+		//.find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}
+		model.subsidio=SubsidioEmpleo.obtenerTabla(model.diasTrabajados,ejercicio,dias)
+		//.find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
+		.find(){(model.percepciones>it.desde && model.percepciones<=it.hasta)}
 		
 		model.baseGravable=model.percepciones-model.tarifa.limiteInferior
 		model.tarifaPorcentaje=model.tarifa.porcentaje/100
@@ -119,7 +142,7 @@ class ProcesadorDeISTP {
 		
 		model.istp=(model.importeGravado+model.cuotaFija).setScale(2,RoundingMode.HALF_EVEN)
 		model.importeSubsidio=model.istp-model.subsidio?.subsidio
-		model.importeExcento=model.importeSubsidio<0?model.subsidio.abs():0.0
+		model.importeExcento=model.importeSubsidio<0?model.subsidio?.subsidio.abs():0.0
 		//model.importeISTP=model.importeSubsidio<0?0.0:model.istp
 		model.importeISTP=det.total
 		return model

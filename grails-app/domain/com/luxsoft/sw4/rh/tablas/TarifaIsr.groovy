@@ -35,8 +35,8 @@ class TarifaIsr {
 
 	
 
-	static def obtenerTabla(def ejercicio,def tipo,def diasDelPeriodo){
-		def diasMes=30.4
+	static def obtenerTabla(def ejercicio,def tipo,def diasDelPeriodo,def diasMes){
+		//def diasMes=30.4
 		def res=[] //diasMap[diasDelPeriodo]
 
 		def valores=TarifaIsr.findAllByEjercicioAndTipo(ejercicio,tipo)
@@ -49,6 +49,9 @@ class TarifaIsr {
 				,porcentaje:it.porcentaje
 				)
 			res.add(val)
+		}
+		res.each{
+			println it
 		}
 		return res
 	}

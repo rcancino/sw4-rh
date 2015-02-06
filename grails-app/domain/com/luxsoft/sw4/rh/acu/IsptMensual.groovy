@@ -10,6 +10,7 @@ class IsptMensual {
 	NominaPorEmpleado nominaPorEmpleado
 	
 	BigDecimal baseGravable
+	BigDecimal permisoRetardoAcu
 	
 	BigDecimal limiteInferior
 	BigDecimal limiteSuperior

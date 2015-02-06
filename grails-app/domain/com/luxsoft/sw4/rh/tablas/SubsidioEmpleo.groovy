@@ -34,8 +34,8 @@ class SubsidioEmpleo {
 	}
 
 
-	static def obtenerTabla(def diasDelPeriodo,def ejercicio){
-		def diasMes=30.4
+	static def obtenerTabla(def diasDelPeriodo,def ejercicio,def diasMes){
+		//def diasMes=30.4
 		def res=[] 
 		def valores=SubsidioEmpleo.findAllByEjercicio(ejercicio)
 		valores.each{
@@ -45,6 +45,9 @@ class SubsidioEmpleo {
 				,subsidio:((it.subsidio/diasMes)*diasDelPeriodo).setScale(2,RoundingMode.HALF_EVEN)
 				)
 			res.add(val)
+		}
+		res.each{
+			println it
 		}
 		return res
 	}

@@ -24,6 +24,10 @@
 								<td ><g:formatNumber number="${ajuste.baseGravable}" type="currency"/></td>
 							</tr>
 							<tr>
+								<td> Retardo/Permisodata</td>
+								<td ><g:formatNumber number="${ajuste.permisoRetardoAcu}" type="currency"/></td>
+							</tr>
+							<tr>
 								<td> Limite Inferior</td>
 								<td ><g:formatNumber number="${ajuste.limiteInferior}" format="#,###.##"/></td>
 							</tr>

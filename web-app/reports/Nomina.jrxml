@@ -32,7 +32,11 @@
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
 ,X.ID,X.CLAVE AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
-,E.FALTAS,E.INCAPACIDADES,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) - (E.FALTAS+(0.167*E.FALTAS)) - E.INCAPACIDADES AS DIAS_TRAB,E.subsidio_empleo_aplicado AS SUBS_APLIC
+,E.FALTAS,E.INCAPACIDADES
+,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
+	when x.alta<=N.periodo_fecha_inicial then (round(((-(timestampdiff(minute,N.periodo_fecha_final,(case when x.alta>N.periodo_fecha_inicial then x.alta else N.periodo_fecha_inicial end))/60)/24)+1),0)  -   (e.faltas+(e.fraccion_descanso))	-(e.incapacidades))  
+	else  ifnull(round((e.dias_trabajados),0)-((select (a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) end) as DIAS_TRAB
+,E.subsidio_empleo_aplicado AS SUBS_APLIC
 ,ifnull((SELECT ifnull(z.importe_gravado,0) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id and X.clave='P001'),0) as sueldo
 ,ifnull((SELECT ifnull(z.importe_gravado,0)+ifnull(z.importe_excento,0) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id and X.clave='P021'),0) as subsEmpleo
 ,ifnull((SELECT sum(ifnull(z.importe_gravado,0)) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id AND X.TIPO='PERCEPCION' ),0) as percpGrv
@@ -82,7 +86,7 @@ WHERE N.ID=$P{NOMINA} and U.CLAVE like $P{UBICACION}]]></queryString>
 	<field name="salario_diario_integrado" class="java.math.BigDecimal"/>
 	<field name="FALTAS" class="java.lang.Integer"/>
 	<field name="INCAPACIDADES" class="java.lang.Integer"/>
-	<field name="DIAS_TRAB" class="java.math.BigDecimal"/>
+	<field name="DIAS_TRAB" class="java.lang.Double"/>
 	<field name="SUBS_APLIC" class="java.math.BigDecimal"/>
 	<field name="sueldo" class="java.math.BigDecimal"/>
 	<field name="subsEmpleo" class="java.math.BigDecimal"/>
@@ -1232,22 +1236,6 @@ $F{IMPORTE_GRAVADO}.doubleValue()!=0.0 && $F{CONCEPTO}.equals( "P" )
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["DIAS TRAB.: "]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="548"
-						y="1"
-						width="21"
-						height="10"
-						key="textField-171">
-							<printWhenExpression><![CDATA[new Boolean($V{GRUPO1_COUNT}.intValue()==1)]]></printWhenExpression>
-						</reportElement>
-					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Left" verticalAlignment="Bottom">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
-					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIAS_TRAB}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="4"
@@ -1323,6 +1311,22 @@ $F{IMPORTE_GRAVADO}.doubleValue()!=0.0 && $F{CONCEPTO}.equals( "P" )
 						key="line-16"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
+				<textField isStretchWithOverflow="false" pattern="0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="548"
+						y="1"
+						width="21"
+						height="10"
+						key="textField-190">
+							<printWhenExpression><![CDATA[new Boolean($V{GRUPO1_COUNT}.intValue()==1)]]></printWhenExpression>
+						</reportElement>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{DIAS_TRAB}]]></textFieldExpression>
+				</textField>
 			</band>
 		</detail>
 		<columnFooter>

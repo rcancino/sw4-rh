@@ -4,7 +4,7 @@ import com.luxsoft.sw4.cfdi.Cfdi;
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-
+import java.math.RoundingMode;
 
 @EqualsAndHashCode(includes='empleado,nomina')
 @ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
@@ -115,7 +115,10 @@ class NominaPorEmpleado {
 	}
 	
 	def actualizar() {
-		total=percepciones-deducciones
+		//total=getPercepciones().subtract(getDeducciones()).setScale(2, RoundingMode.HALF_EVEN);
+		total=getPercepciones().setScale(2, RoundingMode.HALF_EVEN);
+		total-=getDeducciones().setScale(2, RoundingMode.HALF_EVEN);
+		//total=percepciones-deducciones
 		totalGravado=percepcionesGravadas
 		totalExcento=percepcionesExcentas
 	}

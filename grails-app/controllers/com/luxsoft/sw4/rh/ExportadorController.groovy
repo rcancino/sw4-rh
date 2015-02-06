@@ -129,7 +129,7 @@ class ExportadorController {
     	
     }
 	
-	
+/** Layouts Imss */	
 	def modificacionesImss(){
 		[reportCommand:new EjercicioBimestreCommand()]
 	}
@@ -347,7 +347,305 @@ def generarBajasImss(PeriodoCommand command){
 	response.outputStream << temp.newInputStream()
 }	
 	
+
+/** Layouts del SUA*/
+
+def trabajadoresSua(){
+	[reportCommand:new PeriodoCommand()]
 }
+
+def generarTrabajadoresSua(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		Empresa emp=Empresa.first()
+		def registroPatronal=emp.registroPatronal
+		def fechaInicial=command.fechaInicial
+		def fechaFinal=command.fechaFinal
+		def empleados = Empleado.findAll("from Empleado e where  alta between ? and ? order by e.apellidoPaterno asc",[fechaInicial,fechaFinal]).each{empleado->
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+		def formato = new DecimalFormat("###")
+		def formatoDec = new DecimalFormat(".####")
+		  
+		  
+		  def numSeguridadSocial=SeguridadSocial.findByEmpleado(empleado).numero.replace('-','')
+			 def rfc=empleado.rfc.padLeft(13)
+		  def curp=empleado.curp
+		  def nombre=((empleado.apellidoPaterno?(empleado.apellidoPaterno+"\$"):(empleado.apellidoMaterno+"\$"))+(empleado.apellidoPaterno?(empleado.apellidoMaterno+"\$"):"\$")+empleado.nombres).padRight(50)
+			def tipoTrabajador="1"
+		  def jornada="0"
+		  if(empleado.perfil.jornada=="MEDIA" || empleado.perfil.jornada=="REDUCIDA"){
+			jornada="6"
+			 }
+		  def fechaAlta=df.format(empleado.alta)
+		  def sdi=empleado.salario.salarioDiarioIntegrado.toString().replace('.','').padLeft(7,"0")
+		  def ubicacion=StringUtils.leftPad("",17)
+		  
+		  def infonavitNumero=StringUtils.leftPad("",10)
+		  def inicioDesc="00000000"
+		  def tipoDesc="0"
+		  def valorDesc="00000000"
+		  def infonavit=Infonavit.findByEmpleadoAndActivo(empleado,true)
+		  if(infonavit)
+		  {
+	   
+				infonavitNumero=infonavit.numeroDeCredito.padLeft(10)
+			  inicioDesc=infonavit.alta<new Date("01/07/1997")?"30061997":df.format(infonavit.alta)
+			  tipoDesc=infonavit.tipo=="PORCENTAJE"?"1":infonavit.tipo=="CUOTA_FIJA"?"2":infonavit.tipo=="VSM"?"3":"0"
+			int importeInd=Math.floor(infonavit.cuotaFija)
+			def importeDesc =formato.format(importeInd) //.padLeft(16,"0");
+			def decimalDesc=formatoDec.format(infonavit.cuotaFija-importeInd).replace('.','') //.padRight(2,"0")
+			   valorDesc=importeDesc.padLeft(4,"0")+decimalDesc.padRight(4,"0")
+				 
+		  }
+		
+		  append(registroPatronal+numSeguridadSocial+rfc+curp+nombre+tipoTrabajador+jornada+fechaAlta+sdi+ubicacion+infonavitNumero+inicioDesc+tipoDesc+valorDesc+"\r\n")
+	  
+		}
+	  
+	}
+	
+	String name="TrabajadoresSUA_"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+	
+}
+
+
+def bajasSua(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarBajasSua(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		Empresa emp=Empresa.first()
+		def registroPatronal=emp.registroPatronal
+		def fechaIni=command.fechaInicial
+		def fechaFin=command.fechaFinal
+		def formato = new DecimalFormat("###")
+		def formatoDec = new DecimalFormat(".####")
+		  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+		
+	   
+		 def bajas=BajaDeEmpleado.findAll("from BajaDeEmpleado e where   e.fecha between ? and ?",[fechaIni,fechaFin]).each{calculo ->
+	   
+		  
+		  def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+		  def tipoMov="02"
+		  def fechaMov=df.format(calculo.fecha)
+		  def folioInc= StringUtils.leftPad("",8)
+		  def diasInc= StringUtils.leftPad("",2)
+		  def sdiOAp= StringUtils.leftPad("0000000",7)
+		  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+	  
+		}
+	 
+	}
+	
+	String name="BajasSUA_"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+	
+}
+
+def modificacionBimestralSua(){
+	[reportCommand:new EjercicioBimestreCommand()]
+}
+
+def generarModificacionBimestralSua(EjercicioBimestreCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		Empresa emp=Empresa.first()
+		def registroPatronal=emp.registroPatronal
+		def ejercicio=command.ejercicio
+		def bimestre=command.bimestre
+		def formato = new DecimalFormat("###")
+		def formatoDec = new DecimalFormat(".####")
+		  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+		
+	   
+		 def calculosSdi=CalculoSdi.findAllByEjercicioAndBimestre(ejercicio,bimestre).sort{it.empleado.apellidoPaterno}.each{calculo ->
+	   
+		  
+		  def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+		  def tipoMov="07"
+		  def fechaMov=df.format(calculo.fechaFin+1)
+		  def folioInc= StringUtils.leftPad("",8)
+		  def diasInc= StringUtils.leftPad("",2)
+		  def sdiOAp=calculo.sdiInf.toString().replace('.','').padLeft(7,"0")
+		  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+	  
+		}
+	  
+	}
+	
+	String name="BajasIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+	
+}
+
+def modificacionIndividualSua(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarModificacionIndividualSua(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		Empresa emp=Empresa.first()
+		def registroPatronal=emp.registroPatronal
+		def fechaIni=command.fechaInicial
+		def fechaFin=command.fechaFinal
+		def formato = new DecimalFormat("###")
+		def formatoDec = new DecimalFormat(".####")
+		  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+		
+	   def calculosSdi=ModificacionSalarial.findAll("from ModificacionSalarial m where m.fecha between ? and  ? and tipo=\'AUMENTO\'",[fechaIni,fechaFin]).each{calculo ->
+		  
+		  def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+		  def tipoMov="07"
+		  def fechaMov=df.format(calculo.fecha)
+		  def folioInc= StringUtils.leftPad("",8)
+		  def diasInc= StringUtils.leftPad("",2)
+		  def sdiOAp=calculo.sdiNuevo.toString().replace('.','').padLeft(7,"0")
+		  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+	  
+		}
+	 
+	}
+	
+	String name="BajasIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+	
+}
+
+def ausentismoSua(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarAusentismoSua(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		
+		Empresa emp=Empresa.first()
+		def registroPatronal=emp.registroPatronal
+		def fechaIni=command.fechaInicial
+		def fechaFin=command.fechaFinal
+		def formato = new DecimalFormat("###")
+		def formatoDec = new DecimalFormat(".####")
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+		Periodo periodo=new Periodo(fechaIni,fechaFin)
+	  
+		def numSeguridadSocial=""
+		def tipoMov=""
+		def fechaMov=""
+		def folioInc="        "
+		def diasInc=""
+		def sdiOAp="0000000"
+	   
+		  def ausentismos=AsistenciaDet.findAll("from AsistenciaDet i where  i.fecha between ? and ? and i.tipo='falta' "
+												,[fechaIni,fechaFin]).sort{it.asistencia.empleado}.each{calculo ->
+			
+			BajaDeEmpleado baja =BajaDeEmpleado.find("from BajaDeEmpleado b where b.empleado=? and b.fecha>=?",[calculo.asistencia.empleado,calculo.asistencia.empleado.alta])
+			def fechaBaja=baja? baja.fecha :new Date()
+		   
+			if(calculo.asistencia.empleado.controlDeAsistencia==true && calculo.asistencia.diasTrabajados==0.0 && calculo.fecha>=calculo.asistencia.empleado.alta && calculo.fecha<= fechaBaja ){
+			  
+
+			   numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistencia.empleado).numero.replace('-','')
+				 tipoMov="11"
+			   fechaMov=df.format(calculo.fecha)
+			   folioInc="        "
+			   diasInc="01"
+			  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+			}else if(calculo.asistencia.empleado.controlDeAsistencia==true && calculo.asistencia.diasTrabajados!=0.0 && calculo.asistencia.faltasManuales>0 ){
+			 
+			  numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistencia.empleado).numero.replace('-','')
+				 tipoMov="11"
+			   fechaMov=df.format(calculo.fecha)
+			   folioInc="        "
+			   diasInc="01"
+			  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+			}else{
+			 }
+		}
+		
+	}
+	
+	String name="AusentismoSUA_"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+	
+}
+
+def incapacidadesSua(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarIncapacidadesSua(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		
+		Empresa emp=Empresa.first()
+	  def registroPatronal=emp.registroPatronal
+	  def fechaIni=command.fechaInicial
+	  def fechaFin=command.fechaFinal
+	  def formato = new DecimalFormat("###")
+	  def formatoDec = new DecimalFormat(".####")
+	  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+	  Periodo periodo=new Periodo(fechaIni,fechaFin)
+	 
+		def incapacidades=Incapacidad.findAll("from Incapacidad i where  i.fechaInicial between ? and ? "
+											  ,[fechaIni,fechaFin]).each{calculo ->
+	 
+		
+		def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+		def tipoMov="12"
+		def fechaMov=df.format(calculo.fechaInicial)
+		def folioInc= calculo.referenciaImms.padLeft(8)
+		def diasInc= (calculo.fechaFinal-calculo.fechaInicial+1).toString().padLeft(2,"0")
+		  
+		  
+		  
+		
+		def sdiOAp="0000000" //calculo.sdiNuevo.toString().replace('.','').padLeft(7,"0")
+		
+	   
+		println calculo.empleado.id+"-"+calculo.empleado.status+"--"+registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"fin"
+		append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+	
+	  }
+	
+	}
+	
+	String name="Incapacidades"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+	
+}
+
+
+}
+
 
 
 

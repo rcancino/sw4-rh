@@ -79,6 +79,7 @@
     			<div class="col-sm-8">
       				<p class="form-control-static">
       					<g:formatNumber number="${nominaPorEmpleadoInstance?.total }" format="###.##" type="currency"/>
+      					
       				</p>
     			</div>
   			</div>

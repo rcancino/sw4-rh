@@ -439,10 +439,10 @@ class NominaService {
 	def actualizarSaldos(Nomina nomina){
 		nomina.partidas.each{ne->
 			
-			//actualizarOtrasDeducciones(ne)
-			//actualizarPrestamo(ne)
+			actualizarOtrasDeducciones(ne)
+			actualizarPrestamo(ne)
 			actualizarCalculoAnual(ne)
-			//actualizarVacaciones(ne)
+			actualizarVacaciones(ne)
 		}
 	}
 	

@@ -109,20 +109,25 @@ class AsistenciaService {
 		dias.each{ date->
 			//log.info 'Genrando asistencia det para: '+date
 			//println 'Agregando asistenciadet para: '+date
-			def asistenciaDet=asistencia.partidas.find(){det->
-				DateUtils.isSameDay(det.fecha, date)
-			}
-			if(!asistenciaDet){
-				asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion,tipo:'ASISTENCIA')
-				asistencia.addToPartidas(asistenciaDet)
-			}else {
-				if(!asistenciaDet.manual){
-					asistenciaDet.entrada1=null
-					asistenciaDet.salida1=null
-					asistenciaDet.entrada2=null
-					asistenciaDet.salida2=null
+			if(date>=empleado.alta){
+				def asistenciaDet=asistencia.partidas.find(){det->
+					DateUtils.isSameDay(det.fecha, date)
+				}
+				if(!asistenciaDet){
+					asistenciaDet=new AsistenciaDet(fecha:date,ubicacion:empleado.perfil.ubicacion,tipo:'ASISTENCIA')
+					asistencia.addToPartidas(asistenciaDet)
+					
+				}else {
+					if(!asistenciaDet.manual){
+						asistenciaDet.entrada1=null
+						asistenciaDet.salida1=null
+						asistenciaDet.entrada2=null
+						asistenciaDet.salida2=null
+					}
 				}
 			}
+			
+			
 		}
 		
 		//Buscar vacaciones de cierre anual

@@ -28,6 +28,15 @@ class AjusteIsr {
 		
 		if(baseGravable<=0.0)
 			return
+			
+		def baseGravableTotal=baseGravable
+			
+		def permisoRetardoAcu=NominaPorEmpleadoDet
+			.executeQuery("select sum(det.importeGravado+det.importeExcento) from NominaPorEmpleadoDet det "
+					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.mes=? "
+					+" and det.concepto.clave=?  ",[ne.empleado,mes,'D012'])[0]?:0.0
+		
+		 baseGravable-=permisoRetardoAcu
 		
 		log.info "Base gravable $baseGravable"
 		def tarifa =TarifaIsr.buscar(ne.nomina.ejercicio,'MENSUAL',baseGravable)
@@ -150,7 +159,7 @@ class AjusteIsr {
 			istpMensual.ejercicio=ejercicio
 			istpMensual.mes=mes
 			istpMensual.nominaPorEmpleado=ne
-			istpMensual.baseGravable=baseGravable
+			istpMensual.baseGravable=baseGravableTotal
 			istpMensual.limiteInferior=tarifa.limiteInferior
 			istpMensual.limiteSuperior=tarifa.limiteSuperior
 			istpMensual.cuotaFija=tarifa.cuotaFija
@@ -167,6 +176,7 @@ class AjusteIsr {
 			istpMensual.resultadoSubsidio=resultadoSubsidio
 			istpMensual.subsidioAplicado=subsidioAplicado
 			istpMensual.resultadoSubsidioAplicado=resultadoSubsidioAplicado
+			istpMensual.permisoRetardoAcu=permisoRetardoAcu
 			istpMensual.save failOnError:true
 		}		
 		 
