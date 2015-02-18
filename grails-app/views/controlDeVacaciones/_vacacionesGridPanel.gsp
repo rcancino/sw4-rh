@@ -5,14 +5,15 @@
 
 			<th>Empleado</th>
 			<th>Ubicación</th>
-			<th>Excento (ini)</th>
-			<th>Excento (real)</th>
+			<th>Excento </th>
+			
 			<th>Gravado</th>
 			<th>Ant Dias</th>
 			<th>Ant Años</th>
 			<th>Trasladados</th>
 			<th>Corresponden</th>
 			<th>Tomados</th>
+			<th>Dias P</th>
 			<th>Disponibles</th>
 		</tr>
 	</thead>
@@ -32,13 +33,14 @@
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td><g:formatNumber number="${row.acumuladoExcento}" format="###.##"/></td>
-				<td><g:formatNumber number="${row.acumuladoExcentoCalculado}" format="###.##"/></td>
+				
 				<td><g:formatNumber number="${row.acumuladoGravado}" format="###.##"/></td>
 				<td><g:formatNumber number="${row.antiguedadDias }" format="###"/></td>
 				<td><g:formatNumber number="${row.antiguedadYears }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasTrasladados }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasVacaciones }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasTomados }" format="###"/></td>
+				<td><g:formatNumber number="${row.diasPagados }" format="###"/></td>
 				<td><g:formatNumber number="${row.diasDisponibles }" format="###"/></td>
 				
 				

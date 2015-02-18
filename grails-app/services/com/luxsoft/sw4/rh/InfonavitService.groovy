@@ -23,7 +23,8 @@ class InfonavitService {
 				bimestre:bimestre,
 				diasDelBimestre:diasDelBimestre,
 				fechaInicial:periodo.fechaInicial,
-				fechaFinal:periodo.fechaFinal)
+				fechaFinal:periodo.fechaFinal
+				,suspension:infonavit.suspension)
 			infonavit.addToPartidas(det)
 		
 		det.cuota=infonavit.cuotaFija
@@ -153,7 +154,7 @@ class InfonavitService {
 					" and d.parent.empleado=? "
 			def abonos=NominaPorEmpleadoDet.executeQuery(hql,['D006',ejercicio,bimestre,infonavit.empleado]).get(0)
 			log.info 'Abonos: '+abonos
-			return abonos
+			return abonos?:0.0
 		}else{return 0.0}
 		
 	}

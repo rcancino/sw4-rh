@@ -110,7 +110,9 @@
 				<li>
 					<g:link action="edit" class="btn btn-default" id="${infonavitInstance.id}"> Editar</g:link>
 				</li>
-				
+				<li>
+					<g:link action="editarBitacora" class="list-group-item" id="${infonavitInstance.id}"> Bitacora</g:link>
+				</li>
 				
 				<li>
 					<g:link action="calcularCuotaBimestral" id="${infonavitInstance.id}" 
@@ -146,13 +148,13 @@
 			<li>
 				<g:link action="index" class="list-group-item"> <span class="glyphicon glyphicon-list-alt"></span> Catálogo</g:link>
 			</li>
-			<li>
-				<g:link action="create" class="list-group-item"> <span class="glyphicon glyphicon-floppy-saved"></span> Nuevo</g:link>
-			</li>
+			
 			
 			<li>
 				<g:link action="edit" class="list-group-item" id="${infonavitInstance.id}"> Editar</g:link>
 			</li>
+			
+			
 			
 			<li>
 				<g:link action="delete" id="${infonavitInstance.id}" 

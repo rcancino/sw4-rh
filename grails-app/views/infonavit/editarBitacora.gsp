@@ -26,29 +26,29 @@
 	</content>
 	
 	<content tag="form">
-		<g:form class="form-horizontal numeric-form"  method="post">
+		<g:form class="form-horizontal numeric-form"  action="updateBitacora">
 		<f:with bean="${infonavitInstance}">
 			<g:hiddenField name="id" value="${infonavitInstance?.id}" />
 			<g:hiddenField name="version" value="${infonavitInstance?.version}" />
-			
-			<f:field property="alta" input-class="form-control"/>
-			<f:field property="numeroDeCredito" input-class="form-control"/>
-			<f:field property="tipo" input-class="form-control"/>
-			<f:field property="cuotaFija" input-type="text" input-class="form-control " label="Descuento"/>
-			<f:field property="activo" input-type="text" input-class="form-control " />
+			<f:field property="alta" input-class="form-control" input-disabled="disabled"/>
+			<f:field property="numeroDeCredito" input-class="form-control" input-disabled="disabled"/>
+			<f:field property="tipo" input-class="form-control" input-disabled="disabled"/>
+			<f:field property="cuotaFija" input-type="text" input-class="form-control " label="Descuento" input-disabled="disabled"/>
+			<f:field property="activo" input-type="text" input-class="form-control " input-disabled="disabled"/>
 			<f:field property="suspension" input-type="text" input-class="form-control " />
+			<f:field property="reinicio" input-type="text" input-class="form-control " />
+			<f:field property="modificacionTipo" input-type="text" input-class="form-control " />
+			<f:field property="modificacionValor" input-type="text" input-class="form-control " />
+			<f:field property="modificacionNumero" input-type="text" input-class="form-control " />
 			<f:field property="comentario" input-class="form-control"/>
 		</f:with>
 		
 		<div class="form-group">
 		    <div class="col-sm-offset-2 col-sm-4">
 		    	<br/>
-		      	<g:actionSubmit class="btn btn-default" action="update" 
-		      		value="Actualizar" />
-				<g:actionSubmit class="btn btn-danger" action="delete" 
-					value="Eliminar" 
-					formnovalidate="" 
-					onclick="return confirm('¿Eliminar este registro?');" />
+		      	<button type="submit" class="btn btn-primary">
+		      			<span class="glyphicon glyphicon-floppy-save"></span> Actualizar
+		      	</button>
 		    </div>
 		</div>
 		

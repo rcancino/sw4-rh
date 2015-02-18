@@ -16,12 +16,12 @@ class VacacionesController {
 	def index(Integer max) {
 		
 		params.max = Math.min(max ?: 500, 1000)
+		def ejercicio=session.ejercicio
 		//def tipo=params.tipo?:'QUINCENAL'
-		def list=Vacaciones.findAll("from Vacaciones i order by i.lastUpdated desc")
-		/*list=list.sort{a,b ->
-			a.empleado.perfil.ubicacion.clave<=>b.empleado.perfil.ubicacion.clave?:a.empleado.nombre<=>b.empleado.nombre
-		}*/
-		[vacacionesList:list,vacacinesTotalCount:Vacaciones.count()]
+		def list=Vacaciones.findAll("from Vacaciones i  where year(i.lastUpdated)=? order by i.lastUpdated desc"
+			,[ejercicio])
+		
+		[vacacionesList:list,vacacinesTotalCount:list.size()]
 	}
 	
 	def create() {
@@ -39,6 +39,11 @@ class VacacionesController {
 		}
 		def ejercicio=session.ejercicio
 		def control=ControlDeVacaciones.findByEmpleadoAndEjercicio(vacacionesInstance.empleado,ejercicio)
+		if(!control){
+			flash.message="No existe control de vacaciones en el ejercicio $ejercicio   para "+vacacionesInstance.empleado
+			render view:'create',model:[vacacionesInstance:vacacionesInstance]
+			return
+		}
 		vacacionesInstance.control=control
 		vacacionesInstance.save flush:true
 		flash.message="Solicitud generada: "+vacacionesInstance.id

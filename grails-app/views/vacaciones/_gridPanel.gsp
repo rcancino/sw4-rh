@@ -6,6 +6,7 @@
 			<g:sortableColumn property="id" title="Folio"/>
 			<g:sortableColumn property="empleado.apellidoPaterno" title="Empleado"/>
 			<th>Ubicación</th>
+			<th>Periodicidad</th>
 			<th>Pagados</th>
 			<th>Días</th>
 			<th>Modificado</th>
@@ -29,6 +30,7 @@
 					</g:link>
 				</td>
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
+				<td>${fieldValue(bean:row,field:"empleado.salario.periodicidad")}</td>
 				<td><g:fieldValue bean="${row}" field="pg"/></td>
 				<td><g:formatNumber number="${row.pg?row.diasPagados:row.dias.size()}" format="###"/></td>
 				<td><g:formatDate date="${row.lastUpdated}" format="dd/MM/yyyy"/></td>

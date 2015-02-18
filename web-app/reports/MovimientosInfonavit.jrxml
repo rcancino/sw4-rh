@@ -2,16 +2,16 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Incapacidades"
+		 name="MovimientosInfonavit"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
 		 pageWidth="612"
 		 pageHeight="792"
-		 columnWidth="552"
+		 columnWidth="584"
 		 columnSpacing="0"
-		 leftMargin="30"
-		 rightMargin="30"
+		 leftMargin="14"
+		 rightMargin="14"
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="NoPages"
@@ -27,32 +27,45 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["REPORTE DE INCAPACIDADES"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["REPORTE DE TRABAJADORES"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
-	<queryString><![CDATA[SELECT concat(ifnull(e.apellido_paterno,"")," ",e.apellido_materno," ",e.nombres ) AS empleado,date(e.alta)as fecha_alta
-,i.fecha_inicial,i.fecha_final,i.referencia_imms,(TO_DAYS(i.fecha_final)-TO_DAYS(fecha_inicial))+1 as dias_inc
-,s.numero,t.descripcion as TURNO
-FROM 
-empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.id=p.turno_id) join ubicacion u on (u.id=p.ubicacion_id)
- JOIN 	seguridad_social s on (s.empleado_id=e.id) JOIN incapacidad i on (i.empleado_id=e.id) 
- and i.fecha_inicial between $P{FECHA_INI} and $P{FECHA_FIN}
- order by e.apellido_paterno
-]]></queryString>
+	<queryString><![CDATA[SELECT concat(ifnull(e.apellido_paterno,''),' ',e.apellido_materno,' ',e.nombres ) AS empleado,s.numero as numeroSeg,i.alta,suspension,modificacion_numero,modificacion_tipo,modificacion_valor,reinicio,i.numero_de_credito
+,case 
+ when i.alta is not null and  suspension is  null and modificacion_numero is null and modificacion_tipo is null and modificacion_valor is null and reinicio is null  then 'Inicio credito'   
+ when i.suspension is not null  and i.suspension>ifnull(i.alta,'1900/01/01') and i.suspension> ifnull(i.modificacion_numero,'1900/01/01') and i.suspension> ifnull(i.modificacion_tipo,'1900/01/01') and i.suspension> ifnull(i.modificacion_valor,'1900/01/01') and i.suspension> ifnull(i.reinicio,'1900/01/01') then 'Suspension descuento' 
+ when reinicio is not null and i.reinicio > ifnull(i.alta,'1900/01/01') and i.reinicio > ifnull(i.suspension,'1900/01/01') and i.reinicio > ifnull(i.modificacion_numero,'1900/01/01') and i.reinicio > ifnull(i.modificacion_tipo,'1900/01/01') and i.reinicio > ifnull(i.modificacion_valor,'1900/01/01')   then 'Reinicio descuento' 
+ when modificacion_tipo is not null and i.modificacion_tipo > ifnull(i.alta,'1900/01/01') and i.modificacion_tipo > ifnull(i.suspension,'1900/01/01') and i.modificacion_tipo > ifnull(i.modificacion_numero,'1900/01/01') and i.modificacion_tipo > ifnull(i.modificacion_valor,'1900/01/01') and i.modificacion_tipo > ifnull(i.reinicio,'1900/01/01') then 'Modificacion tipo descuento' 
+ when modificacion_valor is not null and modificacion_valor > ifnull(i.alta,'1900/01/01') and modificacion_valor > ifnull(i.suspension,'1900/01/01')and modificacion_valor > ifnull(i.modificacion_numero,'1900/01/01') and modificacion_valor > ifnull(i.modificacion_tipo,'1900/01/01') and modificacion_valor > ifnull(i.reinicio,'1900/01/01') then 'Modificacion valor descuento' 
+ when modificacion_numero is not null and modificacion_numero > ifnull(i.alta,'1900/01/01') and modificacion_numero > ifnull(i.suspension,'1900/01/01') and modificacion_numero > ifnull(i.modificacion_tipo,'1900/01/01') and modificacion_numero > ifnull(i.modificacion_valor,'1900/01/01') and modificacion_numero > ifnull(i.reinicio,'1900/01/01') then 'Modificacion numero' end as 'tipoMov'
+,DATE(case 
+ when i.alta is not null and  suspension is  null and modificacion_numero is null and modificacion_tipo is null and modificacion_valor is null and reinicio is null  then i.alta   
+ when i.suspension is not null  and i.suspension>ifnull(i.alta,'1900/01/01') and i.suspension> ifnull(i.modificacion_numero,'1900/01/01') and i.suspension> ifnull(i.modificacion_tipo,'1900/01/01') and i.suspension> ifnull(i.modificacion_valor,'1900/01/01') and i.suspension> ifnull(i.reinicio,'1900/01/01') then i.suspension
+ when reinicio is not null and i.reinicio > ifnull(i.alta,'1900/01/01') and i.reinicio > ifnull(i.suspension,'1900/01/01') and i.reinicio > ifnull(i.modificacion_numero,'1900/01/01') and i.reinicio > ifnull(i.modificacion_tipo,'1900/01/01') and i.reinicio > ifnull(i.modificacion_valor,'1900/01/01')   then i.reinicio
+ when modificacion_tipo is not null and i.modificacion_tipo > ifnull(i.alta,'1900/01/01') and i.modificacion_tipo > ifnull(i.suspension,'1900/01/01') and i.modificacion_tipo > ifnull(i.modificacion_numero,'1900/01/01') and i.modificacion_tipo > ifnull(i.modificacion_valor,'1900/01/01') and i.modificacion_tipo > ifnull(i.reinicio,'1900/01/01') then i.modificacion_tipo
+ when modificacion_valor is not null and modificacion_valor > ifnull(i.alta,'1900/01/01') and modificacion_valor > ifnull(i.suspension,'1900/01/01')and modificacion_valor > ifnull(i.modificacion_numero,'1900/01/01') and modificacion_valor > ifnull(i.modificacion_tipo,'1900/01/01') and modificacion_valor > ifnull(i.reinicio,'1900/01/01') then i.modificacion_valor
+ when modificacion_numero is not null and modificacion_numero > ifnull(i.alta,'1900/01/01') and modificacion_numero > ifnull(i.suspension,'1900/01/01') and modificacion_numero > ifnull(i.modificacion_tipo,'1900/01/01') and modificacion_numero > ifnull(i.modificacion_valor,'1900/01/01') and modificacion_numero > ifnull(i.reinicio,'1900/01/01') then i.modificacion_numero 
+end)  as 'fechaMov'
+ ,i.tipo,i.cuota_fija
+FROM infonavit i  join empleado e on (e.id=i.empleado_id) join seguridad_social s on (s.empleado_id=e.id)
+where i.alta between $P{FECHA_INI} and $P{FECHA_FIN} or suspension between $P{FECHA_INI} and $P{FECHA_FIN} or modificacion_numero between $P{FECHA_INI} and $P{FECHA_FIN} or modificacion_tipo between $P{FECHA_INI} and $P{FECHA_FIN}
+or modificacion_valor between $P{FECHA_INI} and $P{FECHA_FIN} or reinicio between $P{FECHA_INI} and $P{FECHA_FIN}]]></queryString>
 
 	<field name="empleado" class="java.lang.String"/>
-	<field name="fecha_alta" class="java.sql.Date"/>
-	<field name="fecha_inicial" class="java.sql.Date"/>
-	<field name="fecha_final" class="java.sql.Date"/>
-	<field name="referencia_imms" class="java.lang.String"/>
-	<field name="dias_inc" class="java.lang.Integer"/>
-	<field name="numero" class="java.lang.String"/>
-	<field name="TURNO" class="java.lang.String"/>
+	<field name="numeroSeg" class="java.lang.String"/>
+	<field name="alta" class="java.sql.Date"/>
+	<field name="suspension" class="java.sql.Date"/>
+	<field name="modificacion_numero" class="java.sql.Date"/>
+	<field name="modificacion_tipo" class="java.sql.Date"/>
+	<field name="modificacion_valor" class="java.sql.Date"/>
+	<field name="reinicio" class="java.sql.Date"/>
+	<field name="numero_de_credito" class="java.lang.String"/>
+	<field name="tipoMov" class="java.lang.String"/>
+	<field name="fechaMov" class="java.sql.Date"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="cuota_fija" class="java.math.BigDecimal"/>
 
-	<variable name="TOTAL_DIAS" class="java.lang.Integer" resetType="Report" calculation="Sum">
-		<variableExpression><![CDATA[$F{dias_inc}]]></variableExpression>
-	</variable>
 		<background>
 			<band height="49"  isSplitAllowed="true" >
 			</band>
@@ -91,11 +104,11 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<staticText>
 					<reportElement
-						x="476"
-						y="37"
+						x="484"
+						y="40"
 						width="25"
 						height="11"
-						key="staticText-36"/>
+						key="staticText-5"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
@@ -104,11 +117,11 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<staticText>
 					<reportElement
-						x="400"
-						y="37"
+						x="417"
+						y="40"
 						width="25"
 						height="11"
-						key="staticText-37"/>
+						key="staticText-6"/>
 					<box></box>
 					<textElement textAlignment="Right">
 						<font size="8"/>
@@ -117,11 +130,11 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<staticText>
 					<reportElement
-						x="360"
-						y="37"
+						x="377"
+						y="40"
 						width="40"
 						height="11"
-						key="staticText-38"/>
+						key="staticText-21"/>
 					<box></box>
 					<textElement textAlignment="Center">
 						<font size="8"/>
@@ -130,11 +143,11 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="425"
-						y="37"
-						width="53"
+						x="446"
+						y="40"
+						width="40"
 						height="11"
-						key="textField-13"/>
+						key="textField"/>
 					<box></box>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
@@ -143,11 +156,11 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="501"
-						y="37"
-						width="42"
+						x="509"
+						y="40"
+						width="40"
 						height="11"
-						key="textField-14"/>
+						key="textField"/>
 					<box></box>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
@@ -182,8 +195,8 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="9"
-						width="174"
+						y="12"
+						width="163"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -201,9 +214,9 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="247"
-						y="9"
-						width="44"
+						x="235"
+						y="12"
+						width="73"
 						height="11"
 						forecolor="#000000"
 						key="staticText-24"
@@ -216,13 +229,13 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[INICIO]]></text>
+				<text><![CDATA[No. CREDITO]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="174"
-						y="9"
+						x="162"
+						y="12"
 						width="73"
 						height="11"
 						forecolor="#000000"
@@ -236,17 +249,17 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[NSS]]></text>
+				<text><![CDATA[N.S.S.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="432"
-						y="9"
-						width="50"
+						x="308"
+						y="12"
+						width="73"
 						height="11"
 						forecolor="#000000"
-						key="staticText-30"
+						key="staticText-26"
 						isPrintInFirstWholeBand="true"/>
 					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -256,14 +269,54 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[TURNO]]></text>
+				<text><![CDATA[TIPO MOV.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="291"
-						y="9"
+						x="381"
+						y="12"
+						width="57"
+						height="11"
+						forecolor="#000000"
+						key="staticText-27"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FECHA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="507"
+						y="12"
 						width="44"
+						height="11"
+						forecolor="#000000"
+						key="staticText-28"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DESCTO.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="438"
+						y="12"
+						width="69"
 						height="11"
 						forecolor="#000000"
 						key="staticText-31"
@@ -276,57 +329,17 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[FIN]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="335"
-						y="9"
-						width="24"
-						height="11"
-						forecolor="#000000"
-						key="staticText-33"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[DIAS]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="359"
-						y="9"
-						width="73"
-						height="11"
-						forecolor="#000000"
-						key="staticText-34"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[REFERENCIA]]></text>
+				<text><![CDATA[TIPO]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="14"  isSplitAllowed="true" >
+			<band height="13"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="0"
-						y="3"
-						width="174"
+						y="2"
+						width="163"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -335,23 +348,10 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{empleado}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="247"
-						y="3"
-						width="44"
-						height="11"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha_inicial}]]></textFieldExpression>
-				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="174"
-						y="3"
+						x="162"
+						y="2"
 						width="73"
 						height="11"
 						key="textField"/>
@@ -359,64 +359,77 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numero}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numeroSeg}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="432"
-						y="3"
-						width="48"
+						x="235"
+						y="2"
+						width="73"
 						height="11"
 						key="textField"/>
 					<box></box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TURNO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numero_de_credito}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="291"
-						y="3"
-						width="44"
+						x="308"
+						y="2"
+						width="73"
 						height="11"
-						key="textField-8"/>
+						key="textField"/>
 					<box></box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha_final}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{tipoMov}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="381"
+						y="2"
+						width="57"
+						height="11"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fechaMov}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="335"
-						y="3"
-						width="24"
+						x="438"
+						y="2"
+						width="69"
 						height="11"
-						key="textField-10"/>
+						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Center">
+					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{dias_inc}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{tipo}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="359"
-						y="3"
-						width="73"
+						x="507"
+						y="2"
+						width="44"
 						height="11"
-						key="textField-11"/>
+						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Center">
+					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{referencia_imms}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{cuota_fija}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
 		<columnFooter>
-			<band height="0"  isSplitAllowed="true" >
+			<band height="46"  isSplitAllowed="true" >
 			</band>
 		</columnFooter>
 		<pageFooter>
@@ -653,75 +666,6 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 		</lastPageFooter>
 		<summary>
 			<band height="50"  isSplitAllowed="true" >
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="218"
-						y="22"
-						width="110"
-						height="11"
-						forecolor="#000000"
-						key="staticText-32"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[TOTAL REGISTROS: ]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="341"
-						y="22"
-						width="69"
-						height="11"
-						key="textField-9"/>
-					<box>					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="284"
-						y="5"
-						width="44"
-						height="11"
-						forecolor="#000000"
-						key="staticText-35"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[TOTAL :]]></text>
-				</staticText>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="328"
-						y="4"
-						width="31"
-						height="11"
-						key="textField-12"/>
-					<box>					<topPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
-</box>
-					<textElement textAlignment="Center">
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$V{TOTAL_DIAS}]]></textFieldExpression>
-				</textField>
 			</band>
 		</summary>
 </jasperReport>

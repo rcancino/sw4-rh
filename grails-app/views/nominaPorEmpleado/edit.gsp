@@ -162,11 +162,12 @@
 							<g:if test="${nominaPorEmpleadoInstance.cfdi}">
 								<g:jasperReport
 									controller="reciboDeNomina"
-									action="imprimirCfdi"
-									jasper="CFDI" 
+									action="impresionDirecta"
+									jasper="NominaDigitalCFDI" 
 									format="PDF" 
-									name="Imprimir">
-								<g:hiddenField name="id" value="${nominaPorEmpleadoInstance.id}"/>
+									name="${nominaPorEmpleadoInstance.cfdi.folio }">
+								<g:hiddenField name="id" value="${nominaPorEmpleadoInstance.cfdi.id}"/>
+								
 								</g:jasperReport>
 								<g:link class="list-group-item" action="cancelar" onclick="return confirm('Cancelar CFDI?');">
 								<span class="glyphicon glyphicon-ban-circle"></span> Cancelar

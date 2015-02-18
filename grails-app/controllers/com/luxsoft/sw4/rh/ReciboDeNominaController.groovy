@@ -274,6 +274,7 @@ class ReciboDeNominaController {
 		repParams['DEPARTAMENTO']=empleado.perfil.departamento.clave
 		repParams['SALARIO_DIARIO_BASE']=ne.salarioDiarioBase as String
 		repParams['SALARIO_DIARIO_INTEGRADO']=ne.salarioDiarioIntegrado as String
+		/*
 		if(ne?.asistencia?.diasTrabajados>0){
 			repParams['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(ne.asistencia.diasTrabajados)) as String
 		}else{
@@ -282,6 +283,7 @@ class ReciboDeNominaController {
 		
 		def faltas=(com.luxsoft.sw4.MonedaUtils.round(ne.faltas+ne.incapacidades)) as String
 		repParams['FALTAS']=faltas
+		*/
 		repParams['FECHA_INGRESO_LABORAL']=empleado.alta.format("yyyy-MM-dd")
 		repParams['NFISCAL']=ne.id as String
 		repParams['FECHA_INICIAL']=n.periodo.fechaInicial?.format("yyyy-MM-dd")
@@ -290,6 +292,31 @@ class ReciboDeNominaController {
 		repParams['PERIOCIDAD_PAGO']=n.periodicidad
 		repParams['IMP_CON_LETRA']=com.luxsoft.sw4.cfdi.ImporteALetra.aLetra(ne.getTotal())
 		repParams['TOTAL']=ne.total //as String
+		
+		def diasTrabajados=0
+		def faltas=0
+		def nominaPorEmpleado=ne
+		if(nominaPorEmpleado){
+			
+			if(!nominaPorEmpleado.empleado.controlDeAsistencia){
+			   diasTrabajados= nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+			   faltas=	(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+			}else{
+			  if(nominaPorEmpleado.empleado.alta<=nominaPorEmpleado.asistencia.calendarioDet.inicio){
+				  diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+				 
+				  
+				  faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+			  }else{
+				  diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+				  faltas=(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+			  }
+			
+			}
+			
+		}
+		repParams['FALTAS']=com.luxsoft.sw4.MonedaUtils.round(faltas,2) as String
+		repParams['DIAS_TRABAJADOS']=com.luxsoft.sw4.MonedaUtils.round(diasTrabajados,2) as String
 		
 		def deducciones=ne.conceptos.findAll{it.concepto.tipo=='DEDUCCION'}
 		def percepciones=ne.conceptos.findAll{it.concepto.tipo=='PERCEPCION'}

@@ -4,6 +4,7 @@
 			<th>Nomina</th>
 			<th>Numero</th>
 			<th>Días</th>
+			<th>P</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -20,7 +21,8 @@
 						${row.nomina.folio}
 					</g:link>
 				</td>
-				<td><g:formatNumber number="${row.vacaciones}" format="###.##"/></td>
+				<td><g:formatNumber number="${row.vacaciones}" format="###"/></td>
+				<td><g:formatNumber number="${row.asistencia.vacacionesp}" format="###"/></td>
 			</tr>
 		</g:each>
 	</tbody>
@@ -28,7 +30,13 @@
 		<tr>
 			<th></th>
 			<th>Total</th>
-			<th>${ nominas.sum(0.0,{it.vacaciones}) }</th>
+			<th>
+				<g:formatNumber number="${ nominas.sum(0.0,{it.vacaciones}) }" format="###"/>
+			</th>
+			<th>
+				<g:formatNumber number="${ nominas.sum(0.0,{it.asistencia.vacacionesp}) }" format="###"/>
+			</th>
+			
 			
 		</tr>
 	</tfoot>

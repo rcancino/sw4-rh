@@ -7,14 +7,19 @@ import grails.transaction.Transactional
 import grails.validation.Validateable
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.util.Map;
 import org.apache.commons.lang.StringUtils
 import java.io.BufferedWriter
 import com.luxsoft.sw4.*
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import org.apache.commons.lang.WordUtils
 
 @Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
 class ExportadorController {
 
+	def jasperService
     def index() { }
 
 
@@ -413,6 +418,28 @@ def generarTrabajadoresSua(PeriodoCommand command){
 	
 }
 
+def reporteDeTrabajadores(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def reportePorPeriodo(PeriodoCommand command){
+	if(command==null){
+		render 'No esta bien generado el gsp para el reporte falta el bean PorEmpleadoCommand'
+	}
+	command.validate()
+	if(command.hasErrors()){
+		log.info 'Errores de validacion al ejecurar reporte: '+ params
+		render view:WordUtils.uncapitalize(params.reportName),model:[reportCommand:command]
+		return [reportCommand:command]
+	}
+	def repParams=[:]
+	repParams['FECHA_INI']=command.fechaInicial
+	repParams['FECHA_FIN']=command.fechaFinal 
+	repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+	ByteArrayOutputStream  pdfStream=runReport(repParams)
+	render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+		,fileName:'TrabajadoresSua'+repParams.reportName)
+}
 
 def bajasSua(){
 	[reportCommand:new PeriodoCommand()]
@@ -454,6 +481,10 @@ def generarBajasSua(PeriodoCommand command){
 	
 }
 
+def reporteDeBajas(){
+	[reportCommand:new PeriodoCommand()]
+}
+
 def modificacionBimestralSua(){
 	[reportCommand:new EjercicioBimestreCommand()]
 }
@@ -487,11 +518,35 @@ def generarModificacionBimestralSua(EjercicioBimestreCommand command){
 	  
 	}
 	
-	String name="BajasIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
+	String name="ModifBimestral_"+new Date().format("dd_MM_yyyy")+".txt"
 	response.setContentType("application/octet-stream")
 	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
 	response.outputStream << temp.newInputStream()
 	
+}
+
+def reporteDeModificacionBimestral(){
+	[reportCommand:new EjercicioBimestreCommand()]
+}
+
+def reportePorBimestre(EjercicioBimestreCommand command){
+	if(command==null){
+		render 'No esta bien generado el gsp para el reporte falta el bean PorEmpleadoCommand'
+	}
+	command.validate()
+	if(command.hasErrors()){
+		log.info 'Errores de validacion al ejecurar reporte: '+ params
+		render view:WordUtils.uncapitalize(params.reportName),model:[reportCommand:command]
+		return [reportCommand:command]
+	}
+	
+	def repParams=[:]
+	repParams['BIMESTRE']=command.bimestre
+	repParams['EJERCICIO']=command.ejercicio
+	repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+	ByteArrayOutputStream  pdfStream=runReport(repParams)
+	render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+		,fileName:'TrabajadoresSua'+repParams.reportName)
 }
 
 def modificacionIndividualSua(){
@@ -530,6 +585,10 @@ def generarModificacionIndividualSua(PeriodoCommand command){
 	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
 	response.outputStream << temp.newInputStream()
 	
+}
+
+def reporteDeModificacionIndividual(){
+	[reportCommand:new PeriodoCommand()]
 }
 
 def ausentismoSua(){
@@ -594,6 +653,11 @@ def generarAusentismoSua(PeriodoCommand command){
 	
 }
 
+
+def reporteDeAusentismo(){
+	[reportCommand:new PeriodoCommand()]
+}
+
 def incapacidadesSua(){
 	[reportCommand:new PeriodoCommand()]
 }
@@ -640,6 +704,115 @@ def generarIncapacidadesSua(PeriodoCommand command){
 	response.setContentType("application/octet-stream")
 	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
 	response.outputStream << temp.newInputStream()
+	
+}
+
+	def exportadorDim
+	
+	def dim(){
+		def ejercicio=session.ejercicio
+		exportadorDim.generarLayuout(ejercicio)
+	}
+
+def reporteDeIncapacidades(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def infonavitSua(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarInfonavitSua(PeriodoCommand command){
+	
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		  
+		Empresa emp=Empresa.first()
+	  def registroPatronal=emp.registroPatronal
+	  def fechaInicial=new Date("2015/01/01")
+	  def fechaFinal=new Date("2015/01/31")
+	  def empleados = Infonavit.findAll("from Infonavit i order by i.empleado.apellidoPaterno asc").each{infonavit->
+	  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+	  def formato = new DecimalFormat("###")
+	  def formatoDec = new DecimalFormat(".####")
+		
+		
+		def numSeguridadSocial=SeguridadSocial.findByEmpleado(infonavit.empleado).numero.replace('-','')
+	  
+		def infonavitNumero="0000000000"
+		def tipoMov="00"
+		def fechaMov="00000000"
+		def tipoDesc="0"
+		def valorDesc="00000000"
+		def aplicaTabla="0"
+	
+		if (infonavit.alta> fechaInicial && infonavit.alta<fechaFinal){
+			 fechaMov=df.format(infonavit.alta)
+				tipoMov="15"
+		}
+		if (infonavit.suspension> fechaInicial && infonavit.suspension<fechaFinal){
+			   fechaMov=df.format(infonavit.suspension)
+				tipoMov="16"
+		}
+		if (infonavit.reinicio> fechaInicial && infonavit.reinicio<fechaFinal){
+			   fechaMov=df.format(infonavit.reinicio)
+				tipoMov="17"
+		}
+		if (infonavit.modificacionTipo> fechaInicial && infonavit.modificacionTipo<fechaFinal){
+			   fechaMov=df.format(infonavit.modificacionTipo)
+				tipoMov="18"
+		}
+		if (infonavit.modificacionValor> fechaInicial && infonavit.modificacionValor<fechaFinal){
+			   fechaMov=df.format(infonavit.modificacionValor)
+				tipoMov="19"
+		}
+		if (infonavit.modificacionNumero> fechaInicial && infonavit.modificacionNumero<fechaFinal){
+			   fechaMov=df.format(infonavit.modificacionNumero)
+				tipoMov="20"
+		}
+		
+		
+		infonavitNumero=infonavit.numeroDeCredito.padLeft(10)
+		tipoDesc=infonavit.tipo=="PORCENTAJE"?"1":infonavit.tipo=="CUOTA_FIJA"?"2":infonavit.tipo=="VSM"?"3":"0"
+		int importeInd=Math.floor(infonavit.cuotaFija)
+		def importeDesc =formato.format(importeInd) //.padLeft(16,"0");
+		def decimalDesc=formatoDec.format(infonavit.cuotaFija-importeInd).replace('.','') //.padRight(2,"0")
+		 valorDesc=importeDesc.padLeft(4,"0")+decimalDesc.padRight(4,"0")
+	
+    	if(fechaMov!="00000000"){
+		
+		  def registro=registroPatronal+numSeguridadSocial+infonavitNumero+tipoMov+fechaMov+tipoDesc+valorDesc+"\r\n" //+aplicaTabla
+	
+		append registro
+		  
+		}
+		
+	  }
+	
+	}
+	
+	String name="Infonavit"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+}
+
+def reporteDeInfonavit(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+
+private runReport(Map repParams){
+	log.info 'Ejecutando reporte  '+repParams
+	def nombre=WordUtils.capitalize(repParams.reportName)
+	def reportDef=new JasperReportDef(
+		name:nombre
+		,fileFormat:JasperExportFormat.PDF_FORMAT
+		,parameters:repParams
+		)
+	ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+	return pdfStream
 	
 }
 

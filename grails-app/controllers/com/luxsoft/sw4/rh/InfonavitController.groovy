@@ -38,9 +38,10 @@ class InfonavitController {
 	}
 	
 	def show(Infonavit infonavitInstance){
-		log.info 'Probando .....'
+		
 		def ejercicio=session.ejercicio
 		def abonos=infonavitService.geAcumuladoActual(infonavitInstance,ejercicio)
+		log.info "Ejercicio $ejercicio $infonavitInstance.empleado $abonos"
 		[infonavitInstance:infonavitInstance,abonos:abonos]	
 	}
 	
@@ -65,6 +66,20 @@ class InfonavitController {
 			render view:'edit' ,model:[infonavitInstance:infonavitInstance]
 		}
 		flash.message="Credito infonavit modificado :"+infonavitInstance
+		redirect action:'show',params:[id:infonavitInstance.id]
+	}
+	
+	def editarBitacora(Infonavit infonavitInstance){
+		[infonavitInstance:infonavitInstance]
+	}
+	
+	def updateBitacora(Infonavit infonavitInstance){
+		infonavitInstance.validate()
+		if(infonavitInstance.hasErrors()){
+			render view:'editarBitacora' ,model:[infonavitInstance:infonavitInstance]
+		}
+		infonavitInstance.save failOnError:true
+		flash.message="Credito infonavit actualizado :"+infonavitInstance
 		redirect action:'show',params:[id:infonavitInstance.id]
 	}
 }

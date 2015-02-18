@@ -9,7 +9,7 @@
 </head>
 <body>
 	<content tag="header">
-		<h3>Control de vacaciones</h3>
+		<h3>Control de vacaciones ${session.ejercicio }</h3>
 	</content>
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
@@ -22,6 +22,9 @@
 		</div>
 		<div class="btn-group">
 			<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" >
+		</div>
+		<div class="btn-group">
+			<input type='text' id="periodicidadField" placeholder="Periodicidad" class="form-control" >
 		</div>
 		<g:link action="index" class="btn btn-default">
 			<span class="glyphicon glyphicon-repeat"></span> Refrescar
@@ -48,6 +51,9 @@
 							});
 							$("#nombreField").keyup(function(){
 		      					table.DataTable().column(1).search( $(this).val() ).draw();
+							});
+							$("#periodicidadField").keyup(function(){
+		      					table.DataTable().column(3).search( $(this).val() ).draw();
 							});
 							
 					});

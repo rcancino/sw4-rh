@@ -15,6 +15,9 @@
 				</div>
 			</div>
 			<div class="col-md-9">
+				<g:if test="${ flash.message }">
+							<span class="label label-warning text-center">${flash.message}</span>
+				</g:if>
 				<g:render template="createForm"/>
 			</div>
 		</div>

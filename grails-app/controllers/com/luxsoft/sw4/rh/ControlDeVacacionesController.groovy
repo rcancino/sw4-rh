@@ -48,7 +48,7 @@ class ControlDeVacacionesController {
 		def totalGravadoPrima=percepcionesPorPrimas.sum 0.0,{it.importeGravado}
 		
 		def nominas=NominaPorEmpleado
-			.findAll("from NominaPorEmpleado ne where ne.empleado=? and ne.nomina.ejercicio=? and ne.vacaciones>0"
+			.findAll("from NominaPorEmpleado ne where ne.empleado=? and ne.nomina.ejercicio=? and (ne.vacaciones>0 or ne.asistencia.vacacionesp>0)"
 			,[controlDeVacacionesInstance.empleado,controlDeVacacionesInstance.ejercicio.toInteger()])
 		//def totalDias=percepcionesPorPrimas.sum 0.0,{it.vacaciones}
 		[controlDeVacacionesInstance:controlDeVacacionesInstance

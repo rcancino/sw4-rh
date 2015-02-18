@@ -25,7 +25,7 @@ import com.luxsoft.sw4.rh.procesadores.*
 import com.luxsoft.sw4.rh.ProcesadorDePercepcionGenerica
 import com.luxsoft.sw4.rh.ProcesadorDeDeduccionGenerica
 
-
+import com.luxsoft.sw4.rh.ExportadorDim
 
 
 // Place your Spring DSL code here
@@ -118,4 +118,6 @@ beans = {
 
 	procesadorDePercepcionGenerica(ProcesadorDePercepcionGenerica){}
 	procesadorDeDeduccionGenerica(ProcesadorDeDeduccionGenerica){}
+	
+	exportadorDim(ExportadorDim){}
 }

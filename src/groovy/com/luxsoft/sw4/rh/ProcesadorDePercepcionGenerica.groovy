@@ -13,25 +13,21 @@ class ProcesadorDePercepcionGenerica {
 	def procesar(NominaPorEmpleado ne) {
 		
 		def calendarioDet=ne.nomina.calendarioDet
-		def generica=OperacionGenerica.findByEmpleadoAndCalendarioDetAndTipo(ne.empleado,calendarioDet,'PERCEPCION')
-		//println 'Operacion detectada: '+generica
-		if(generica){
+		def operaciones=OperacionGenerica.findAllByEmpleadoAndCalendarioDetAndTipo(ne.empleado,calendarioDet,'PERCEPCION')
+		operaciones.each{ generica->
 			concepto=generica.concepto
 			
 			log.info "Procesando percepcion generica para ${ne.empleado}"
 			//Localizar el concepto
-			def nominaPorEmpleadoDet=ne.conceptos.find(){ 
-				it.concepto==concepto
-			}
-			
-			if(!nominaPorEmpleadoDet){
-				log.info 'NominaPorEmpleadoDet nueva no localizo alguna existente...'
-				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(nominaPorEmpleadoDet)
-			}
+			def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			nominaPorEmpleadoDet.importeGravado=generica.importeGravado
 			nominaPorEmpleadoDet.importeExcento=generica.importeExcento
+			ne.addToConceptos(nominaPorEmpleadoDet)
+			
 		}
+		//def generica=OperacionGenerica.findByEmpleadoAndCalendarioDetAndTipo(ne.empleado,calendarioDet,'PERCEPCION')
+		//println 'Operacion detectada: '+generica
+		
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {

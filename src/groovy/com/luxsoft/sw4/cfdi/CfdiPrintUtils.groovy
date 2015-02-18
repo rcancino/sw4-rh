@@ -165,14 +165,36 @@ class CfdiPrintUtils {
 			parametros['PUESTO']=nomina.puesto
 			parametros['DEPARTAMENTO']=nomina.departamento
 			
+			def diasTrabajados=0
+			def faltas=0
+			if(nominaPorEmpleado){
+				
+				if(!nominaPorEmpleado.empleado.controlDeAsistencia){
+				   diasTrabajados= nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+				   faltas=	(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+				}else{
+				  if(nominaPorEmpleado.empleado.alta<=nominaPorEmpleado.asistencia.calendarioDet.inicio){
+					  //diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+					  diasTrabajados=100
+					  println 'Calcuando dias trabajavados'
+					  faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+				  }else{
+				  	diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+					  faltas=(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+				  }
+				
+				}
+				
+			}
+			parametros['DIAS_TRABAJADOS']=diasTrabajados
 			
-			if(nominaPorEmpleado?.asistencia?.diasTrabajados>0){
-				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.asistencia.diasTrabajados)) as String
-			}else{
-				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasDelPeriodo)) as String
-			}			
+//			if(nominaPorEmpleado?.asistencia?.diasTrabajados>0){
+//				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.asistencia.diasTrabajados)) as String
+//			}else{
+				   //(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.diasDelPeriodo)) as String
+//			}			
 
-			parametros['FALTAS']=nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades
+			parametros['FALTAS']= faltas //nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades
 		}
 		
 		
@@ -271,7 +293,7 @@ class CfdiPrintUtils {
 			parametros['SUCURSAL']=nominaPorEmpleado.empleado.perfil.ubicacion.clave
 			parametros['PUESTO']=nomina.puesto
 			parametros['DEPARTAMENTO']=nomina.departamento
-
+/*
 			if(nominaPorEmpleado?.asistencia?.diasTrabajados>0){
 				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.asistencia.diasTrabajados)) as String
 			}else{
@@ -280,6 +302,30 @@ class CfdiPrintUtils {
 
 			def faltas=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.faltas+nominaPorEmpleado.incapacidades)) as String
 			parametros['FALTAS']=faltas
+			*/
+			def diasTrabajados=0
+			def faltas=0
+			if(nominaPorEmpleado){
+				
+				if(!nominaPorEmpleado.empleado.controlDeAsistencia){
+				   diasTrabajados= nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+				   faltas=	(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+				}else{
+				  if(nominaPorEmpleado.empleado.alta<=nominaPorEmpleado.asistencia.calendarioDet.inicio){
+					  diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+					 
+					  println 'Calcuando dias trabajavados'
+					  faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+				  }else{
+					  diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+					  faltas=(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+				  }
+				
+				}
+				
+			}
+			parametros['FALTAS']=com.luxsoft.sw4.MonedaUtils.round(faltas,2) as String
+			parametros['DIAS_TRABAJADOS']=com.luxsoft.sw4.MonedaUtils.round(diasTrabajados,2) as String
 		}
 		
 		
