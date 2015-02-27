@@ -438,7 +438,7 @@ def reportePorPeriodo(PeriodoCommand command){
 	repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
 	ByteArrayOutputStream  pdfStream=runReport(repParams)
 	render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
-		,fileName:'TrabajadoresSua'+repParams.reportName)
+		,fileName:repParams.reportName)
 }
 
 def bajasSua(){

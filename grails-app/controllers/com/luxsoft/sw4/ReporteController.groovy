@@ -376,7 +376,7 @@ class ReporteController {
 		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
 		ByteArrayOutputStream  pdfStream=runReport(repParams)
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
-			,fileName:repParams.reportName)
+			,fileName:repParams.reportName+'.pdf')
 	}
 	
 	private runReport(Map repParams){

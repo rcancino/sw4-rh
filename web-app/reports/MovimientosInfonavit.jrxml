@@ -27,7 +27,7 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["REPORTE DE TRABAJADORES"]]></defaultValueExpression>
+		<defaultValueExpression ><![CDATA["REPORTE DE MOVIMIENTOS INFONAVIT"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
