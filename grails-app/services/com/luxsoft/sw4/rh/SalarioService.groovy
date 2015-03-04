@@ -206,8 +206,17 @@ class SalarioService {
 							found.agndoDias=row.AGNDO_DIAS
 							found.factor=row.FACTOR
 							found.sdiF=found.sdb*found.factor
-							found.diasLabBim=row.DIAS_LAB_BIM
 							
+							found.diasLabBim=row.DIAS_LAB_BIM
+							if((!empleado.controlDeAsistencia && empleado.salario.periodicidad=='QUINCENAL' && bimestre==1) || empleado.id==441){
+								
+								/*if(fechaFin){
+									
+								}else{
+								
+								}*/
+								found.diasLabBim=found.diasLabBim-2
+							}
 							
 							
 							

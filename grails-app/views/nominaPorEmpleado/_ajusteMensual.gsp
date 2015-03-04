@@ -20,20 +20,26 @@
 						</thead>
 						<tbody >
 							<tr>
-								<td> Base gravable</td>
+								<td> Base gravable mensual</td>
 								<td ><g:formatNumber number="${ajuste.baseGravable}" type="currency"/></td>
 							</tr>
+							
 							<tr>
-								<td> Retardo/Permisodata</td>
+								<td> Retardo/Permiso</td>
 								<td ><g:formatNumber number="${ajuste.permisoRetardoAcu}" type="currency"/></td>
 							</tr>
+							<tr>
+								<td> Base gravable neta</td>
+								<td ><g:formatNumber number="${ajuste.baseGravable-ajuste.permisoRetardoAcu}" type="currency"/></td>
+							</tr>
+							
 							<tr>
 								<td> Limite Inferior</td>
 								<td ><g:formatNumber number="${ajuste.limiteInferior}" format="#,###.##"/></td>
 							</tr>
 							<tr>
 								<td> Excedente del L.I.</td>
-								<td ><g:formatNumber number="${ajuste.baseGravable-ajuste.limiteInferior}" format="#,###.##"/></td>
+								<td ><g:formatNumber number="${ajuste.baseGravable-ajuste.permisoRetardoAcu-ajuste.limiteInferior}" format="#,###.##"/></td>
 							</tr>
 							<tr>
 								<td> Tarifa</td>
@@ -44,13 +50,12 @@
 								<td ><g:formatNumber number="${ajuste.cuotaFija}" format="#,###.##"/></td>
 							</tr>
 							<tr>
-								<td> Impuesto Determinado</td>
-								<td ><g:formatNumber number="${ajuste.impuestoMensual}" format="#,###.##"/></td>
+								<td> Impuesto marginal</td>
+								<td ><g:formatNumber
+								 number="${((ajuste.baseGravable-ajuste.permisoRetardoAcu -ajuste.limiteInferior)*ajuste.tarifa)/100}" 
+								format="#,###.##"/></td>
 							</tr>
-							<tr>
-								<td> Subsidio al Empleo</td>
-								<td ><g:formatNumber number="${ajuste.subsidioMensual}" format="#,###.##"/></td>
-							</tr>
+							
 						</tbody>
 						<tfoot>
 							<tr>
@@ -96,6 +101,14 @@
 							<tr>
 								<td> Subsidio Empleo Aplicado</td>
 								<td ><g:formatNumber number="${ajuste.resultadoSubsidioAplicado}" format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Impuesto Determinado</td>
+								<td ><g:formatNumber number="${ajuste.impuestoMensual}" format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Subsidio al Empleo</td>
+								<td ><g:formatNumber number="${ajuste.subsidioMensual}" format="#,###.##"/></td>
 							</tr>
 						</tbody>
 						<tfoot>

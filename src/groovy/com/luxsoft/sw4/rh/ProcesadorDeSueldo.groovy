@@ -44,6 +44,9 @@ class ProcesadorDeSueldo {
 		ne.salarioDiarioBase=salarioDiario
 		ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
 		ne.diasDelPeriodo=ne.nomina.getDiasPagados()
+		if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4){
+			ne.diasDelPeriodo=15
+		}
 		ne.faltas=asistencia.faltas+asistencia.incidencias
 		/*
 		if(asistencia.diasTrabajados>0){
@@ -56,7 +59,9 @@ class ProcesadorDeSueldo {
 		
 		//Calculo de dias trabajados y sueldo
 		if(asistencia.diasTrabajados>0.0){
-			
+			if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4){
+				asistencia.diasTrabajados=15
+			}
 			ne.faltas=asistencia.faltasManuales
 			
 			ne.fraccionDescanso=(1/6*ne.faltas)
@@ -79,6 +84,9 @@ class ProcesadorDeSueldo {
 		def model=[:]
 		model.salario=ne.salarioDiarioBase
 		model.diasDelPeriodo=ne.nomina.getDiasPagados()
+		if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4){
+			model.diasDelPeriodo=15
+		}
 		model.faltas=ne.faltas
 		model.incapacidades=ne.incapacidades
 		model.vacaciones=ne.vacaciones

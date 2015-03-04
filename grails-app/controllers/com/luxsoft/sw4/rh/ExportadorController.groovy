@@ -147,11 +147,12 @@ class ExportadorController {
 		  Empresa emp=Empresa.first()
 		def registroPatronal=emp.registroPatronal
 		def numeroDeMovs=0
+		SimpleDateFormat df = new SimpleDateFormat("ddMMyy")
 		
 		def calculosSdi=CalculoSdi.findAllByEjercicioAndBimestre(command.ejercicio,command.bimestre).each{calculo ->
 		 
 		  
-		  if(calculo.sdiInf!=0.0){
+		  if(calculo.sdiInf!=0.0  && calculo.tipo== 'CALCULO_SDI' ){
 		  
 			numeroDeMovs=numeroDeMovs+1
 			
@@ -168,7 +169,7 @@ class ExportadorController {
 		  def tipoJornada=0
 			if(calculo.empleado.perfil.jornada=="MEDIA" || calculo.empleado.perfil.jornada=="REDUCIDA")
 			 tipoJornada=6
-		  def fechaMov="01012015"
+		  def fechaMov="01032015"
 		  def unidadMedica=   StringUtils.leftPad("",3)   //   calculo.empleado.seguridadSocial.unidadMedica? calculo.empleado.seguridadSocial.unidadMedica.padLeft(3,"0") :"000"
 		  def filler2=StringUtils.leftPad("",2)
 		  def tipoMov="07"
@@ -177,9 +178,11 @@ class ExportadorController {
 		  def filler3=StringUtils.leftPad("",1)
 		  def curp=StringUtils.leftPad("",18)  //calculo.empleado.curp?:calculo.empleado.rfc.padLeft(18," ")
 		  def identificador="9"
-		
-		   def registro= registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+tipoSalario+tipoJornada+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+filler3+curp+identificador
-		   append(registro+"\r\n","UTF8")
+		  
+			  def registro= registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+tipoSalario+tipoJornada+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+filler3+curp+identificador
+			  append(registro+"\r\n","UTF8")
+			  
+		   
 		  }		 
 		}	
 	  }	

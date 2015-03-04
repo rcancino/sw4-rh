@@ -12,18 +12,22 @@ class CalculoSdiService {
 
     def calcularSdi(ModificacionSalarial m) {
 		
+		def tipo=m.empleado.salario.periodicidad
+		def stipo=tipo=='SEMANAL'?'SEMANA':'QUINCENA'
 		def ejercicio=Periodo.obtenerYear(m.fecha)
 		
-		def val=CalendarioDet.executeQuery("select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin",[m.fecha])
+		def val=CalendarioDet.executeQuery(
+			"select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin and d.calendario.tipo=?"
+			,[m.fecha,stipo])
 		def bimestre=val.get(0)-1
 		
 		if(bimestre==0){
 			bimestre=6
 			ejercicio=ejercicio-1
 		}
-		def tipo=m.empleado.salario.periodicidad
 		
-		def stipo=tipo=='SEMANAL'?'SEMANA':'QUINCENA'
+		
+		
 		def res=CalendarioDet
 		.executeQuery(
 			"select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=? and d.calendario.tipo=? and d.calendario.ejercicio=?"

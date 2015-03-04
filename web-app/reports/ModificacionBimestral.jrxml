@@ -38,6 +38,7 @@ FROM
 empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.id=p.turno_id) join ubicacion u on (u.id=p.ubicacion_id)
 left join calculo_sdi s on(s.empleado_id=e.id) join seguridad_social l on (e.id=l.empleado_id)
 where bimestre=$P{BIMESTRE} and ejercicio=$P{EJERCICIO} AND S.TIPO='CALCULO_SDI'
+and s.sdi_inf<>0
 ORDER BY E.APELLIDO_PATERNO]]></queryString>
 
 	<field name="empleado" class="java.lang.String"/>
