@@ -55,7 +55,7 @@ class InfonavitService {
 				break
 		}
 		infonavit.importeBimestral=det.importeBimestral
-		infonavit.save failOnError:true
+		infonavit.save()
 		return infonavit
 		
 		//Calcular faltas e incapacidades

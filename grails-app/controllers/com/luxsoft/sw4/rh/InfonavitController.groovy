@@ -3,6 +3,8 @@ package com.luxsoft.sw4.rh
 import grails.plugin.springsecurity.annotation.Secured
 import com.luxsoft.sw4.*
 
+import grails.transaction.Transactional
+
 @Secured(['ROLE_ADMIN'])
 class InfonavitController {
     static scaffold = true
@@ -53,18 +55,22 @@ class InfonavitController {
 		if(infonavitInstance.hasErrors()){
 			render view:'create' ,model:[infonavitInstance:infonavitInstance]
 		}
+		infonavitInstance.save()
 		flash.message="Credito infonavit generado :"+infonavitInstance
 		redirect action:'index'
 	}
 	
+	@Transactional
 	def update(Infonavit infonavitInstance){
 		log.info 'Actualizacion credito infonavit: '+infonavitInstance
 		def bimestre=Bimestre.getCurrentBimestre()
-		infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		
 		infonavitInstance.validate()
 		if(infonavitInstance.hasErrors()){
 			render view:'edit' ,model:[infonavitInstance:infonavitInstance]
 		}
+		infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		infonavitInstance.save()
 		flash.message="Credito infonavit modificado :"+infonavitInstance
 		redirect action:'show',params:[id:infonavitInstance.id]
 	}
