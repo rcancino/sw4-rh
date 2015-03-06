@@ -3,6 +3,7 @@
 <table id="bimestresGrid" class="table table-striped table-bordered table-condensed">
 	<thead>
 		<tr>
+			<th>Folio</th>
 			<th>Ejercicio</th>
 			<th>Bimestre</th>
 <%--			<th>F.Inicial</th>--%>
@@ -16,7 +17,8 @@
 	</thead>
 	<tbody>
 		<g:each in="${infonavitInstance.partidas}" var="row">
-			<tr>				
+			<tr>
+				<td><g:formatNumber number="${row.id}" format="####"/></td>
 				<td>${fieldValue(bean:row,field:"ejercicio")}</td>
 				<td>${fieldValue(bean:row,field:"bimestre")}</td>
 <%--				<td><g:formatDate date="${row.fechaInicial}" format="dd/MM/yyyy"/></td>--%>
