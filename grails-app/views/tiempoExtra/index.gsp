@@ -30,6 +30,9 @@
 					<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" autocomplete="off" >
 				</div>
 				<div class="btn-group">
+					<input type='text' id="periodicidadField" placeholder="Periodicidad" class="form-control" >
+				</div>
+				<div class="btn-group">
 					<g:link action="index" class="btn btn-default"><span class="glyphicon glyphicon-refresh"></span> Refrescar</g:link>
 					<button type="button" name="reportes"
 							class="btn btn-default dropdown-toggle" data-toggle="dropdown"
@@ -88,6 +91,9 @@
 					});
 					$("#nombreField").keyup(function(){
       					table.DataTable().column(1).search( $(this).val() ).draw();
+					});
+					$("#periodicidadField").keyup(function(){
+      					table.DataTable().column(3).search( $(this).val() ).draw();
 					});
 					
 			});

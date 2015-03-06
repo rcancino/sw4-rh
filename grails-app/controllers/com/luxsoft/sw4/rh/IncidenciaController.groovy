@@ -13,12 +13,10 @@ class IncidenciaController {
     
 	
 	def index(Long max) {
-		params.max = Math.min(max ?: 50, 100)
-		params.sort=params.sort?:'dateCreated'
-		params.order='desc'
-		def tipo=params.tipo?:'QUINCENAL'
-		def list=Incidencia.findAll("from Incidencia i where i.empleado.salario.periodicidad=?",[tipo])
-		[incidenciaList:list,incidenciaTotalCount:Incidencia.count(),tipo:tipo]
+		def list=Incapacidad.findAll(
+			"from Incidencia i where ( year(i.fechaInicial)=? or year(i.fechaFinal)=? ) order by i.dateCreated desc"
+			,[session.ejercicio,session.ejercicio])
+		[incidenciaList:list]
 	}
 	
 	def create() {

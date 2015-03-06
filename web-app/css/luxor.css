@@ -142,3 +142,7 @@ body{
 .table-small-font{
 	font-size: 12px;
 }
+
+.ui-datepicker-month{
+  color: #ffffff;
+}

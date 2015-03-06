@@ -4,6 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="layout" content="operaciones"/>
+	<r:require modules="datatables"/>
 	<title>Incidencias</title>
 </head>
 <body>
@@ -13,27 +14,27 @@
 	<content tag="consultas">
 		<nav:menu scope="app/operaciones/asistencia" class="nav nav-tabs nav-stacked" path=""/>
 	</content>
-	<content tag="gridTitle">Incidencias (${tipo})</content>
+	<content tag="gridTitle">Incidencias  (${session.ejercicio})</content>
 	
 	<content tag="gridTasks">
+
+		<div class="btn-group">
+			<input type='text' id="nombreField" placeholder="Empleado" class="form-control" autofocus="autofocus">
+		</div>
+		<div class="btn-group">
+			<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" >
+		</div>
+		<div class="btn-group">
+			<input type='text' id="periodicidadField" placeholder="Periodicidad" class="form-control" >
+		</div>
 		<g:link action="index" class="btn btn-default">
 			<span class="glyphicon glyphicon-repeat"></span> Refrescar
 		</g:link>
 		<g:link action="create" class="btn btn-default">
 			<span class="glyphicon glyphicon-floppy-saved"></span> Nuevo
 		</g:link>
-		<button class="btn btn-default" data-toggle="modal" data-target="#searchForm">
-			<span class="glyphicon glyphicon-search"></span> Buscar
-		</button>
-		<button class="btn btn-default" data-toggle="modal" data-target="#filterForm">
-			<span class="glyphicon glyphicon-filter"></span> Filtrar
-		</button>
-		<g:link action="index" class="btn btn-default ${tipo=='QUINCENAL'?'active':''}" params="[tipo:'QUINCENAL']">
-			<span class="glyphicon glyphicon-filter"></span> Quincenal
-		</g:link>
-		<g:link action="index" class="btn btn-default ${tipo=='SEMANAL'?'active':''}" params="[tipo:'SEMANAL']">
-			<span class="glyphicon glyphicon-filter"></span> Semanal
-		</g:link>
+
+		
 	</content>
 	
 	<content tag="gridPanel">

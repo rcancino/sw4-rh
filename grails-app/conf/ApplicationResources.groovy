@@ -15,6 +15,7 @@ modules = {
     datepicker{
         dependsOn 'jquery-ui'
         resource url:'js/jquery.ui.datepicker-es.js'  
+        // resource url:'css/jquery-ui.css'
     }
 	mask{
 		dependsOn 'jquery'

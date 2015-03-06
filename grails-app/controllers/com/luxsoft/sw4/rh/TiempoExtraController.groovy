@@ -18,7 +18,8 @@ class TiempoExtraController {
 		params.max?:100
 		params.sort='lastUpdated'
 		params.order='desc'
-		[tiempoExtraInstanceList:TiempoExtra.list(params),tiempoExtraInstanceCount:TiempoExtra.count()]
+		def list=TiempoExtra.findAllByEjercicio(2014)
+		[tiempoExtraInstanceList:list]
 	}
 		
 	def actualizar(ActualizarCmd cmd){
