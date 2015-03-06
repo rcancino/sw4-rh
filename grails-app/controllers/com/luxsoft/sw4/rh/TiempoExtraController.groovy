@@ -18,7 +18,7 @@ class TiempoExtraController {
 		params.max?:100
 		params.sort='lastUpdated'
 		params.order='desc'
-		def list=TiempoExtra.findAllByEjercicio(2014)
+		def list=TiempoExtra.findAllByEjercicio(session.ejercicio)
 		[tiempoExtraInstanceList:list]
 	}
 		
