@@ -16,7 +16,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${infonavitInstance.partidas}" var="row">
+		<g:each in="${infonavitInstance.partidas.sort{!it.id}}" var="row">
 			<tr>
 				<td><g:formatNumber number="${row.id}" format="####"/></td>
 				<td>${fieldValue(bean:row,field:"ejercicio")}</td>
