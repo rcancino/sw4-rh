@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info">
-					<h3>Módulo de administración de tiempo extra </h3>
+					<h3>Módulo de administración de tiempo extra (${session.ejercicio})</h3>
 					<g:if test="${flash.message}">
 						<div class="message" role="status">
 							<strong>${flash.message}</strong>
