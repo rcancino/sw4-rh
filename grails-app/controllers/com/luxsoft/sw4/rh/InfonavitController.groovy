@@ -50,14 +50,16 @@ class InfonavitController {
 	def save(Infonavit infonavitInstance){
 		log.info 'Alta de nuevo credito infonavit: '+infonavitInstance
 		def bimestre=Bimestre.getCurrentBimestre()
-		infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
-		infonavitInstance.validate()
-		if(infonavitInstance.hasErrors()){
-			render view:'create' ,model:[infonavitInstance:infonavitInstance]
-		}
-		infonavitInstance.save()
-		flash.message="Credito infonavit generado :"+infonavitInstance
-		redirect action:'index'
+		// infonavitInstance.validate()
+		// if(infonavitInstance.hasErrors()){
+		// 	println 'Infonavit Errores: '+infonavitInstance.errors
+		// 	render view:'create' ,model:[infonavitInstance:infonavitInstance]
+		// 	return
+		// }
+		infonavitInstance.comentario=infonavitInstance.comentario?:''
+		infonavitInstance=infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		flash.message="Credito infonavit generado :"+infonavitInstance.id
+		redirect action:'show',params:[id:infonavitInstance.id]
 	}
 	
 	@Transactional
@@ -65,12 +67,15 @@ class InfonavitController {
 		log.info 'Actualizacion credito infonavit: '+infonavitInstance
 		def bimestre=Bimestre.getCurrentBimestre()
 		
-		infonavitInstance.validate()
-		if(infonavitInstance.hasErrors()){
-			render view:'edit' ,model:[infonavitInstance:infonavitInstance]
-		}
-		infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
-		infonavitInstance.save()
+		// infonavitInstance.validate()
+		// if(infonavitInstance.hasErrors()){
+		// 	render view:'edit' ,model:[infonavitInstance:infonavitInstance]
+		// 	return
+		// }
+		//infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		infonavitInstance.comentario=infonavitInstance.comentario?:''
+		infonavitInstance=infonavitService.altaDeCuota(infonavitInstance, session.ejercicio, bimestre)
+		//infonavitInstance.save()
 		flash.message="Credito infonavit modificado :"+infonavitInstance
 		redirect action:'show',params:[id:infonavitInstance.id]
 	}
@@ -87,5 +92,11 @@ class InfonavitController {
 		infonavitInstance.save failOnError:true
 		flash.message="Credito infonavit actualizado :"+infonavitInstance
 		redirect action:'show',params:[id:infonavitInstance.id]
+	}
+
+	def delete(Infonavit infonavitInstance){
+		infonavitInstance.delete flush:true
+		flash.message='Registro de prestamo Infonavit eliminado: '+infonavitInstance.id
+		redirect action:'index'
 	}
 }

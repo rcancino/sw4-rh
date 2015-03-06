@@ -25,7 +25,7 @@ class InfonavitService {
 				fechaInicial:periodo.fechaInicial,
 				fechaFinal:periodo.fechaFinal
 				,suspension:infonavit.suspension)
-			infonavit.addToPartidas(det)
+			
 		
 		det.cuota=infonavit.cuotaFija
 		det.seguroDeVivienda=15.00
@@ -35,6 +35,10 @@ class InfonavitService {
 		det.faltas=0
 		det.incapacidades=0
 		det.saldo=infonavit.ultimaDiferencia
+		
+		infonavit.addToPartidas(det)
+		//det.validate()
+		//println 'Errores: '+det.errors
 		infonavit.bimestreActual=bimestre
 		infonavit.salarioMinimoGeneral=det.salarioMinimoGeneral
 		infonavit.salarioDiarioIntegrado=det.salarioDiarioIntegrado
@@ -55,7 +59,7 @@ class InfonavitService {
 				break
 		}
 		infonavit.importeBimestral=det.importeBimestral
-		infonavit.save()
+		infonavit=infonavit.save failOnError:true
 		return infonavit
 		
 		//Calcular faltas e incapacidades

@@ -41,6 +41,10 @@
 			"path": "grails-app/taglib"
 		},
 		{
+			"name": "User Scripts",
+			"path": "grails-app/userScripts"
+		},
+		{
 			"name": "Utils",
 			"path": "grails-app/utils"
 		},

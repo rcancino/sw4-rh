@@ -46,8 +46,8 @@ class InfonavitDet {
 
 	BigDecimal saldo=0.0
 	
-	@BindingFormat('dd/MM/yyyy')
-	Date suspension
+	//@BindingFormat('dd/MM/yyyy')
+	//Date suspension
 
 	Date dateCreated
 	Date lastUpdated
@@ -59,13 +59,13 @@ class InfonavitDet {
     	ejercicio range:2014..2020
     	bimestre range:1..6
 		cuota scale:6
-		suspension nullable:true
+		//suspension nullable:true
     }
 
     static mapping = {
     	fechaInicial type:'date'
     	fechaFinal type:'date'
-		suspension type:'date'
+		//suspension type:'date'
     }
 
     public Integer dias(){
