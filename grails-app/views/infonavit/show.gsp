@@ -122,13 +122,13 @@
 					</g:link>
 				</li>
 
-				<li>
+				%{-- <li>
 					<g:link action="delete" id="${infonavitInstance.id}" 
 						class="btn btn-danger"
 						onclick="return confirm('Eliminar prestamo?')"> 
 						<span class="glyphicon glyphicon-trash"></span> Eliminar
 					</g:link>
-				</li>
+				</li> --}%
 				
 			</ul>
 		</div> <!-- end .row 2 Toolbar-->
