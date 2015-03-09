@@ -35,9 +35,14 @@ class ProcesadorDeFonacot {
 				
 			}
 			//def importeExcento=fonacot.retencionDiaria*(ne.diasTrabajados+ne.vacaciones)
-			def importeExcento=fonacot.retencionDiaria*(ne.diasDelPeriodo-ne.faltas-ne.incapacidades)
+			//def importeExcento=fonacot.retencionDiaria*(ne.diasDelPeriodo-ne.faltas-ne.incapacidades)
+			def importeExcento=fonacot.retencionDiaria*(ne.diasDelPeriodo)
+			if(ne.asistencia.diasTrabajados==0 && ne.diasTrabajados==0){
+				importeExcento=0
+			}
 			if(ne.asistencia.diasTrabajados>0){
-				importeExcento=fonacot.retencionDiaria*(ne.asistencia.diasTrabajados-ne.asistencia.faltasManuales)
+				//importeExcento=fonacot.retencionDiaria*(ne.asistencia.diasTrabajados-ne.asistencia.faltasManuales)
+				importeExcento=fonacot.retencionDiaria*(ne.asistencia.diasTrabajados)
 			}
 			
 			println "Aplicando decucccon para FONACOT: ${fonacot.empleado}  ${fonacot.retencionDiaria} Deduccion calculada de: ${importeExcento}"

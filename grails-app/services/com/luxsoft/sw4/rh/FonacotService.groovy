@@ -13,7 +13,7 @@ class FonacotService {
     		def r=(fonacot.retencionMensual/4)/7
     		fonacot.retencionDiaria=r
 		}else if(tipo=='QUINCENAL'){
-			def r=(fonacot.retencionMensual/2)15
+			def r=(fonacot.retencionMensual/2)/15
     		fonacot.retencionDiaria=r
 		}else{
 			log.info 'No eixste regla para tipo: '+tipo
