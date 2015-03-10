@@ -48,15 +48,10 @@ class ProcesadorDeIncentivo {
 		}
 		if(importeGravado>0.0){
 			//Localizar el concepto
-			def nominaPorEmpleadoDet=ne.conceptos.find(){
-				it.concepto==concepto
-			}
-			if(!nominaPorEmpleadoDet){
-				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(nominaPorEmpleadoDet)
-			}
+			def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			nominaPorEmpleadoDet.importeGravado=importeGravado
 			nominaPorEmpleadoDet.importeExcento=0
+			ne.addToConceptos(nominaPorEmpleadoDet)
 			ne.actualizar()
 		}
 		
@@ -104,8 +99,12 @@ class ProcesadorDeIncentivo {
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {
-		def nominaEmpleado=det.parent
+		def ne=det.parent
 		def model=[:]
+		def tipo=ne.empleado.perfil.tipoDeIncentivo
+		def incentivo=Incentivo.findByTipoAndEmpleadoAndAsistencia(tipo,ne.empleado,ne.asistencia)
+		model.importe=det.importeGravado
+		model.incentivo=incentivo
 		return model
 	}
 	

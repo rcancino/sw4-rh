@@ -155,8 +155,9 @@ class NominaPorEmpleadoController {
 	def informacionDeConcepto(Long id) {
 		
 		def  neDet=NominaPorEmpleadoDet.get(id)
-		println 'Localizando informacion para el calculo del concepto: '+neDet.concepto
+		//println 'Localizando informacion para el calculo del concepto: '+neDet.concepto
 		def ruleModel=conceptoDeNominaRuleResolver.getModel(neDet.concepto)
+
 		if(ruleModel) {
 			render template:ruleModel.getTemplate(),model:ruleModel.getModel(neDet)
 		}else {

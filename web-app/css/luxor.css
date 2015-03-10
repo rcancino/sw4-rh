@@ -143,6 +143,10 @@ body{
 	font-size: 12px;
 }
 
+.table-very-small-font{
+  font-size: 10px;
+}
+
 .ui-state-highlight,
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight {

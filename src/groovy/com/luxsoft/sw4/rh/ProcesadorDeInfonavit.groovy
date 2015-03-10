@@ -26,13 +26,8 @@ class ProcesadorDeInfonavit {
 		if(infonavit) {
 			log.info "Aplicando decucccon para INFONAVIT: ${infonavit.empleado} ${infonavit.tipo} ${infonavit.cuotaFija}"			
 			
-			def neDet=ne.conceptos.find(){
-				it.concepto==concepto
-			}
-			if(!neDet){
-				neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(neDet)
-			}
+			def neDet=neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+			
 			
 			def importeExcento=0.0
 			
@@ -51,6 +46,7 @@ class ProcesadorDeInfonavit {
 				log.info "Deduccion calculada de: ${importeExcento}"
 				neDet.importeGravado=0
 				neDet.importeExcento=importeExcento
+				ne.addToConceptos(neDet)
 				ne.actualizar()
 			}
 		}
@@ -69,6 +65,10 @@ class ProcesadorDeInfonavit {
 	def getModel(NominaPorEmpleadoDet det) {
 		def ne=det.parent
 		def model=[:]
+		def infonavit=buscarPrestamo(ne)
+		model.infonavit=infonavit
+		model.importeExcento=det.importeExcento
+		model.importeGravado=det.importeGravado
 		return model
 	}
 	

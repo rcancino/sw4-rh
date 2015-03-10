@@ -89,10 +89,11 @@ beans = {
 				 'D004':ref('procesadorDePrestamosPersonales'),
 				 'D012':ref('procesadorRetardoPermiso'),
 				 'P032':ref('procesadorDePaternidad'),
-				 'D006':ref('prcoesadorDePensionAlimenticia'),
+				 'D006':ref('procesadorDeInfonavit'),
 				 'D014':ref('procesadorDeFonacot'),
 				 'D005':ref('procesadorDeOtrasDeducciones'),
-				 'P029':ref('procesadorDePagoDeComisiones')
+				 'P029':ref('procesadorDePagoDeComisiones'),
+				 'D001':ref('procesadorSeguroSocial')
 				 ]
 	}
 	

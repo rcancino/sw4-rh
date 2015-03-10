@@ -97,8 +97,8 @@ class ProcesadorDePrimaVacacional {
 			
 			def empleado=ne.empleado
 			def calendarioDet=asistencia.calendarioDet
-			//def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
-			def acumulado=vacaciones.control.acumuladoExcento
+			def acumulado=AcumuladoPorConcepto.find{empleado==empleado && concepto==concepto && ejercicio==calendarioDet.calendario.ejercicio}
+			//def acumulado=vacaciones?.control?.acumuladoExcento
 			def salarioDiario=ne.salarioDiarioBase
 			
 			def sm=ZonaEconomica.findByClave('A').salario
@@ -115,7 +115,7 @@ class ProcesadorDePrimaVacacional {
 			def gravado=dif>0?dif:0.0
 			def excento=dif<0?prima:topeSalarial
 			
-			model.acumuladoExcento=acumulado.acumuladoExcento
+			model.acumuladoExcento=acumulado?.acumuladoExcento?:0
 			model.salarioDiario=salarioDiario
 			model.sm=sm
 			model.dias=vacaciones

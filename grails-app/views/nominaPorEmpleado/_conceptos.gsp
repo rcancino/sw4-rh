@@ -30,7 +30,7 @@
 				<td>
 					<a  
 						data-popover="true" 
-						data-placement="top" 
+						data-placement="right" 
 						data-title="Formula"
 						data-url="${g.createLink(action:'informacionDeConcepto',id:it.id)}"
 						data-toggle="popover"

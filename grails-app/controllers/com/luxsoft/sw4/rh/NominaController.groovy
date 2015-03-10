@@ -45,7 +45,7 @@ class NominaController {
 			//println 'Aguinaldo: '+aguinaldo
 		//
 		
-		def query=Nomina.where{periodicidad==params.periodicidad }
+		def query=Nomina.where{periodicidad==params.periodicidad && ejercicio==session.ejercicio}
 		[nominaInstanceList:query.list(params)
 			,nominaInstanceListTotal:query.count(params)
 			,periodicidad:params.periodicidad,periodos:periodos
