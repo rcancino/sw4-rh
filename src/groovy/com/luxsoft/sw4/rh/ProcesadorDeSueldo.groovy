@@ -18,16 +18,9 @@ class ProcesadorDeSueldo {
 			concepto=ConceptoDeNomina.findByClave(conceptoClave)
 		}
 		log.info "Procesando sueldo para ${ne.empleado}"
-		//Localizar el concepto
-		def nominaPorEmpleadoDet=ne.conceptos.find(){ 
-			it.concepto==concepto
-		}
 		
-		if(!nominaPorEmpleadoDet){
-			log.info 'NominaPorEmpleadoDet nueva no localizo alguna existente...'
-			nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-			ne.addToConceptos(nominaPorEmpleadoDet)
-		}
+		def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+		
 		
 		def empleado=ne.empleado
 		def calendario=ne.nomina.calendarioDet
@@ -74,8 +67,10 @@ class ProcesadorDeSueldo {
 		if(sueldo>0.0){
 			nominaPorEmpleadoDet.importeGravado=sueldo
 			nominaPorEmpleadoDet.importeExcento=0
+			ne.addToConceptos(nominaPorEmpleadoDet)
 			
-		}		
+		}
+		
 		
 	}
 	

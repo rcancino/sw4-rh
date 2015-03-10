@@ -25,25 +25,12 @@ class ProcesadorDePagoDeComisiones {
 		
 		if(comisiones && comisiones.importe){
 			//Localizar el concepto
-			def neDet=ne.conceptos.find(){
-				it.concepto==concepto
-			}
-			if(!neDet){
-				neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(neDet)
-			}
-			log.info "Pago de comisiones poe: ${comisiones.importe}"
+			def neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			neDet.importeGravado=comisiones.importe
 			neDet.importeExcento=0.0
+			ne.addToConceptos(neDet)
 			ne.actualizar()
-		}else{
-			//Clean up en caso de existir previaente
-			def neDet=ne.conceptos.find(){
-				it.concepto==concepto
-			}
-			if(neDet){
-				ne.removeFromConceptos(neDet)
-			}
+			log.info "Pago de comisiones poe: ${comisiones.importe}"
 		}
 		
 	}
