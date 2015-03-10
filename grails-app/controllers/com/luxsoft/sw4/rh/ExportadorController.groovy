@@ -389,7 +389,8 @@ def generarTrabajadoresSua(PeriodoCommand command){
 			jornada="6"
 			 }
 		  def fechaAlta=df.format(empleado.alta)
-		  def sdi=empleado.salario.salarioDiarioIntegrado.toString().replace('.','').padLeft(7,"0")
+		  //def sdi=empleado.salario.salarioDiarioIntegrado.toString().replace('.','').padLeft(7,"0")
+		  def sdi=ModificacionSalarial.findByEmpleadoAndTipo(empleado,'ALTA').sdiNuevo.toString().replace('.','').padLeft(7,"0")
 		  def ubicacion=StringUtils.leftPad("",17)
 		  
 		  def infonavitNumero=StringUtils.leftPad("",10)
@@ -637,7 +638,7 @@ def generarAusentismoSua(PeriodoCommand command){
 			   folioInc="        "
 			   diasInc="01"
 			  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
-			}else if(calculo.asistencia.empleado.controlDeAsistencia==true && calculo.asistencia.diasTrabajados!=0.0 && calculo.asistencia.faltasManuales>0 ){
+			}else if(calculo.asistencia.empleado.controlDeAsistencia==true && calculo.asistencia.diasTrabajados!=0.0 && calculo.asistencia.faltasManuales>0 && calculo.fecha<= fechaBaja ){
 			 
 			  numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistencia.empleado).numero.replace('-','')
 				 tipoMov="11"

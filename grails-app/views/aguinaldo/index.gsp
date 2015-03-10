@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info">
-					<a href="" data-toggle="modal" data-target="#cambioDeEjercicioForm">
+					<a href="" data-toggle="modal" data-target="#cambioGlobalDeEjercicioForm">
 						<h3>Módulo para el calculo del aguinaldo (${session.ejercicio})</h3>
 					</a>
 					
@@ -43,9 +43,10 @@
 							Reportes <span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu">
-						<li>
+						<li><%--
 							%{-- <g:jasperReport jasper="Aguinaldo" format="PDF" name="Aguinaldo">
 							</g:jasperReport> --}%
+							--%>
 							<g:link action="reporte" params="[tipo:'BASE']"> Aguinaldo Base</g:link>
 							<g:link action="reporte" params="[tipo:'CALCULO']"> Aguinaldo Cálculo</g:link>
 							<g:link action="reporte" params="[tipo:'IMPUESTO']"> Aguinaldo Impuesto</g:link>
@@ -108,9 +109,9 @@
 		</div><!--  end .row 3 Grid -->
 	</div>
 	
-	<g:render template="/_common/cambioDeEjercicioDialog"/>
+	<%--<g:render template="/_common/cambioDeEjercicioDialog"/>
 	
-	<r:script>
+	--%><r:script>
 			$(function(){
 				var table=$(".aguinaldoGrid").dataTable({
 			        "paging":   false,

@@ -38,10 +38,16 @@
 				<g:render template="/_menu/user"/>
 				<li><a>Semana: ${session?.calendarioSemana?.folio}</a></li>
 				<li><a>Quincena: ${session?.calendarioQuincena?.folio}</a></li>
-				<li><a>${session.ejercicio}</a></li>
+				<li>
+					
+					<a href="" data-toggle="modal" data-target="#cambioGlobalDeEjercicioForm">
+						${session.ejercicio}
+					</a>
+				</li>
 			</ul>
 		</div>
 		</g:if>
+		
 	</div>
 	
 </nav>

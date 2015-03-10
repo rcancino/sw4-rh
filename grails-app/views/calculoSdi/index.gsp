@@ -39,9 +39,30 @@
 				class="btn btn-default">
 				 Aplicar
 			</g:link>
-			<g:link action="print" class="btn btn-default" >
+			<%--<g:link action="print" class="btn btn-default" >
 				 <span class="glyphicon glyphicon-print"></span> Imprimir
 			</g:link>
+		--%>
+		
+		
+		
+		</div>
+		
+		<div class="btn-group">
+					<button type="button" name="reportes"
+							class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+							role="menu">
+							Reportes <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu">
+						<li>
+							 
+							<g:link action="reporte" params="[tipo:'BASE']"> Sdi Bimestral Base</g:link>
+							<g:link action="reporte" params="[tipo:'CALCULO']"> Sdi Bimestral Calculo</g:link>
+							<g:link action="reporte" params="[tipo:'VARIABLES']">Sdi Bimestral Variables</g:link>
+							
+						</li>
+					</ul>
 		</div>
 		
 		<g:render template="gridPanel"/>

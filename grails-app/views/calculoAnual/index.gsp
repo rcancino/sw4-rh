@@ -9,7 +9,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				<div class="alert alert-info">
-					<a href="" data-toggle="modal" data-target="#cambioDeEjercicioForm">
+					<a href="" data-toggle="modal" data-target="#cambioGlobalDeEjercicioForm">
 						<h3>Cálculo anual (${session.ejercicio})</h3>
 					</a>
 					
@@ -44,7 +44,10 @@
 					</button>
 					<ul class="dropdown-menu">
 						<li>
-							<g:link action="reporte" params="[tipo:'BASE']"> Cálculo</g:link>
+							<g:link action="reporte" params="[tipo:'ACUMULADOS']"> Cálculo Anual Acumulados</g:link>
+						</li>
+						<li>
+							<g:link action="reporte" params="[tipo:'RESULTADOS']"> Cálculo Anual Resultados</g:link>
 						</li>
 					</ul>
 				</div>
@@ -111,7 +114,7 @@
 		</div><!--  end .row 3 Grid -->
 	</div>
 	
-	<g:render template="/_common/cambioDeEjercicioDialog"/>
+<%--	<g:render template="/_common/cambioDeEjercicioDialog"/>--%>
 	
 	<r:script>
 		

@@ -1,5 +1,5 @@
 <%@page expressionCodec="none"%>
-<div class="modal fade" id="cambioDeEjercicioForm" tabindex="-1">
+<div class="modal fade" id="cambioGlobalDeEjercicioForm" tabindex="-1">
 	<div class="modal-dialog ">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -10,7 +10,7 @@
 			<g:form class="form-horizontal" controller="home" action="cambioDeEjercicio">
 				<div class="modal-body">
 					<div class="form-group">
-						<label for="bono1Field" class="col-sm-2 control-label">Ejercicio</label>
+						<label for="ejercicio" class="col-sm-2 control-label">Ejercicio</label>
 						<div class="col-sm-10">
 							<g:select name="ejercicio" class="form-control"
 									from="${2014..2019}" value="${session.ejercicio}"

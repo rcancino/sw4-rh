@@ -202,27 +202,7 @@ class ReporteController {
 		[reportCommand:new EmpleadoPorEjercicioCommand(ejercicio:session.ejercicio)]
 	}
 
-	/*
-	def incapacidadesEmpleado(Empleado command){
-		if(request.method=='GET'){
-			return [reportCommand:new EmpleadoPeriodoCommand()]
-		}
-		command.validate()
-		if(command.hasErrors()){
-			log.info 'Errores de validacion al ejecurar reporte'
-			render view:'incapacidadesEmpleado',model:[reportCommand:command]
-			return
-		}
-		def repParams=[:]
-		repParams['FECHA_INICIAL']=command.fechaInicial
-		repParams['FECHA_FINAL']=command.fechaFinal
-		repParams['EMPLEADO_ID']=command.empleado.id as Long
-		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
-		ByteArrayOutputStream  pdfStream=runReport(repParams)
-		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
-			,fileName:repParams.reportName)
-	}
-*/
+	
 	def tiempoExtra(EmpleadoCalendarioDetCommand command){
 		if(request.method=='GET'){
 			return [reportCommand:new EmpleadoCalendarioDetCommand()]
@@ -379,6 +359,12 @@ class ReporteController {
 			,fileName:repParams.reportName+'.pdf')
 	}
 	
+	
+
+	
+
+	
+	
 	private runReport(Map repParams){
 		log.info 'Ejecutando reporte  '+repParams
 		def nombre=WordUtils.capitalize(repParams.reportName)
@@ -395,6 +381,8 @@ class ReporteController {
 	private File findFile(String name){
 		return grailsApplication.mainContext.getResource("/reports/$name").file
 	}
+	
+	
 	
 	
 	
@@ -546,7 +534,7 @@ class EjercicioBimestreCommand{
 	Integer bimestre
 	
 	static constraints = {
-		ejercicio inList:2014..2018
+		ejercicio inList:2015..2020
 		bimestre inList:01..06
 		
 		

@@ -99,6 +99,7 @@ navigation={
 			salarios(controller:'reporte'){
 				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
 				incrementosIndividuales()
+				
 			}
 			contratacion(controller:'contratacion'){
 				contrato()

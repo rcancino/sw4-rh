@@ -72,6 +72,35 @@ class CalculoSdiController {
 		
 	}
 	
+	def reporte(){
+		def tipo=params.tipo
+		def re=''
+		switch(tipo) {
+			case 'BASE':
+				re='SdiBimestral'
+				break;
+			case 'CALCULO':
+				re='SdiBimestralCalculo'
+				break;
+			case 'VARIABLES':
+				re='SdiBimestralVariables'
+				break;
+			
+			break
+		}
+		if(re){
+			params.reportName=re
+			params['EJERCICIO']=session.ejercicio
+			params['BIMESTRE']=session.bimestre
+			ByteArrayOutputStream  pdfStream=runReport(params)
+			render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:params.reportName+'.pdf')
+		}else{
+			flash.message="Reporte incorrecto: "+re
+			redirect action:'index'
+
+		}
+	}
+	
 	private runReport(Map repParams){
 		log.info 'Ejecutando reporte  '+repParams
 		def nombre=repParams.reportName

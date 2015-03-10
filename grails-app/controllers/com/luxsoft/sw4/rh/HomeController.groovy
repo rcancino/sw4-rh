@@ -18,7 +18,7 @@ class HomeController {
     def cambioDeEjercicio(Integer ejercicio){
     	session.ejercicio=ejercicio
     	def origin=request.getHeader('referer')
-    	session.periodo=command
+    	//session.periodo=command
     	redirect(uri: request.getHeader('referer') )
     }
 	

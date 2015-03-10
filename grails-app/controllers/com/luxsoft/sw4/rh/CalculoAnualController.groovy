@@ -40,10 +40,33 @@ class CalculoAnualController {
 
 
     def reporte(){
-        params.reportName='CalculoAnual'
-        params['EJERCICIO']=session.ejercicio
-        ByteArrayOutputStream  pdfStream=runReport(params)
-        render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:params.reportName)
+		def tipo=params.tipo
+		def re=''
+		switch(tipo) {
+			case 'ACUMULADOS':
+				re='CalculoAnualIngresosAcu'
+				break;
+			case 'RESULTADOS':
+			
+				re='CalculoAnualResultados'
+				break;
+			
+			
+			break
+		}
+		if(re){
+			params.reportName=re
+			params['EJERCICIO']=session.ejercicio
+		
+			ByteArrayOutputStream  pdfStream=runReport(params)
+			render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:params.reportName+'.pdf')
+		}else{
+			flash.message="Reporte incorrecto: "+re
+			redirect action:'index'
+
+		}
+		
+		
     }
 
 
