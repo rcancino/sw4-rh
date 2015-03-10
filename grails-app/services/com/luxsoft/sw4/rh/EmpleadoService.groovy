@@ -50,6 +50,12 @@ class EmpleadoService {
 			if(empleado.status!='BAJA'){
 				empleado.baja=null
 			}
+			def found=Empleado.findByRfc(empleado.rfc)
+			if(found!=empleado){
+				throw new EmpleadoException(
+					message:"RFC:$empleado.rfc ya registrado para "+found.nombre,
+					empleado:Empleado.get(empleado.id))
+			}
 			if(empleado.hasErrors()){
 				println 'Errores de empleado: '+empleado.errors
 				

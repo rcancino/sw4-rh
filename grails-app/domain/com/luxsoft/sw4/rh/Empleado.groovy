@@ -22,7 +22,7 @@ class Empleado  implements Serializable{
 	String rfc
     Date alta
 	String sexo
-	String status
+	String status='ALTA'
 	Date fechaDeNacimiento
 	Boolean activo
 	Boolean controlDeAsistencia

@@ -70,7 +70,7 @@
 			
 			
 			
-			<fieldset ${!edit?'disabled=""':''}>
+			<fieldset disabled>
 				
 				<f:with bean="${empleadoInstance}">
 					<f:field property="baja.fecha"  input-class="form-control" label="Fecha B.">
@@ -81,6 +81,7 @@
 					<f:field property="baja.causa" input-class="form-control" />
 					<f:field property="baja.comentario" input-class="form-control" label="Comentario"/>	
 				</f:with>
+
 			</fieldset>
 			
 		</div>
