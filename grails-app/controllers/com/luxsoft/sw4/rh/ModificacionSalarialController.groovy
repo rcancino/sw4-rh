@@ -3,12 +3,18 @@ package com.luxsoft.sw4.rh
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat;
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef;
 
+import java.util.Map;
+
 import grails.plugin.springsecurity.annotation.Secured
 import grails.transaction.Transactional
 import grails.validation.Validateable;
 
 
+
 import org.grails.databinding.BindingFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import org.apache.commons.lang.WordUtils
 
 @Transactional(readOnly = true)
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
@@ -92,39 +98,35 @@ class ModificacionSalarialController {
     }
 	
 	def reporteDeSDI(ModificacionSalarial ms){
-		//log.info 'Reporte de analis SDI para modificacion salarial: '+ms
-		def val=CalendarioDet.executeQuery("select min(d.bimestre) from CalendarioDet d where date(?) between d.inicio and d.fin",[ms.fecha])
-		def bimestre=val.get(0)-1
-		def tipo=ms.empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
-		def ejercicio=session.ejercicio
-		def res=CalendarioDet
-			.executeQuery("select min(d.inicio),max(d.fin) from CalendarioDet d where d.bimestre=? and d.calendario.tipo=? and d.calendario.ejercicio=?"
-		,[bimestre,tipo,ejercicio])
-	
-		def inicio=new Date(res.get(0)[0].getTime())
-		def fin=new Date(res.get(0)[1].getTime())
-		println 'Tipo de fecha'+ fin.class
-		def parameters=['ID':ms.empleado.id.toString()]
-		parameters['TIPO']=ms.empleado.salario.periodicidad
-		//parameters['FECHA_ULT_MODIF']=ms.fecha.format('yyyy-MM-dd')
-		//parameters['FECHA_INI']=inicio.format('yyyy-MM-dd')
-		//parameters['FECHA_FIN']=fin.format('yyyy-MM-dd')
-		//parameters['SDI_ANTERIOR']=ms.sdiAnterior
-		log.info 'Ejecurando reporte con parametros:'+parameters
-		JasperReportDef reportDef=new JasperReportDef(name:'SalarioDiarioIntegradoIndividual'
-			,fileFormat:JasperExportFormat.PDF_FORMAT
-			,parameters:parameters)
 		
-		def out=jasperService.generateReport(reportDef)
-		def fileName="sdi"+ms.empleado+".pdf"
-		response.setHeader("Content-disposition", "attachment; filename=$fileName" );
-		response.contentType = reportDef.fileFormat.mimeTyp
-		response.characterEncoding = "UTF-8"
-		response.outputStream << out
-		//chain controller:'jasper',action:'index',params:params
+		def repParams=[:]
+		repParams['ID']=ms.id
+		
+		repParams.reportName='SalarioDiarioIntegradoIndividual'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:"SDI_"+ms.empleado+".pdf")
+		
+		
+	}
+	
+
+	
+	private runReport(Map repParams){
+		log.info 'Ejecutando reporte  '+repParams
+		def nombre=WordUtils.capitalize(repParams.reportName)
+		def reportDef=new JasperReportDef(
+			name:nombre
+			,fileFormat:JasperExportFormat.PDF_FORMAT
+			,parameters:repParams
+			)
+		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+		return pdfStream
+		
 	}
 
 }
+
 
 
 

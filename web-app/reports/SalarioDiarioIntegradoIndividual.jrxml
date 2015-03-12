@@ -23,78 +23,21 @@
 	<import value="net.sf.jasperreports.engine.*" />
 	<import value="net.sf.jasperreports.engine.data.*" />
 
-	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_ULT_MODIF" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="TIPO" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="SDI_ANTERIOR" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="ID" isForPrompting="true" class="java.lang.String">
-		<defaultValueExpression ><![CDATA["17"]]></defaultValueExpression>
-	</parameter>
-	<queryString><![CDATA[SELECT x.ID,X.CLAVE,x.NOMBRES,x.APELLIDO_PATERNO,X.APELLIDO_MATERNO,X.ALTA ,X.STATUS,DATE(B.FECHA) AS F_BAJA,P.numero_de_trabajador AS NUM_TRAB,P.JORNADA
-,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS UBICACION
-,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS DEPTO
-,S.PERIODICIDAD,$P{FECHA_INI} AS FECHA_INI,$P{FECHA_FIN} AS FECHA_FIN   
-,S.SALARIO_DIARIO*1 AS SDB_NVO
-,S.SALARIO_DIARIO_INTEGRADO*1 AS SDI_ANTERIOR	
-,(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) AS SMG		
-,(25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) AS TOPE_SMG		
-,ROUND((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24)/365,0)  AS YEARS_ANTIG  
-,ROUND(-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24,0)  AS DIAS_ANTIG 
-,(SELECT MAX(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24,0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_DIAS	
-,(SELECT MAX(F.VAC_PRIMA) FROM factor_de_integracion F WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24,0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_PRIMA	
-,(SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_DIAS WHEN  S.periodicidad='SEMANAL' THEN F.SEM_DIAS	ELSE F.QNA_DIAS END	) 
-	FROM factor_de_integracion F 	WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) THEN 0 ELSE 2 END) AND
-	ROUND(-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24,0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA 	) AS AGNDO_DIAS
-,(SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
-	FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) THEN 0 ELSE 2 END) AND 	
-	ROUND((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS FACTOR	
-,((SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
-	FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) THEN 0 ELSE 2 END) AND 	
-	ROUND((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )	
-	*	 S.SALARIO_DIARIO ) AS SDI_F 																			
-,ROUND(((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_FIN},$P{FECHA_INI})/60)/24)+1),0) AS DIAS_BIM	
-,SUM(E.FALTAS) AS FALTAS,SUM(E.INCAPACIDADES) AS INCAPACIDADES
-,(ROUND(((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_FIN},(CASE WHEN X.ALTA>$P{FECHA_INI} THEN X.ALTA ELSE $P{FECHA_INI} END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) AS DIAS_LAB_BIM		
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19) AND D.ID IS NOT NULL)),0) AS COMPENSACION	
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(22) AND D.ID IS NOT NULL)),0) AS INCENTIVO	
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(24) AND D.ID IS NOT NULL)),0) AS BONO_POR_DESEMP	
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(34) AND D.ID IS NOT NULL)),0) AS HRS_EXTRAS_DOBLES
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(35) AND D.ID IS NOT NULL)),0) AS HRS_EXTRAS_TRIPLES
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(41) AND D.ID IS NOT NULL)),0) AS COMISIONES	
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(42) AND D.ID IS NOT NULL)),0) AS PRIMA_DOM	
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(44) AND D.ID IS NOT NULL)),0) AS VACACIONES_P
-,IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0) AS VARIABLE	
-,( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0)/
-	(ROUND(((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_FIN},(CASE WHEN X.ALTA>$P{FECHA_INI} THEN X.ALTA ELSE $P{FECHA_INI} END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) AS VAR_DIA					
-,( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
-		FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) THEN 0 ELSE 2 END) AND 	
-		ROUND((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )		*	 S.SALARIO_DIARIO )	+			
-	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0) /	(ROUND(((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_FIN},(CASE WHEN X.ALTA>$P{FECHA_INI} THEN X.ALTA ELSE $P{FECHA_INI} END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) ),2) )  AS SDI_CALC			
-,(CASE WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' )<=						
-	( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
-		FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) THEN 0 ELSE 2 END) AND 	
-		ROUND((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )		*	 S.SALARIO_DIARIO )	+			
-	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0) /	(ROUND(((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_FIN},(CASE WHEN X.ALTA>$P{FECHA_INI} THEN X.ALTA ELSE $P{FECHA_INI} END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) ),2) )			
-		THEN		 (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A' ) 		ELSE 
-	( ROUND( ( ( (SELECT MAX(CASE WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  S.periodicidad='SEMANAL' THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
-		FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR($P{FECHA_FIN}) THEN 0 ELSE 2 END) AND 	
-		ROUND((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_ULT_MODIF},X.ALTA)/60)/24),0) BETWEEN F.DIAS_DE AND F.DIAS_HASTA )		*	 S.SALARIO_DIARIO )	+			
-	( IFNULL(SUM((SELECT SUM(ifnull(D.importe_excento,0)+ifnull(D.importe_gravado,0)) AS VARIABLE FROM nomina_por_empleado_det D 	WHERE E.ID=D.PARENT_ID AND  D.CONCEPTO_ID IN(19,22,24,34,35,41,42,44) AND D.ID IS NOT NULL)),0) /	(ROUND(((-(TIMESTAMPDIFF(MINUTE,$P{FECHA_FIN},(CASE WHEN X.ALTA>$P{FECHA_INI} THEN X.ALTA ELSE $P{FECHA_INI} END))/60)/24)+1),0)  -SUM(E.FALTAS)-SUM(E.INCAPACIDADES)) ) ),2) )			
-		END ) AS SDI_NVO				
-,CASE WHEN S.SALARIO_DIARIO_INTEGRADO <> $P{SDI_ANTERIOR} 	THEN 	S.SALARIO_DIARIO_INTEGRADO ELSE 0 END	AS SDI_INF
-FROM NOMINA N 						
-JOIN nomina_por_empleado E ON(E.nomina_id=N.ID)
-JOIN empleado X ON(X.ID=E.empleado_id)
-JOIN salario S ON(S.EMPLEADO_ID=X.ID)
-JOIN perfil_de_empleado P ON(X.ID=P.empleado_id) 
-LEFT JOIN baja_de_empleado B ON(B.empleado_id=X.id)
-WHERE X.ID=$P{ID} AND 
-date(n.periodo_fecha_inicial)>=$P{FECHA_INI} and date(n.periodo_fecha_final)<=$P{FECHA_FIN}  AND (B.ID IS NULL OR ( X.ALTA>DATE(B.FECHA) AND X.STATUS<>'BAJA') )
-GROUP BY X.ID]]></queryString>
+	<parameter name="ID" isForPrompting="true" class="java.lang.String"/>
+	<queryString><![CDATA[select x.ID,x.CLAVE,x.NOMBRES,x.APELLIDO_PATERNO,x.APELLIDO_MATERNO,x.ALTA,x.STATUS,b.fecha as F_BAJA,s.PERIODICIDAD,p.numero_de_trabajador as NUM_TRAB,M.FECHA
+,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.UBICACION_ID) AS UBICACION,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS DEPTO,P.JORNADA
+,FECHA_INI,FECHA_FIN,SDB,SDB_ANTERIOR,C.SDI_ANTERIOR,SMG,TOPE_SMG,YEARS,DIAS,VAC_DIAS,VAC_PRIMA,AGNDO_DIAS,FACTOR,SDIF,DIAS_BIM,FALTAS,INCAPACIDADES
+,DIAS_LAB_BIM,COMPENSACION,INCENTIVO,BONO_POR_DESEMP,HRS_EXTRAS_DOBLES,HRS_EXTRAS_TRIPLES,COMISIONES,PRIMA_DOM,VACACIONESP,VARIABLE,VAR_DIA,SDI_CALC,SDI_NVO,SDI_INF
+from 	empleado X 
+		JOIN salario S ON(S.EMPLEADO_ID=X.ID)
+		JOIN perfil_de_empleado P ON(P.EMPLEADO_ID=X.ID)
+		LEFT JOIN baja_de_empleado B ON(B.empleado_id=X.id)
+		JOIN modificacion_salarial m on(m.empleado_id=x.id)
+		join calculo_sdi c on(m.calculo_sdi_id=c.id)
+	where m.id=$P{ID}]]></queryString>
 
 	<field name="ID" class="java.lang.Long"/>
 	<field name="CLAVE" class="java.lang.String"/>
@@ -103,25 +46,27 @@ GROUP BY X.ID]]></queryString>
 	<field name="APELLIDO_MATERNO" class="java.lang.String"/>
 	<field name="ALTA" class="java.sql.Timestamp"/>
 	<field name="STATUS" class="java.lang.String"/>
-	<field name="F_BAJA" class="java.sql.Date"/>
+	<field name="F_BAJA" class="java.sql.Timestamp"/>
+	<field name="PERIODICIDAD" class="java.lang.String"/>
 	<field name="NUM_TRAB" class="java.lang.String"/>
-	<field name="JORNADA" class="java.lang.String"/>
+	<field name="FECHA" class="java.sql.Date"/>
 	<field name="UBICACION" class="java.lang.String"/>
 	<field name="DEPTO" class="java.lang.String"/>
-	<field name="PERIODICIDAD" class="java.lang.String"/>
-	<field name="FECHA_INI" class="java.lang.Object"/>
-	<field name="FECHA_FIN" class="java.lang.Object"/>
-	<field name="SDB_NVO" class="java.math.BigDecimal"/>
+	<field name="JORNADA" class="java.lang.String"/>
+	<field name="FECHA_INI" class="java.sql.Date"/>
+	<field name="FECHA_FIN" class="java.sql.Date"/>
+	<field name="SDB" class="java.math.BigDecimal"/>
+	<field name="SDB_ANTERIOR" class="java.math.BigDecimal"/>
 	<field name="SDI_ANTERIOR" class="java.math.BigDecimal"/>
 	<field name="SMG" class="java.math.BigDecimal"/>
 	<field name="TOPE_SMG" class="java.math.BigDecimal"/>
-	<field name="YEARS_ANTIG" class="java.math.BigDecimal"/>
-	<field name="DIAS_ANTIG" class="java.math.BigDecimal"/>
+	<field name="YEARS" class="java.math.BigDecimal"/>
+	<field name="DIAS" class="java.math.BigDecimal"/>
 	<field name="VAC_DIAS" class="java.lang.Integer"/>
 	<field name="VAC_PRIMA" class="java.math.BigDecimal"/>
-	<field name="AGNDO_DIAS" class="java.lang.Long"/>
+	<field name="AGNDO_DIAS" class="java.lang.Integer"/>
 	<field name="FACTOR" class="java.math.BigDecimal"/>
-	<field name="SDI_F" class="java.math.BigDecimal"/>
+	<field name="SDIF" class="java.math.BigDecimal"/>
 	<field name="DIAS_BIM" class="java.math.BigDecimal"/>
 	<field name="FALTAS" class="java.math.BigDecimal"/>
 	<field name="INCAPACIDADES" class="java.math.BigDecimal"/>
@@ -133,7 +78,7 @@ GROUP BY X.ID]]></queryString>
 	<field name="HRS_EXTRAS_TRIPLES" class="java.math.BigDecimal"/>
 	<field name="COMISIONES" class="java.math.BigDecimal"/>
 	<field name="PRIMA_DOM" class="java.math.BigDecimal"/>
-	<field name="VACACIONES_P" class="java.math.BigDecimal"/>
+	<field name="VACACIONESP" class="java.math.BigDecimal"/>
 	<field name="VARIABLE" class="java.math.BigDecimal"/>
 	<field name="VAR_DIA" class="java.math.BigDecimal"/>
 	<field name="SDI_CALC" class="java.math.BigDecimal"/>
@@ -264,7 +209,7 @@ GROUP BY X.ID]]></queryString>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NUM_TRAB}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="dd-MMM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="65"
 						y="76"
@@ -279,7 +224,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{TIPO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{PERIODICIDAD}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -484,7 +429,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_ULT_MODIF}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{FECHA}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -521,7 +466,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{ALTA}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -558,7 +503,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{FECHA_INI}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -595,7 +540,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{FECHA_FIN}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -711,7 +656,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SDB_NVO}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SDB}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -748,7 +693,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{SDI_ANTERIOR}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SDI_ANTERIOR}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -809,7 +754,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{YEARS_ANTIG}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{YEARS}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -850,7 +795,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIAS_ANTIG}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIAS}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -1068,7 +1013,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{AGNDO_DIAS}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{AGNDO_DIAS}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -1234,7 +1179,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SDI_F}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{SDIF}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -1605,7 +1550,7 @@ GROUP BY X.ID]]></queryString>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VACACIONES_P}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VACACIONESP}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

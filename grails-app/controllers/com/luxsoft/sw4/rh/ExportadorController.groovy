@@ -33,6 +33,12 @@ class ExportadorController {
 		temp.with{
 			Empresa emp=Empresa.first()
 			Nomina n=nomina
+			 def totalNomina=0
+			 n.partidas.each{
+				 totalNomina=totalNomina+it.total
+				
+			 }
+			 
 
 			SimpleDateFormat df = new SimpleDateFormat("ddMMyy")
 
@@ -62,7 +68,7 @@ class ExportadorController {
 			def tipoOp="1"
 			def claveMoneda="001"
 			def formato = new DecimalFormat("###")
-			int importe	= Math.floor(n.total)
+			int importe	= totalNomina //Math.floor(n.total)
 
 
 			def importeCargos =formato.format(importe).padLeft(16,"0")
@@ -507,14 +513,39 @@ def generarModificacionBimestralSua(EjercicioBimestreCommand command){
 		def formato = new DecimalFormat("###")
 		def formatoDec = new DecimalFormat(".####")
 		  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
-		
+
+		  def fecha_aplic
+		  
+				  switch(bimestre)
+				  {
+				
+				  case 1:
+						  fecha_aplic="0103"+ejercicio
+				   break;
+				  case 2:
+						  fecha_aplic="0105"+ejercicio
+				   break;
+				  case 3:
+						  fecha_aplic="0107"+ejercicio
+				   break;
+				  case 4:
+						  fecha_aplic="0109"+ejercicio
+				   break;
+				  case 5:
+						  fecha_aplic="0111"+ejercicio
+				   break;
+				  case 6:
+						  fecha_aplic="0101"+(ejercicio+1)
+				   break;
+					 
+					}
 	   
 		 def calculosSdi=CalculoSdi.findAllByEjercicioAndBimestre(ejercicio,bimestre).sort{it.empleado.apellidoPaterno}.each{calculo ->
 	   
 		  
 		  def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
 		  def tipoMov="07"
-		  def fechaMov=df.format(calculo.fechaFin+1)
+		  def fechaMov= fecha_aplic  //df.format(calculo.fechaFin+1)
 		  def folioInc= StringUtils.leftPad("",8)
 		  def diasInc= StringUtils.leftPad("",2)
 		  def sdiOAp=calculo.sdiInf.toString().replace('.','').padLeft(7,"0")
