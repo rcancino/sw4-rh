@@ -17,6 +17,7 @@
 					<f:field property="fecha" input-class="form-control"/>	
 					<f:field property="motivo" input-class="form-control"/>
 					<f:field property="causa" input-class="form-control"/>
+					<f:field property="comentario" input-class="form-control"/>
 				</f:with>
 			</fieldset>
 			

@@ -50,14 +50,21 @@ class EmpleadoService {
 			if(empleado.status!='BAJA'){
 				empleado.baja=null
 			}
-			def found=Empleado.findByRfc(empleado.rfc)
-			if(found!=empleado){
-				throw new EmpleadoException(
-					message:"RFC:$empleado.rfc ya registrado para "+found.nombre,
-					empleado:Empleado.get(empleado.id))
+			
+			if(empleado.rfc){
+				/*
+				def found=Empleado.findByRfc(empleado.rfc)
+				
+				if(found!=empleado){
+					throw new EmpleadoException(
+						message:"RFC:$empleado.rfc ya registrado para "+found.nombre,
+						empleado:Empleado.get(empleado.id))
+				}
+				*/
 			}
+			
 			if(empleado.hasErrors()){
-				println 'Errores de empleado: '+empleado.errors
+				//println 'Errores de empleado: '+empleado.errors
 				
 			}
 			if(empleado.datosPersonales){
@@ -65,7 +72,7 @@ class EmpleadoService {
 					empleado.datosPersonales.empleado=empleado
 				}
 				empleado.datosPersonales.validate()
-				println 'Errores en datos personales: '+empleado.datosPersonales.hasErrors()
+				//println 'Errores en datos personales: '+empleado.datosPersonales.hasErrors()
 				empleado.datosPersonales.errors.each{
 					println 'Error: '+it
 				}
@@ -80,14 +87,14 @@ class EmpleadoService {
 			if(empleado.perfil){
 				
 				if(!empleado.perfil.id){
-					println 'Perfil de empleado: '+empleado.perfil
+					//println 'Perfil de empleado: '+empleado.perfil
 					empleado.perfil.empleado=empleado
 					def empresa=Empresa.get(1)
-					println 'Empresa: '+empresa
+					//println 'Empresa: '+empresa
 					empleado.perfil.empresa=empresa
 				}
 				empleado.perfil.validate()
-				println 'Errores en Perfil: '+empleado.perfil.hasErrors()
+				//println 'Errores en Perfil: '+empleado.perfil.hasErrors()
 				empleado.perfil.errors.each{
 					println 'Error: '+it
 				}

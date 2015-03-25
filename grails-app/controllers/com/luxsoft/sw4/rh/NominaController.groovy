@@ -112,6 +112,7 @@ class NominaController {
     }
 	
 	def timbrar(Nomina nominaInstance) {
+		nominaService.actualizarSaldos(nominaInstance)
 		if(nominaInstance==null){
 			notFound()
 			return
@@ -119,9 +120,8 @@ class NominaController {
 		nominaInstance.partidas.each{
 			nominaService.timbrar(it.id)
 		}
-		
-		//redirect action:'show',params:[id:nominaInstance.id]
-		redirect action:'actualizarSaldos',params:[id:nominaInstance.id]
+		redirect action:'show',params:[id:nominaInstance.id]
+		//redirect action:'actualizarSaldos',params:[id:nominaInstance.id]
 	}
 	
 	def actualizarSaldos(Nomina nominaInstance){

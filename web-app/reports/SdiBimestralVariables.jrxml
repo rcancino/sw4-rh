@@ -8,10 +8,10 @@
 		 orientation="Landscape"
 		 pageWidth="792"
 		 pageHeight="612"
-		 columnWidth="736"
+		 columnWidth="764"
 		 columnSpacing="0"
-		 leftMargin="28"
-		 rightMargin="28"
+		 leftMargin="14"
+		 rightMargin="14"
 		 topMargin="20"
 		 bottomMargin="20"
 		 whenNoDataType="NoPages"
@@ -34,9 +34,9 @@
 	</parameter>
 	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.Integer"/>
 	<parameter name="BIMESTRE" isForPrompting="true" class="java.lang.Integer"/>
-	<queryString><![CDATA[select x.ID,x.CLAVE,concat(ifnull(x.apellido_paterno,"")," ",x.apellido_materno," ",x.nombres ) as nombre,x.ALTA,x.STATUS,b.fecha as F_BAJA,s.PERIODICIDAD,p.numero_de_trabajador as NUM_TRAB
+	<queryString><![CDATA[select x.ID,x.CLAVE,concat(ifnull(x.apellido_paterno,"")," ",x.apellido_materno," ",x.nombres ) as nombre,x.ALTA,x.STATUS,b.fecha as F_BAJA,SUBSTRING(s.periodicidad,1,1) as periodicidad,p.numero_de_trabajador as NUM_TRAB
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.UBICACION_ID) AS ubicacion,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS DEPTO,P.JORNADA
-,FECHA_INI,FECHA_FIN,SDB,SDB_ANTERIOR,C.SDI_ANTERIOR,SMG,TOPE_SMG,YEARS,DIAS,VAC_DIAS,VAC_PRIMA,AGNDO_DIAS,FACTOR,SDIF,DIAS_BIM,FALTAS,INCAPACIDADES,DIAS_LAB_BIM,u.clave
+,fecha_ini,fecha_fin,SDB,SDB_ANTERIOR,C.SDI_ANTERIOR,SMG,TOPE_SMG,YEARS,DIAS,VAC_DIAS,VAC_PRIMA,AGNDO_DIAS,FACTOR,SDIF,dias_bim,FALTAS,INCAPACIDADES,dias_lab_bim,u.clave
 ,c.ejercicio,c.bimestre,x.CLAVE AS EMP
 ,COMPENSACION,INCENTIVO,BONO_POR_DESEMP,HRS_EXTRAS_DOBLES,HRS_EXTRAS_TRIPLES,COMISIONES,PRIMA_DOM,VACACIONESP,VARIABLE,VAR_DIA
 ,SDI_CALC,SDI_NVO,SDI_INF,c.id
@@ -46,7 +46,7 @@ from 	empleado X
 		LEFT JOIN baja_de_empleado B ON(B.empleado_id=X.id)
 		join calculo_sdi c on(c.empleado_id=x.id)
 		join ubicacion u on (u.id=p.ubicacion_id)
-	where C.EJERCICIO=$P{EJERCICIO} AND C.BIMESTRE=$P{BIMESTRE}]]></queryString>
+	where C.EJERCICIO=$P{EJERCICIO} AND C.BIMESTRE=$P{BIMESTRE} and c.tipo='CALCULO_SDI']]></queryString>
 
 	<field name="ID" class="java.lang.Long"/>
 	<field name="CLAVE" class="java.lang.String"/>
@@ -54,13 +54,13 @@ from 	empleado X
 	<field name="ALTA" class="java.sql.Timestamp"/>
 	<field name="STATUS" class="java.lang.String"/>
 	<field name="F_BAJA" class="java.sql.Timestamp"/>
-	<field name="PERIODICIDAD" class="java.lang.String"/>
+	<field name="periodicidad" class="java.lang.String"/>
 	<field name="NUM_TRAB" class="java.lang.String"/>
 	<field name="ubicacion" class="java.lang.String"/>
 	<field name="DEPTO" class="java.lang.String"/>
 	<field name="JORNADA" class="java.lang.String"/>
-	<field name="FECHA_INI" class="java.sql.Date"/>
-	<field name="FECHA_FIN" class="java.sql.Date"/>
+	<field name="fecha_ini" class="java.sql.Date"/>
+	<field name="fecha_fin" class="java.sql.Date"/>
 	<field name="SDB" class="java.math.BigDecimal"/>
 	<field name="SDB_ANTERIOR" class="java.math.BigDecimal"/>
 	<field name="SDI_ANTERIOR" class="java.math.BigDecimal"/>
@@ -73,10 +73,10 @@ from 	empleado X
 	<field name="AGNDO_DIAS" class="java.lang.Integer"/>
 	<field name="FACTOR" class="java.math.BigDecimal"/>
 	<field name="SDIF" class="java.math.BigDecimal"/>
-	<field name="DIAS_BIM" class="java.math.BigDecimal"/>
+	<field name="dias_bim" class="java.math.BigDecimal"/>
 	<field name="FALTAS" class="java.math.BigDecimal"/>
 	<field name="INCAPACIDADES" class="java.math.BigDecimal"/>
-	<field name="DIAS_LAB_BIM" class="java.math.BigDecimal"/>
+	<field name="dias_lab_bim" class="java.math.BigDecimal"/>
 	<field name="ejercicio" class="java.lang.Integer"/>
 	<field name="bimestre" class="java.lang.Integer"/>
 	<field name="EMP" class="java.lang.String"/>
@@ -231,40 +231,20 @@ from 	empleado X
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="40"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="2"
-						width="736"
-						height="2"
-						forecolor="#666666"
-						key="line-5"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="37"
-						width="735"
-						height="1"
-						forecolor="#666666"
-						key="line-6"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
+			<band height="29"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="2"
-						y="5"
-						width="195"
+						y="1"
+						width="176"
 						height="28"
 						forecolor="#000000"
 						key="staticText-30"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
@@ -275,36 +255,36 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="197"
-						y="5"
-						width="70"
+						x="309"
+						y="1"
+						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-32"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[COMPENSACION]]></text>
+				<text><![CDATA[COMPEN SACION]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="267"
-						y="5"
+						x="352"
+						y="1"
 						width="48"
 						height="28"
 						forecolor="#000000"
 						key="staticText-33"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
@@ -315,16 +295,16 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="315"
-						y="5"
-						width="48"
+						x="400"
+						y="1"
+						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-34"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
@@ -335,16 +315,16 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="363"
-						y="5"
+						x="443"
+						y="1"
 						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-35"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
@@ -355,16 +335,16 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="406"
-						y="5"
+						x="486"
+						y="1"
 						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-36"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
@@ -375,76 +355,76 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="449"
-						y="5"
-						width="59"
+						x="529"
+						y="1"
+						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-37"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[COMISIONES]]></text>
+				<text><![CDATA[COMISIO NES]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="508"
-						y="5"
-						width="49"
+						x="572"
+						y="1"
+						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-39"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[PRIMA DOMINICAL]]></text>
+				<text><![CDATA[PRIMA DOM.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="557"
-						y="5"
-						width="64"
+						x="615"
+						y="1"
+						width="43"
 						height="28"
 						forecolor="#000000"
 						key="staticText-40"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[VACACIONES P]]></text>
+				<text><![CDATA[VACACIO NES  P]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="621"
-						y="5"
-						width="53"
+						x="658"
+						y="1"
+						width="48"
 						height="28"
 						forecolor="#000000"
 						key="staticText-41"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
@@ -455,22 +435,122 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="674"
-						y="5"
-						width="53"
+						x="729"
+						y="1"
+						width="33"
 						height="28"
 						forecolor="#000000"
 						key="staticText-44"
 						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[VARIABLE DIA]]></text>
+				<text><![CDATA[VAR. DIA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="706"
+						y="1"
+						width="23"
+						height="28"
+						forecolor="#000000"
+						key="staticText-45"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIAS LAB.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="286"
+						y="1"
+						width="23"
+						height="28"
+						forecolor="#000000"
+						key="staticText-46"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIAS BIM.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="202"
+						y="1"
+						width="42"
+						height="28"
+						forecolor="#000000"
+						key="staticText-47"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FECHA INICIAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="244"
+						y="1"
+						width="42"
+						height="28"
+						forecolor="#000000"
+						key="staticText-48"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FECHA FINAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="178"
+						y="1"
+						width="24"
+						height="28"
+						forecolor="#000000"
+						key="staticText-49"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PER.]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
@@ -480,7 +560,7 @@ from 	empleado X
 					<reportElement
 						x="2"
 						y="0"
-						width="195"
+						width="176"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -494,7 +574,7 @@ from 	empleado X
 						mode="Opaque"
 						x="0"
 						y="11"
-						width="735"
+						width="764"
 						height="1"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -503,9 +583,9 @@ from 	empleado X
 				</line>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="197"
+						x="309"
 						y="0"
-						width="70"
+						width="43"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -516,7 +596,7 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="267"
+						x="352"
 						y="0"
 						width="48"
 						height="11"
@@ -529,9 +609,9 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="315"
+						x="400"
 						y="0"
-						width="48"
+						width="43"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -542,7 +622,7 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="363"
+						x="443"
 						y="0"
 						width="43"
 						height="11"
@@ -555,7 +635,7 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="406"
+						x="486"
 						y="0"
 						width="43"
 						height="11"
@@ -568,9 +648,9 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="449"
+						x="529"
 						y="0"
-						width="59"
+						width="43"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -581,9 +661,9 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="508"
+						x="572"
 						y="0"
-						width="49"
+						width="43"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -594,9 +674,9 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="556"
+						x="615"
 						y="0"
-						width="65"
+						width="43"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -607,9 +687,9 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="621"
+						x="658"
 						y="0"
-						width="54"
+						width="48"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -620,9 +700,9 @@ from 	empleado X
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="674"
+						x="729"
 						y="0"
-						width="54"
+						width="34"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -630,6 +710,71 @@ from 	empleado X
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VAR_DIA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="706"
+						y="0"
+						width="23"
+						height="11"
+						key="textField-8"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{dias_lab_bim}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="286"
+						y="0"
+						width="23"
+						height="11"
+						key="textField-9"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{dias_bim}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="202"
+						y="0"
+						width="42"
+						height="11"
+						key="textField-10"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha_ini}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="dd-MM-yy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="244"
+						y="0"
+						width="42"
+						height="11"
+						key="textField-11"/>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha_fin}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="178"
+						y="0"
+						width="24"
+						height="11"
+						key="textField-12"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{periodicidad}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -654,7 +799,7 @@ from 	empleado X
 						mode="Opaque"
 						x="0"
 						y="2"
-						width="735"
+						width="764"
 						height="1"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -788,9 +933,9 @@ from 	empleado X
 				<line direction="TopDown">
 					<reportElement
 						mode="Opaque"
-						x="-1"
+						x="0"
 						y="2"
-						width="735"
+						width="764"
 						height="1"
 						forecolor="#666666"
 						backcolor="#FFFFFF"
@@ -881,16 +1026,6 @@ from 	empleado X
 		</lastPageFooter>
 		<summary>
 			<band height="0"  isSplitAllowed="true" >
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="-49"
-						width="736"
-						height="2"
-						forecolor="#666666"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
 			</band>
 		</summary>
 </jasperReport>

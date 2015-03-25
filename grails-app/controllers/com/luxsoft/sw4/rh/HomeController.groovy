@@ -15,6 +15,7 @@ class HomeController {
     	
     }
 
+	@Secured(['ROLE_USER'])
     def cambioDeEjercicio(Integer ejercicio){
     	session.ejercicio=ejercicio
     	def origin=request.getHeader('referer')
@@ -22,6 +23,7 @@ class HomeController {
     	redirect(uri: request.getHeader('referer') )
     }
 	
+	@Secured(['ROLE_USER'])
 	def cambiarCalendario(CalendarioDet calendario){
 		if(calendario.calendario.tipo=='SEMANAL'){
 			session.calendarioSemana=calendarioDet

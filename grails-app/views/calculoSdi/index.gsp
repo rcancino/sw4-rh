@@ -57,7 +57,6 @@
 					<ul class="dropdown-menu">
 						<li>
 							 
-							<g:link action="reporte" params="[tipo:'BASE']"> Sdi Bimestral Base</g:link>
 							<g:link action="reporte" params="[tipo:'CALCULO']"> Sdi Bimestral Calculo</g:link>
 							<g:link action="reporte" params="[tipo:'VARIABLES']">Sdi Bimestral Variables</g:link>
 							

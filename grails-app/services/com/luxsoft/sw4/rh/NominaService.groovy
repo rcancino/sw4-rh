@@ -426,7 +426,7 @@ class NominaService {
 	}
 	
 	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
-		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.id  asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}

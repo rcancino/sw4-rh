@@ -115,6 +115,13 @@ class ProcesadorDeISTP {
 		
 		def ejercicio=nominaEmpleado.nomina.ejercicio
 		
+		
+	   def retardoPermiso=nominaEmpleado.conceptos.find{it.concepto.clave=='D012'}
+	   
+	   model.retardo=retardoPermiso?.importeExcento?:0.0
+	   
+	  
+		
 		model.percepciones=nominaEmpleado.getPercepcionesGravadas()
 		if(model.percepciones<=0){
 			return model
@@ -126,7 +133,7 @@ class ProcesadorDeISTP {
 				(it.fin-it.inicio)+1
 			}else 0
 		}
-		model.diasTrabajados=nominaEmpleado.diasDelPeriodo
+		model.diasTrabajados=  nominaEmpleado.diasDelPeriodo
 		
 		model.tarifa =TarifaIsr.obtenerTabla(ejercicio,'MENSUAL',model.diasTrabajados,dias)
 		.find(){(model.percepciones>it.limiteInferior && model.percepciones<=it.limiteSuperior)}

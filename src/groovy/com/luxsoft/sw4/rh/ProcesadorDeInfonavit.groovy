@@ -26,7 +26,7 @@ class ProcesadorDeInfonavit {
 		if(infonavit) {
 			log.info "Aplicando decucccon para INFONAVIT: ${infonavit.empleado} ${infonavit.tipo} ${infonavit.cuotaFija}"			
 			
-			def neDet=neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
+			def neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			
 			
 			def importeExcento=0.0

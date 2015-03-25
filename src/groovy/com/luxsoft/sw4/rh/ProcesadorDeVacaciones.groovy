@@ -29,18 +29,13 @@ class ProcesadorDeVacaciones {
 		if(asistencia.vacaciones>0){
 			
 			//Localizar el concepto
-			def nominaPorEmpleadoDet=ne.conceptos.find(){
-				it.concepto==concepto
-			}
+			def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			
-			if(!nominaPorEmpleadoDet){
-				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(nominaPorEmpleadoDet)
-			}
 			def importe=salarioDiario*asistencia.vacaciones
 			if(importe){
 				nominaPorEmpleadoDet.importeGravado=importe
 				nominaPorEmpleadoDet.importeExcento=0
+				ne.addToConceptos(nominaPorEmpleadoDet)
 			}
 			
 		}
@@ -50,19 +45,13 @@ class ProcesadorDeVacaciones {
 			log.debug 'Procesando vacaciones pagadas: '+asistencia.vacacionesp
 			def conceptoPag=ConceptoDeNomina.findByClave('P031')
 			
-			def nominaPorEmpleadoDet=ne.conceptos.find(){
-				it.concepto==conceptoPag
-			}
-			
-			if(!nominaPorEmpleadoDet){
-				nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:conceptoPag,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-				ne.addToConceptos(nominaPorEmpleadoDet)
-			}
+			def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:conceptoPag,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 			
 			def importe=salarioDiario*asistencia.vacacionesp
 			if(importe){
 				nominaPorEmpleadoDet.importeGravado=importe
 				nominaPorEmpleadoDet.importeExcento=0
+				ne.addToConceptos(nominaPorEmpleadoDet)
 			}
 		}
 		

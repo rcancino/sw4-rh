@@ -17,11 +17,23 @@
 			<td>Percepcion grav</td>
 			<td><g:formatNumber number="${percepciones}" type="currency"/></td>
 		</tr>
+		
 		<tr>
-			<td>Límite inferior Limite superior</td>
+			<td>Retardo Permiso</td>
+			<td><g:formatNumber number="${retardo}" type="currency"/></td>
+		</tr>
+		
+		<tr>
+			<td>Base gravable</td>
+			<td><g:formatNumber number="${ (percepciones?:0.0)-retardo}" type="currency"/></td>
+		</tr>
+		
+		<tr>
+			<td>Límite inferior </td>
 			<td>
 				<g:formatNumber number="${tarifa.limiteInferior}" type="currency"/>
-				<g:formatNumber number="${tarifa.limiteSuperior}" type="currency"/>
+				<%--<g:formatNumber number="${tarifa.limiteSuperior}" type="currency"/>--%>
+				
 			</td>
 			
 		</tr>
@@ -49,10 +61,7 @@
 			<td>Subsidio</td>
 			<td><g:formatNumber number="${subsidio.subsidio}" type="currency"/></td>
 		</tr>
-		<tr>
-			<td>Excento</td>
-			<td><g:formatNumber number="${importeExcento}" type="currency"/></td>
-		</tr>
+		
 	</tbody>
 	<tfoot>
 		<tr>

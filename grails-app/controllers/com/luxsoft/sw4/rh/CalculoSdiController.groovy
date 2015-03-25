@@ -76,9 +76,6 @@ class CalculoSdiController {
 		def tipo=params.tipo
 		def re=''
 		switch(tipo) {
-			case 'BASE':
-				re='SdiBimestral'
-				break;
 			case 'CALCULO':
 				re='SdiBimestralCalculo'
 				break;

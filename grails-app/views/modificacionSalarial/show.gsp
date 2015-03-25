@@ -26,7 +26,7 @@
 							</g:link>
 						</g:if>
 				
-					
+					</g:if>
 					<g:link action="reporteDeSDI" class="list-group-item" id="${modificacionInstance.id}">
 						<span class="glyphicon glyphicon-check"></span> Reporte
 					</g:link>

@@ -47,7 +47,7 @@ class CalculoSdiService {
 		.replaceAll('@FECHA_ULT_MODIF'.toLowerCase(),m.fecha.format('yyyy/MM/dd'))
 		.replaceAll('@TIPO'.toLowerCase()," s.periodicidad=\'SEMANAL\'")
 		.replaceAll('@PERIODO'.toLowerCase(),tipo)
-		println query
+		//println query
 		Sql sql=new Sql(dataSource)
 		sql.eachRow(query,[m.empleado.id]){ row->
 			def empleado=m.empleado

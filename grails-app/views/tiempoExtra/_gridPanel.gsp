@@ -8,6 +8,8 @@
 			<th>Ubicacion</th>
 			<th>Tipo</th>
 			<th>Número</th>
+			<th>Inicio</th>
+			<th>Fin</th>
 			<th>Dobles E</th>
 			<th>Dobles G</th>
 			<th>Triples G</th>
@@ -29,6 +31,8 @@
 				<td>${fieldValue(bean:row,field:"empleado.perfil.ubicacion.clave")}</td>
 				<td>${fieldValue(bean:row,field:"tipo")}</td>
 				<td><g:formatNumber number="${row.folio}" format="##"/></td>
+                <td><g:formatDate date="${row.asistencia.calendarioDet.inicio}" format="dd/MM/yyyy"/></td>
+                <td><g:formatDate date="${row.asistencia.calendarioDet.fin}" format="dd/MM/yyyy"/></td>
 				<td><g:formatNumber number="${row.doblesExcentos}" format="####.####"/></td>
 				<td><g:formatNumber number="${row.doblesGravados}" format="####.####"/></td>
 				<td><g:formatNumber number="${row.triplesGravados}" format="####.####"/></td>

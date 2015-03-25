@@ -53,7 +53,7 @@ navigation={
 				incapacidad(controller:'incapacidad',action:'index',titleText:'Incapacidades')
 				incidencias(controller:'incidencia',action:'index')
 				vacaciones(controller:'vacaciones',action:'index')
-				tiempoExtra(controller:'tiempoExtra',action:'index',titleText:'Compensaciones')
+				tiempoExtra(controller:'tiempoExtra',action:'index',titleText:'Tiempo Extra')
 			}
 			incentivo(controller:'incentivo',action:'index')
 			
@@ -162,6 +162,7 @@ navigation={
 			infonavitSua()
 			reporteDeInfonavit()
 			dimm(titleText:'DIMM')
+			rfc(titleText:'RFC')
 			
 			
 		}

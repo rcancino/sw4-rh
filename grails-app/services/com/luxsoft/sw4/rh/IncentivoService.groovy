@@ -368,12 +368,13 @@ class IncentivoService {
 			bono.tasaBono2=0.0
 		}
 		
-		
+		bono.comentario=""
 		def checadasFaltantesComida=calcularChecadasFaltantesComida(asistencia.partidas)
 		if(checadasFaltantesComida>0){
 			bono.tasaBono2=0.0
-			bono.comentario+="B1 (CANCELADO POR $checadasFaltantesComida CHEC FALTANTES)"
+			bono.comentario="B1 (CANCELADO POR $checadasFaltantesComida CHEC FALTANTES)"
 		}
+		
 		def checadasFaltantes=calcularChecadasFaltantesPrincipales(asistencia.partidas)
 		if(checadasFaltantes>0){
 			bono.tasaBono1=0.0
@@ -388,16 +389,31 @@ class IncentivoService {
 	def calcularChecadasFaltantesComida(List registros){
 		def faltantes=0
 		registros.each{ det->
-			
-			if(!det.excentarChecadas){
-				if(det.turnoDet.salida1 && !det.salida1)
-					faltantes++
-				if(det.turnoDet.entrada2 && !det.entrada2)
-					faltantes++
+			def diaFestivo=DiaFestivo.findByFecha(det.fecha)
+			if(det.tipo=='ASISTENCIA'){
+				if(diaFestivo){
+					
+					if(diaFestivo.parcial){
+						log.info 'Evluando dia festivo parcial: '+diaFestivo.fecha
+						if(det.salida1 && !det.entrada1 ){
+							faltantes++;
+						}
+						if(det.entrada1 && !det.salida1 ){
+							faltantes++;
+						}
+					}else
+						log.info 'Evluando dia festivo total: '+diaFestivo.fecha+ "   Faltantes: "+faltantes
+				}else{
+					if(!det.excentarChecadas){
+						if(det.turnoDet.salida1 && !det.salida1)
+							faltantes++
+						if(det.turnoDet.entrada2 && !det.entrada2)
+							faltantes++
+					}
+				}
+				log.info 'Partida de fecha: '+det.fecha+ "   Faltantes calculados: "+faltantes
 			}
 			
-			
-				
 		}
 		return faltantes
 	}
@@ -405,13 +421,31 @@ class IncentivoService {
 	def calcularChecadasFaltantesPrincipales(List registros){
 		def faltantes=0
 		registros.each{ det->
-			if(!det.excentarChecadas){
-				if(det.turnoDet.entrada1 && !det.entrada1)
-					faltantes++
-				if(det.turnoDet.salida2 && !det.salida2)
-					faltantes++
+			if(det.tipo=='ASISTENCIA'){
+				def diaFestivo=DiaFestivo.findByFecha(det.fecha)
+				if(diaFestivo){
+					if(diaFestivo.parcial){
+						log.info 'Evluando dia festivo parcial: '+diaFestivo.fecha
+						if(det.salida1 && !det.entrada1 ){
+							faltantes++;
+						}
+						if(det.entrada1 && !det.salida1 ){
+							faltantes++;
+						}
+					}else
+						log.info 'Evluando dia festivo total: '+diaFestivo.fecha+ "   Faltantes: "+faltantes
+				}else{
+					
+				
+					if(!det.excentarChecadas){
+						if(det.turnoDet.entrada1 && !det.entrada1)
+							faltantes++
+						if(det.turnoDet.salida2 && !det.salida2)
+							faltantes++
+					}
+				}
+				
 			}
-			
 				
 		}
 		return faltantes
@@ -422,7 +456,7 @@ class IncentivoService {
 		def inventario=CalendarioDet.find(
 			"from CalendarioDet det  where det.calendario.ejercicio=? and det.mes=? and det.calendario.tipo=? and det.calendario.comentario=?",
 			[ejercicio,mes.nombre,'ESPECIAL','INVENTARIO'])
-		//println 'Validando participacion en inventario: '+inventario
+		println 'Validando participacion en inventario: '+inventario+ ' Ejercicio: '+ejercicio+ ' Mes: '+mes
 		if(inventario){
 			log.info 'Evaluando calendario de inventario: '+inventario
 			return alta<=inventario.inicio

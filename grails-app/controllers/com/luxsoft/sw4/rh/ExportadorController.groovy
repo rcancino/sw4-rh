@@ -73,7 +73,7 @@ class ExportadorController {
 
 			def importeCargos =formato.format(importe).padLeft(16,"0")
 			def formatoDec = new DecimalFormat(".##")
-			def decimalCargo=formatoDec.format(n.total-importe).replace('.','').padRight(2,"0")
+			def decimalCargo=formatoDec.format(totalNomina-importe).replace('.','').padRight(2,"0")
 
 			def importeCargo=importeCargos+decimalCargo
 			def tipoCta="01"
@@ -840,6 +840,55 @@ def reporteDeInfonavit(){
 }
 
 
+def rfc(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarRfc(PeriodoCommand command){
+	
+def temp = File.createTempFile('temp', '.txt')
+	
+	def consecutivo="01"
+	  Empresa emp=Empresa.first()
+	
+	temp.with {
+	  
+	def fechaIni=command.fechaInicial  //new Date('2015/01/13')
+	def fechaFin=command.fechaFinal    //new Date('2015/01/31')
+	SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy")
+
+	
+	def rfc=emp.rfc
+	def p="|"
+	def empleados = Empleado.findAll("from Empleado e where e.alta between ? and ?",[fechaIni,fechaFin]).each{ empleado ->
+  
+		  def curp=empleado.curp
+		  def apellidoPaterno=empleado.apellidoPaterno?empleado.apellidoPaterno:empleado.apellidoMaterno
+		  def apellidoMaterno=empleado.apellidoPaterno?empleado.apellidoMaterno:""
+		  def nombre=empleado.nombres
+		  def ingreso=df.format(empleado.alta)
+		  def tipoSalario="2"
+		  
+  
+ 
+	  def registro=curp+p+apellidoPaterno+p+apellidoMaterno+p+nombre+p+ingreso+p+tipoSalario+p+rfc+"\r\n"
+	 	append registro
+	 //println registro
+		  
+	 }
+
+}
+	String name=emp.rfc+"_"+new Date().format("ddMMyyyy")+"_"+consecutivo+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+  
+
+}
+
+
+
+
 private runReport(Map repParams){
 	log.info 'Ejecutando reporte  '+repParams
 	def nombre=WordUtils.capitalize(repParams.reportName)
@@ -852,6 +901,8 @@ private runReport(Map repParams){
 	return pdfStream
 	
 }
+
+
 
 
 }

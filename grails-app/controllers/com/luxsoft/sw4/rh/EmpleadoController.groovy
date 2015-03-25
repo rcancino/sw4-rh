@@ -114,7 +114,7 @@ class EmpleadoController {
 		}catch(EmpleadoException ex){
 			//println ex.message
 			flash.message=ex.message
-			render view:v,model:[empleadoInstance:ex.empleado.refresh(),edit:true]
+			render view:v,model:[empleadoInstance:ex.empleado,edit:true]
 		}
 		
 	}
