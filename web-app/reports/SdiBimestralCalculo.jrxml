@@ -834,6 +834,21 @@ AG   BN    FB ]]></text>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{sdi_nvo}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="421"
+						y="0"
+						width="55"
+						height="11"
+						key="textField-20">
+							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==46)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" 15     30     1 "]]></textFieldExpression>
+				</textField>
 			</band>
 		</detail>
 		<columnFooter>

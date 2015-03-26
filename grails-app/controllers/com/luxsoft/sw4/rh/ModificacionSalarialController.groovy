@@ -101,6 +101,7 @@ class ModificacionSalarialController {
 		
 		def repParams=[:]
 		repParams['ID']=ms.id
+		repParams['FECHA_MODIFICADO']=ms.fecha.format('dd-MM-yyyy')
 		
 		repParams.reportName='SalarioDiarioIntegradoIndividual'
 		ByteArrayOutputStream  pdfStream=runReport(repParams)
