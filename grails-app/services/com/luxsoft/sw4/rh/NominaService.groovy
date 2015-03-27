@@ -138,6 +138,11 @@ class NominaService {
 		return nomina
 	}
 	
+	/**
+	* Nota: Por el momento este metodo no se debe llamar si la nomina ya ha sido generada
+	* 		es decir solo  funciona bien para genera los registros de nomina por empleado
+	* 		la primer vez
+	**/
 	@Transactional
 	def actualizarPartidas(Nomina nomina) {
 		assert nomina,"Nomina nula no es valido"

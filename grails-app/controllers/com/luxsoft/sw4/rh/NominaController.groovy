@@ -179,10 +179,15 @@ class NominaController {
 	def ajusteMensualIsr(Long id){
 		
 		Nomina nomina=Nomina.get(id)
-		nomina.partidas.each{
-			ajusteIsr.ajusteMensual(it)
+		nomina.partidas.each{ne->
+
+			def found=IsptMensual.findByNominaPorEmpleado(ne)
+			if(!found){
+				ajusteIsr.ajusteMensual(ne)
+				nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
+			}
+
 		}
-		nominaService.actualizarPartidas(Nomina.get(id))
 		redirect action:'show',params:[id:nomina.id]
 	}
 	
@@ -201,7 +206,7 @@ class NominaController {
 				}
 			}
 		}
-		nominaService.actualizarPartidas(Nomina.get(id))
+		//nominaService.actualizarPartidas(Nomina.get(id))
 		flash.message="Ajuste mensual ISTP eliminado"
 		redirect action:'show',params:[id:nomina.id]
 	}
