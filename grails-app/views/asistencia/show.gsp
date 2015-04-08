@@ -83,6 +83,10 @@
 							<li>
 								<button class="btn btn-default" data-toggle="modal" data-target="#calendarioForm"> Mensual X Empleado</button>
 							</li>
+							
+							<li>
+								<button class="btn btn-default" data-toggle="modal" data-target="#periodoCalendarioForm"> Tarjeta X Periodo</button>
+							</li>
 						</ul>
 					</div>
 					
@@ -172,6 +176,7 @@
 </r:script>
 	
 <g:render template="calendarioPeriodoDialog" model="[periodos:periodos]"/>
+<g:render template="periodoDialog" model="[periodos:periodos]"/>
 	
 
 </body>

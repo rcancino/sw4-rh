@@ -43,7 +43,7 @@
 		</tr>
 		<tr>
 			<td>Tasa %</td>
-			<td><g:formatNumber number="${tarifaPorcentaje}" type="percent"/></td>
+			<td><g:formatNumber number="${tarifaPorcentaje*100}" format="##.##"/></td>
 		</tr>
 		<tr>
 			<td>Impuesto marginal</td>

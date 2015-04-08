@@ -887,6 +887,11 @@ def temp = File.createTempFile('temp', '.txt')
 }
 
 
+def reporteDeRFC(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+
 
 
 private runReport(Map repParams){

@@ -54,10 +54,32 @@
 								<span class="glyphicon glyphicon-calendar"></span> Agregar
 							</button>
 
-							<button class="btn btn-default" data-toggle="modal" 
+							<%--<button class="btn btn-default" data-toggle="modal" 
 								data-target="#reporteDeNominaForm">
 								<span class="glyphicon glyphicon-print"></span> Reporte
 							</button>
+						--%>
+						
+						<div class="btn-group">
+						<button type="button" name="reportes"
+							class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+							role="menu">
+							Reportes <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+													
+							<li>
+								<button class="btn btn-default" data-toggle="modal"	data-target="#reporteDeNominaForm"> Nomina	</button>
+							</li>
+							
+							<li>
+								<button class="btn btn-default" data-toggle="modal"	data-target="#reporteDeNominaConcentradaForm"> Nomina Concentrada	</button>
+							</li>
+						</ul>
+					</div>
+							
+							
+							
 							<g:link action="importar" class="btn btn-default" params="[periodicidad:periodicidad]" 
 								>
 								<span class="glyphicon glyphicon-filter"></span> Importar
@@ -72,6 +94,7 @@
 		
 		<g:render template="agregarDialog"/>
 		<g:render template="reporteDeNomina"/>
+		<g:render template="reporteDeNominaConcentrada"/>
 	
 	<r:script>
 			$(function(){

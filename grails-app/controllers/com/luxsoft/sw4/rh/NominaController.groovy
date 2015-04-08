@@ -84,8 +84,10 @@ class NominaController {
 				nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
 			}
 		}
+		nominaService.depurar(id)
 		flash.message="Actualización exitosa"
-		redirect action:'depurar',params:[id:id]
+		//redirect action:'depurar',params:[id:id]
+		redirect action:'show',params:[id:id]
 	}
 
 	def depurar(Long id){
@@ -180,11 +182,15 @@ class NominaController {
 		
 		Nomina nomina=Nomina.get(id)
 		nomina.partidas.each{ne->
-
+			
+			println "Calculando ajuste mensual para :"+ ne.empleado.nombre
 			def found=IsptMensual.findByNominaPorEmpleado(ne)
 			if(!found){
+				println "Ajustando nomina"
 				ajusteIsr.ajusteMensual(ne)
 				nominaPorEmpleadoService.actualizarNominaPorEmpleado(ne.id)
+			}else{
+			  println "Nomina ya ajustada"
 			}
 
 		}

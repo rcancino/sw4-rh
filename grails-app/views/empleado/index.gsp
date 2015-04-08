@@ -37,8 +37,7 @@
 						<g:jasperReport
           						jasper="CatalogoEmpleados"
           						format="PDF"
-          						name="Catálogo">
-    							
+          						name="Empleados">	
  						</g:jasperReport>
 					</li>
 				</ul>

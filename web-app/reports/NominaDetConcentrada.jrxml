@@ -29,13 +29,20 @@
 	<parameter name="UBICACION" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="FOLIO" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="TIPO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="PERIODICIDAD" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL,'BANAMEX' AS BANCO,N.FORMA_DE_PAGO
-,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
+,(case when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=28 then 2 when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=29 then 1 else 0 end ) +
+	(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO
+,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
 ,X.ID,X.CLAVE AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
 ,E.FALTAS,E.INCAPACIDADES
 ,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
-	when x.alta<=N.periodo_fecha_inicial then (round(((-(timestampdiff(minute,N.periodo_fecha_final,(case when x.alta>N.periodo_fecha_inicial then x.alta else N.periodo_fecha_inicial end))/60)/24)+1),0)  -   (e.faltas+(e.fraccion_descanso))	-(e.incapacidades))  
+	when x.alta<=N.periodo_fecha_inicial then (
+	(case when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=28 then 2 when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=29 then 1 else 0 end ) +
+	(round(((-(timestampdiff(minute,N.periodo_fecha_final,(case when x.alta>N.periodo_fecha_inicial then x.alta else N.periodo_fecha_inicial end))/60)/24)+1),0)  -   (e.faltas+(e.fraccion_descanso))	-(e.incapacidades))  
+	)
 	else  ifnull(round((e.dias_trabajados),0)-((select (a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) end) as DIAS_TRAB
 ,E.subsidio_empleo_aplicado AS SUBS_APLIC
 ,ifnull((SELECT ifnull(z.importe_gravado,0) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id and X.clave='P001'),0) as sueldo
@@ -60,7 +67,7 @@ JOIN empleado X ON(X.ID=E.empleado_id)
 LEFT JOIN nomina_por_empleado_det D ON(E.ID=D.parent_id)
 LEFT JOIN concepto_de_nomina C ON(C.ID=D.concepto_id)
 JOIN UBICACION U ON(U.ID=E.UBICACION_ID)
-WHERE  N.FOLIO =$P{FOLIO} AND N.EJERCICIO=$P{EJERCICIO} AND  U.CLAVE like $P{UBICACION}]]></queryString>
+WHERE  n.tipo=$P{TIPO} and n.periodicidad=$P{PERIODICIDAD} AND N.FOLIO =$P{FOLIO} AND N.EJERCICIO=$P{EJERCICIO}]]></queryString>
 
 	<field name="EMPRESA" class="java.lang.String"/>
 	<field name="RFC" class="java.lang.String"/>

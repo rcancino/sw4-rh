@@ -15,9 +15,12 @@ class AjusteIsr {
 	
 	def ajusteMensual(NominaPorEmpleado ne){
 		
+	
 		
 		def mes=ne.nomina.calendarioDet.mes
 		def ejercicio=ne.nomina.calendarioDet.calendario.ejercicio
+		
+		
 		
 		
 		def baseGravable=NominaPorEmpleadoDet
@@ -26,9 +29,11 @@ class AjusteIsr {
 		
 					
 		
-		if(baseGravable<=0.0)
+		if(baseGravable<=0.0){
+			println "la base gravable es menor a cero"
 			return
 			
+		}
 		def baseGravableTotal=baseGravable
 			
 		def permisoRetardoAcu=NominaPorEmpleadoDet

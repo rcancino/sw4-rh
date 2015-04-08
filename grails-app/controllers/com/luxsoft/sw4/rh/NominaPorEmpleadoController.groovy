@@ -218,6 +218,8 @@ class NominaPorEmpleadoController {
 	
 	@Transactional
 	def ajusteMensualIsr(NominaPorEmpleado ne){
+		
+		
 		def found=IsptMensual.findByNominaPorEmpleado(ne)
 		if(!found){
 			ajusteIsr.ajusteMensual(ne)

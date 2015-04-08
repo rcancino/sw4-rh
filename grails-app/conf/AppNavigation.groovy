@@ -163,6 +163,7 @@ navigation={
 			reporteDeInfonavit()
 			dimm(titleText:'DIMM')
 			rfc(titleText:'RFC')
+			reporteDeRFC()
 			
 			
 		}
