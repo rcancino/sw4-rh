@@ -6,9 +6,10 @@ import grails.plugin.springsecurity.annotation.Secured;
 @Secured(['ROLE_ADMIN','RH_USER'])
 //@Transactional(readOnly = true)
 class ControlDeVacacionesController {
-    static scaffold = true
+    //static scaffold = true
 	
 	def vacacionesService
+	def controlDeVacacionesService
 	
 	def index() {
 		
@@ -24,6 +25,24 @@ class ControlDeVacacionesController {
 		//def partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
 		[partidasList:list,ejercicio:ejercicio,tipo:tipo]
 		
+	}
+
+	def create(){
+		def ejercicio=session.ejercicio
+		[controlDeVacacionesInstance:new ControlDeVacaciones(ejercicio:ejercicio)]
+	}
+
+	def save(ControlDeVacaciones controlDeVacacionesInstance){
+		def found=ControlDeVacaciones.findByEmpleadoAndEjercicio(controlDeVacacionesInstance.empleado,session.ejercicio)
+		if(found){
+			flash.message="Control de vacaciones para $controlDeVacacionesInstance.empleado ya registrado"
+			render view:'create',model:[controlDeVacacionesInstance:new ControlDeVacaciones(ejercicio:session.ejercicio)]
+			return
+		}
+		controlDeVacacionesInstance=controlDeVacacionesService
+			.save(session.ejercicio,controlDeVacacionesInstance.empleado)
+		flash.message="Control de vacaciones registrado: $controlDeVacacionesInstance.empleado"
+		redirect action:'index'
 	}
 	
 	def generar(Integer id){
