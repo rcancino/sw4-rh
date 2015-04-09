@@ -34,15 +34,18 @@
 				<button type="button" name="reportes" class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="menu">Reportes <span class="caret"></span></button>
 				<ul class="dropdown-menu">
 					<li>
-						<g:jasperReport
-          						jasper="CatalogoEmpleados"
-          						format="PDF"
-          						name="Empleados">	
- 						</g:jasperReport>
+					      <a  data-toggle="modal"	data-target="#empleadosForm"> Empleados	</a>
+					      
+					</li>
+					<li>
+						<a  data-toggle="modal"	data-target="#cumpleaniosForm"> Cumpleaños	</a>
 					</li>
 				</ul>
 				</div>
 		</div>
+		<g:render template="empleados"/>
+	    <g:render template="dialogCumple"/>
+		
 	</content>
 	
 	<content tag="grid">
@@ -73,7 +76,12 @@
 				<g:submitButton class="btn btn-primary" name="update" value="Buscar"/>
 			</div>
 		</g:form>
+		
+		
 	</content>
+	
+	
+	
 	
 	<r:script>
 		$('#searchForm').on('shown.bs.modal', function () {

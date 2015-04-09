@@ -69,11 +69,11 @@
 						<ul class="dropdown-menu">
 													
 							<li>
-								<button class="btn btn-default" data-toggle="modal"	data-target="#reporteDeNominaForm"> Nomina	</button>
+								<a  data-toggle="modal"	data-target="#reporteDeNominaForm"> Nomina	</a>
 							</li>
 							
 							<li>
-								<button class="btn btn-default" data-toggle="modal"	data-target="#reporteDeNominaConcentradaForm"> Nomina Concentrada	</button>
+								<a data-toggle="modal"	data-target="#reporteDeNominaConcentradaForm"> Nomina Concentrada	</a>
 							</li>
 						</ul>
 					</div>

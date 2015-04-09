@@ -81,11 +81,12 @@
 								</g:jasperReport>
 							</li>
 							<li>
-								<button class="btn btn-default" data-toggle="modal" data-target="#calendarioForm"> Mensual X Empleado</button>
+							
+								<a  data-toggle="modal" data-target="#calendarioForm"> Mensual X Empleado</a>
 							</li>
 							
 							<li>
-								<button class="btn btn-default" data-toggle="modal" data-target="#periodoCalendarioForm"> Tarjeta X Periodo</button>
+								<a data-toggle="modal" data-target="#periodoCalendarioForm"> Tarjeta X Periodo</a>
 							</li>
 						</ul>
 					</div>

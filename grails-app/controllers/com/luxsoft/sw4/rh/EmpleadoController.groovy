@@ -2,8 +2,14 @@ package com.luxsoft.sw4.rh
 
 
 
-import com.luxsoft.sw4.Empresa
 import grails.plugin.springsecurity.annotation.Secured
+import grails.validation.Validateable
+
+import org.apache.commons.lang.WordUtils
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import com.luxsoft.sw4.rh.*
+import com.luxsoft.sw4.Mes
 
 
 
@@ -11,6 +17,7 @@ import grails.plugin.springsecurity.annotation.Secured
 class EmpleadoController {
 	
     def empleadoService
+	def jasperService
 	
 	def index(Long max) {
 		//params.max = Math.min(max ?: 50, 100)
@@ -190,6 +197,68 @@ class EmpleadoController {
 		
 	}
 	
+	def reporteEmpleados(ReporteDeEmpleadosCommand command){
+		def repParams=[:]
+		repParams['FPAGO']=command.fpago
+		repParams['PERIODICIDAD']=command.periodicidad
+		
+		repParams.reportName='Empleados'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
+	
+	private runReport(Map repParams){
+		log.info 'Ejecutando reporte  '+repParams
+		def nombre=WordUtils.capitalize(repParams.reportName)
+		def reportDef=new JasperReportDef(
+			name:nombre
+			,fileFormat:JasperExportFormat.PDF_FORMAT
+			,parameters:repParams
+			)
+		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+		return pdfStream
+		
+	}
+	
+	
+	def cumpleanios(EjercicioMesReportCommand command){
+		def repParams=[:]
+		repParams['EJERCICIO']=command.ejercicio
+		repParams['MES']=command.mes
+		
+		repParams.reportName='Cumpleanios'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName)
+	}
 
 }
 
+@Validateable
+class ReporteDeEmpleadosCommand{
+	
+	String fpago
+	String periodicidad
+
+	static constraints = {
+		fpago inList:['CHEQUE','TRANSFERENCIA']
+		periodicidad inList:['SEMANAL','QUINCENAL']
+		
+	}
+}
+
+
+@Validateable
+class EjercicioMesReportCommand{
+	
+	
+	String mes
+	String ejercicio
+	
+	static constraints={
+		ejercicio inList:2015..2025
+		mes inList:['1','2','3','4','5','6','7','8','9','10','11','12']
+		
+	}
+}

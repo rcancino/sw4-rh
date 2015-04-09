@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Ausentismo"
+		 name="AusentismoSua"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -181,7 +181,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 						mode="Opaque"
 						x="0"
 						y="12"
-						width="174"
+						width="187"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -199,9 +199,9 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="174"
+						x="187"
 						y="12"
-						width="44"
+						width="59"
 						height="11"
 						forecolor="#000000"
 						key="staticText-24"
@@ -219,7 +219,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="319"
+						x="340"
 						y="12"
 						width="50"
 						height="11"
@@ -239,9 +239,9 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="222"
+						x="246"
 						y="12"
-						width="92"
+						width="94"
 						height="11"
 						forecolor="#000000"
 						key="staticText-32"
@@ -259,9 +259,9 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="376"
+						x="390"
 						y="12"
-						width="50"
+						width="59"
 						height="11"
 						forecolor="#000000"
 						key="staticText-33"
@@ -284,7 +284,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 					<reportElement
 						x="0"
 						y="1"
-						width="174"
+						width="187"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -295,9 +295,9 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="174"
+						x="187"
 						y="1"
-						width="44"
+						width="59"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -308,7 +308,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="319"
+						x="340"
 						y="0"
 						width="48"
 						height="11"
@@ -321,9 +321,9 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="222"
+						x="246"
 						y="0"
-						width="92"
+						width="94"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -334,9 +334,9 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="374"
+						x="390"
 						y="0"
-						width="48"
+						width="59"
 						height="11"
 						key="textField-9"/>
 					<box></box>
@@ -588,7 +588,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="262"
+						x="288"
 						y="7"
 						width="69"
 						height="11"
@@ -607,7 +607,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="344"
+						x="370"
 						y="7"
 						width="69"
 						height="11"
