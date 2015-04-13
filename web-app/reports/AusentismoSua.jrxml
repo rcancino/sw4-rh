@@ -89,65 +89,65 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 				</textField>
 				<staticText>
 					<reportElement
-						x="477"
+						x="469"
 						y="40"
 						width="25"
 						height="11"
 						key="staticText-34"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<text><![CDATA[AL:]]></text>
+				<text><![CDATA[AL:  ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="401"
+						x="386"
 						y="40"
 						width="25"
 						height="11"
 						key="staticText-35"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<text><![CDATA[DEL:]]></text>
+				<text><![CDATA[DEL:  ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="361"
+						x="336"
 						y="40"
-						width="40"
+						width="50"
 						height="11"
 						key="staticText-36"/>
 					<box></box>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<text><![CDATA[PERIODO]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="426"
+						x="411"
 						y="40"
-						width="53"
+						width="58"
 						height="11"
 						key="textField-10"/>
 					<box></box>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="502"
+						x="494"
 						y="40"
-						width="42"
+						width="58"
 						height="11"
 						key="textField-11"/>
 					<box></box>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>

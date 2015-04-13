@@ -199,7 +199,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 						mode="Opaque"
 						x="174"
 						y="12"
-						width="44"
+						width="58"
 						height="11"
 						forecolor="#000000"
 						key="staticText-24"
@@ -217,7 +217,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="218"
+						x="232"
 						y="12"
 						width="44"
 						height="11"
@@ -237,7 +237,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="262"
+						x="276"
 						y="12"
 						width="44"
 						height="11"
@@ -257,7 +257,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="306"
+						x="320"
 						y="12"
 						width="44"
 						height="11"
@@ -277,7 +277,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="350"
+						x="364"
 						y="12"
 						width="44"
 						height="11"
@@ -297,7 +297,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="394"
+						x="408"
 						y="12"
 						width="50"
 						height="11"
@@ -317,9 +317,9 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="444"
+						x="458"
 						y="12"
-						width="66"
+						width="81"
 						height="11"
 						forecolor="#000000"
 						key="staticText-32"
@@ -355,18 +355,18 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 					<reportElement
 						x="174"
 						y="1"
-						width="44"
+						width="58"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{fecha_mov}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="218"
+						x="232"
 						y="1"
 						width="44"
 						height="11"
@@ -379,7 +379,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="262"
+						x="276"
 						y="1"
 						width="44"
 						height="11"
@@ -392,7 +392,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="306"
+						x="320"
 						y="0"
 						width="44"
 						height="11"
@@ -405,7 +405,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="350"
+						x="364"
 						y="1"
 						width="44"
 						height="11"
@@ -418,7 +418,7 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="394"
+						x="408"
 						y="0"
 						width="48"
 						height="11"
@@ -431,13 +431,13 @@ ORDER BY E.APELLIDO_PATERNO]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="442"
+						x="456"
 						y="0"
-						width="68"
+						width="83"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numero}]]></textFieldExpression>

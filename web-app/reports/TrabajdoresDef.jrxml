@@ -85,11 +85,11 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="475"
+						x="498"
 						y="40"
 						width="25"
 						height="11"
-						key="staticText-5"/>
+						key="staticText-32"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
@@ -98,11 +98,11 @@ order by e.apellido_paterno ASC]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="408"
+						x="415"
 						y="40"
 						width="25"
 						height="11"
-						key="staticText-6"/>
+						key="staticText-33"/>
 					<box></box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
@@ -111,11 +111,11 @@ order by e.apellido_paterno ASC]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="368"
+						x="365"
 						y="40"
-						width="40"
+						width="50"
 						height="11"
-						key="staticText-21"/>
+						key="staticText-34"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
@@ -124,11 +124,11 @@ order by e.apellido_paterno ASC]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="433"
+						x="440"
 						y="40"
-						width="42"
+						width="58"
 						height="11"
-						key="textField"/>
+						key="textField-9"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
@@ -137,11 +137,11 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="500"
+						x="523"
 						y="40"
-						width="42"
+						width="58"
 						height="11"
-						key="textField"/>
+						key="textField-10"/>
 					<box></box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
@@ -177,7 +177,7 @@ order by e.apellido_paterno ASC]]></queryString>
 						mode="Opaque"
 						x="0"
 						y="8"
-						width="183"
+						width="177"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -195,9 +195,9 @@ order by e.apellido_paterno ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="183"
+						x="177"
 						y="8"
-						width="48"
+						width="54"
 						height="11"
 						forecolor="#000000"
 						key="staticText-24"
@@ -215,9 +215,9 @@ order by e.apellido_paterno ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="231"
+						x="217"
 						y="8"
-						width="66"
+						width="89"
 						height="11"
 						forecolor="#000000"
 						key="staticText-25"
@@ -230,12 +230,12 @@ order by e.apellido_paterno ASC]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[NUMERO]]></text>
+				<text><![CDATA[NSS]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="297"
+						x="302"
 						y="8"
 						width="69"
 						height="11"
@@ -255,7 +255,7 @@ order by e.apellido_paterno ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="366"
+						x="371"
 						y="8"
 						width="95"
 						height="11"
@@ -275,7 +275,7 @@ order by e.apellido_paterno ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="461"
+						x="466"
 						y="8"
 						width="33"
 						height="11"
@@ -295,7 +295,7 @@ order by e.apellido_paterno ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="494"
+						x="499"
 						y="8"
 						width="33"
 						height="11"
@@ -315,9 +315,9 @@ order by e.apellido_paterno ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="527"
+						x="532"
 						y="8"
-						width="54"
+						width="51"
 						height="11"
 						forecolor="#000000"
 						key="staticText-30"
@@ -340,7 +340,7 @@ order by e.apellido_paterno ASC]]></queryString>
 					<reportElement
 						x="0"
 						y="2"
-						width="183"
+						width="177"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -351,9 +351,9 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="183"
+						x="177"
 						y="3"
-						width="48"
+						width="54"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -364,20 +364,20 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="231"
+						x="217"
 						y="1"
-						width="66"
+						width="89"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numero}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="297"
+						x="302"
 						y="1"
 						width="69"
 						height="11"
@@ -390,7 +390,7 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="366"
+						x="371"
 						y="1"
 						width="95"
 						height="11"
@@ -403,7 +403,7 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="461"
+						x="466"
 						y="1"
 						width="33"
 						height="11"
@@ -416,7 +416,7 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="494"
+						x="499"
 						y="1"
 						width="33"
 						height="11"
@@ -429,9 +429,9 @@ order by e.apellido_paterno ASC]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="529"
+						x="534"
 						y="1"
-						width="52"
+						width="49"
 						height="11"
 						key="textField"/>
 					<box></box>

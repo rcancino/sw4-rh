@@ -49,8 +49,8 @@ FROM EMPLEADO E JOIN perfil_de_empleado P ON(E.ID=P.empleado_id) JOIN asistencia
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
 LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
 WHERE E.ID LIKE $P{ID} AND C.ID=$P{CALENDARIO_ID} 
-AND E.ALTA<=C.asistencia_fecha_final 
-AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></queryString>
+AND E.ALTA<=C.asistencia_fecha_final AND E.CONTROL_DE_ASISTENCIA IS TRUE  
+and d.fecha<= (case when B.id IS not NULL AND b.fecha>e.alta and b.fecha<=d.fecha then b.fecha else d.fecha end)]]></queryString>
 
 	<field name="asistencia_fecha_inicial" class="java.sql.Timestamp"/>
 	<field name="ID" class="java.lang.Long"/>
@@ -404,25 +404,6 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					</textElement>
 				<text><![CDATA[PERIODICIDAD : ]]></text>
 				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="154"
-						y="98"
-						width="43"
-						height="11"
-						key="staticText-18"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[ENTRADA]]></text>
-				</staticText>
 				<line direction="TopDown">
 					<reportElement
 						x="0"
@@ -730,6 +711,25 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					</textElement>
 				<text><![CDATA[FECHA]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="154"
+						y="98"
+						width="43"
+						height="11"
+						key="staticText-79"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[ENTRADA]]></text>
+				</staticText>
 			</band>
 			</groupHeader>
 			<groupFooter>
@@ -859,7 +859,7 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					<reportElement
 						mode="Opaque"
 						x="237"
-						y="27"
+						y="28"
 						width="17"
 						height="11"
 						forecolor="#000000"
@@ -870,7 +870,7 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[del ]]></text>
@@ -896,7 +896,7 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					<reportElement
 						mode="Opaque"
 						x="318"
-						y="27"
+						y="28"
 						width="16"
 						height="11"
 						forecolor="#000000"
@@ -907,7 +907,7 @@ AND E.CONTROL_DE_ASISTENCIA IS TRUE  AND (B.ID IS NULL OR B.FECHA<E.ALTA)]]></qu
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[al]]></text>

@@ -50,6 +50,7 @@ JOIN SALARIO L ON (E.ID=L.EMPLEADO_ID)
 WHERE 
 S.FECHA BETWEEN $P{FECHA_INICIAL} AND $P{FECHA_FINAL}
 AND S.tipo IN ('FALTA','INCAPACIDAD')  AND L.PERIODICIDAD=$P{PERIODICIDAD} and e.control_de_asistencia is true
+and (b.fecha is null or (s.fecha<=b.fecha or e.alta>b.fecha))
 ORDER BY u.id,E.clave,S.FECHA]]></queryString>
 
 	<field name="ID" class="java.lang.Long"/>

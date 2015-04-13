@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="TrabajdoresRFC"
+		 name="TrabajadoresRFC"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -77,65 +77,65 @@ order by ifnull(e.apellido_paterno,apellido_materno)]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="484"
+						x="464"
 						y="40"
 						width="25"
 						height="11"
 						key="staticText-5"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<text><![CDATA[AL:]]></text>
+				<text><![CDATA[AL:  ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="408"
+						x="384"
 						y="40"
 						width="25"
 						height="11"
 						key="staticText-6"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<text><![CDATA[DEL:]]></text>
+				<text><![CDATA[DEL:  ]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="368"
+						x="311"
 						y="40"
-						width="40"
+						width="73"
 						height="11"
 						key="staticText-21"/>
 					<box></box>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<text><![CDATA[PERIODO]]></text>
+				<text><![CDATA[PERIODO ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="433"
+						x="409"
 						y="40"
-						width="53"
+						width="55"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="509"
+						x="489"
 						y="40"
-						width="42"
+						width="60"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
@@ -167,9 +167,9 @@ order by ifnull(e.apellido_paterno,apellido_materno)]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="113"
+						x="103"
 						y="12"
-						width="174"
+						width="184"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -187,9 +187,9 @@ order by ifnull(e.apellido_paterno,apellido_materno)]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="307"
+						x="287"
 						y="12"
-						width="44"
+						width="72"
 						height="11"
 						forecolor="#000000"
 						key="staticText-24"
@@ -207,9 +207,9 @@ order by ifnull(e.apellido_paterno,apellido_materno)]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="360"
+						x="359"
 						y="12"
-						width="124"
+						width="130"
 						height="11"
 						forecolor="#000000"
 						key="staticText-27"
@@ -230,9 +230,9 @@ order by ifnull(e.apellido_paterno,apellido_materno)]]></queryString>
 			<band height="14"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="113"
+						x="103"
 						y="2"
-						width="174"
+						width="184"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -243,22 +243,22 @@ order by ifnull(e.apellido_paterno,apellido_materno)]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="307"
+						x="287"
 						y="3"
-						width="44"
+						width="72"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha_alta}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="360"
+						x="359"
 						y="1"
-						width="124"
+						width="130"
 						height="11"
 						key="textField"/>
 					<box></box>

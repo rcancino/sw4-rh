@@ -38,8 +38,7 @@
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=x.ubicacion_id) AS ubicacion,(SELECT U.descripcion FROM puesto U WHERE U.ID=x.puesto_id) AS puesto,(SELECT U.descripcion FROM departamento U WHERE U.ID=x.departamento_id) AS depto
 FROM EMPLEADO E JOIN salario s ON(s.empleado_id=e.id) join perfil_de_empleado x on(x.empleado_id=e.id)
 where e.status <>'BAJA' and s.periodicidad like $P{PERIODICIDAD} and s.forma_de_pago like $P{FPAGO}
-order by 6,7,8,2
-]]></queryString>
+order by 6,7,8,2]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
 	<field name="clave" class="java.lang.String"/>
@@ -208,7 +207,7 @@ order by 6,7,8,2
 					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PERIODICIDAD}.equals("%") ? "AMBOS" : $P{PERIODICIDAD}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PERIODICIDAD}.equals("%") ? "TODOS" : $P{PERIODICIDAD}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -223,7 +222,7 @@ order by 6,7,8,2
 					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FPAGO}.equals("%") ? "AMBOS" : $P{FPAGO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{FPAGO}.equals("%") ? "TODOS" : $P{FPAGO}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>

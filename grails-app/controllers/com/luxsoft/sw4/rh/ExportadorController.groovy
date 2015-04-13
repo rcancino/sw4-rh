@@ -158,7 +158,7 @@ class ExportadorController {
 		def calculosSdi=CalculoSdi.findAllByEjercicioAndBimestre(command.ejercicio,command.bimestre).each{calculo ->
 		 
 		  
-		  if(calculo.sdiInf!=0.0  && calculo.tipo== 'CALCULO_SDI' ){3
+		  if(calculo.sdiInf!=0.0  && calculo.tipo== 'CALCULO_SDI' ){
 			  
 		  
 			numeroDeMovs=numeroDeMovs+1
@@ -542,14 +542,18 @@ def generarModificacionBimestralSua(EjercicioBimestreCommand command){
 	   
 		 def calculosSdi=CalculoSdi.findAllByEjercicioAndBimestre(ejercicio,bimestre).sort{it.empleado.apellidoPaterno}.each{calculo ->
 	   
+			 
+			 if(calculo.sdiInf!=0.0  && calculo.tipo== 'CALCULO_SDI' ){
+				 def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+				 def tipoMov="07"
+				 def fechaMov= fecha_aplic  //df.format(calculo.fechaFin+1)
+				 def folioInc= StringUtils.leftPad("",8)
+				 def diasInc= StringUtils.leftPad("",2)
+				 def sdiOAp=calculo.sdiInf.toString().replace('.','').padLeft(7,"0")
+				 append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+			 }
 		  
-		  def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-		  def tipoMov="07"
-		  def fechaMov= fecha_aplic  //df.format(calculo.fechaFin+1)
-		  def folioInc= StringUtils.leftPad("",8)
-		  def diasInc= StringUtils.leftPad("",2)
-		  def sdiOAp=calculo.sdiInf.toString().replace('.','').padLeft(7,"0")
-		  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+		 
 	  
 		}
 	  

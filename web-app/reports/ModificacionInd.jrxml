@@ -189,7 +189,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 						mode="Opaque"
 						x="0"
 						y="12"
-						width="174"
+						width="167"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -207,7 +207,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="174"
+						x="167"
 						y="12"
 						width="57"
 						height="11"
@@ -227,7 +227,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="231"
+						x="224"
 						y="12"
 						width="44"
 						height="11"
@@ -247,7 +247,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="275"
+						x="268"
 						y="12"
 						width="44"
 						height="11"
@@ -267,7 +267,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="319"
+						x="312"
 						y="12"
 						width="44"
 						height="11"
@@ -287,7 +287,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="363"
+						x="356"
 						y="12"
 						width="44"
 						height="11"
@@ -307,9 +307,9 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="407"
+						x="400"
 						y="12"
-						width="77"
+						width="67"
 						height="11"
 						forecolor="#000000"
 						key="staticText-30"
@@ -327,9 +327,9 @@ ORDER BY e.apellido_paterno]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="484"
+						x="467"
 						y="12"
-						width="66"
+						width="84"
 						height="11"
 						forecolor="#000000"
 						key="staticText-35"
@@ -352,7 +352,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 					<reportElement
 						x="0"
 						y="1"
-						width="174"
+						width="167"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -363,20 +363,20 @@ ORDER BY e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="174"
+						x="167"
 						y="1"
 						width="57"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="231"
+						x="224"
 						y="1"
 						width="44"
 						height="11"
@@ -389,7 +389,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="275"
+						x="268"
 						y="1"
 						width="44"
 						height="11"
@@ -402,7 +402,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="319"
+						x="312"
 						y="0"
 						width="44"
 						height="11"
@@ -415,7 +415,7 @@ ORDER BY e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="363"
+						x="356"
 						y="1"
 						width="44"
 						height="11"
@@ -428,9 +428,9 @@ ORDER BY e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="411"
+						x="404"
 						y="0"
-						width="73"
+						width="63"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -441,13 +441,13 @@ ORDER BY e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="484"
+						x="467"
 						y="0"
-						width="68"
+						width="84"
 						height="11"
 						key="textField-11"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{numero}]]></textFieldExpression>

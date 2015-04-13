@@ -199,8 +199,8 @@ class EmpleadoController {
 	
 	def reporteEmpleados(ReporteDeEmpleadosCommand command){
 		def repParams=[:]
-		repParams['FPAGO']=command.fpago
-		repParams['PERIODICIDAD']=command.periodicidad
+		repParams['FPAGO']=command.fpago=='TODOS' ? '%' : command.fpago
+		repParams['PERIODICIDAD']=command.periodicidad=='TODOS'? '%' : command.periodicidad
 		
 		repParams.reportName='Empleados'
 		ByteArrayOutputStream  pdfStream=runReport(repParams)
@@ -242,8 +242,8 @@ class ReporteDeEmpleadosCommand{
 	String periodicidad
 
 	static constraints = {
-		fpago inList:['CHEQUE','TRANSFERENCIA']
-		periodicidad inList:['SEMANAL','QUINCENAL']
+		fpago inList:['TODOS','CHEQUE','TRANSFERENCIA']
+		periodicidad inList:['TODOS','SEMANAL','QUINCENAL']
 		
 	}
 }

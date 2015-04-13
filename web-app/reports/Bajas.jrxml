@@ -83,8 +83,8 @@ order by e.apellido_paterno]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="472"
-						y="43"
+						x="469"
+						y="40"
 						width="25"
 						height="11"
 						key="staticText-33"/>
@@ -96,8 +96,8 @@ order by e.apellido_paterno]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="405"
-						y="43"
+						x="386"
+						y="40"
 						width="25"
 						height="11"
 						key="staticText-34"/>
@@ -109,9 +109,9 @@ order by e.apellido_paterno]]></queryString>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="365"
-						y="43"
-						width="40"
+						x="336"
+						y="40"
+						width="50"
 						height="11"
 						key="staticText-35"/>
 					<box></box>
@@ -122,9 +122,9 @@ order by e.apellido_paterno]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="430"
-						y="43"
-						width="42"
+						x="411"
+						y="40"
+						width="58"
 						height="11"
 						key="textField-10"/>
 					<box></box>
@@ -135,9 +135,9 @@ order by e.apellido_paterno]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="497"
-						y="43"
-						width="42"
+						x="494"
+						y="40"
+						width="58"
 						height="11"
 						key="textField-11"/>
 					<box></box>

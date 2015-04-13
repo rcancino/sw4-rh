@@ -90,8 +90,8 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<staticText>
 					<reportElement
-						x="465"
-						y="37"
+						x="469"
+						y="40"
 						width="25"
 						height="11"
 						key="staticText-36"/>
@@ -103,8 +103,8 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<staticText>
 					<reportElement
-						x="389"
-						y="37"
+						x="386"
+						y="40"
 						width="25"
 						height="11"
 						key="staticText-37"/>
@@ -116,9 +116,9 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<staticText>
 					<reportElement
-						x="341"
-						y="37"
-						width="48"
+						x="336"
+						y="40"
+						width="50"
 						height="11"
 						key="staticText-38"/>
 					<box></box>
@@ -129,9 +129,9 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="414"
-						y="37"
-						width="53"
+						x="411"
+						y="40"
+						width="58"
 						height="11"
 						key="textField-13"/>
 					<box></box>
@@ -142,9 +142,9 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="490"
-						y="37"
-						width="53"
+						x="494"
+						y="40"
+						width="58"
 						height="11"
 						key="textField-14"/>
 					<box></box>
