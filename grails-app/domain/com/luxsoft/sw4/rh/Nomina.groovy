@@ -61,11 +61,13 @@ class Nomina {
 		partidas cascade: "all-delete-orphan"
 	}
 	
-	public Integer getDiasPagados(){
-		use(TimeCategory){
+	def Integer getDiasPagados(){
+	/*	use(TimeCategory){
 			def duration= periodo.fechaFinal-periodo.fechaInicial+1.day
 			return duration.days
-		}
+		}*/
+		def duration=(periodo.fechaFinal-periodo.fechaInicial)+1
+		
 	}
 
 	def beforeUpdate() {
