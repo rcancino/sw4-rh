@@ -139,6 +139,7 @@ log4j = {
 			info 'grails.app.services.com.luxsoft.sw4.rh.InfonavitService'
 			info 'grails.app.com.luxsoft.sw4.rh.TiempoExtraService'
 			info 'grails.app.services.com.luxsoft.rh.AguinaldoService'
+			debug 'grails.app.service.com.luxsoft.sw4.rh.PtuService'
 			//info 'com.luxsoft.sw4.rh'
 			off 'com.luxsoft.sw4.rh.ProcesadorDeSueldo'
 			off 'com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadas'
@@ -152,6 +153,8 @@ log4j = {
 			off 'com.luxsoft.sw4.rh.ProcesadorDeOtrasDeducciones'
 			info 'com.luxsoft.sw4.rh.procesadores.AjusteIsr'
 			off 'com.luxsoft.sw4.rh.ExportadorDim'
+
+			
 			
 			
 			
