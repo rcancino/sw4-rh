@@ -28,6 +28,9 @@ class Ptu {
 	
 	Integer antiguedad=0
 	Integer diasDelEjercicio=0
+
+	Boolean noAsignado
+	String noAsignadoComentario
 	
 	Date dateCreated
 	Date lastUpdated
@@ -36,6 +39,8 @@ class Ptu {
     static constraints = {
 		empleado unique:['ejercicio']
 		nominaPorEmpleado nullable:true
+		noAsignadoComentario nullable:true,maxSize:100
+		noAsignadoComentario nullable:true
 		
     }
 
