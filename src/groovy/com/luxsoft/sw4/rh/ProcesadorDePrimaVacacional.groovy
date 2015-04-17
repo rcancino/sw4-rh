@@ -23,25 +23,14 @@ class ProcesadorDePrimaVacacional {
 		
 		
 		//Localizar el concepto
-		def nominaPorEmpleadoDet=ne.conceptos.find(){
-			it.concepto==concepto
-		}
+		def nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 		
-		if(!nominaPorEmpleadoDet){
-			nominaPorEmpleadoDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-			ne.addToConceptos(nominaPorEmpleadoDet)
-		}
+		
 		def asistencia=ne.asistencia
 		def vacaciones=asistencia.vacaciones+asistencia.vacacionesp
 		def calendarioDet=asistencia.calendarioDet
 		log.debug "El empleado ${ne.empleado.clave} tiene ${vacaciones} en el periodo:${calendarioDet.asistencia}"
-		if(vacaciones<=0){
-			if(nominaPorEmpleadoDet){
-				ne.removeFromConceptos(nominaPorEmpleadoDet)
-				log.debug "No hay vacaciones registradas eliminando la partida de percepcion prima vacacional"
-				return
-			}
-		}
+		
 		if(vacaciones>0){
 			
 			def empleado=ne.empleado
@@ -80,6 +69,7 @@ class ProcesadorDePrimaVacacional {
 			
 			nominaPorEmpleadoDet.importeGravado=gravado
 			nominaPorEmpleadoDet.importeExcento=excento
+			ne.addToConceptos(nominaPorEmpleadoDet)
 			ne.actualizar()
 		}
 		

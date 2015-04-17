@@ -403,6 +403,35 @@ class NominaService {
 		}
 	}
 	
+	def cancelarPrestamo(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='D004'}
+		
+		if(neDet){
+			log.info 'Cancelando deduccion de prestamo aplicada '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			
+			def prestamo=buscarPrestamo(ne)
+			
+			if(prestamo){
+			
+				def abono=prestamo.abonos.find{a->
+					a?.nominaPorEmpleadoDet?.id==neDet?.id
+				}
+				if(abono){
+					log.info "Eliminando el  abono de $neDet.importeExcento para prestamo: "+prestamo
+					prestamo.removeFromAbonos(abono)
+					
+					//prestamo.save failOnError:true
+					
+				}
+				
+				prestamo.actualizarSaldo()
+			}
+			
+		}
+	}
+	
+	
+	
 	def actualizarOtrasDeducciones(NominaPorEmpleado ne){
 		def neDet=ne.conceptos.find{it.concepto.clave=='D005'}
 		if(neDet){
@@ -430,24 +459,64 @@ class NominaService {
 		}
 	}
 	
+	def cancelarOtrasDeducciones(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='D005'}
+		if(neDet){
+			log.info 'Cancelando Otra Deduccion  detectado D005 '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			def deduccion=buscarOtraDeduccion(ne)
+			
+			if(deduccion){
+				println 'Eliminando otra deduccion '+deduccion
+				def abono=deduccion.abonos.find{a->
+					a.nominaPorEmpleadoDet.id==neDet.id
+				}
+				if(abono){
+					log.info "Elinando otra deduccion  de $neDet.importeExcento para : "+deduccion
+					deduccion.removeFromAbonos(abono)
+				}
+				deduccion.actualizarSaldo()
+				deduccion.save flush:true
+			}else{
+				println 'No encontro el registro de Deduccion para: Nomina'+ne.id
+			}
+		}
+	}
+	
+	
+	
 	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
-		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.id  asc"
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>=0 and p.empleado=? order by p.id  asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}
 	private OtraDeduccion buscarOtraDeduccion(NominaPorEmpleado ne) {
-		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.id asc"
+		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>=0 and o.empleado=? order by o.id asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}
 	
 	def actualizarSaldos(Nomina nomina){
 		nomina.partidas.each{ne->
+			if(ne.cfdi){
+				actualizarOtrasDeducciones(ne)
+				actualizarPrestamo(ne)
+				actualizarCalculoAnual(ne)
+				actualizarVacaciones(ne)
+			}
 			
-			actualizarOtrasDeducciones(ne)
-			actualizarPrestamo(ne)
-			actualizarCalculoAnual(ne)
-			actualizarVacaciones(ne)
+		}
+	}
+	
+	def cancelarSaldos(Nomina nomina){
+		nomina.partidas.each{ne->
+			if(!ne.cfdi){
+				println 'Cancelando saldos: '+ne
+				cancelarOtrasDeducciones(ne)
+				cancelarPrestamo(ne)
+				cancelarCalculoAnual(ne)
+				cancelarVacaciones(ne)
+			}
+			
 		}
 	}
 	
@@ -465,7 +534,40 @@ class NominaService {
 		}
 	}
 	
+	def cancelarVacaciones(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='P024'}
+		if(neDet){
+			log.info 'Cancelando vacaciones detectada P024 para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			def control=ControlDeVacaciones.find("from ControlDeVacaciones v where v.ejercicio=? and v.empleado=?"
+				,[ne.nomina.ejercicio.toLong(),ne.empleado])
+			def data=NominaPorEmpleadoDet.executeQuery(
+				"select sum(d.importeExcento),sum(d.importeGravado) from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.concepto.clave=? and d.parent.cfdi!=null and d.id!=?",
+				[ne.empleado,ne.nomina.ejercicio,neDet.concepto.clave,neDet.id])
+			control.acumuladoExcento=data.get(0)[0]?:0.0
+			control.acumuladoGravado=data.get(0)[1]?:0.0
+		}
+	}
+	
+	
 	def actualizarCalculoAnual(NominaPorEmpleado ne){
+		def neDet=ne.conceptos.find{it.concepto.clave=='P033'}
+		if(neDet){
+			log.info 'Percepcion por calculo anual P003 detectada para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
+			def calculo=CalculoAnual.find (
+				"from CalculoAnual c where c.ejercicio=? and c.empleado=?  "
+				,[ne.nomina.ejercicio-1,ne.empleado])
+			
+			if(calculo){
+				def aplicado=NominaPorEmpleadoDet.executeQuery(
+					"select sum(d.importeExcento) from NominaPorEmpleadoDet d where  d.parent.empleado=? and d.concepto.clave=? and d.id!=?",
+					[ne.empleado,"P033",neDet.id])
+				calculo.aplicado=aplicado.get(0)?:0.0
+				
+			}
+		}
+	}
+	
+	def cancelarCalculoAnual(NominaPorEmpleado ne){
 		def neDet=ne.conceptos.find{it.concepto.clave=='P033'}
 		if(neDet){
 			log.info 'Percepcion por calculo anual P003 detectada para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
@@ -482,6 +584,7 @@ class NominaService {
 			}
 		}
 	}
+	
 }
 
 class NominaException extends RuntimeException{
