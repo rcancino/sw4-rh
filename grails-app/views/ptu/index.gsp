@@ -97,7 +97,7 @@
 				
 			$("#generar").on('click',function(event){
 				var button=$(this);
-				if(confirm('Generar/Actualizar PTU para el ejercicio'+"${session.ejercicio}"){
+				if(confirm('Generar/Actualizar PTU para el ejercicio'+"${session.ejercicio}")){
 					button.addClass('disabled');
 				}
 			});
