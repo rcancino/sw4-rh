@@ -110,11 +110,28 @@ class CfdiService {
 			setFechaFinalPago(CFDIUtils.toXmlDate(nominaEmpleado.nomina.periodo.fechaFinal).getCalendarValue())			
 			
 			//setNumDiasPagados(nominaEmpleado.nomina.diasPagados as BigDecimal)
-			if(nominaEmpleado?.asistencia?.diasTrabajados>0){
-				setNumDiasPagados(nominaEmpleado.asistencia.diasTrabajados as BigDecimal)
+		/*	if(nominaEmpleado?.asistencia?.diasTrabajados>0){
+				setNumDiasPagados((nominaEmpleado.asistencia.diasTrabajados+ nominaEmpleado.vacaciones) as BigDecimal)
 			}else{
 				setNumDiasPagados(nominaEmpleado.diasDelPeriodo as BigDecimal)
-			}			
+			}	*/		
+			
+			def diasTrabajados=0
+			def faltas=0
+			
+			if(!nominaEmpleado.empleado.controlDeAsistencia){
+				   diasTrabajados= nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones-(nominaEmpleado.asistencia.faltasManuales+(nominaEmpleado.asistencia.faltasManuales*0.167)+ nominaEmpleado.incapacidades)
+			}else{
+				  if(nominaEmpleado.empleado.alta<=nominaEmpleado.asistencia.calendarioDet.inicio){
+					  diasTrabajados=nominaEmpleado.diasDelPeriodo-(nominaEmpleado.faltas+ nominaEmpleado.fraccionDescanso + nominaEmpleado.incapacidades)
+					 
+				  }else{
+				  	diasTrabajados=nominaEmpleado.diasTrabajados-(nominaEmpleado.asistencia.faltasManuales+nominaEmpleado.incapacidades)
+				  }
+				
+				}
+			
+			setNumDiasPagados(diasTrabajados)
 			
 			setDepartamento(empleado.perfil.departamento.clave)
 			//setBanco(empleado.salario.banco?.clave)

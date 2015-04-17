@@ -38,7 +38,7 @@
 ,X.ID,X.CLAVE AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
 ,E.FALTAS,E.INCAPACIDADES
-,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
+,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)+round((e.vacaciones),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
 	when x.alta<=N.periodo_fecha_inicial then (
 	(case when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=28 then 2 when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=29 then 1 else 0 end ) +
 	(round(((-(timestampdiff(minute,N.periodo_fecha_final,(case when x.alta>N.periodo_fecha_inicial then x.alta else N.periodo_fecha_inicial end))/60)/24)+1),0)  -   (e.faltas+(e.fraccion_descanso))	-(e.incapacidades))  

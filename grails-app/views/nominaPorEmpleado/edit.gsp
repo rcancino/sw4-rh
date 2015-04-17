@@ -161,7 +161,7 @@
 							
 							<g:if test="${nominaPorEmpleadoInstance.cfdi}">
 								<g:jasperReport
-									controller="reciboDeNomina"
+										controller="reciboDeNomina"
 									action="impresionDirecta"
 									jasper="NominaDigitalCFDI" 
 									format="PDF" 
@@ -171,10 +171,16 @@
 								</g:jasperReport>
 								<g:link class="list-group-item" action="cancelar" onclick="return confirm('Cancelar CFDI?');">
 								<span class="glyphicon glyphicon-ban-circle"></span> Cancelar
-							</g:link>
-								<g:link class="list-group-item" action="todo">
-								<span class="glyphicon glyphicon-picture"></span> Mostrar
-							</g:link>
+							    </g:link>
+								
+								<g:link class="list-group-item" action="descargarXml"  id="${nominaPorEmpleadoInstance.cfdi.id}">
+								    <span class="glyphicon glyphicon-download"></span> Descargar XML
+							    </g:link>
+													
+							    <g:link class="list-group-item" action="mostrarXml"  id="${nominaPorEmpleadoInstance.cfdi.id}">
+								   <span class="glyphicon glyphicon-eye-open"></span> Mostrar
+							    </g:link>
+							
 							<a: href="#" class="list-group-item">
 								<span class="glyphicon glyphicon-envelope"></span> Enviar mail
 							</a:>

@@ -170,13 +170,13 @@ class CfdiPrintUtils {
 			if(nominaPorEmpleado){
 				
 				if(!nominaPorEmpleado.empleado.controlDeAsistencia){
-				   diasTrabajados= nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+				   diasTrabajados= nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167)+ nominaPorEmpleado.incapacidades)
 				   faltas=	(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
 				}else{
 				  if(nominaPorEmpleado.empleado.alta<=nominaPorEmpleado.asistencia.calendarioDet.inicio){
-					  //diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
-					  diasTrabajados=100
-					  println 'Calcuando dias trabajavados'
+					 diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+					 
+					 
 					  faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
 				  }else{
 				  	diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
@@ -308,13 +308,13 @@ class CfdiPrintUtils {
 			if(nominaPorEmpleado){
 				
 				if(!nominaPorEmpleado.empleado.controlDeAsistencia){
-				   diasTrabajados= nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
+				   diasTrabajados= nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones-(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167)+ nominaPorEmpleado.incapacidades)
 				   faltas=	(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
 				}else{
 				  if(nominaPorEmpleado.empleado.alta<=nominaPorEmpleado.asistencia.calendarioDet.inicio){
 					  diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
 					 
-					  println 'Calcuando dias trabajavados'
+					
 					  faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
 				  }else{
 					  diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)

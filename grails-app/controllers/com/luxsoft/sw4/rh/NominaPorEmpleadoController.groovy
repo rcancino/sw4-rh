@@ -1,11 +1,12 @@
 package com.luxsoft.sw4.rh
 
-import com.luxsoft.sw4.rh.acu.IsptMensual;
-import com.luxsoft.sw4.rh.procesadores.AjusteIsr;
 
-import grails.transaction.Transactional;
-import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.JSON
+import grails.plugin.springsecurity.annotation.Secured
+import grails.transaction.Transactional
+
+import com.luxsoft.sw4.cfdi.Cfdi
+import com.luxsoft.sw4.rh.acu.IsptMensual
 
 //@Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 @Secured(['ROLE_ADMIN'])
@@ -284,6 +285,26 @@ class NominaPorEmpleadoController {
 		}
 		redirect action:'edit',params:[id:ne.id]
 	}
+	
+	def descargarXml(Cfdi cfdi){
+	
+	//	log.info 'Descargando archivo xml: '+cfdi
+		//log.info 'Index action....'
+		//def file=new
+		//render(contentType: "text/xml", encoding: "UTF-8",file)
+		
+		response.setContentType("application/octet-stream")
+		response.setHeader("Content-disposition", "filename=${cfdi.uuid}")
+		response.outputStream << cfdi.xml
+		return
+		
+	}
+
+	def mostrarXml(Cfdi cfdi){
+	
+		render(text: cfdi.comprobanteDocument.xmlText(), contentType: "text/xml", encoding: "UTF-8")
+	}
+	
 }
 
 class AgregarEmpleadoCommand{

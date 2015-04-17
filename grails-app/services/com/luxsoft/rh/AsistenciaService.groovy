@@ -24,6 +24,7 @@ import com.luxsoft.sw4.rh.CalendarioDet
 import org.apache.commons.lang.exception.ExceptionUtils
 import org.apache.commons.lang.time.DateUtils;
 import org.joda.time.LocalTime
+import org.joda.time.DateTimeZone
 import com.luxsoft.sw4.rh.Vacaciones
 
 import grails.events.Listener
@@ -222,6 +223,7 @@ class AsistenciaService {
 	
 	@NotTransactional
 	def recalcularRetardos(Asistencia asistencia) {
+		DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
 		log.info 'Recalculando retardos para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
 		def retardoMenor=0
 		asistencia.faltas=0
@@ -314,7 +316,8 @@ class AsistenciaService {
 				def salidaRegistrada=turnoDet.salida2?it.salida2:it.salida1
 				
 				if(salidaRegistrada==null)
-					salidaRegistrada=it.salida1
+					//salidaRegistrada=it.salida1
+					salidaRegistrada=it.entrada2?it.entrada2:it.salida1
 					
 				if(salidaRegistrada){
 					
