@@ -1,24 +1,14 @@
 package com.luxsoft.sw4.rh
 
-import groovy.transform.EqualsAndHashCode
-import org.grails.databinding.BindingFormat
 
-@EqualsAndHashCode(includes='ejercicio,empleado')
-class Ptu {
-    
-	Integer ejercicio
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='empleado,total')
+@ToString(includePackage=false,includeNames=true,excludes='dateCreated,lastUpdated')
+class PtuDet {
 
 	Empleado empleado
-
-	@BindingFormat('dd/MM/yyyy')
-	Date fechaInicial
-
-	@BindingFormat('dd/MM/yyyy')
-	Date fechaFinal
-
-	NominaPorEmpleado nominaPorEmpleado
-
-	//Base para el calculo
 	BigDecimal salario =0.0//Percepcion
 	BigDecimal vacaciones=0.0 //Pecepcion
 	BigDecimal comisiones=0.0 //Percepcion
@@ -31,40 +21,21 @@ class Ptu {
 
 	Boolean noAsignado
 	String noAsignadoComentario
-	
+
+	BigDecimal salarioNeto
+
 	Date dateCreated
 	Date lastUpdated
 
-
     static constraints = {
-		empleado unique:['ejercicio']
-		nominaPorEmpleado nullable:true
+		//nominaPorEmpleado nullable:true
 		noAsignadoComentario nullable:true,maxSize:100
 		noAsignadoComentario nullable:true
-		
     }
 
-    static mapping = {
-		fechaInicial type:'date'
-		fechaFinal type:'date'
-	}
+    static transients = ['antiguedad','salarioNeto']
 
-	static transients = ['diasDelEjercicio','antiguedad']
-
-    String toString(){
-    	return "PTU $ejercicio  $empleado "
-    }
-
-    public Integer getDiasDelEjercicio(){
-    	if(!diasDelEjercicio){
-    		use(TimeCategory){
-    			def duration= fechaFinal-fechaInicial+1.day
-    			diasDelEjercicio=duration.days
-    		}
-    	}
-    	return diasDelEjercicio
-		
-	}
+    static belongsTo = [ptu: Ptu]
 
 	public Integer getAntiguedad(){
     	if(!antiguedad && empleado){
@@ -80,8 +51,9 @@ class Ptu {
 		
 	}
 
-	
+	def getSalarioNeto(){
+		return (salario+vacaciones)-retardos
+	}    
 
 
 }
-

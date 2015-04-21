@@ -12,31 +12,17 @@ class PtuController {
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
     def ptuService
 
-    def index(Integer max) {
-        def ejercicio =session.ejercicio
-        //params.max = Math.min(max ?: 20, 100)
-        def list =Ptu.findAll("from Ptu p where p.ejercicio=? "+
-            " order by p.empleado.perfil.ubicacion.clave, p.empleado.apellidoPaterno"
-            ,[ejercicio])
-        respond list, model:[ptuInstanceCount: Ptu.countByEjercicio(ejercicio)]
+    def index() {
+        respond Ptu.findAll()
     }
 
     def show(Ptu ptuInstance) {
         respond ptuInstance
     }
 
-    @NotTransactional
-    def generar(){
-        def ejercicio=session.ejercicio
-        def list=NominaPorEmpleado
-            .executeQuery("select distinct n.empleado from NominaPorEmpleado n where n.nomina.ejercicio=?",ejercicio)
-        list.each{
-            ptuService.generar(ejercicio,it)
-        }       
-        redirect action:"index"
-        
+    def create(){
+        [ptuInstance:new Ptu(ejercicio:session.ejercicio-1)]
     }
-
 
     @Transactional
     def save(Ptu ptuInstance) {
@@ -50,7 +36,7 @@ class PtuController {
             return
         }
 
-        ptuInstance.save flush:true
+        ptuInstance=ptuService.save ptuInstance
 
         request.withFormat {
             form multipartForm {
@@ -77,7 +63,7 @@ class PtuController {
             return
         }
 
-        ptuInstance.save flush:true
+        ptuInstance=ptuService.save ptuInstance
 
         request.withFormat {
             form multipartForm {

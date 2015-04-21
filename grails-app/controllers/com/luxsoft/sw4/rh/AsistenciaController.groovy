@@ -62,9 +62,10 @@ class AsistenciaController {
 	}
 	
 	def show(Asistencia asistencia){
+		def ejercicio=session.ejercicio
 		def tipo=asistencia.calendarioDet.calendario.tipo
 		log.info 'Cargando calendarios para: '+tipo
-		def periodos=CalendarioDet.findAll{calendario.ejercicio==2014 && calendario.tipo==tipo}
+		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
 		[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha},periodos:periodos]
 	}
 
