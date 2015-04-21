@@ -47,4 +47,18 @@ class PtuService {
     	log.info " ptuDet $ptuDet.empleado( $ejercicio ) actualizado"
     	return ptuDet
     }
+
+    // def actualizarAsistencia(Ptu ptu){
+    //     if(ptu.ejercicio){
+    //         def file=grailsApplication.mainContext.getResource("/WEB-INF/data/PrestamosINFONAVIT2.csv").file
+    //          file.eachLine{line,row ->
+    //             if(row>1){
+    //                 def fields=line.split(",")
+    //                 def clave=fields[0].split(" ")
+    //                 def empleado=Empleado.findByClave(clave)
+    //                 def tipo=fields[1]
+    //             }
+    //         }
+    //     }
+    // }
 }
