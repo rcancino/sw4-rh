@@ -25,11 +25,13 @@ class PtuDet {
 
 	BigDecimal salarioNeto
 
+	NominaPorEmpleado nominaPorEmpleado
+
 	Date dateCreated
 	Date lastUpdated
 
     static constraints = {
-		//nominaPorEmpleado nullable:true
+		nominaPorEmpleado nullable:true
 		noAsignadoComentario nullable:true,maxSize:100
 		noAsignadoComentario nullable:true
     }
