@@ -28,10 +28,11 @@
 				<div class="button-panel">
 					<div class="btn-group">
 						<g:if test="${!com.luxsoft.sw4.rh.Ptu.findByEjercicio(session.ejercicio-1)}">
-							<g:link action="index" class="btn btn-default">
+							<g:link action="create" class="btn btn-default">
 								<span class="glyphicon glyphicon-plus"></span> Nuevo
 							</g:link>
 						</g:if>
+						
 						
 						<button type="button" name="reportes"
 								class="btn btn-default dropdown-toggle" data-toggle="dropdown"

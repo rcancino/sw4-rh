@@ -66,6 +66,10 @@
 								onclick="return confirm('Recalcular la PTU para todos los empleados?');">
 								<span class="glyphicon glyphicon-refresh"></span> Actualizar
 							</g:link>
+							<g:link action="delete" class="btn btn-danger" id="${ptuInstance.id}"
+								onclick="return confirm('Eliminar el calculo de PTU para el ejercicio?');">
+								<span class="glyphicon glyphicon-trash"></span> Eliminar
+							</g:link>
 							<button type="button" name="reportes"
 									class="btn btn-default dropdown-toggle" data-toggle="dropdown"
 									role="menu">

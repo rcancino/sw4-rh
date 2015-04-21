@@ -9,7 +9,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
 class PtuController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    //static allowedMethods = [save: "POST", update: "PUT"]
     def ptuService
 
     def index() {
@@ -76,21 +76,21 @@ class PtuController {
 
     @Transactional
     def delete(Ptu ptuInstance) {
-
+        println 'Eliminando PTU: '+ptuInstance
         if (ptuInstance == null) {
             notFound()
             return
         }
 
         ptuInstance.delete flush:true
-
-        request.withFormat {
-            form multipartForm {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Ptu.label', default: 'Ptu'), ptuInstance.id])
-                redirect action:"index", method:"GET"
-            }
-            '*'{ render status: NO_CONTENT }
-        }
+        redirect action:"index"
+        // request.withFormat {
+        //     form multipartForm {
+        //         flash.message = message(code: 'default.deleted.message', args: [message(code: 'Ptu.label', default: 'Ptu'), ptuInstance.id])
+        //         redirect action:"index", method:"GET"
+        //     }
+        //     '*'{ render status: NO_CONTENT }
+        // }
     }
 
     protected void notFound() {
