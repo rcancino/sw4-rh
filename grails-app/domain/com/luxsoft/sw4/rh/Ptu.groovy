@@ -52,7 +52,9 @@ class Ptu {
 
 	def getSalarioTope(){
 		def found=getEmpleadoTope()
-		return found?.getSalarioNeto()?:0.0
+		if(found)
+			return found.getSalarioNeto()*factor
+		return 0.0
 	}
 
 	def getEmpleadoTope(){

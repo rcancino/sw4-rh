@@ -20,24 +20,30 @@
 					</g:if>
 					<form action="" class="form-horizontal">
 						<div class="form-group">
-						    <label class="col-sm-2 control-label">Monto</label>
-						    <div class="col-sm-4">
+						    <label class="col-sm-3 control-label">Monto</label>
+						    <div class="col-sm-3">
 						      <p class="form-control-static">
 						      	${formatNumber(number:ptuInstance.monto,type:'currency')}
 						      </p>
 						    </div>
-						    <label class="col-sm-2 control-label">Remanente (${ptuInstance.ejercicio-1})</label>
-						    <div class="col-sm-4">
+						    <label class="col-sm-3 control-label">Remanente (${ptuInstance.ejercicio-1})</label>
+						    <div class="col-sm-3">
 						      <p class="form-control-static">
 						      	${formatNumber(number:ptuInstance.remanente,type:'currency')}
 						      </p>
 						    </div>
 						</div>
 						<div class="form-group">
-						    <label class="col-sm-2 control-label">Salario tope</label>
-						    <div class="col-sm-4">
+						    <label class="col-sm-3 control-label">Salario tope (Sindicalizado)</label>
+						    <div class="col-sm-3">
 						      <p class="form-control-static" title="${ptuInstance.empleadoTope.empleado}">
 						      	${formatNumber(number:ptuInstance.salarioTope,type:'currency')}
+						      </p>
+						    </div>
+						    <label class="col-sm-3 control-label">Total</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static" >
+						      	${formatNumber(number:ptuInstance.total,type:'currency')}
 						      </p>
 						    </div>
 						</div>
