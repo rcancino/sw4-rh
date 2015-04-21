@@ -21,6 +21,7 @@ class PtuDet {
 
 	Boolean noAsignado
 	String noAsignadoComentario
+	Boolean noEntregar=false
 
 	BigDecimal salarioNeto
 
