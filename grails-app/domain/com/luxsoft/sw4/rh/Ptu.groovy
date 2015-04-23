@@ -22,6 +22,8 @@ class Ptu {
 	BigDecimal factorDias=0.0
 	BigDecimal factorSalario=0.0
 	BigDecimal topeAnualAcumulado=0.0	
+	BigDecimal salarioMinimoGeneral=0.0
+	BigDecimal topeSmg=0.0  //Tope salario minimo general (15 Diass)
 
 	Date dateCreated
 	Date lastUpdated

@@ -2,6 +2,11 @@ package com.luxsoft.sw4.rh
 
 import grails.transaction.Transactional
 import com.luxsoft.sw4.Periodo
+import com.luxsoft.sw4.rh.tablas.ZonaEconomica
+import com.luxsoft.sw4.rh.imss.*
+import com.luxsoft.sw4.rh.tablas.SubsidioEmpleo
+
+import java.math.RoundingMode
 
 @Transactional
 class PtuService {
@@ -81,6 +86,7 @@ class PtuService {
             it.montoDias=it.diasPtu*ptu.factorDias
             it.montoSalario=it.topeAnual*ptu.factorSalario
         }
+        calcularImpuestos ptu
         ptu.save flush:true
         return ptu
     }
@@ -109,6 +115,136 @@ class PtuService {
             de=fechaSuperior-fechaDeInicio+1
           }
         }
+    }
+
+    def calcularImpuestos(Ptu ptu){
+        def zona=ZonaEconomica.findByClave('A')
+        ptu.salarioMinimoGeneral=zona.salario
+        ptu.topeSmg=ptu.salarioMinimoGeneral*15
+        ptu.partidas.each{
+            it.ptuExcento=it.montoPtu>=ptu.topeSmg?ptu.topeSmg:it.montoPtu
+            it.ptuGravado=it.montoPtu-it.ptuExcento
+            it.salarioDiario=it.empleado.salario.salarioDiario
+            if(it.empleado.salario.periodicidad=='QUINCENAL')
+                it.salarioMensual=it.salarioDiario*31
+            else
+                it.salarioMensual=it.salarioDiario*28
+            it.incentivo=it.salarioMensual*0.10
+            it.totalMensualGravado=it.ptuGravado+it.salarioMensual+it.incentivo
+            it.with{
+                def base=totalMensualGravado
+                tmgIsr=calcularImpuesto(base)
+                tmgSubsidio=buscarSubsidio(base)?:0.0
+                tmgResultado=tmgIsr-tmgSubsidio
+
+                // Impuestos de salarioMensual+incentivo
+
+                base=salarioMensual+incentivo
+                smiIsr=calcularImpuesto(base)
+                smiSubsidio=buscarSubsidio(base)?:0.0
+                smiResultado=smiIsr-smiSubsidio
+
+                isrPorRetener=tmgResultado-smiResultado
+
+            }
+            calcularPago it
+           
+        }
+    }
+
+    
+    
+    private BigDecimal calcularImpuesto(BigDecimal percepciones){
+        def tarifa =TarifaIsr.obtenerTabla(30.4)
+        .find(){(percepciones>it.limiteInferior && percepciones<=it.limiteSuperior)}
+        if(!tarifa) return 0.0
+        //assert tarifa,'No encontro tarifa en las tablas de ISR para una percepcion de: '+percepciones
+        
+        
+        def importeGravado=percepciones-tarifa.limiteInferior
+        importeGravado*=tarifa.porcentaje
+        importeGravado/=100
+        importeGravado+=tarifa.cuotaFija
+        importeGravado=importeGravado.setScale(2,RoundingMode.HALF_EVEN)
+        return importeGravado
+    }
+
+    def subsidios
+
+    def buscarSubsidio(def valor){
+       
+        if(!subsidios)
+            subsidios=SubsidioEmpleo.findAllByEjercicio(2015)
+        def found= subsidios.find(){ it ->
+            (valor>it.desde && valor<=it.hasta)
+        }
+        
+        return found?.subsidio
+    }
+
+    def calcularPago(PtuDet ptuDet){
+        
+        ptuDet.porPagarBruto=ptuDet.ptuExcento+ptuDet.ptuGravado+ptuDet.isrAcreditable
+        
+        def percepcion=ptuDet.porPagarBruto
+        
+        def pension=buscarPension(ptuDet.empleado)
+        if(pension){
+            def importeP=0.0
+            
+            if(!pension.neto){
+                importeP=(ptuDet.ptuExcento+ptuDet.ptuGravado)*(pension.porcentaje/100)
+            }else{
+                importeP=(ptuDet.porPagarBruto)*(pension.porcentaje/100)
+            }
+            ptuDet.pensionA=importeP
+            percepcion-=importeP
+        }
+        
+        percepcion*=0.75
+        
+        def otraDeduccion=buscarOtrasDeducciones(ptuDet.empleado)
+        
+        if(otraDeduccion){
+            
+            if(otraDeduccion.saldo<=percepcion){
+                ptuDet.otrasDed=otraDeduccion.saldo
+                percepcion-=otraDeduccion.saldo
+            }else{
+                ptuDet.otrasDed=percepcion
+            }
+        }
+        
+        def prestamo=buscarPrestamo(ptuDet.empleado)
+        
+        if(prestamo){
+            if(prestamo.saldo<=percepcion){
+                ptuDet.prestamo=prestamo.saldo
+            }else{
+                ptuDet.prestamo=percepcion
+            }
+        }
+        ptuDet.porPagarNeto=ptuDet.porPagarBruto-ptuDet.pensionA-ptuDet.otrasDed-ptuDet.prestamo
+        
+        
+    }
+    
+    private PensionAlimenticia buscarPension(Empleado e) {
+        def pensiones=PensionAlimenticia.findAll("from PensionAlimenticia p where p.empleado=?"
+            ,[e],[max:1])
+        return pensiones?pensiones[0]:null
+    }
+    
+    private Prestamo buscarPrestamo(Empleado e) {
+        def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
+            ,[e],[max:1])
+        return prestamos?prestamos[0]:null
+    }
+    
+    private OtraDeduccion buscarOtrasDeducciones(Empleado e){
+        def d=OtraDeduccion.findAll("from OtraDeduccion d where d.saldo>0 and d.empleado=? order by d.saldo desc"
+            ,[e],[max:1])
+        return d?d[0]:null
     }
 
     // def actualizarAsistencia(Ptu ptu){

@@ -21,6 +21,28 @@
 			<th>Monto Días</th>
 			<th>Monto Salario</th>
 			<th>PTU</th>
+			<th>Excento</th>
+			<th>Gravado</th>
+			<th>Salario D</th>
+			<th>Salario M</th>
+			<th>Incentivo</th>
+			<th>Tot men gravado </th>
+
+			<th>TMG ISTP</th>
+			<th>TMG Sub</th>
+			<th>TMG Res</th>
+			<th>SMI ISTP</th>
+			<th>SMI Sub</th>
+			<th>SMI Res</th>
+			<th>ISR</th>
+
+			<th>Pago Bruto</th>
+			<th>ISR Acred</th>
+			<th>Pensión</th>
+			<th>Otreas</th>
+			<th>Prestamo</th>
+			<th>Neto</th>
+
 		</tr>
 	</thead>
 	<tbody>
@@ -57,6 +79,29 @@
 				<td>${formatNumber(number:row.montoDias, type:'currency')}</td>
 				<td>${formatNumber(number:row.montoSalario, type:'currency')}</td>
 				<td>${formatNumber(number:row.montoPtu, type:'currency')}</td>
+				<td>${formatNumber(number:row.ptuExcento, type:'currency')}</td>
+				<td>${formatNumber(number:row.ptuGravado, type:'currency')}</td>
+				<td>${formatNumber(number:row.salarioDiario, type:'currency')}</td>
+				<td>${formatNumber(number:row.salarioMensual, type:'currency')}</td>
+				<td>${formatNumber(number:row.incentivo, type:'currency')}</td>
+				<td>${formatNumber(number:row.totalMensualGravado, type:'currency')}</td>
+
+				<td>${formatNumber(number:row.tmgIsr, type:'currency')}</td>
+				<td>${formatNumber(number:row.tmgSubsidio, type:'currency')}</td>
+				<td>${formatNumber(number:row.tmgResultado, type:'currency')}</td>
+
+				<td>${formatNumber(number:row.smiIsr, type:'currency')}</td>
+				<td>${formatNumber(number:row.smiSubsidio, type:'currency')}</td>
+				<td>${formatNumber(number:row.smiResultado, type:'currency')}</td>
+				<td>${formatNumber(number:row.isrPorRetener, type:'currency')}</td>
+
+				<td>${formatNumber(number:row.porPagarBruto, type:'currency')}</td>
+				<td>${formatNumber(number:row.isrAcreditable, type:'currency')}</td>
+				<td>${formatNumber(number:row.pensionA, type:'currency')}</td>
+				<td>${formatNumber(number:row.otrasDed, type:'currency')}</td>
+				<td>${formatNumber(number:row.prestamo, type:'currency')}</td>
+				<td>${formatNumber(number:row.porPagarNeto, type:'currency')}</td>
+				
 			</tr>
 		</g:each>
 	</tbody>

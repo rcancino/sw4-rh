@@ -44,7 +44,35 @@ class PtuDet {
 	BigDecimal montoSalario=0.0
 	BigDecimal montoPtu=0.0
 
-	
+	BigDecimal ptuExcento=0.0
+	BigDecimal ptuGravado=0.0
+
+	BigDecimal salarioDiario=0.0
+	BigDecimal salarioMensual=0.0
+	BigDecimal incentivo=0.0
+	BigDecimal totalMensualGravado=0.0
+
+	//Impuestos del Total mensual gravado
+	BigDecimal tmgIsr=0.0
+	BigDecimal tmgSubsidio=0.0
+	BigDecimal tmgResultado=0.0
+
+	// Impuestos de salarioMensual+incentivo
+	BigDecimal smiIsr=0.0 
+	BigDecimal smiSubsidio=0.0
+	BigDecimal smiResultado=0.0
+
+	BigDecimal isrPorRetener=0.0
+
+	BigDecimal porPagarBruto=0.0
+
+	BigDecimal isrAcreditable=0.0
+
+	BigDecimal pensionA=0.0
+	BigDecimal otrasDed=0.0
+	BigDecimal prestamo=0.0
+
+	BigDecimal porPagarNeto=0.0
 
     static constraints = {
 		nominaPorEmpleado nullable:true

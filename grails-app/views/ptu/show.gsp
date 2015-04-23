@@ -89,6 +89,21 @@
 						      </p>
 						    </div>
 						</div>
+						<div class="form-group">
+						    <label class="col-sm-3 control-label">Salario M.G</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static">
+						      	${formatNumber(number:ptuInstance.salarioMinimoGeneral,type:'currency')}
+						      </p>
+						    </div>
+						     <label class="col-sm-3 control-label">Tope S.M.G</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static">
+						      	${formatNumber(number:ptuInstance.topeSmg,type:'currency')}
+						      </p>
+						    </div>
+						   
+						</div>
 					</form>
 					
 
