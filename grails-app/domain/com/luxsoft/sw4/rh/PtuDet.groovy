@@ -38,14 +38,23 @@ class PtuDet {
 	Long incapacidades=0
 	Long permisosP=0	
 	
+	
+	Long diasPtu=0
+	BigDecimal montoDias=0.0
+	BigDecimal montoSalario=0.0
+	BigDecimal montoPtu=0.0
+
+	
 
     static constraints = {
 		nominaPorEmpleado nullable:true
 		noAsignadoComentario nullable:true,maxSize:100
 		noAsignadoComentario nullable:true
+		montoDias scale:6
+		montoSalario scale:6
     }
 
-    static transients = ['antiguedad','salarioNeto','periodo']
+    static transients = ['antiguedad','salarioNeto','periodo','montoPtu']
 
     static belongsTo = [ptu: Ptu]
 
@@ -66,12 +75,16 @@ class PtuDet {
 
 	Periodo getPeriodo(){
 		if(!periodo)
-			periodo=Periodo.getPeriodoAnual(this.ejercicio)
+			periodo=Periodo.getPeriodoAnual(ptu.ejercicio)
 		return periodo
 	}
 
 	def getSalarioNeto(){
 		return (salario+vacaciones)-retardos
+	}
+
+	def getMontoPtu(){
+		return montoDias+montoSalario
 	}    
 
 

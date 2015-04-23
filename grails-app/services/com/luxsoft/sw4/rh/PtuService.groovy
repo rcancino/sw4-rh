@@ -15,6 +15,7 @@ class PtuService {
         	ptu.addToPartidas(det)
         }
         ptu.save failOnError:true
+        recalcular ptu
         return ptu
 	}
 
@@ -46,6 +47,68 @@ class PtuService {
     	ptuDet.total=(ptuDet.salario+ptuDet.vacaciones+ptuDet.comisiones)-ptuDet.retardos
     	log.info " ptuDet $ptuDet.empleado( $ejercicio ) actualizado"
     	return ptuDet
+    }
+
+    def recalcular(Ptu ptu){
+        def tope=ptu.getSalarioTope()
+        ptu.partidas.each{
+            it.topeAnual=it.total>tope?tope:it.total
+            it.diasDelEjercicio=calcularDiasDelEjercicio it
+            it.diasPtu=it.diasDelEjercicio-it.faltas-it.incapacidades-it.permisosP
+            it.noAsignado=it.diasPtu<60 
+            if(it.empleado.id==260 || it.empleado.id==280){
+                it.noAsignado=true
+            }
+        }
+
+        ptu.montoDias=ptu.total*0.5
+        ptu.montoSalario=ptu.total-ptu.montoDias
+        ptu.diasPtu=ptu.partidas.sum 0,{
+            if(!it.noAsignado) 
+                it.diasPtu
+            else
+                0
+        }
+        ptu.topeAnualAcumulado=ptu.partidas.sum 0.0,{
+            if(!it.noAsignado) 
+                it.topeAnual
+            else
+                0
+        }
+        ptu.factorDias=ptu.montoDias/ptu.diasPtu
+        ptu.factorSalario=ptu.montoSalario/ptu.topeAnualAcumulado
+        ptu.partidas.each{
+            it.montoDias=it.diasPtu*ptu.factorDias
+            it.montoSalario=it.topeAnual*ptu.factorSalario
+        }
+        ptu.save flush:true
+        return ptu
+    }
+
+
+    def calcularDiasDelEjercicio(PtuDet ptuDet){
+
+        def periodo=ptuDet.getPeriodo()
+        def alta=ptuDet.empleado.alta
+        def baja=ptuDet.empleado?.baja?.fecha
+
+        def de=0
+        if(!baja){
+          if(alta<periodo.fechaInicial){
+            
+            de=periodo.fechaFinal-periodo.fechaInicial+1
+          }else{
+            de=periodo.fechaFinal-alta+1
+          }
+        }else{
+          if(baja<periodo.fechaInicial && (baja>alta)){
+            de=0
+          }else{
+            def fechaSuperior=(baja<periodo.fechaFinal && baja>alta)?baja:periodo.fechaFinal
+            def fechaDeInicio=alta<periodo.fechaInicial?periodo.fechaInicial:alta
+            de=fechaSuperior-fechaDeInicio+1
+          }
+        }
     }
 
     // def actualizarAsistencia(Ptu ptu){

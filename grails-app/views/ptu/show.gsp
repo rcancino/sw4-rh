@@ -47,6 +47,48 @@
 						      </p>
 						    </div>
 						</div>
+						<div class="form-group">
+						    <label class="col-sm-3 control-label">Monto Días</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static">
+						      	${formatNumber(number:ptuInstance.montoDias,type:'currency')}
+						      </p>
+						    </div>
+						    <label class="col-sm-3 control-label">Monto Salario</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static" >
+						      	${formatNumber(number:ptuInstance.montoSalario,type:'currency')}
+						      </p>
+						    </div>
+						</div>
+						<div class="form-group">
+						    <label class="col-sm-3 control-label">Días PTU</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static">
+						      	${formatNumber(number:ptuInstance.diasPtu,format:'##')}
+						      </p>
+						    </div>
+						     <label class="col-sm-3 control-label">Tope anual acu</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static">
+						      	${formatNumber(number:ptuInstance.topeAnualAcumulado,type:'currency')}
+						      </p>
+						    </div>
+						</div>
+						<div class="form-group">
+						    <label class="col-sm-3 control-label">Factor Días</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static">
+						      	${formatNumber(number:ptuInstance.factorDias,format:'##.####')}
+						      </p>
+						    </div>
+						    <label class="col-sm-3 control-label">Factor Salario</label>
+						    <div class="col-sm-3">
+						      <p class="form-control-static" >
+						      	${formatNumber(number:ptuInstance.factorSalario,format:'##.####')}
+						      </p>
+						    </div>
+						</div>
 					</form>
 					
 
@@ -68,9 +110,9 @@
 						</div>
 						
 						<div class="btn-group">
-							<g:link action="actualizar" class="btn btn-default" id="${ptuInstance.id}"
+							<g:link action="recalcular" class="btn btn-default" id="${ptuInstance.id}"
 								onclick="return confirm('Recalcular la PTU para todos los empleados?');">
-								<span class="glyphicon glyphicon-refresh"></span> Actualizar
+								<span class="glyphicon glyphicon-refresh"></span> Re Calcular
 							</g:link>
 							<g:link action="delete" class="btn btn-danger" id="${ptuInstance.id}"
 								onclick="return confirm('Eliminar el calculo de PTU para el ejercicio?');">

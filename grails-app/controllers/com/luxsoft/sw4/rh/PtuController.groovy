@@ -30,7 +30,8 @@ class PtuController {
             notFound()
             return
         }
-
+        ptuInstance.montoDias=0.0
+        ptuInstance.montoSalario=0.0
         if (ptuInstance.hasErrors()) {
             respond ptuInstance.errors, view:'create'
             return
@@ -76,7 +77,7 @@ class PtuController {
 
     @Transactional
     def delete(Ptu ptuInstance) {
-        println 'Eliminando PTU: '+ptuInstance
+       
         if (ptuInstance == null) {
             notFound()
             return
@@ -101,5 +102,16 @@ class PtuController {
             }
             '*'{ render status: NOT_FOUND }
         }
+    }
+
+    @NotTransactional
+    def recalcular(Ptu ptuInstance){
+        if (ptuInstance == null) {
+            notFound()
+            return
+        }
+        ptuInstance=ptuService.recalcular(ptuInstance)
+        //respond  ptuInstance,view:'show'
+        redirect action:'show',params:[id:ptuInstance.id]
     }
 }

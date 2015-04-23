@@ -32,6 +32,7 @@
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.UBICACION_ID) AS UBICACION,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS DEPTO,P.JORNADA
 ,FECHA_INI,FECHA_FIN,SDB,SDB_ANTERIOR,C.SDI_ANTERIOR,SMG,TOPE_SMG,YEARS,DIAS,VAC_DIAS,VAC_PRIMA,AGNDO_DIAS,FACTOR,SDIF,DIAS_BIM,FALTAS,INCAPACIDADES,M.TIPO
 ,DIAS_LAB_BIM,COMPENSACION,INCENTIVO,BONO_POR_DESEMP,HRS_EXTRAS_DOBLES,HRS_EXTRAS_TRIPLES,COMISIONES,PRIMA_DOM,VACACIONESP,VARIABLE,VAR_DIA,SDI_CALC,SDI_NVO,SDI_INF,M.ID AS FOLIO
+,(SELECT U.numero FROM seguridad_social U WHERE U.ID=x.id) AS NSS
 from 	empleado X 
 		JOIN salario S ON(S.EMPLEADO_ID=X.ID)
 		JOIN perfil_de_empleado P ON(P.EMPLEADO_ID=X.ID)
@@ -87,6 +88,7 @@ from 	empleado X
 	<field name="SDI_NVO" class="java.math.BigDecimal"/>
 	<field name="SDI_INF" class="java.math.BigDecimal"/>
 	<field name="FOLIO" class="java.lang.Long"/>
+	<field name="NSS" class="java.lang.String"/>
 
 		<background>
 			<band height="0"  isSplitAllowed="true" >
@@ -134,7 +136,7 @@ from 	empleado X
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-BoldOblique" size="12" isBold="true" isItalic="true" isUnderline="true" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[CONTROL DE ASISTENCIA POR EMPLEADO ( RH )]]></text>
+				<text><![CDATA[SALARIO DIARIO INTEGRADO ( RH )]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -627,7 +629,7 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="229"
+						x="225"
 						y="89"
 						width="63"
 						height="11"
@@ -646,7 +648,7 @@ from 	empleado X
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="292"
+						x="288"
 						y="89"
 						width="45"
 						height="11"
@@ -664,9 +666,9 @@ from 	empleado X
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="343"
+						x="334"
 						y="89"
-						width="74"
+						width="49"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -679,11 +681,11 @@ from 	empleado X
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[S.D.I. ANTERIOR : ]]></text>
+				<text><![CDATA[S.D.I. ANT. : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="417"
+						x="383"
 						y="89"
 						width="41"
 						height="11"
@@ -2354,8 +2356,8 @@ $F{AGNDO_DIAS}.doubleValue()==45 ? "30 " : "0"]]></textFieldExpression>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="468"
-						y="89"
+						x="0"
+						y="22"
 						width="47"
 						height="11"
 						forecolor="#000000"
@@ -2373,8 +2375,8 @@ $F{AGNDO_DIAS}.doubleValue()==45 ? "30 " : "0"]]></textFieldExpression>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="515"
-						y="89"
+						x="47"
+						y="22"
 						width="35"
 						height="11"
 						key="textField-52"/>
@@ -2472,6 +2474,43 @@ $F{AGNDO_DIAS}.doubleValue()==45 ? "30 " : "0"]]></textFieldExpression>
 					</textElement>
 				<text><![CDATA[FEBRERO]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="431"
+						y="89"
+						width="27"
+						height="11"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="staticText-77"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[NSS : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="458"
+						y="89"
+						width="93"
+						height="11"
+						key="textField-53"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NSS}]]></textFieldExpression>
+				</textField>
 			</band>
 		</columnHeader>
 		<detail>
