@@ -183,6 +183,11 @@ class PtuService {
     }
 
     def calcularPago(PtuDet ptuDet){
+
+        def calculoAnual=CalculoAnual.findByEjercicioAndEmpleado(ptuDet.ptu.ejercicio,ptuDet.empleado)
+        if(calculoAnual){
+            ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)!=0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
+        }
         
         ptuDet.porPagarBruto=ptuDet.ptuExcento+ptuDet.ptuGravado+ptuDet.isrAcreditable
         
