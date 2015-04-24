@@ -5,6 +5,8 @@ import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.tablas.ZonaEconomica
 import com.luxsoft.sw4.rh.imss.*
 import com.luxsoft.sw4.rh.tablas.SubsidioEmpleo
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 
 import java.math.RoundingMode
 
@@ -252,17 +254,26 @@ class PtuService {
         return d?d[0]:null
     }
 
-    // def actualizarAsistencia(Ptu ptu){
-    //     if(ptu.ejercicio){
-    //         def file=grailsApplication.mainContext.getResource("/WEB-INF/data/PrestamosINFONAVIT2.csv").file
-    //          file.eachLine{line,row ->
-    //             if(row>1){
-    //                 def fields=line.split(",")
-    //                 def clave=fields[0].split(" ")
-    //                 def empleado=Empleado.findByClave(clave)
-    //                 def tipo=fields[1]
-    //             }
-    //         }
-    //     }
-    // }
+    def reporte(Ptu ptu){
+        params.reportName='PtuGeneral'
+        params['EJERCICIO']=session.ejercicio
+        ByteArrayOutputStream  pdfStream=runReport(params)
+        String fileName=params.reportName+'_'+(new Date().format('dd_mm_yyyy_hh_MM'))
+        render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:params.reportName)
+    }
+
+    private runReport(Map repParams){
+        log.info 'Ejecutando reporte  '+repParams
+        def nombre=repParams.reportName
+        def reportDef=new JasperReportDef(
+            name:nombre
+            ,fileFormat:JasperExportFormat.PDF_FORMAT
+            ,parameters:repParams
+            )
+        ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+        return pdfStream
+        
+    }
+
+    
 }

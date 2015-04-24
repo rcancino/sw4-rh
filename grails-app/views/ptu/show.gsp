@@ -124,20 +124,34 @@
 							<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" autocomplete="off" >
 						</div>
 						
+						
 						<div class="btn-group">
-							<g:link action="recalcular" class="btn btn-default" id="${ptuInstance.id}"
-								onclick="return confirm('Recalcular la PTU para todos los empleados?');">
-								<span class="glyphicon glyphicon-refresh"></span> Re Calcular
-							</g:link>
-							<g:link action="delete" class="btn btn-danger" id="${ptuInstance.id}"
-								onclick="return confirm('Eliminar el calculo de PTU para el ejercicio?');">
-								<span class="glyphicon glyphicon-trash"></span> Eliminar
-							</g:link>
-							<button type="button" name="reportes"
-									class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-									role="menu">
-									Reportes <span class="caret"></span>
-							</button>
+							<button type="button" class="btn btn-primary">Operaciones</button>
+							  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							 </button>
+							<ul class="dropdown-menu">
+								<li>
+									<g:link action="recalcular" class="" id="${ptuInstance.id}"
+										onclick="return confirm('Recalcular la PTU para todos los empleados?');">
+										<span class="glyphicon glyphicon-refresh"></span> Re Calcular
+									</g:link>
+								</li>
+								<li class="danger">
+									<g:link action="delete" class="" id="${ptuInstance.id}"
+										onclick="return confirm('Eliminar el calculo de PTU para el ejercicio?');">
+										<span class="glyphicon glyphicon-trash"></span> Eliminar
+									</g:link>
+								</li>
+							</ul>
+						</div>
+						<div class="btn-group">
+							<button type="button" class="btn btn-default">Reportes</button>
+							  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							    <span class="caret"></span>
+							    <span class="sr-only">Toggle Dropdown</span>
+							 </button>
 							<ul class="dropdown-menu">
 								<li>
 									<g:link action="reporteGlobal" > PTU General</g:link>
@@ -157,12 +171,57 @@
 	<r:script>
 		$(function(){
 
-			var table=$("#grid").dataTable({
-			        "paging":   false,
-			        "ordering": false,
-			        "info":     false,
-			         "dom":'t'
-				});
+			// var table=$("#grid").DataTable({
+			//         "paging":   false,
+			//         "ordering": false,
+			//         "info":     false,
+			//         "dom":'t',
+			//         "columnDefs": [
+			//             {
+			//               "defaultContent": ''
+			//             }
+			//         ]
+			// 	});
+
+			var table=$("#grid").DataTable({
+				// "processing": true,
+				// "serverSide": true,
+				"ajax": {
+				    "url": '<g:createLink  action="getPartidas" id="${ptuInstance.id}"/>',    
+				    "dataSrc": ""  
+					},
+				"columns": [
+				            {
+				             	"data": "nombre" ,
+				            	"class":"details-control"
+				            },
+				            { "data": "ubicacion" },
+				            { "data": "salario" }
+				        ],
+				 "paging":   false,
+		         "ordering": false,
+		         "info":     false,
+		         "dom":'t'
+			});
+
+			
+			
+			$('#grid tbody').on('click','td.details-control',function(){
+				console.log('Mostrando detalles');
+				var tr = $(this).closest('tr');
+				var row = table.row( tr );
+				if ( row.child.isShown() ) {
+		            // This row is already open - close it
+		            row.child.hide();
+		            tr.removeClass('shown');
+				}else {
+	            	// Open this row
+		            row.child( format(row.data().ptu) ).show();
+		            tr.addClass('shown');
+		            console.log(row.data());
+        		}
+			});
+
 							
 			$("#nombreField").keyup(function(){
 					table.DataTable().column(0).search( $(this).val() ).draw();
@@ -171,6 +230,27 @@
 			$("#ubicacionField").keyup(function(){
 					table.DataTable().column(1).search( $(this).val() ).draw();
 			});
+
+			function format ( d ) {
+			    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" class="table  table-bordered table-condensed">'+
+			            '<tr>'+
+			                '<td>Salario:</td>'+
+			                '<td>'+d.salario+'</td>'+
+			            '</tr>'+
+			            '<tr>'+
+			                '<td>Vacaciones:</td>'+
+			                '<td>'+d.vacaciones+'</td>'+
+			            '</tr>'+
+			            '<tr>'+
+			                '<td>Retardos:</td>'+
+			                '<td>'+d.retardos+'</td>'+
+			            '</tr>'+
+			            '<tr>'+
+			                '<td>S.Neto:</td>'+
+			                '<td>'+d.salarioNeto+'</td>'+
+			            '</tr>'+
+			       		'</table>';
+			}
 		});
 	</r:script>
 </body>

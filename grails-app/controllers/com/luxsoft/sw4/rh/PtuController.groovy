@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.transaction.NotTransactional
 import grails.plugin.springsecurity.annotation.Secured
+import grails.converters.JSON
 
 @Transactional(readOnly = true)
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
@@ -113,5 +114,15 @@ class PtuController {
         ptuInstance=ptuService.recalcular(ptuInstance)
         //respond  ptuInstance,view:'show'
         redirect action:'show',params:[id:ptuInstance.id]
+    }
+
+    def getPartidas(Ptu ptuInstance){
+        def data=ptuInstance.partidas.collect{
+            [nombre:it.empleado.nombre,
+             ubicacion:it.empleado.perfil.ubicacion.clave,
+             salario:it.salario,
+             ptu:it]
+        }
+        render data as JSON
     }
 }

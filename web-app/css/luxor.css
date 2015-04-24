@@ -154,3 +154,7 @@ body{
   background: #eeeeee url("images/ui-bg_highlight-soft_80_eeeeee_1x100.png") 50% top repeat-x;
   color: #222222;
 }
+
+.hiddenRow {
+    padding: 0;
+}

@@ -3,14 +3,12 @@
 	<thead>
 		<tr>
 			<th>Nombre</th>
-			%{-- <th>Ubicación</th> --}%
+			<th>Ubicación</th>
 			<th>Salario</th>
-			<th>Vacaciones</th>
-			
+			%{-- <th>Vacaciones</th>
 			<th>Retardos</th>
 			<th>S. Neto</th>
 			<th>Com</th>
-			
 			<th>Total</th>
 			<th>S. Tope</th>
 			<th>Dias E</th>
@@ -27,7 +25,6 @@
 			<th>Salario M</th>
 			<th>Incentivo</th>
 			<th>Tot men gravado </th>
-
 			<th>TMG ISTP</th>
 			<th>TMG Sub</th>
 			<th>TMG Res</th>
@@ -35,29 +32,26 @@
 			<th>SMI Sub</th>
 			<th>SMI Res</th>
 			<th>ISR</th>
-
 			<th>Pago Bruto</th>
 			<th>ISR Acred</th>
 			<th>Pensión</th>
 			<th>Otreas</th>
 			<th>Prestamo</th>
-			<th>Neto</th>
+			<th>Neto</th> --}%
 
 		</tr>
 	</thead>
 	<tbody>
-		<g:each 
+		%{-- <g:each 
 			in="${ptuInstance?.partidas.sort({ a,b -> a.empleado.perfil.ubicacion.clave <=> b.empleado.perfil.ubicacion.clave?: a.empleado.apellidoPaterno<=>b.empleado.apellidoPaterno  }) }" var="row">
-			<tr>
-				<td>
-					<g:link action="edit" id="${row.id}">
-						${fieldValue(bean:row,field:"empleado")}
-					</g:link>
+			<tr >
+				<td nowrap="nowrap" class="details-control">
+					${fieldValue(bean:row,field:"empleado")}
 				</td>
-				%{-- <td>${fieldValue(bean:row,field:'empleado.perfil.ubicacion.clave')}</td> --}%
+				<td>${fieldValue(bean:row,field:'empleado.perfil.ubicacion.clave')}</td>
 				<td>${formatNumber(number:row.salario, type:'currency')}</td>
-				<td>${formatNumber(number:row.vacaciones, type:'currency')}</td>
 				
+				<td>${formatNumber(number:row.vacaciones, type:'currency')}</td>
 				<td>${formatNumber(number:row.retardos, type:'currency')}</td>
 				<td>${formatNumber(number:row.salarioNeto, type:'currency')}</td>
 				<td>${formatNumber(number:row.comisiones, type:'currency')}</td>
@@ -101,9 +95,12 @@
 				<td>${formatNumber(number:row.otrasDed, type:'currency')}</td>
 				<td>${formatNumber(number:row.prestamo, type:'currency')}</td>
 				<td>${formatNumber(number:row.porPagarNeto, type:'currency')}</td>
-				
+
 			</tr>
-		</g:each>
+			
+		</g:each> --}%
 	</tbody>
 </table>
+
+
 
