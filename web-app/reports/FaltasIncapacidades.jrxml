@@ -40,6 +40,7 @@ U.CLAVE AS ubicacion,concat(ifnull(e.apellido_paterno,''),' ',ifnull(e.apellido_
 ,(case when dayofweek(S.fecha)=1 then 'DOM' when dayofweek(S.fecha)=2 then 'LUN' when dayofweek(S.fecha)=3 then 'MAR' when dayofweek(S.fecha)=4 then 'MIE' when dayofweek(S.fecha)=5 
 then 'JUE' when dayofweek(S.fecha)=6 then 'VIE' when dayofweek(S.fecha)=7 then 'SAB' ELSE 'ND' END) as diaSem
 ,s.tipo
+,(SELECT I.referencia_imms FROM incapacidad I WHERE I.empleado_id=E.ID AND S.FECHA BETWEEN I.fecha_inicial AND I.fecha_final ) AS REFERENCIA
 FROM CALENDARIO C JOIN calendario_det D ON (C.ID=D.calendario_id) 
 JOIN asistencia A  ON ( A.calendario_det_id=D.ID ) JOIN asistencia_det S ON (S.asistencia_id= A.ID )
 JOIN empleado E ON (E.ID=A.empleado_id) JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) 
@@ -55,6 +56,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 	<field name="DIA" class="java.lang.Long"/>
 	<field name="diaSem" class="java.lang.String"/>
 	<field name="tipo" class="java.lang.String"/>
+	<field name="REFERENCIA" class="java.lang.String"/>
 
 		<background>
 			<band height="49"  isSplitAllowed="true" >
@@ -279,6 +281,26 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 					</textElement>
 				<text><![CDATA[TIPO]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="274"
+						y="11"
+						width="80"
+						height="11"
+						forecolor="#000000"
+						key="staticText-31"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FOLIO]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
@@ -321,6 +343,19 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{tipo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="292"
+						y="3"
+						width="62"
+						height="11"
+						key="textField"/>
+					<box></box>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{REFERENCIA}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

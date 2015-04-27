@@ -30,7 +30,7 @@
 	<parameter name="UBICACION" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL,'BANAMEX' AS BANCO,N.FORMA_DE_PAGO
 ,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
-,X.ID,X.CLAVE AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
+,X.ID,concat(X.CLAVE,'') AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
 ,E.FALTAS,E.INCAPACIDADES
 ,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)+round((e.vacaciones),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
@@ -407,9 +407,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="2"
 						width="59"
 						height="12"
-						key="textField-162">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-162"/>
 					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -434,9 +432,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="2"
 						width="52"
 						height="12"
-						key="textField-180">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-180"/>
 					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -464,9 +460,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="2"
 						width="46"
 						height="12"
-						key="textField-182">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-182"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>

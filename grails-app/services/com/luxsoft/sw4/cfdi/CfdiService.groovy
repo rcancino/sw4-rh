@@ -1,5 +1,6 @@
 package com.luxsoft.sw4.cfdi
 
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -121,6 +122,7 @@ class CfdiService {
 			
 			if(!nominaEmpleado.empleado.controlDeAsistencia){
 				   diasTrabajados= nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones-(nominaEmpleado.asistencia.faltasManuales+(nominaEmpleado.asistencia.faltasManuales*0.167)+ nominaEmpleado.incapacidades)
+				
 			}else{
 				  if(nominaEmpleado.empleado.alta<=nominaEmpleado.asistencia.calendarioDet.inicio){
 					  diasTrabajados=nominaEmpleado.diasDelPeriodo-(nominaEmpleado.faltas+ nominaEmpleado.fraccionDescanso + nominaEmpleado.incapacidades)
@@ -131,7 +133,8 @@ class CfdiService {
 				
 				}
 			
-			setNumDiasPagados(diasTrabajados)
+			 def diasLab=new BigDecimal(diasTrabajados).setScale(6, RoundingMode.HALF_EVEN)
+			setNumDiasPagados(diasLab)
 			
 			setDepartamento(empleado.perfil.departamento.clave)
 			//setBanco(empleado.salario.banco?.clave)

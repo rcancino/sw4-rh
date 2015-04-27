@@ -7,7 +7,7 @@
 <body>
 
 	<content tag="reporteTitle">
-		Incapacidedes
+		Incapacidades
 	</content>
 	
 	<content tag="reportForm">

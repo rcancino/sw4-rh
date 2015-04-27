@@ -81,7 +81,7 @@ class ReciboDeNominaController {
 	}
 	
 	def imprimirCfdi() {
-		println 'Imprimeindo CFDI: '+params.id
+		println 'Imprimiendo CFDI: '+params.id
 		def cfdi=Cfdi.findById(params.id)
 		if(cfdi==null){
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'cfdiInstance.label', default: 'Cfdi'), params.id])
@@ -347,6 +347,19 @@ class ReciboDeNominaController {
 		modelData.sort{
 			it.clave
 		}
+		
+		if (!percepciones){
+			def res=[
+				'GRUPO':"",
+				'CLAVE':"",
+				'DESCRIPCION':"",
+				'IMPORTE_GRAVADO':0.0,
+				'IMPORTE_EXENTO':0.0,
+				'CONCEPTO':'P'
+			 ]
+			modelData<<res
+		}
+		
 		def reportDef=new JasperReportDef(
 			name:'Recibo'
 			,fileFormat:JasperExportFormat.PDF_FORMAT

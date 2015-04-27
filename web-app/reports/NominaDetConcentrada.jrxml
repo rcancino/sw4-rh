@@ -35,7 +35,7 @@
 ,(case when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=28 then 2 when n.periodicidad='QUINCENAL' and n.folio=4 and DAYOFMONTH(n.periodo_fecha_final)=29 then 1 else 0 end ) +
 	(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
-,X.ID,X.CLAVE AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
+,X.ID,concat(X.CLAVE,'') AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
 ,E.FALTAS,E.INCAPACIDADES
 ,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)+round((e.vacaciones),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
@@ -415,9 +415,7 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						y="2"
 						width="59"
 						height="12"
-						key="textField-162">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-162"/>
 					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -436,15 +434,13 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 						</reportElement>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="230"
 						y="2"
 						width="52"
 						height="12"
-						key="textField-180">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-180"/>
 					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
 </box>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -466,15 +462,13 @@ $F{IMPORTE_EXENTO}.doubleValue()+$F{IMPORTE_GRAVADO}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["PAGADO="]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="537"
 						y="2"
 						width="46"
 						height="12"
-						key="textField-182">
-							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
-						</reportElement>
+						key="textField-182"/>
 					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>

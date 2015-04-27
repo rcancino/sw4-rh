@@ -529,6 +529,8 @@ class NominaService {
 			def data=NominaPorEmpleadoDet.executeQuery(
 				"select sum(d.importeExcento),sum(d.importeGravado) from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.concepto.clave=? and d.parent.cfdi!=null",
 				[ne.empleado,ne.nomina.ejercicio,neDet.concepto.clave])
+println "----"+data.get(0)[0]+"---------" +data.get(0)[1]
+
 			control.acumuladoExcento=data.get(0)[0]?:0.0
 			control.acumuladoGravado=data.get(0)[1]?:0.0
 		}
@@ -583,6 +585,38 @@ class NominaService {
 				
 			}
 		}
+	}
+
+	def actualizarVacaciones(Long ejercicio,Empleado  empleado){
+		
+		log.info 'Actualizando vacaciones  para  '+empleado
+		def control=ControlDeVacaciones.find("from ControlDeVacaciones v where v.ejercicio=? and v.empleado=?"
+				,[ejercicio,empleado])
+		if(control){
+			def data=NominaPorEmpleadoDet.executeQuery(
+				"select sum(d.importeExcento),sum(d.importeGravado) from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.concepto.clave=? and d.parent.cfdi!=null",
+				[empleado,ejercicio.toInteger(),'P024'])
+			control.acumuladoExcento=data.get(0)[0]?:0.0
+			control.acumuladoGravado=data.get(0)[1]?:0.0
+		}
+		
+	}
+
+	def actualizarCalculoAnual(Integer ejercicio,Empleado empleado){
+		
+		log.info 'Percepcion por calculo anual P003 para  '+empleado
+
+			def calculo=CalculoAnual.find (
+				"from CalculoAnual c where c.ejercicio=? and c.empleado=?  "
+				,[ejercicio-1,empleado])
+			
+			if(calculo){
+				def aplicado=NominaPorEmpleadoDet.executeQuery(
+					"select sum(d.importeExcento) from NominaPorEmpleadoDet d where  d.parent.empleado=? and d.concepto.clave=? and d.parent.cfdi!=null",
+					[empleado,"P033"])
+				calculo.aplicado=aplicado.get(0)?:0.0
+				
+			}
 	}
 	
 }

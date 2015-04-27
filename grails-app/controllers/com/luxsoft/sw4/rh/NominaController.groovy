@@ -65,6 +65,10 @@ class NominaController {
 		def periodicidad=params.periodicidad
 		def formaDePago=params.formaDePago
 		def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago,periodicidad)
+		nominaInstance.partidas.seach{
+			nominaService.actualizarCalculoAnual(nomina.ejercicio,it.empleado)
+			nominaService.actualizarVacaciones(nomina.ejercicio,it.empleado)
+		}
 		redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
 		
 	}
@@ -84,6 +88,7 @@ class NominaController {
 				nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
 			}
 		}
+
 		nominaService.depurar(id)
 		flash.message="Actualización exitosa"
 		//redirect action:'depurar',params:[id:id]
@@ -114,7 +119,7 @@ class NominaController {
     }
 	
 	def timbrar(Nomina nominaInstance) {
-		nominaService.actualizarSaldos(nominaInstance)
+		
 		if(nominaInstance==null){
 			notFound()
 			return
@@ -122,6 +127,7 @@ class NominaController {
 		nominaInstance.partidas.each{
 			nominaService.timbrar(it.id)
 		}
+		nominaService.actualizarSaldos(nominaInstance)
 		redirect action:'show',params:[id:nominaInstance.id]
 		//redirect action:'actualizarSaldos',params:[id:nominaInstance.id]
 	}

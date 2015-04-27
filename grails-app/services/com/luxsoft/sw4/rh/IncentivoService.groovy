@@ -150,7 +150,8 @@ class IncentivoService {
     	
 		def checadasFaltantes=calcularChecadasFaltantes(rows)
 		log.info "Dias: ${rows.size()} Minutos: $minutos Faltas: $faltas Incapacidades: $incapacidades Incidencia_F: $incidenciaf Tasa bono 1:${bono1} Checadas faltantes:${checadasFaltantes}"
-    	faltas+=(incapacidades+incidenciaf)
+    	//faltas+=(incapacidades+incidenciaf)
+		faltas+=(incidenciaf)
 		
 		incentivo.checadasFaltantes=checadasFaltantes
 		incentivo.minutosNoLaborados=minutos

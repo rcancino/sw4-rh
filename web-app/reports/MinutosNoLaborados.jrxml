@@ -46,12 +46,18 @@ WHEN DAYOFWEEK(D.FECHA)-1=6 THEN D.SALIDA1
 ELSE D.SALIDA2 END AS SALIDA
 ,d.entrada1,d.salida1,d.entrada2,d.salida2,d.entrada3,d.salida3
 ,D.minutos_no_laborados,a.periodo_fecha_inicial,a.periodo_fecha_final
+,CASE 
+WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN IF(D.SALIDA1 IS NULL,"C/F","OK" )
+WHEN M.TURNO_ID IN (8,9) THEN IF(D.SALIDA1 IS NULL,"C/F","OK" ) 
+WHEN DAYOFWEEK(D.FECHA)-1=6 THEN IF(D.SALIDA1 IS NULL,"C/F","OK" )
+ELSE IF(D.SALIDA2 IS NULL,"C/F","OK" ) END 
+as CHF
 FROM asistencia a join asistencia_det d on (a.id=d.asistencia_id) join empleado e on (e.id=a.empleado_id) JOIN ubicacion U ON (U.ID=D.ubicacion_id)
 join perfil_de_empleado m on (m.EMPLEADO_id=e.id) join calendario_det  c on (a.calendario_det_id=c.id)
 JOIN turno_det T ON (M.TURNO_ID=T.TURNO_ID AND DAYOFWEEK(D.FECHA)-1=DIAS_IDX)
 where a.calendario_det_id = $P{CALENDARIODET}
 AND
-(CASE 
+((CASE 
 WHEN D.FECHA = (SELECT F.FECHA FROM dia_festivo F WHERE F.FECHA=D.FECHA ) THEN  (SELECT F.SALIDA FROM dia_festivo F WHERE F.FECHA=D.FECHA )
 WHEN M.TURNO_ID IN (8,9) THEN T.salida1 
 WHEN DAYOFWEEK(D.FECHA)-1=6 THEN T.SALIDA1
@@ -60,7 +66,7 @@ ELSE T.SALIDA2 END)>
 WHEN DAYOFWEEK(FECHA) BETWEEN 2 AND 6 AND (if(d.entrada1 is not null,1,0)+if(d.salida1 is not null,1,0)+if(d.entrada2 is not null,1,0)+if(d.salida2 is not null,1,0))=2 THEN D.SALIDA1
 WHEN M.TURNO_ID IN (8,9) THEN D.salida1 
 WHEN DAYOFWEEK(D.FECHA)-1=6 THEN D.SALIDA1
-ELSE D.SALIDA2 END)
+ELSE D.SALIDA2 END)OR D.MINUTOS_NO_LABORADOS>0 )
 ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 
 	<field name="ASISTENCIA_FECHA_INICIAL" class="java.sql.Timestamp"/>
@@ -83,6 +89,7 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 	<field name="minutos_no_laborados" class="java.lang.Integer"/>
 	<field name="periodo_fecha_inicial" class="java.sql.Timestamp"/>
 	<field name="periodo_fecha_final" class="java.sql.Timestamp"/>
+	<field name="CHF" class="java.lang.String"/>
 
 
 		<group  name="UBICACION" isStartNewPage="true" >
@@ -364,7 +371,7 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="416"
+						x="409"
 						y="11"
 						width="30"
 						height="11"
@@ -384,7 +391,7 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="451"
+						x="444"
 						y="6"
 						width="36"
 						height="24"
@@ -404,9 +411,9 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="493"
+						x="486"
 						y="6"
-						width="59"
+						width="52"
 						height="24"
 						forecolor="#000000"
 						key="staticText-29"
@@ -550,7 +557,7 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="417"
+						x="410"
 						y="0"
 						width="30"
 						height="11"
@@ -563,7 +570,7 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="451"
+						x="444"
 						y="0"
 						width="36"
 						height="11"
@@ -576,7 +583,7 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="493"
+						x="486"
 						y="0"
 						width="36"
 						height="11"
@@ -599,6 +606,21 @@ ORDER BY U.ID,E.CLAVE,DAYOFWEEK(D.FECHA)]]></queryString>
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{diaSem}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="527"
+						y="0"
+						width="25"
+						height="11"
+						key="textField-22">
+							<printWhenExpression><![CDATA[new Boolean($F{CHF}.equals( "C/F" ))]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CHF}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
