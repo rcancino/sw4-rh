@@ -51,18 +51,18 @@ class CalculoSdiService {
 		Sql sql=new Sql(dataSource)
 		sql.eachRow(query,[m.empleado.id]){ row->
 			def empleado=m.empleado
-			def found=CalculoSdi.findByEmpleadoAndEjercicioAndBimestreAndTipo(empleado,ejercicio,bimestre,m.tipo)
-			if(!found){
-				found=new CalculoSdi(
+
+			//def found=CalculoSdi.findByEmpleadoAndEjercicioAndBimestreAndTipo(empleado,ejercicio,bimestre,m.tipo)
+			//if(!found){
+			def	found=new CalculoSdi(
 					empleado:empleado,
 					ejercicio:ejercicio,
 					bimestre:bimestre,
 					tipo:m.tipo,
 					fechaIni:inicio,
 					fechaFin:fin
-					
-					).save flush:true
-			}
+					)//.save flush:true
+			//}
 			found.sdiAnterior=empleado.salario.salarioDiarioIntegrado
 			found.sdbAnterior=empleado.salario.salarioDiario
 			found.sdb=m.salarioNuevo

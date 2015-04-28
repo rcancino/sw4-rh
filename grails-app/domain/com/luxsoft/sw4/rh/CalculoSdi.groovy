@@ -78,11 +78,14 @@ class CalculoSdi {
 	
 	String status='REVISION'
 
+	//Date fecha
+
     static constraints = {
-		empleado unique:['ejercicio','bimestre','tipo']
+		//empleado unique:['ejercicio','bimestre','tipo']
 		tipo inList:['CALCULO_SDI','AUMENTO','ALTA']
 		status inList:['REVISION','APLICADO']
 		factor sacle:4
+		//fecha nullable:true
     }
 	
 	static mapping = {
