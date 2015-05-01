@@ -65,9 +65,9 @@ class NominaController {
 		def periodicidad=params.periodicidad
 		def formaDePago=params.formaDePago
 		def nominaInstance=nominaService.generar(calendarioDet,tipo,formaDePago,periodicidad)
-		nominaInstance.partidas.seach{
-			nominaService.actualizarCalculoAnual(nomina.ejercicio,it.empleado)
-			nominaService.actualizarVacaciones(nomina.ejercicio,it.empleado)
+		nominaInstance.partidas.each{
+			nominaService.actualizarCalculoAnual(nominaInstance.ejercicio,it.empleado)
+			nominaService.actualizarVacaciones(nominaInstance.ejercicio,it.empleado)
 		}
 		redirect action:'actualizarPartidas',params:[id:nominaInstance.id]
 		

@@ -36,7 +36,7 @@ class EmpleadoRestController {
 
 	def getEmpleadosConSalario() {
 		def term=params.term.trim()+'%'
-		def query=Empleado.where{status=='ALTA'}
+		def query=Empleado.where{status=='ALTA' || status=='REINGRESO'}
 		query=query.where{
 			apellidoPaterno=~term || apellidoMaterno=~term || nombres=~term
 		}

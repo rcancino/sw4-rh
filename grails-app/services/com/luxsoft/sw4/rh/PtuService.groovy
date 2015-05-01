@@ -63,7 +63,7 @@ class PtuService {
             it.diasDelEjercicio=calcularDiasDelEjercicio it
             it.diasPtu=it.diasDelEjercicio-it.faltas-it.incapacidades-it.permisosP
             it.noAsignado=it.diasPtu<60 
-            if(it.empleado.id==260 || it.empleado.id==280){
+            if(it.empleado.id==260 || it.empleado.id==280 || it.empleado.id==246){
                 it.noAsignado=true
             }
         }

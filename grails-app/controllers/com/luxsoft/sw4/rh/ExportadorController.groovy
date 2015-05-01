@@ -164,9 +164,9 @@ class ExportadorController {
 			numeroDeMovs=numeroDeMovs+1
 			
 		  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-		  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.replace('Ñ','N').padRight(27) : calculo.empleado.apellidoMaterno.replace('Ñ','N').padRight(27)
-		  def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.replace('Ñ','N').padRight(27) : StringUtils.leftPad("",27)
-		  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27).replace('Ñ','N')
+		  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.replace('\u00d1','N').padRight(27) : calculo.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27)
+		  def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
+		  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
 		  def salarioBase=calculo.sdiInf.toString().replace('.','').padLeft(6,"0")
 		  def filler= StringUtils.leftPad("",6)
 		  def tipoTrabajador="1"
@@ -222,9 +222,9 @@ def generarAltasImss(PeriodoCommand command){
 		numeroDeMovs=numeroDeMovs+1
 		
 	  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-	  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.replace('Ñ','N').padRight(27) : calculo.empleado.apellidoMaterno.replace('Ñ','N').padRight(27)
-	  def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.replace('Ñ','N').padRight(27) : StringUtils.leftPad("",27)
-	   def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
+	  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.replace('\u00d1','N').padRight(27) : calculo.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27)
+	  def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
+	   def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
 	  def salarioBase= calculo.sdiNuevo.toString().replace('.','').padLeft(6,"0")
 	  def filler= StringUtils.leftPad("",6)
 	  def tipoTrabajador="1"
@@ -280,9 +280,11 @@ def generarModificacionIndividualImss(PeriodoCommand command){
 		   numeroDeMovs=numeroDeMovs+1
 		   
 	   def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.calculoSdi.empleado).numero.replace('-','')
-	   def apellidoPaterno=calculo.calculoSdi.empleado.apellidoPaterno ? calculo.calculoSdi.empleado.apellidoPaterno.replace('Ñ','N').padRight(27) : calculo.calculoSdi.empleado.apellidoMaterno.replace('Ñ','N').padRight(27)
-	   def apellidoMaterno=calculo.calculoSdi.empleado.apellidoPaterno ? calculo.calculoSdi.empleado.apellidoMaterno.replace('Ñ','N').padRight(27) : StringUtils.leftPad("",27)
-	   def nombres= calculo.calculoSdi.empleado.nombres ? calculo.calculoSdi.empleado.nombres.replace('Ñ','N').padRight(27) : StringUtils.leftPad("",27)
+	   def apellidoPaterno=calculo.calculoSdi.empleado.apellidoPaterno ? calculo.calculoSdi.empleado.apellidoPaterno.replace('\u00d1','N').padRight(27) : calculo.calculoSdi.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27)
+	   //def apellidoPaterno=calculo.calculoSdi.empleado.apellidoPaterno.replace(\u00d1,'N').padRight(27) 
+	   
+	   def apellidoMaterno=calculo.calculoSdi.empleado.apellidoPaterno ? calculo.calculoSdi.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
+	   def nombres= calculo.calculoSdi.empleado.nombres ? calculo.calculoSdi.empleado.nombres.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
 	   def salarioBase=calculo.calculoSdi.sdiInf.toString().replace('.','').padLeft(6,"0")
 	   def filler= StringUtils.leftPad("",6)
 	   def tipoTrabajador="1"
@@ -303,7 +305,7 @@ def generarModificacionIndividualImss(PeriodoCommand command){
 	   def identificador="9"
 
 		def registro= registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+tipoSalario+tipoJornada+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+filler3+curp+identificador
-		append(registro+"\r\n","UTF8")
+		append(registro+"\r\n")
 	   }
 	
   }
@@ -333,9 +335,9 @@ def generarBajasImss(PeriodoCommand command){
 			numeroDeMovs=numeroDeMovs+1
 			
 		  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-		  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.replace('Ñ','N').padRight(27) : calculo.empleado.apellidoMaterno.replace('Ñ','N').padRight(27) 
-		  def apellidoMaterno=calculo.empleado.apellidoMaterno ? calculo.empleado.apellidoMaterno.padRight(27) : StringUtils.leftPad("",27)
-		  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.padRight(27) : StringUtils.leftPad("",27)
+		  def apellidoPaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoPaterno.replace('\u00d1','N').padRight(27) : calculo.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27) 
+		  def apellidoMaterno=calculo.empleado.apellidoMaterno ? calculo.empleado.apellidoMaterno.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
+		  def nombres= calculo.empleado.nombres ? calculo.empleado.nombres.replace('\u00d1','N').padRight(27) : StringUtils.leftPad("",27)
 		  def salarioBase= "000000"   //calculo.empleado.salario.salarioDiarioIntegrado.toString().replace('.','').padLeft(6,"0") //calculo.sdiNuevo.toString().replace('.','').padLeft(6,"0")
 		  def filler= "000000"
 		  def tipoTrabajador="0"
