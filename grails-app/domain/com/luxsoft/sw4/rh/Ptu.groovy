@@ -25,6 +25,9 @@ class Ptu {
 	BigDecimal salarioMinimoGeneral=0.0
 	BigDecimal topeSmg=0.0  //Tope salario minimo general (15 Diass)
 
+	BigDecimal sindicalizadoMaximo
+	String sindicalizadoNombre
+
 	Date dateCreated
 	Date lastUpdated
 
@@ -33,7 +36,8 @@ class Ptu {
 		ejercicio inList:[2014,2015,2016,2017,2018]
 		factorDias scale:6
 		factorSalario scale:6
-
+		sindicalizadoNombre nullable:true
+		sindicalizadoMaximo nullable:true
     }
 
     static mapping = {
@@ -80,7 +84,7 @@ class Ptu {
 		return monto+remanente
 	}
 	
-
+	
 
 }
 

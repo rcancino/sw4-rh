@@ -89,6 +89,8 @@ class PtuService {
             it.montoSalario=it.topeAnual*ptu.factorSalario
         }
         calcularImpuestos ptu
+        ptu.sindicalizadoMaximo=ptu.getgetEmpleadoTope()?.getSalarioNeto()
+        ptu.sindicalizadoNombre=ptu.getEmpleadoTope()?.nombre
         ptu.save flush:true
         return ptu
     }
