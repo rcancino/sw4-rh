@@ -155,6 +155,36 @@ class ExportadorController {
 		def numeroDeMovs=0
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
 		
+		def ejercicio=command.ejercicio
+		def bimestre=command.bimestre
+		def fecha_aplic
+		
+				switch(bimestre)
+				{
+			  
+				case 1:
+						fecha_aplic="0103"+ejercicio
+				 break;
+				case 2:
+						fecha_aplic="0105"+ejercicio
+				 break;
+				case 3:
+						fecha_aplic="0107"+ejercicio
+				 break;
+				case 4:
+						fecha_aplic="0109"+ejercicio
+				 break;
+				case 5:
+						fecha_aplic="0111"+ejercicio
+				 break;
+				case 6:
+						fecha_aplic="0101"+(ejercicio+1)
+				 break;
+				   
+				  }
+		
+		
+		
 		def calculosSdi=CalculoSdi.findAllByEjercicioAndBimestre(command.ejercicio,command.bimestre).each{calculo ->
 		 
 		  
@@ -176,7 +206,9 @@ class ExportadorController {
 		  def tipoJornada=0
 			if(calculo.empleado.perfil.jornada=="MEDIA" || calculo.empleado.perfil.jornada=="REDUCIDA")
 			 tipoJornada=6
-		  def fechaMov="01032015"
+		  def fechaMov=fecha_aplic
+		  
+		  
 		  def unidadMedica=   StringUtils.leftPad("",3)   //   calculo.empleado.seguridadSocial.unidadMedica? calculo.empleado.seguridadSocial.unidadMedica.padLeft(3,"0") :"000"
 		  def filler2=StringUtils.leftPad("",2)
 		  def tipoMov="07"

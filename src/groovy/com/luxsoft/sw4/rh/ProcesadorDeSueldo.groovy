@@ -61,6 +61,12 @@ class ProcesadorDeSueldo {
 			ne.diasTrabajados=asistencia.diasTrabajados-ne.faltas-ne.fraccionDescanso
 		}else{
 			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades-asistencia.paternidad
+			
+			def asi=asistencia.calendarioDet.periodo().dias()-ne.incapacidades
+			
+			if(asi==0)
+				
+				ne.diasTrabajados=0
 		}
 		
 		def sueldo=salarioDiario*ne.diasTrabajados
