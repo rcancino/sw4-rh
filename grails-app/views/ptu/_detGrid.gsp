@@ -5,7 +5,7 @@
 			<th>Nombre</th>
 			<th>Ubicación</th>
 			<th>Salario</th>
-			%{-- <th>Vacaciones</th>
+			<th>Vacaciones</th>
 			<th>Retardos</th>
 			<th>S. Neto</th>
 			<th>Com</th>
@@ -37,12 +37,12 @@
 			<th>Pensión</th>
 			<th>Otreas</th>
 			<th>Prestamo</th>
-			<th>Neto</th> --}%
+			<th>Neto</th> 
 
 		</tr>
 	</thead>
 	<tbody>
-		%{-- <g:each 
+		<g:each 
 			in="${ptuInstance?.partidas.sort({ a,b -> a.empleado.perfil.ubicacion.clave <=> b.empleado.perfil.ubicacion.clave?: a.empleado.apellidoPaterno<=>b.empleado.apellidoPaterno  }) }" var="row">
 			<tr >
 				<td nowrap="nowrap" class="details-control">
@@ -98,7 +98,7 @@
 
 			</tr>
 			
-		</g:each> --}%
+		</g:each>
 	</tbody>
 </table>
 

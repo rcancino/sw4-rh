@@ -805,8 +805,8 @@ def generarInfonavitSua(PeriodoCommand command){
 		  
 		Empresa emp=Empresa.first()
 	  def registroPatronal=emp.registroPatronal
-	  def fechaInicial=new Date("2015/01/01")
-	  def fechaFinal=new Date("2015/01/31")
+	    def fechaInicial=command.fechaInicial
+	  def fechaFinal=command.fechaFinal
 	  def empleados = Infonavit.findAll("from Infonavit i order by i.empleado.apellidoPaterno asc").each{infonavit->
 	  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
 	  def formato = new DecimalFormat("###")

@@ -37,8 +37,9 @@
 						    <label class="col-sm-3 control-label">Salario tope (Sindicalizado)</label>
 						    <div class="col-sm-3">
 						      <p class="form-control-static" title="${ptuInstance.empleadoTope.empleado}">
-						      	${formatNumber(number:ptuInstance.salarioTope,type:'currency')}
+						      	${formatNumber(number:ptuInstance.sindicalizadoMaximo,type:'currency')}  (${ptuInstance.sindicalizadoNombre})
 						      </p>
+
 						    </div>
 						    <label class="col-sm-3 control-label">Total</label>
 						    <div class="col-sm-3">
@@ -104,6 +105,8 @@
 						    </div>
 						   
 						</div>
+
+
 					</form>
 					
 
@@ -154,8 +157,15 @@
 							 </button>
 							<ul class="dropdown-menu">
 								<li>
-									<g:link action="reporteGlobal" > PTU General</g:link>
-									<g:link action="reporteGlobal" > PTU Individual</g:link>
+									<g:link controller="Reporte" action="reporteDePtu"  
+											params="[reporte: 'CalculoPTU',ejercicio:'2014']"> PTU</g:link>
+									<g:link controller="Reporte" action="reporteDePtu"  
+											params="[reporte: 'ISR_PTU',ejercicio:'2014']"> ISR PTU</g:link>
+									<g:link controller="Reporte" action="reporteDePtu"  
+											params="[reporte: 'NetoPTU',ejercicio:'2014']"> Neto PTU</g:link>
+									<g:link controller="Reporte" action="reporteDePtu"  
+											params="[reporte: 'AcumuladoPTU',ejercicio:'2014']"> Acumulado PTU</g:link>
+									
 								</li>
 							</ul>
 						</div>
@@ -171,18 +181,18 @@
 	<r:script>
 		$(function(){
 
-			// var table=$("#grid").DataTable({
-			//         "paging":   false,
-			//         "ordering": false,
-			//         "info":     false,
-			//         "dom":'t',
-			//         "columnDefs": [
-			//             {
-			//               "defaultContent": ''
-			//             }
-			//         ]
-			// 	});
-
+			 var table=$("#grid").dataTable({
+			         "paging":   false,
+			         "ordering": false,
+			         "info":     false,
+			         "dom":'t',
+			         "columnDefs": [
+			             {
+			               "defaultContent": ''
+			             }
+			         ]
+			 	});
+			/*
 			var table=$("#grid").DataTable({
 				// "processing": true,
 				// "serverSide": true,
@@ -205,7 +215,8 @@
 			});
 
 			
-			
+			*/
+			/*
 			$('#grid tbody').on('click','td.details-control',function(){
 				console.log('Mostrando detalles');
 				var tr = $(this).closest('tr');
@@ -222,7 +233,7 @@
         		}
 			});
 
-							
+			*/				
 			$("#nombreField").keyup(function(){
 					table.DataTable().column(0).search( $(this).val() ).draw();
 			});

@@ -372,7 +372,15 @@ class ReporteController {
 	}
 	
 	
-
+	def reporteDePtu(){
+		def repParams=[:]
+		repParams['EJERCICIO']=params.ejercicio as Integer
+		repParams.reportName=params.reporte
+		log.info('Ejecutando reporte: '+repParams)
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName+'.pdf')
+	}
 	
 
 	

@@ -51,6 +51,12 @@ class PtuService {
     	ptuDet.vacaciones=movimientos.sum(0.0){it.concepto.clave==VACACIONES?it.getTotal():0.0}
     	ptuDet.comisiones=movimientos.sum(0.0){it.concepto.clave==COMISION?it.getTotal():0.0}
     	ptuDet.retardos=movimientos.sum(0.0){it.concepto.clave==RETARDOS?it.getTotal():0.0}
+        if(ptuDet.empleado.id==209){
+            ptuDet.retardos-=72.86
+        }
+        if(ptuDet.empleado.id==54){
+            ptuDet.retardos-=6.07
+        }
     	ptuDet.total=(ptuDet.salario+ptuDet.vacaciones+ptuDet.comisiones)-ptuDet.retardos
     	log.info " ptuDet $ptuDet.empleado( $ejercicio ) actualizado"
     	return ptuDet
@@ -62,6 +68,10 @@ class PtuService {
             it.topeAnual=it.total>tope?tope:it.total
             it.diasDelEjercicio=calcularDiasDelEjercicio it
             it.diasPtu=it.diasDelEjercicio-it.faltas-it.incapacidades-it.permisosP
+           //Fix temporal
+            if(it.empleado.id==45){
+                it.diasPtu=292
+            }
             it.noAsignado=it.diasPtu<60 
             if(it.empleado.id==260 || it.empleado.id==280 || it.empleado.id==246){
                 it.noAsignado=true
@@ -89,8 +99,8 @@ class PtuService {
             it.montoSalario=it.topeAnual*ptu.factorSalario
         }
         calcularImpuestos ptu
-        ptu.sindicalizadoMaximo=ptu.getgetEmpleadoTope()?.getSalarioNeto()
-        ptu.sindicalizadoNombre=ptu.getEmpleadoTope()?.nombre
+        ptu.sindicalizadoMaximo=ptu.getEmpleadoTope()?.getSalarioNeto()
+        ptu.sindicalizadoNombre=ptu.getEmpleadoTope()?.empleado?.nombre
         ptu.save flush:true
         return ptu
     }
@@ -129,10 +139,18 @@ class PtuService {
             it.ptuExcento=it.montoPtu>=ptu.topeSmg?ptu.topeSmg:it.montoPtu
             it.ptuGravado=it.montoPtu-it.ptuExcento
             it.salarioDiario=it.empleado.salario.salarioDiario
-            if(it.empleado.salario.periodicidad=='QUINCENAL')
+            if(it.empleado.salario.periodicidad=='QUINCENAL'){
                 it.salarioMensual=it.salarioDiario*31
-            else
+                if(it.noAsignado || it.empleado.baja){
+                    it.salarioMensual=0.0
+                }
+            }
+            else{
                 it.salarioMensual=it.salarioDiario*28
+                if(it.noAsignado || it.empleado.baja){
+                    it.salarioMensual=0.0
+                }
+            }
             it.incentivo=it.salarioMensual*0.10
             it.totalMensualGravado=it.ptuGravado+it.salarioMensual+it.incentivo
             it.with{
