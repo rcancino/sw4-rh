@@ -4,6 +4,7 @@
 		<tr>
 			<th>Nombre</th>
 			<th>Ubicación</th>
+			<th>E</th>
 			<th>Salario</th>
 			<th>Vacaciones</th>
 			<th>Retardos</th>
@@ -15,7 +16,7 @@
 			<th>Faltas</th>
 			<th>Inc</th>
 			<th>Dias PTU</th>
-			<th>A</th>
+			<th>Asig</th>
 			<th>Monto Días</th>
 			<th>Monto Salario</th>
 			<th>PTU</th>
@@ -32,8 +33,9 @@
 			<th>SMI Sub</th>
 			<th>SMI Res</th>
 			<th>ISR</th>
-			<th>Pago Bruto</th>
 			<th>ISR Acred</th>
+			<th>Pago Bruto</th>
+			
 			<th>Pensión</th>
 			<th>Otreas</th>
 			<th>Prestamo</th>
@@ -49,6 +51,7 @@
 					${fieldValue(bean:row,field:"empleado")}
 				</td>
 				<td>${fieldValue(bean:row,field:'empleado.perfil.ubicacion.clave')}</td>
+				<td>${fieldValue(bean:row,field:'empleado.status')}</td>
 				<td>${formatNumber(number:row.salario, type:'currency')}</td>
 				
 				<td>${formatNumber(number:row.vacaciones, type:'currency')}</td>
@@ -64,10 +67,10 @@
 				<td>${formatNumber(number:row.diasPtu,format:'##')}</td>
 				<td>
 					<g:if test="${!row.noAsignado}">
-						<span class="glyphicon glyphicon-ok">
+						S
 					</g:if>
 					<g:else>
-						<span class="glyphicon glyphicon-remove">
+						N
 					</g:else>
 				</td>
 				<td>${formatNumber(number:row.montoDias, type:'currency')}</td>
@@ -88,9 +91,9 @@
 				<td>${formatNumber(number:row.smiSubsidio, type:'currency')}</td>
 				<td>${formatNumber(number:row.smiResultado, type:'currency')}</td>
 				<td>${formatNumber(number:row.isrPorRetener, type:'currency')}</td>
-
-				<td>${formatNumber(number:row.porPagarBruto, type:'currency')}</td>
 				<td>${formatNumber(number:row.isrAcreditable, type:'currency')}</td>
+				<td>${formatNumber(number:row.porPagarBruto, type:'currency')}</td>
+				
 				<td>${formatNumber(number:row.pensionA, type:'currency')}</td>
 				<td>${formatNumber(number:row.otrasDed, type:'currency')}</td>
 				<td>${formatNumber(number:row.prestamo, type:'currency')}</td>

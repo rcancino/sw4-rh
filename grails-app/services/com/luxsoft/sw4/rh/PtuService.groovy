@@ -95,8 +95,14 @@ class PtuService {
         ptu.factorDias=ptu.montoDias/ptu.diasPtu
         ptu.factorSalario=ptu.montoSalario/ptu.topeAnualAcumulado
         ptu.partidas.each{
-            it.montoDias=it.diasPtu*ptu.factorDias
-            it.montoSalario=it.topeAnual*ptu.factorSalario
+            if(!it.noAsignado){
+                it.montoDias=it.diasPtu*ptu.factorDias
+                it.montoSalario=it.topeAnual*ptu.factorSalario    
+            }else{
+                it.montoDias=0.0
+                it.montoSalario=0.0
+            }
+            
         }
         calcularImpuestos ptu
         ptu.sindicalizadoMaximo=ptu.getEmpleadoTope()?.getSalarioNeto()
@@ -206,12 +212,18 @@ class PtuService {
 
     def calcularPago(PtuDet ptuDet){
 
-        def calculoAnual=CalculoAnual.findByEjercicioAndEmpleado(ptuDet.ptu.ejercicio,ptuDet.empleado)
-        if(calculoAnual){
-            ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)!=0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
-        }
+        if(!ptuDet.noAsignado){
+            def calculoAnual=CalculoAnual.findByEjercicioAndEmpleado(ptuDet.ptu.ejercicio,ptuDet.empleado)
+            if(calculoAnual){
+                ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)!=0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
+            }  
+        }else{
+            ptuDet.isrAcreditable=0.0
+        }  
+
         
-        ptuDet.porPagarBruto=ptuDet.ptuExcento+ptuDet.ptuGravado+ptuDet.isrAcreditable
+        
+        ptuDet.porPagarBruto=ptuDet.ptuExcento+ptuDet.ptuGravado+ptuDet.isrAcreditable-ptuDet.isrPorRetener
         
         def percepcion=ptuDet.porPagarBruto
         

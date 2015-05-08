@@ -56,7 +56,7 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 join ubicacion u on (u.id=p.ubicacion_id)
 where pt.ejercicio=$P{EJERCICIO}
 group by e.id
-order by 21 ASC,2 DESC,1 ASC]]></queryString>
+order by 21 ASC,2 DESC,44 ASC,1 ASC]]></queryString>
 
 	<field name="nombre" class="java.lang.String"/>
 	<field name="periodicidad" class="java.lang.String"/>
@@ -154,11 +154,11 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 			</band>
 			</groupHeader>
 			<groupFooter>
-			<band height="50"  isSplitAllowed="true" >
+			<band height="47"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="148"
-						y="7"
+						y="3"
 						width="51"
 						height="11"
 						key="textField">
@@ -173,7 +173,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="199"
-						y="7"
+						y="3"
 						width="51"
 						height="11"
 						key="textField-60">
@@ -188,7 +188,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="326"
-						y="7"
+						y="3"
 						width="44"
 						height="11"
 						key="textField-61">
@@ -203,7 +203,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="370"
-						y="7"
+						y="3"
 						width="44"
 						height="11"
 						key="textField-62">
@@ -218,7 +218,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="414"
-						y="7"
+						y="3"
 						width="44"
 						height="11"
 						key="textField-63">
@@ -233,7 +233,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="458"
-						y="7"
+						y="3"
 						width="44"
 						height="11"
 						key="textField-64">
@@ -248,7 +248,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="502"
-						y="7"
+						y="3"
 						width="48"
 						height="11"
 						key="textField-65">
@@ -263,7 +263,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="550"
-						y="7"
+						y="3"
 						width="53"
 						height="11"
 						key="textField-66">
@@ -278,7 +278,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="603"
-						y="7"
+						y="3"
 						width="58"
 						height="11"
 						key="textField-67">
@@ -294,7 +294,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="2"
-						y="23"
+						y="19"
 						width="215"
 						height="11"
 						forecolor="#000000"
@@ -315,7 +315,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="217"
-						y="23"
+						y="19"
 						width="187"
 						height="11"
 						key="textField">
@@ -331,7 +331,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="7"
-						y="36"
+						y="32"
 						width="70"
 						height="11"
 						forecolor="#000000"
@@ -352,7 +352,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="77"
-						y="36"
+						y="32"
 						width="65"
 						height="11"
 						key="textField">
@@ -368,7 +368,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="142"
-						y="36"
+						y="32"
 						width="62"
 						height="11"
 						forecolor="#000000"
@@ -389,7 +389,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="204"
-						y="36"
+						y="32"
 						width="65"
 						height="11"
 						key="textField">
@@ -413,7 +413,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 			</band>
 		</title>
 		<pageHeader>
-			<band height="69"  isSplitAllowed="true" >
+			<band height="74"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="544"
@@ -444,7 +444,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="7"
-						y="27"
+						y="28"
 						width="70"
 						height="11"
 						forecolor="#000000"
@@ -463,7 +463,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="83"
-						y="27"
+						y="28"
 						width="31"
 						height="11"
 						forecolor="#000000"
@@ -478,7 +478,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="334"
-						y="27"
+						y="28"
 						width="70"
 						height="11"
 						key="textField"/>
@@ -491,7 +491,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="334"
-						y="38"
+						y="39"
 						width="70"
 						height="11"
 						key="textField"/>
@@ -505,7 +505,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="119"
-						y="27"
+						y="28"
 						width="215"
 						height="11"
 						forecolor="#000000"
@@ -525,7 +525,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="119"
-						y="38"
+						y="39"
 						width="215"
 						height="11"
 						forecolor="#000000"
@@ -544,7 +544,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="334"
-						y="49"
+						y="50"
 						width="70"
 						height="11"
 						key="textField"/>
@@ -559,7 +559,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="119"
-						y="49"
+						y="50"
 						width="215"
 						height="11"
 						forecolor="#000000"
@@ -578,7 +578,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="603"
-						y="58"
+						y="63"
 						width="58"
 						height="11"
 						key="textField-57"/>
@@ -592,7 +592,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="550"
-						y="58"
+						y="63"
 						width="53"
 						height="11"
 						key="textField-58"/>
@@ -606,7 +606,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="502"
-						y="58"
+						y="63"
 						width="48"
 						height="11"
 						key="textField-59"/>
@@ -620,11 +620,12 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="502"
-						y="49"
+						y="48"
 						width="48"
 						height="11"
 						key="textField-68"/>
 					<box>					<topPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
 </box>
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
@@ -634,26 +635,111 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="#,##0.0000" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="550"
-						y="49"
+						y="48"
 						width="53"
 						height="11"
 						key="textField-69"/>
 					<box>					<topPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
 </box>
 					<textElement textAlignment="Right">
 						<font pdfFontName="Helvetica-Bold" size="7" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{factor_salario}]]></textFieldExpression>
 				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="502"
+						y="28"
+						width="48"
+						height="11"
+						forecolor="#000000"
+						key="staticText-108"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FACTOR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="502"
+						y="39"
+						width="48"
+						height="9"
+						forecolor="#000000"
+						key="staticText-109"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="550"
+						y="28"
+						width="53"
+						height="11"
+						forecolor="#000000"
+						key="staticText-110"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FACTOR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="550"
+						y="39"
+						width="53"
+						height="9"
+						forecolor="#000000"
+						key="staticText-111"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SALARIO]]></text>
+				</staticText>
 			</band>
 		</pageHeader>
 		<columnHeader>
-			<band height="33"  isSplitAllowed="true" >
+			<band height="28"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="2"
-						y="5"
+						y="0"
 						width="128"
 						height="28"
 						forecolor="#000000"
@@ -673,47 +759,28 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="148"
-						y="5"
+						y="0"
 						width="51"
-						height="28"
+						height="14"
 						forecolor="#000000"
 						key="staticText-61"
+						positionType="Float"
 						isPrintInFirstWholeBand="true"/>
 					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[ACUM. ANUAL]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="199"
-						y="5"
-						width="51"
-						height="28"
-						forecolor="#000000"
-						key="staticText-62"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[TOPE ANUAL]]></text>
+				<text><![CDATA[ACUM.]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="130"
-						y="5"
+						y="0"
 						width="18"
 						height="28"
 						forecolor="#000000"
@@ -732,68 +799,8 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="250"
-						y="5"
-						width="43"
-						height="28"
-						forecolor="#000000"
-						key="staticText-76"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FECHA ING.]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="293"
-						y="5"
-						width="33"
-						height="28"
-						forecolor="#000000"
-						key="staticText-77"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FECHA BAJA]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="326"
-						y="5"
-						width="44"
-						height="28"
-						forecolor="#000000"
-						key="staticText-78"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[DIAS AÑO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
 						x="370"
-						y="5"
+						y="0"
 						width="44"
 						height="28"
 						forecolor="#000000"
@@ -813,7 +820,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="414"
-						y="5"
+						y="0"
 						width="44"
 						height="28"
 						forecolor="#000000"
@@ -832,88 +839,8 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="458"
-						y="5"
-						width="44"
-						height="28"
-						forecolor="#000000"
-						key="staticText-81"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[DIAS PTU]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="502"
-						y="5"
-						width="48"
-						height="28"
-						forecolor="#000000"
-						key="staticText-82"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FACTOR DIAS]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="550"
-						y="5"
-						width="53"
-						height="28"
-						forecolor="#000000"
-						key="staticText-83"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[FACTOR SALARIO]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="603"
-						y="5"
-						width="58"
-						height="28"
-						forecolor="#000000"
-						key="staticText-84"
-						isPrintInFirstWholeBand="true"/>
-					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.5" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[P.T.U A PAGAR]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
 						x="661"
-						y="5"
+						y="0"
 						width="44"
 						height="28"
 						forecolor="#000000"
@@ -933,7 +860,7 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="705"
-						y="5"
+						y="0"
 						width="54"
 						height="28"
 						forecolor="#000000"
@@ -948,6 +875,363 @@ order by 21 ASC,2 DESC,1 ASC]]></queryString>
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[SUCURSAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="148"
+						y="14"
+						width="51"
+						height="14"
+						forecolor="#000000"
+						key="staticText-93"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[ANUAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="199"
+						y="0"
+						width="51"
+						height="14"
+						forecolor="#000000"
+						key="staticText-94"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[TOPE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="199"
+						y="14"
+						width="51"
+						height="14"
+						forecolor="#000000"
+						key="staticText-95"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[ANUAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="250"
+						y="0"
+						width="43"
+						height="14"
+						forecolor="#000000"
+						key="staticText-96"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FECHA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="250"
+						y="14"
+						width="43"
+						height="14"
+						forecolor="#000000"
+						key="staticText-97"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[INGRESO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="326"
+						y="0"
+						width="44"
+						height="14"
+						forecolor="#000000"
+						key="staticText-98"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="326"
+						y="14"
+						width="44"
+						height="14"
+						forecolor="#000000"
+						key="staticText-99"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[AÑO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="458"
+						y="0"
+						width="44"
+						height="14"
+						forecolor="#000000"
+						key="staticText-100"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="458"
+						y="14"
+						width="44"
+						height="14"
+						forecolor="#000000"
+						key="staticText-101"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[PTU]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="502"
+						y="0"
+						width="48"
+						height="14"
+						forecolor="#000000"
+						key="staticText-102"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="502"
+						y="14"
+						width="48"
+						height="14"
+						forecolor="#000000"
+						key="staticText-103"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[DIAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="550"
+						y="0"
+						width="53"
+						height="14"
+						forecolor="#000000"
+						key="staticText-104"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="550"
+						y="14"
+						width="53"
+						height="14"
+						forecolor="#000000"
+						key="staticText-105"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SALARIO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="603"
+						y="0"
+						width="58"
+						height="14"
+						forecolor="#000000"
+						key="staticText-106"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[P.T.U.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="603"
+						y="14"
+						width="58"
+						height="14"
+						forecolor="#000000"
+						key="staticText-107"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[A PAGAR]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="293"
+						y="0"
+						width="33"
+						height="14"
+						forecolor="#000000"
+						key="staticText-112"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FECHA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="293"
+						y="14"
+						width="33"
+						height="14"
+						forecolor="#000000"
+						key="staticText-113"
+						positionType="Float"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="7" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[BAJA]]></text>
 				</staticText>
 			</band>
 		</columnHeader>

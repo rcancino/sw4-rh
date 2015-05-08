@@ -655,7 +655,7 @@ def generarModificacionIndividualSua(PeriodoCommand command){
 	 
 	}
 	
-	String name="BajasIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
+	String name="ModificacionIndividualIMSS_"+new Date().format("dd_MM_yyyy")+".txt"
 	response.setContentType("application/octet-stream")
 	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
 	response.outputStream << temp.newInputStream()
@@ -820,7 +820,7 @@ def generarInfonavitSua(PeriodoCommand command){
 		def fechaMov="00000000"
 		def tipoDesc="0"
 		def valorDesc="00000000"
-		def aplicaTabla="0"
+		def aplicaTabla="N"
 	
 		if (infonavit.alta> fechaInicial && infonavit.alta<fechaFinal){
 			 fechaMov=df.format(infonavit.alta)
@@ -857,7 +857,7 @@ def generarInfonavitSua(PeriodoCommand command){
 	
     	if(fechaMov!="00000000"){
 		
-		  def registro=registroPatronal+numSeguridadSocial+infonavitNumero+tipoMov+fechaMov+tipoDesc+valorDesc+"\r\n" //+aplicaTabla
+		  def registro=registroPatronal+numSeguridadSocial+infonavitNumero+tipoMov+fechaMov+tipoDesc+valorDesc+aplicaTabla+"\r\n" //+aplicaTabla
 	
 		append registro
 		  

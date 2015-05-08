@@ -20,7 +20,7 @@
 					</g:if>
 					<form action="" class="form-horizontal">
 						<div class="form-group">
-						    <label class="col-sm-3 control-label">Monto</label>
+						    <label class="col-sm-3 control-label">Monto PTU</label>
 						    <div class="col-sm-3">
 						      <p class="form-control-static">
 						      	${formatNumber(number:ptuInstance.monto,type:'currency')}
@@ -97,7 +97,7 @@
 						      	${formatNumber(number:ptuInstance.salarioMinimoGeneral,type:'currency')}
 						      </p>
 						    </div>
-						     <label class="col-sm-3 control-label">Tope S.M.G</label>
+						     <label class="col-sm-3 control-label">Excento PTU</label>
 						    <div class="col-sm-3">
 						      <p class="form-control-static">
 						      	${formatNumber(number:ptuInstance.topeSmg,type:'currency')}
@@ -126,7 +126,12 @@
 						<div class="btn-group">
 							<input type='text' id="ubicacionField" placeholder="Ubicacion" class="form-control" autocomplete="off" >
 						</div>
-						
+						<div class="btn-group">
+							<input type='text' id="statusField" placeholder="Status" class="form-control" autocomplete="off" >
+						</div>
+						<div class="btn-group">
+							<input type='text' id="asignadoField" placeholder="Asignado" class="form-control" autocomplete="off" >
+						</div>
 						
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary">Operaciones</button>
@@ -240,6 +245,12 @@
 			
 			$("#ubicacionField").keyup(function(){
 					table.DataTable().column(1).search( $(this).val() ).draw();
+			});
+			$("#statusField").keyup(function(){
+					table.DataTable().column(2).search( $(this).val() ).draw();
+			});
+			$("#asignadoField").keyup(function(){
+					table.DataTable().column(14).search( $(this).val() ).draw();
 			});
 
 			function format ( d ) {
