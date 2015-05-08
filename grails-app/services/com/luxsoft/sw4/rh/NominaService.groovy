@@ -103,6 +103,11 @@ class NominaService {
 			nomina=generarAguinaldo(nomina)
 			return nomina
 		}
+		if(nomina.tipo=='PTU'){
+			nomina=generarPtu(nomina)
+			return nomina
+		}
+
 		def tipo=nomina.periodicidad
 		//def asistencias=Asistencia.findAllByCalendarioDet(nomina.calendarioDet)
 		def asistencias=Asistencia
@@ -149,6 +154,10 @@ class NominaService {
 		validarParaModificacion(nomina)
 		if(nomina.tipo=='AGUINALDO'){
 			actualizarAguinaldo(nomina)
+			return nomina
+		}
+		if(nomina.tipo=='PTU'){
+			nomina = actualizarPtu(nomina)
 			return nomina
 		}
 		generarPartidas(nomina)
@@ -529,7 +538,7 @@ class NominaService {
 			def data=NominaPorEmpleadoDet.executeQuery(
 				"select sum(d.importeExcento),sum(d.importeGravado) from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.concepto.clave=? and d.parent.cfdi!=null",
 				[ne.empleado,ne.nomina.ejercicio,neDet.concepto.clave])
-println "----"+data.get(0)[0]+"---------" +data.get(0)[1]
+
 
 			control.acumuladoExcento=data.get(0)[0]?:0.0
 			control.acumuladoGravado=data.get(0)[1]?:0.0
@@ -617,6 +626,95 @@ println "----"+data.get(0)[0]+"---------" +data.get(0)[1]
 				calculo.aplicado=aplicado.get(0)?:0.0
 				
 			}
+	}
+
+
+	def generarPtu(Nomina nomina){
+		def ptus=PtuDet.findAll (
+				"from PtuDet a where a.ptu.ejercicio=? and a.empleado.salario.periodicidad=? and a.empleado.salario.formaDePago=? and a.noAsignado=false"
+			,[nomina.ejercicio,nomina.periodicidad,nomina.formaDePago])
+		
+		ptus.each{
+			def empleado=it.empleado
+			def ne=new NominaPorEmpleado(
+			empleado:empleado,
+			ubicacion:empleado.perfil.ubicacion,
+			antiguedadEnSemanas:0,
+			nomina:nomina,
+			vacaciones:0,
+			fraccionDescanso:0
+			
+			)
+			ne.antiguedadEnSemanas=ne.getAntiguedad()
+			ne.salarioDiarioBase=empleado.salario.salarioDiario
+			ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
+			//def asistencia=Asistencia.findByCalendarioDetAndEmpleado(nomina.calendarioDet,empleado)
+			//ne.asistencia=asistencia
+			nomina.addToPartidas(ne)
+			
+			it.nominaPorEmpleado=ne
+		}
+		nomina.save failOnError:true
+		ordenar(nomina)
+		return nomina
+	}
+
+	def actualizarPtu(Nomina nomina)	{	
+		nomina.partidas.each{ ne ->
+			ne.conceptos.clear()
+			def ptu=Ptu.findByNominaPorEmpleado(ne)
+			if(ptu){
+				log.info 'Actualizando ptu: '+ptu
+				//Percepcion 1
+				def p1=new NominaPorEmpleadoDet(
+					concepto:ConceptoDeNomina.findByClave('P002')
+					,importeGravado:ptu.ptuGravado
+					,importeExcento:ptu.ptuExcento
+					,comentario:'PENDIENTE')
+				ne.addToConceptos(p1)
+				
+				// def p2=new NominaPorEmpleadoDet(
+				// 	concepto:ConceptoDeNomina.findByClave('P011')
+				// 	,importeGravado:aguinaldo.bono
+				// 	,importeExcento:0.0
+				// 	,comentario:'PENDIENTE')
+				// ne.addToConceptos(p2)
+				
+				
+				def d1=new NominaPorEmpleadoDet(
+					concepto:ConceptoDeNomina.findByClave('D002')
+					,importeGravado:0.0
+					,importeExcento:ptu.isrPorRetener
+					,comentario:'PENDIENTE')
+				ne.addToConceptos(d1)
+				
+				if(ptu.pensionA){
+					def d2=new NominaPorEmpleadoDet(
+						concepto:ConceptoDeNomina.findByClave('D007')
+						,importeGravado:0.0
+						,importeExcento:ptu.pensionA
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
+				if(ptu.otrasDed){
+					def d2=new NominaPorEmpleadoDet(
+						concepto:ConceptoDeNomina.findByClave('D005')
+						,importeGravado:0.0
+						,importeExcento:ptu.otrasDed
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
+				if(ptu.prestamo){
+					def d2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D004')
+						,importeGravado:0.0
+						,importeExcento:ptu.prestamo
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
+				
+			}
+			
+		}
 	}
 	
 }
