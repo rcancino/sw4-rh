@@ -40,7 +40,7 @@ class ReciboDeNominaController {
 		
 		params.periodicidad=params.periodicidad?:'QUINCENAL'
 		
-		println 'Lista de recibos para : '+params
+		//println 'Lista de recibos para : '+params
 		
 		def nominasPorMes=[:]
 		Mes.getMeses().each{
@@ -61,7 +61,7 @@ class ReciboDeNominaController {
 	}
 	
 	def semanal(long nominaId) {
-		println 'Lista de recibos para : '+params
+		//println 'Lista de recibos para : '+params
 		def nominasPorMes=[:]
 		Mes.getMeses().each{
 			nominasPorMes[it.nombre]=Nomina.findAll(
@@ -81,7 +81,7 @@ class ReciboDeNominaController {
 	}
 	
 	def imprimirCfdi() {
-		println 'Imprimiendo CFDI: '+params.id
+		//println 'Imprimiendo CFDI: '+params.id
 		def cfdi=Cfdi.findById(params.id)
 		if(cfdi==null){
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'cfdiInstance.label', default: 'Cfdi'), params.id])
@@ -303,18 +303,30 @@ class ReciboDeNominaController {
 			   faltas=	(nominaPorEmpleado.asistencia.faltasManuales+(nominaPorEmpleado.asistencia.faltasManuales*0.167))
 			}else{
 			  if(nominaPorEmpleado.empleado.alta<=nominaPorEmpleado.asistencia.calendarioDet.inicio){
-				  diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
-				 
+				  //diasTrabajados=nominaPorEmpleado.diasDelPeriodo-(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+				  //faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
+				  diasTrabajados=nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones
+				  faltas=nominaPorEmpleado.diasDelPeriodo-nominaPorEmpleado.diasTrabajados-nominaPorEmpleado.vacaciones
 				  
-				  faltas=(nominaPorEmpleado.faltas+ nominaPorEmpleado.fraccionDescanso + nominaPorEmpleado.incapacidades)
 			  }else{
+			  
+			  
+			  
 				  diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
 				  faltas=(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+			  
+			  		
+					
+					
+					
+				  
 			  }
 			
 			}
 			
 		}
+		
+		//println "-Dias trabajados"+diasTrabajados+"--------"+nominaPorEmpleado.id
 		repParams['FALTAS']=com.luxsoft.sw4.MonedaUtils.round(faltas,2) as String
 		repParams['DIAS_TRABAJADOS']=com.luxsoft.sw4.MonedaUtils.round(diasTrabajados,2) as String
 		
@@ -372,7 +384,7 @@ class ReciboDeNominaController {
 	}
 	
 	def showXml(Long id){
-		println 'Mostrando XML: '+id
+		//println 'Mostrando XML: '+id
 		def cfdi=Cfdi.findById(id)
 		if(cfdi==null){
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'cfdiInstance.label', default: 'Cfdi'), params.id])

@@ -10,7 +10,7 @@
 	
 	<content tag="header">
 		<g:link action="index" id="${nominaInstance.id}" params="[periodicidad:nominaInstance.periodicidad]">
-			<h4>Nómina: ${nominaInstance.folio} ${nominaInstance.periodicidad}  ${nominaInstance.formaDePago } (${nominaInstance.periodo}) </h4>
+			<h4>Nómina: ${nominaInstance.folio} ${nominaInstance.periodicidad}  ${nominaInstance.formaDePago } (${nominaInstance.periodo}) ${nominaInstance.tipo}</h4>
 		</g:link>
 		
 	</content>

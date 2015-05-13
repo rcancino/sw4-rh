@@ -35,11 +35,11 @@
 			<th>ISR</th>
 			<th>ISR Acred</th>
 			<th>Pago Bruto</th>
-			
 			<th>Pensión</th>
 			<th>Otreas</th>
 			<th>Prestamo</th>
 			<th>Neto</th> 
+			<th>Nuevo</th>
 
 		</tr>
 	</thead>
@@ -51,6 +51,8 @@
 					${fieldValue(bean:row,field:"empleado")}
 				</td>
 				<td>${fieldValue(bean:row,field:'empleado.perfil.ubicacion.clave')}</td>
+				
+				
 				<td>${fieldValue(bean:row,field:'empleado.status')}</td>
 				<td>${formatNumber(number:row.salario, type:'currency')}</td>
 				
@@ -98,6 +100,14 @@
 				<td>${formatNumber(number:row.otrasDed, type:'currency')}</td>
 				<td>${formatNumber(number:row.prestamo, type:'currency')}</td>
 				<td>${formatNumber(number:row.porPagarNeto, type:'currency')}</td>
+				<td>
+					<g:if test="${row.empleado.alta<row.periodo.fechaInicial}">
+						N
+					</g:if>
+					<g:else>
+						S
+					</g:else>
+				</td>
 
 			</tr>
 			

@@ -50,6 +50,11 @@ class CalculoAnualController {
 			
 				re='CalculoAnualResultados'
 				break;
+				
+			case 'SALDOS':
+				
+				re='CalculoAnualSaldosRH'
+				break;
 			
 			
 			break

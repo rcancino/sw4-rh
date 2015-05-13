@@ -237,18 +237,22 @@ class PtuService {
                 importeP=(ptuDet.porPagarBruto)*(pension.porcentaje/100)
             }
             ptuDet.pensionA=importeP
-            percepcion-=importeP
+            percepcion-=ptuDet.pensionA
+        }
+
+        if(ptuDet.empleado.status!='BAJA'){
+            percepcion*=0.75
+        }else{
+            percepcion*=0.90
         }
         
-        percepcion*=0.75
+        def otraDeducciones=buscarOtrasDeducciones(ptuDet.empleado)
         
-        def otraDeduccion=buscarOtrasDeducciones(ptuDet.empleado)
-        
-        if(otraDeduccion){
+        if(otraDeducciones){
             
-            if(otraDeduccion.saldo<=percepcion){
-                ptuDet.otrasDed=otraDeduccion.saldo
-                percepcion-=otraDeduccion.saldo
+            if(otraDeducciones<=percepcion){
+                ptuDet.otrasDed=otraDeducciones
+                percepcion-=ptuDet.otrasDed
             }else{
                 ptuDet.otrasDed=percepcion
             }
@@ -257,14 +261,13 @@ class PtuService {
         def prestamo=buscarPrestamo(ptuDet.empleado)
         
         if(prestamo){
-            if(prestamo.saldo<=percepcion){
-                ptuDet.prestamo=prestamo.saldo
+            if(prestamo<=percepcion){
+                ptuDet.prestamo=prestamo
             }else{
                 ptuDet.prestamo=percepcion
             }
         }
         ptuDet.porPagarNeto=ptuDet.porPagarBruto-ptuDet.pensionA-ptuDet.otrasDed-ptuDet.prestamo
-        
         
     }
     
@@ -274,18 +277,20 @@ class PtuService {
         return pensiones?pensiones[0]:null
     }
     
-    private Prestamo buscarPrestamo(Empleado e) {
+    private  buscarPrestamo(Empleado e) {
         def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
-            ,[e],[max:1])
-        return prestamos?prestamos[0]:null
+            ,[e])
+        return prestamos.sum {it.saldo}
     }
     
-    private OtraDeduccion buscarOtrasDeducciones(Empleado e){
-        def d=OtraDeduccion.findAll("from OtraDeduccion d where d.saldo>0 and d.empleado=? order by d.saldo desc"
-            ,[e],[max:1])
-        return d?d[0]:null
+    private  buscarOtrasDeducciones(Empleado e){
+        def rows=OtraDeduccion.findAll("from OtraDeduccion d where d.saldo>0 and d.empleado=? order by d.saldo desc"
+            ,[e])
+        return rows.sum {it.saldo}
     }
 
+
+   
     def reporte(Ptu ptu){
         params.reportName='PtuGeneral'
         params['EJERCICIO']=session.ejercicio

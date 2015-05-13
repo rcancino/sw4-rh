@@ -28,7 +28,7 @@
 								from="${periodos}"
 								value="${calendarioActual}" 
 								optionKey="id" 
-								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' )'}}"
+								optionValue="${{it.calendario.tipo+' '+it.folio+' ( '+it.inicio.format('MMM-dd')+' al '+it.fin.format('MMM-dd')+ ' ) '+it.calendario.comentario}}"
 							/>
     					</div>
   					</div>

@@ -23,6 +23,11 @@
 				<span class="glyphicon glyphicon-floppy-save"></span> Actualizar
 			</button>
 		</div>
+		<!--<div class="col-sm-offset-9 col-sm-2">
+			<button type="submit" class="btn btn-default">
+				<span class="glyphicon glyphicon-floppy-save"></span> ActualizarSaldos
+			</button>
+		</div> -->
 	</div>
 </g:form>
 </fieldset>

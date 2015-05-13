@@ -27,6 +27,7 @@ class PtuDet {
 	BigDecimal salarioNeto
 
 	NominaPorEmpleado nominaPorEmpleado
+	CalendarioDet calendarioDet
 
 	Periodo periodo
 
@@ -76,6 +77,7 @@ class PtuDet {
 
     static constraints = {
 		nominaPorEmpleado nullable:true
+		calendarioDet nullable:true
 		noAsignadoComentario nullable:true,maxSize:100
 		noAsignadoComentario nullable:true
 		montoDias scale:6

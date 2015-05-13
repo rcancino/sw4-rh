@@ -33,7 +33,7 @@
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
 	<parameter name="MES" isForPrompting="true" class="java.lang.String"/>
-	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.Integer"/>
 	<queryString><![CDATA[SELECT 
 A.control,
 A.EMPRESA,A.RFC,A.REGISTRO_PATRONAL,A.NOM_ID 
@@ -1089,7 +1089,7 @@ $F{5FE_EXT}.doubleValue()+$F{5FE_GRV}.doubleValue()
 					<textElement verticalAlignment="Middle">
 						<font/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement

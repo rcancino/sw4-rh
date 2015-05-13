@@ -127,6 +127,10 @@ class NominaController {
 		nominaInstance.partidas.each{
 			nominaService.timbrar(it.id)
 		}
+		
+		nominaInstance.status='CERRADA'
+		nominaInstance=nominaInstance.save flush:true
+
 		nominaService.actualizarSaldos(nominaInstance)
 		redirect action:'show',params:[id:nominaInstance.id]
 		//redirect action:'actualizarSaldos',params:[id:nominaInstance.id]

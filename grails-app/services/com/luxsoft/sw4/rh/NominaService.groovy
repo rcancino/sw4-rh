@@ -511,6 +511,11 @@ class NominaService {
 				actualizarPrestamo(ne)
 				actualizarCalculoAnual(ne)
 				actualizarVacaciones(ne)
+			}else{
+				actualizarOtrasDeducciones(ne)
+				actualizarPrestamo(ne)
+				actualizarCalculoAnual(ne)
+				actualizarVacaciones(ne)
 			}
 			
 		}
@@ -630,10 +635,20 @@ class NominaService {
 
 
 	def generarPtu(Nomina nomina){
-		def ptus=PtuDet.findAll (
-				"from PtuDet a where a.ptu.ejercicio=? and a.empleado.salario.periodicidad=? and a.empleado.salario.formaDePago=? and a.noAsignado=false"
-			,[nomina.ejercicio,nomina.periodicidad,nomina.formaDePago])
+		log.info 'Generando nomina para PTU  '+nomina
+
+		def folio=nomina.calendarioDet.folio
+		def ptus=[]
+		if(folio==1){
+			ptus=PtuDet.findAll (
+				"from PtuDet a where a.ptu.ejercicio=? and a.empleado.salario.periodicidad=? and a.empleado.salario.formaDePago=? and a.noAsignado=false and a.empleado.status!=?"
+			,[nomina.ejercicio-1,nomina.periodicidad,nomina.formaDePago,'BAJA'])
+		}else{
+			ptus=PtuDet.findAllByCalendarioDet(nomina.calendarioDet)
+		}
 		
+		log.info ' Registros de PTU detectados: '
+
 		ptus.each{
 			def empleado=it.empleado
 			def ne=new NominaPorEmpleado(

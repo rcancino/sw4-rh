@@ -125,8 +125,8 @@ class CfdiService {
 				
 			}else{
 				  if(nominaEmpleado.empleado.alta<=nominaEmpleado.asistencia.calendarioDet.inicio){
-					  diasTrabajados=nominaEmpleado.diasDelPeriodo-(nominaEmpleado.faltas+ nominaEmpleado.fraccionDescanso + nominaEmpleado.incapacidades)
-					 
+					  //diasTrabajados=nominaEmpleado.diasDelPeriodo-(nominaEmpleado.faltas+ nominaEmpleado.fraccionDescanso + nominaEmpleado.incapacidades)
+					  diasTrabajados=nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones				 
 				  }else{
 				  	diasTrabajados=nominaEmpleado.diasTrabajados-(nominaEmpleado.asistencia.faltasManuales+nominaEmpleado.incapacidades)
 				  }
@@ -252,7 +252,7 @@ class CfdiService {
 		cfdi=cfdiTimbrador.timbrar(cfdi,"PAP830101CR3", "yqjvqfofb")
 		
 		nominaEmpleado.cfdi=cfdi
-		println cfdi.xmlName
+		//println cfdi.xmlName
 		return cfdi
 		
 	}

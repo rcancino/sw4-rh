@@ -132,6 +132,10 @@
 						<div class="btn-group">
 							<input type='text' id="asignadoField" placeholder="Asignado" class="form-control" autocomplete="off" >
 						</div>
+
+						<div class="btn-group">
+							<input type='text' id="nuevoField" placeholder="Nuevo" class="form-control" autocomplete="off" >
+						</div>
 						
 						<div class="btn-group">
 							<button type="button" class="btn btn-primary">Operaciones</button>
@@ -145,6 +149,11 @@
 										onclick="return confirm('Recalcular la PTU para todos los empleados?');">
 										<span class="glyphicon glyphicon-refresh"></span> Re Calcular
 									</g:link>
+
+									<g:link action="recalcularPago" class="" id="${ptuInstance.id}"
+										onclick="return confirm('Recalcular pago PTU para todos los empleados?');">
+										 Recalcular Pago
+									</g:link>
 								</li>
 								<li class="danger">
 									<g:link action="delete" class="" id="${ptuInstance.id}"
@@ -152,6 +161,12 @@
 										<span class="glyphicon glyphicon-trash"></span> Eliminar
 									</g:link>
 								</li>
+								<li >
+									<g:link action="asignacionCalendario" class="" id="${ptuInstance.id}">
+										 Asignacio de calendario
+									</g:link>
+								</li>
+
 							</ul>
 						</div>
 						<div class="btn-group">
@@ -252,7 +267,9 @@
 			$("#asignadoField").keyup(function(){
 					table.DataTable().column(14).search( $(this).val() ).draw();
 			});
-
+			$("#nuevoField").keyup(function(){
+					table.DataTable().column(37).search( $(this).val() ).draw();
+			});
 			function format ( d ) {
 			    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;" class="table  table-bordered table-condensed">'+
 			            '<tr>'+

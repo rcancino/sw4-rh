@@ -49,6 +49,9 @@
 						<li>
 							<g:link action="reporte" params="[tipo:'RESULTADOS']"> Cálculo Anual Resultados</g:link>
 						</li>
+						<li>
+							<g:link action="reporte" params="[tipo:'SALDOS']"> Cálculo Anual Saldos</g:link>
+						</li>
 					</ul>
 				</div>
 				<div class="btn-group">

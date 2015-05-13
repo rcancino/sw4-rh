@@ -116,6 +116,22 @@ class PtuController {
         redirect action:'show',params:[id:ptuInstance.id]
     }
 
+    
+
+    @NotTransactional
+    def recalcularPago(Ptu ptuInstance){
+        if (ptuInstance == null) {
+            notFound()
+            return
+        }
+        ptuInstance.partidas.each{
+            log.info('Actualizando pago para: '+it.empleado)
+            ptuService.calcularPago(it)
+        }
+        ptuInstance.save flush:true
+        redirect action:'show',params:[id:ptuInstance.id]
+    }
+
     def getPartidas(Ptu ptuInstance){
         def data=ptuInstance.partidas.collect{
             [nombre:it.empleado.nombre,
@@ -124,5 +140,10 @@ class PtuController {
              ptu:it]
         }
         render data as JSON
+    }
+
+    def asignacionCalendario(Ptu ptuInstance){
+        def partidas=ptuInstance.partidas.grep {it.empleado.status=='BAJA' && !it.noAsignado}
+        [ptuInstance:ptuInstance,partidas:partidas]
     }
 }
