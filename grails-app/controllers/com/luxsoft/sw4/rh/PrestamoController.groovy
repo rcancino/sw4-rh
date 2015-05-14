@@ -61,6 +61,7 @@ class PrestamoController {
 		if(prestamo.tipo=='IMPORTE_FIJO'){
 			prestamo.tasaDescuento=0.0
 		}
+		prestamo.actualizarSaldo()
 		prestamo.save(failOnError:true)
 		flash.message="Prestamo actualizado: "+prestamo.id
 		redirect action:'edit',params:[id:prestamo.id]

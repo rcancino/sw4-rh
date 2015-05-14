@@ -52,68 +52,24 @@ class ProcesadorDePrestamosPersonales {
 				retMaxima=prestamo.importeFijo
 			}
 			
-			
 			if(retMaxima){
 				def saldo=prestamo.saldo
 				def importeExcento=retMaxima<=saldo?retMaxima:saldo
 				//Localizar el concepto
-				def neDet=ne.conceptos.find(){
-					it.concepto==concepto
-				}
-				
-				if(!neDet){
-					neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
-					ne.addToConceptos(neDet)
-				}
+				def neDet=new NominaPorEmpleadoDet(concepto:concepto,importeGravado:0.0,importeExcento:0.0,comentario:'PENDIENTE')
 				log.info "Deduccion calculada de: ${importeExcento}"
 				neDet.importeGravado=0
 				neDet.importeExcento=importeExcento.setScale(2,RoundingMode.HALF_EVEN)
+				ne.addToConceptos(neDet)
 				ne.actualizar()
-				
-				
-				//Actualizar el saldo del prestamo
-				/*
-				def abono=prestamo.abonos.find{
-					if(it.nominaPorEmpleadoDet){
-						return it.nominaPorEmpleadoDet.id==neDet?.id
-					}
-					return false
-				}
-				if(abono){
-					log.info 'Actualizando abono existente'
-					abono.importe=neDet.importeExcento
-				}else{
-					log.info 'Generando abono nuevo '
-					abono=new PrestamoAbono(fecha:neDet.parent.nomina.pago
-							,importe:neDet.importeExcento
-							,nominaPorEmpleadoDet:neDet)
-					prestamo.addToAbonos(abono)
-						//prestamo.save()
-				}
-				*/
-				
 			}
 			
-			
-			
-			/*def importeExcento=deduccion(prestamo, ne)
-			
-			*/
-			
-		}else{
-			def neDet=ne.conceptos.find(){
-				it.concepto==concepto
-			}
-			if(neDet){
-				ne.removeFromConceptos(neDet)
-			}
 		}
-		
 		
 	}
 	
 	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
-		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0.0 and p.empleado=? order by p.id  asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}

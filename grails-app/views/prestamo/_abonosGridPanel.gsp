@@ -27,6 +27,8 @@
 				<td>
 					<g:link controller="nominaPorEmpleado" action="edit" id="${row?.nominaPorEmpleadoDet?.parent?.id}">
 						<g:formatNumber number="${row?.nominaPorEmpleadoDet?.parent?.nomina?.folio}" format="######"/>
+						(<g:formatNumber number="${row?.nominaPorEmpleadoDet?.parent?.nomina?.ejercicio}" format="####"/>)
+						
 					</g:link>
 				</td>
 				<td>	

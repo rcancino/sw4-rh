@@ -20,17 +20,14 @@
   					<span class="glyphicon glyphicon-arrow-left"></span> Otras Deducciones
   			    </g:link>
   			</li>
-  			<%--<li>
+  			<li>
   				<g:link action="agregarAbono"
-					id="${otraDeduccionInstance.id}" 
-					class="list-group-item">
+					id="${otraDeduccionInstance.id}" >
 					<span class="glyphicon glyphicon-plus"></span> Agregar Abono
 				</g:link>
   			</li>
-  			
-			--%><li>
+			<li>
 				<g:link action="delete" id="${otraDeduccionInstance.id}" 
-					class="list-group-item"
 					onclick="return confirm('Eliminar deducción?')"> 
 					<span class="glyphicon glyphicon-trash"></span> Eliminar
 				</g:link>

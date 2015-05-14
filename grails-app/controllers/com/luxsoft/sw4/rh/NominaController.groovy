@@ -76,8 +76,13 @@ class NominaController {
 	def actualizarPartidas(Long id) {
 		//def nomina=nominaService.actualizarPartidas(Nomina.get(id))
 		def nomina =Nomina.get(id)
+		if(nomina.tipo=='PTU'){
+			nominaService.actualizarPtu(nomina)
+			flash.message="Nomina de PTU actualizada"
+			redirect action:'show',params:[id:id]
+			return
+		}
 		nomina.partidas.each{
-			
 			def ajuste=IsptMensual.find("from IsptMensual i where i.nominaPorEmpleado.id=?",[it.id])
 			if(ajuste){
 				flash.message="Nomina con ajuste mensual ISPT (NO SE PUEDE RECALCULAR)"
@@ -88,10 +93,8 @@ class NominaController {
 				nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
 			}
 		}
-
 		nominaService.depurar(id)
-		flash.message="Actualización exitosa"
-		//redirect action:'depurar',params:[id:id]
+		flash.message="Actualizacion exitosa"
 		redirect action:'show',params:[id:id]
 	}
 
@@ -119,7 +122,6 @@ class NominaController {
     }
 	
 	def timbrar(Nomina nominaInstance) {
-		
 		if(nominaInstance==null){
 			notFound()
 			return
@@ -127,13 +129,10 @@ class NominaController {
 		nominaInstance.partidas.each{
 			nominaService.timbrar(it.id)
 		}
-		
 		nominaInstance.status='CERRADA'
 		nominaInstance=nominaInstance.save flush:true
-
 		nominaService.actualizarSaldos(nominaInstance)
 		redirect action:'show',params:[id:nominaInstance.id]
-		//redirect action:'actualizarSaldos',params:[id:nominaInstance.id]
 	}
 	
 	def actualizarSaldos(Nomina nominaInstance){

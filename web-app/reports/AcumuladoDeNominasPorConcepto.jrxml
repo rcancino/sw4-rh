@@ -38,7 +38,7 @@
 	<parameter name="CONCEPTO_ID" isForPrompting="true" class="java.lang.Long"/>
 	<queryString><![CDATA[SELECT E.ID,U.CLAVE AS ubicacion,concat(ifnull(e.apellido_paterno,''),' ',ifnull(e.apellido_materno,''),' ',ifnull(e.nombres,'')) AS nombre,E.CLAVE AS EMP,P.numero_de_trabajador
 ,ND.importe_gravado,ND.importe_excento,ND.importe_gravado+ND.importe_excento AS TOTAL
-,C.CLASE,C.DESCRIPCION,C.CLAVE_SAT,C.TIPO,N.periodo_fecha_inicial,n.FOLIO
+,C.ID AS ID_CON,C.CLAVE AS CLAVE_CON,C.CLASE,C.DESCRIPCION,C.CLAVE_SAT,C.TIPO,N.periodo_fecha_inicial,n.FOLIO
 FROM nomina N JOIN nomina_por_empleado NE ON (NE.nomina_id=N.ID) JOIN nomina_por_empleado_det ND ON (ND.parent_id=NE.ID) JOIN calendario_det D ON (D.ID=N.calendario_det_id) JOIN calendario L ON (L.ID=D.calendario_id)
 JOIN empleado E ON (NE.empleado_id=E.ID)JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) JOIN ubicacion U ON  (P.ubicacion_id=U.ID)
 JOIN concepto_de_nomina C ON (C.ID=ND.concepto_id)
@@ -53,6 +53,8 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 	<field name="importe_gravado" class="java.math.BigDecimal"/>
 	<field name="importe_excento" class="java.math.BigDecimal"/>
 	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<field name="ID_CON" class="java.lang.Long"/>
+	<field name="CLAVE_CON" class="java.lang.String"/>
 	<field name="CLASE" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
 	<field name="CLAVE_SAT" class="java.lang.Integer"/>
@@ -298,7 +300,7 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 						height="15"
 						key="textField-1"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font pdfFontName="Helvetica-Bold" size="10" isBold="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{COMPANY}]]></textFieldExpression>
@@ -311,20 +313,20 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 						height="15"
 						key="textField"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="Algerian"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{NomReporte}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="76"
+						x="100"
 						y="32"
-						width="78"
+						width="284"
 						height="14"
 						key="textField-8"/>
 					<box></box>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{DESCRIPCION}]]></textFieldExpression>
@@ -337,39 +339,11 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 						height="14"
 						key="textField-9"/>
 					<box></box>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="78"
-						y="18"
-						width="121"
-						height="14"
-						key="textField-10"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CLASE}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement
-						x="0"
-						y="18"
-						width="78"
-						height="14"
-						key="staticText-34"/>
-					<box>					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
-					</textElement>
-				<text><![CDATA[CLASE :]]></text>
-				</staticText>
 				<staticText>
 					<reportElement
 						x="0"
@@ -404,11 +378,11 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 					<reportElement
 						x="78"
 						y="60"
-						width="78"
+						width="30"
 						height="14"
 						key="textField-11"/>
 					<box></box>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$F{CLAVE_SAT}]]></textFieldExpression>
@@ -466,7 +440,7 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 						height="14"
 						key="textField-12"/>
 					<box></box>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
@@ -479,7 +453,7 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 						height="14"
 						key="textField-13"/>
 					<box></box>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{MES}]]></textFieldExpression>
@@ -507,11 +481,52 @@ ORDER BY U.CLAVE,E.ID]]></queryString>
 						height="14"
 						key="textField-14"/>
 					<box></box>
-					<textElement>
+					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$P{PERIODICIDAD}]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="78"
+						y="32"
+						width="22"
+						height="14"
+						key="textField-20"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{CLAVE_CON}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="165"
+						y="60"
+						width="78"
+						height="14"
+						key="textField-21"/>
+					<box></box>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{ID_CON}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="120"
+						y="60"
+						width="45"
+						height="14"
+						key="staticText-43"/>
+					<box>					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[ID :]]></text>
+				</staticText>
 			</band>
 		</pageHeader>
 		<columnHeader>

@@ -34,6 +34,12 @@ class NominaService {
 				it.save flush:true
 			}
 			
+		}else if(nomina.tipo=='PTU'){
+			nomina.partidas.each{
+				def ptuDet=PtuDet.findByNominaPorEmpleado(it)
+				ptuDet.nominaPorEmpleado=null
+				ptuDet.save flush:true
+			}
 		}
 		nomina.delete()
 	}
@@ -156,10 +162,6 @@ class NominaService {
 			actualizarAguinaldo(nomina)
 			return nomina
 		}
-		if(nomina.tipo=='PTU'){
-			nomina = actualizarPtu(nomina)
-			return nomina
-		}
 		generarPartidas(nomina)
 		nomina=procesadorDeNomina.procesar(nomina)
 		return nomina
@@ -198,10 +200,6 @@ class NominaService {
 			log.info 'Timbrando Ne id:'+ne.id
 			try{
 				cfdiService.generarComprobante(ne.id)
-				if(ne.nomina.tipo=='AGUINALDO'){
-					actualizarPrestamo(ne)
-					actualizarOtrasDeducciones(ne)
-				}
 			}catch(Exception ex){
 				ex.printStackTrace()
 				log.error ex
@@ -390,9 +388,11 @@ class NominaService {
 				
 				
 				def found=prestamo.abonos.find{a->
-					//println 'Evaluando:'+a
-					a?.nominaPorEmpleadoDet?.id==neDet?.id
+					if(a.nominaPorEmpleadoDet)
+						return a.nominaPorEmpleadoDet.id==neDet.id
+					return false
 				}
+
 				
 				if(!found){
 					log.info "Generando abono de $neDet.importeExcento para prestamo: "+prestamo
@@ -404,7 +404,10 @@ class NominaService {
 					
 					//prestamo.save failOnError:true
 					
+				}else{
+					log.info 'Abono de prestamo ya registrado '+found.id
 				}
+
 				
 				prestamo.actualizarSaldo()
 			}
@@ -423,7 +426,9 @@ class NominaService {
 			if(prestamo){
 			
 				def abono=prestamo.abonos.find{a->
-					a?.nominaPorEmpleadoDet?.id==neDet?.id
+					if(a.nominaPorEmpleadoDet)
+						return a.nominaPorEmpleadoDet.id==neDet.id
+					return false
 				}
 				if(abono){
 					log.info "Eliminando el  abono de $neDet.importeExcento para prestamo: "+prestamo
@@ -449,7 +454,9 @@ class NominaService {
 			//if(deduccion && (ne.cfdi==null) ){
 			if(deduccion  ){
 				def found=deduccion.abonos.find{a->
-					a.nominaPorEmpleadoDet.id==neDet.id
+					if(a.nominaPorEmpleadoDet)
+						return a.nominaPorEmpleadoDet.id==neDet.id
+					return false
 				}
 				if(!found){
 					log.info "Generando abono de $neDet.importeExcento para prestamo: "+deduccion
@@ -494,12 +501,12 @@ class NominaService {
 	
 	
 	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
-		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>=0 and p.empleado=? order by p.id  asc"
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0.0 and p.empleado=? order by p.id  asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}
 	private OtraDeduccion buscarOtraDeduccion(NominaPorEmpleado ne) {
-		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>=0 and o.empleado=? order by o.id asc"
+		def prestamos=OtraDeduccion.findAll("from OtraDeduccion o where o.saldo>0.0 and o.empleado=? order by o.id asc"
 			,[ne.empleado],[max:1])
 		return prestamos?prestamos[0]:null
 	}
@@ -512,10 +519,12 @@ class NominaService {
 				actualizarCalculoAnual(ne)
 				actualizarVacaciones(ne)
 			}else{
+				/*
 				actualizarOtrasDeducciones(ne)
 				actualizarPrestamo(ne)
 				actualizarCalculoAnual(ne)
 				actualizarVacaciones(ne)
+				*/
 			}
 			
 		}
@@ -677,7 +686,7 @@ class NominaService {
 	def actualizarPtu(Nomina nomina)	{	
 		nomina.partidas.each{ ne ->
 			ne.conceptos.clear()
-			def ptu=Ptu.findByNominaPorEmpleado(ne)
+			def ptu=PtuDet.findByNominaPorEmpleado(ne)
 			if(ptu){
 				log.info 'Actualizando ptu: '+ptu
 				//Percepcion 1
@@ -730,6 +739,7 @@ class NominaService {
 			}
 			
 		}
+		return nomina
 	}
 	
 }

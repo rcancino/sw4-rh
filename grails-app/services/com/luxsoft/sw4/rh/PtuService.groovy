@@ -213,15 +213,19 @@ class PtuService {
     def calcularPago(PtuDet ptuDet){
 
         if(!ptuDet.noAsignado){
-            def calculoAnual=CalculoAnual.findByEjercicioAndEmpleado(ptuDet.ptu.ejercicio,ptuDet.empleado)
+            def calculoAnual=CalculoAnual.findByEjercicioAndEmpleadoAndCalculoAnual(ptuDet.ptu.ejercicio,ptuDet.empleado,true)
             if(calculoAnual){
-                ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)!=0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
+                ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)>0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
             }  
         }else{
             ptuDet.isrAcreditable=0.0
         }  
 
-        
+        if(ptuDet.isrPorRetener<=0.0) 
+            ptuDet.isrAcreditable=0.0
+        else if(ptuDet.isrPorRetener<ptuDet.isrAcreditable){
+            ptuDet.isrAcreditable=ptuDet.isrPorRetener
+        }
         
         ptuDet.porPagarBruto=ptuDet.ptuExcento+ptuDet.ptuGravado+ptuDet.isrAcreditable-ptuDet.isrPorRetener
         
