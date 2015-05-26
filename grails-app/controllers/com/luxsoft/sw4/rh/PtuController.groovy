@@ -5,6 +5,11 @@ import grails.transaction.Transactional
 import grails.transaction.NotTransactional
 import grails.plugin.springsecurity.annotation.Secured
 import grails.converters.JSON
+import grails.validation.Validateable
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import org.apache.commons.lang.WordUtils
+import com.luxsoft.sw4.cfdi.ImporteALetra
 
 @Transactional(readOnly = true)
 @Secured(["hasAnyRole('ROLE_ADMIN','RH_USER')"])
@@ -12,6 +17,7 @@ class PtuController {
 
     //static allowedMethods = [save: "POST", update: "PUT"]
     def ptuService
+    def jasperService
 
     def index() {
         respond Ptu.findAll()
@@ -145,5 +151,44 @@ class PtuController {
     def asignacionCalendario(Ptu ptuInstance){
         def partidas=ptuInstance.partidas.grep {it.empleado.status=='BAJA' && !it.noAsignado}
         [ptuInstance:ptuInstance,partidas:partidas]
+    }
+
+    def recibosDePTU(NominaCommand command){
+       
+        Nomina n =command.nomina
+        def reportes=[]
+        n.partidas.sort{it.orden}.each{ nominaPorEmpleado->
+                def repParams=[:]
+                repParams['NE_ID']=nominaPorEmpleado.id
+                PtuDet ptu=PtuDet.findByNominaPorEmpleado(nominaPorEmpleado)
+
+               // repParams['IMPORTE_LETRA']=  com.luxsoft.sw4.cfdi.ImporteALetra.aLetra(ptu.montoDias+ptu.montoSalario)
+                 repParams['IMPORTE_LETRA']=  com.luxsoft.sw4.cfdi.ImporteALetra.aLetra(ptu.montoDias+ptu.montoSalario)
+
+                def reportDef=new JasperReportDef(
+                    name:'ReciboPTU'
+                    ,fileFormat:JasperExportFormat.PDF_FORMAT
+                    ,parameters:repParams
+                    )
+                reportes.add(reportDef)
+        }
+
+    ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportes)
+        def fileName="nomina_${n.ejercicio}_${n.periodicidad}_${n.folio}_${n.tipo}.pdf"
+        render(file: pdfStream.toByteArray(), contentType: 'application/pdf',fileName:fileName)
+
+    }
+
+
+   
+
+ 
+}
+
+   @Validateable
+class NominaCommand{
+    Nomina nomina   
+    static constraints={
+         nomina nullable:false
     }
 }

@@ -27,7 +27,7 @@
 						name="nomina"
 						from="${com.luxsoft.sw4.rh.Nomina.findAll().sort{it.periodicidad}}" 
 						optionKey="id" 
-						optionValue="${{it.ejercicio+' '+it.periodicidad+' '+it.folio}}"
+						optionValue="${{it.ejercicio+' '+it.periodicidad+' '+it.folio+' '+it.tipo+' '+it.formaDePago}}"
 							
 					/>
 				</div>

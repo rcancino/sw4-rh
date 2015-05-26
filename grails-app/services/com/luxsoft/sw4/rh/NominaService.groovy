@@ -21,6 +21,7 @@ class NominaService {
 	
 	def otraDeduccionService
 	
+	def calculoAnualService
 	
 	@Transactional
 	def eliminarNomina(Long id){
@@ -573,8 +574,12 @@ class NominaService {
 		}
 	}
 	
+
 	
 	def actualizarCalculoAnual(NominaPorEmpleado ne){
+
+		calculoAnualService.actualizarSaldos(ne.empleado,ne.nomina.ejercicio-1)
+		/*
 		def neDet=ne.conceptos.find{it.concepto.clave=='P033'}
 		if(neDet){
 			log.info 'Percepcion por calculo anual P003 detectada para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
@@ -590,9 +595,12 @@ class NominaService {
 				
 			}
 		}
+
+		*/
 	}
 	
 	def cancelarCalculoAnual(NominaPorEmpleado ne){
+		/*
 		def neDet=ne.conceptos.find{it.concepto.clave=='P033'}
 		if(neDet){
 			log.info 'Percepcion por calculo anual P003 detectada para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
@@ -608,6 +616,7 @@ class NominaService {
 				
 			}
 		}
+		*/
 	}
 
 	def actualizarVacaciones(Long ejercicio,Empleado  empleado){
@@ -691,7 +700,7 @@ class NominaService {
 				log.info 'Actualizando ptu: '+ptu
 				//Percepcion 1
 				def p1=new NominaPorEmpleadoDet(
-					concepto:ConceptoDeNomina.findByClave('P002')
+					concepto:ConceptoDeNomina.findByClave('P003')
 					,importeGravado:ptu.ptuGravado
 					,importeExcento:ptu.ptuExcento
 					,comentario:'PENDIENTE')
@@ -711,7 +720,22 @@ class NominaService {
 					,importeExcento:ptu.isrPorRetener
 					,comentario:'PENDIENTE')
 				ne.addToConceptos(d1)
-				
+				if(ptu.isrAcreditable>0){
+					def d2=new NominaPorEmpleadoDet(
+						concepto:ConceptoDeNomina.findByClave('P033')
+						,importeGravado:0.0
+						,importeExcento:ptu.isrAcreditable
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+
+				}else if(ptu.isrAcreditable<0){
+					def d2=new NominaPorEmpleadoDet(
+						concepto:ConceptoDeNomina.findByClave('D015')
+						,importeGravado:0.0
+						,importeExcento:ptu.isrAcreditable.abs()
+						,comentario:'PENDIENTE')
+					ne.addToConceptos(d2)
+				}
 				if(ptu.pensionA){
 					def d2=new NominaPorEmpleadoDet(
 						concepto:ConceptoDeNomina.findByClave('D007')

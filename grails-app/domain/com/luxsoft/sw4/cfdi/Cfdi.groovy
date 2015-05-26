@@ -28,6 +28,8 @@ class Cfdi {
 	ComprobanteDocument comprobanteDocument
 	
 	TimbreFiscal timbreFiscal
+
+	static hasOne = [cancelacion: CancelacionDeCfdi]
 	
 	Date dateCreated
 	Date lastUpdated
@@ -43,6 +45,7 @@ class Cfdi {
 		receptorRfc blank:false,maxSize:13
 		xmlName nullable:true,maxSize:200
 		xml maxSize:(1024 * 512)  // 50kb para almacenar el xml
+		cancelacion nullable:true
     }
 	
 	static transients = ['comprobanteDocument','timbreFiscal']

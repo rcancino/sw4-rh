@@ -69,6 +69,7 @@ navigation={
 			otrasDeducciones(controller:'otraDeduccion',action:'index')
 			registroDeComisiones(controller:'registroDeComisiones',action:'index')
 			genericas(controller:'operacionGenerica',action:'index')
+			cfdi(controller:'cfdi',action:'index')
 		}
 		procesos(){
 			empleados()
@@ -91,7 +92,7 @@ navigation={
 		}
 		reportes(controller:'reporte'){
 			nomina(controller:'reporte'){
-				impuestoSobreNominas(controller:'reporte',titleText:'Impusto sobre nominas')
+				impuestoSobreNominas(controller:'reporte',titleText:'Impuesto sobre nominas')
 				tiempoExtra()
 				detallePorConcepto()
 				acumuladoDeNominasPorConcepto()

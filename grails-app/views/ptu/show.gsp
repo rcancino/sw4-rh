@@ -163,7 +163,7 @@
 								</li>
 								<li >
 									<g:link action="asignacionCalendario" class="" id="${ptuInstance.id}">
-										 Asignacio de calendario
+										 Asignacion de calendario
 									</g:link>
 								</li>
 
@@ -178,20 +178,26 @@
 							<ul class="dropdown-menu">
 								<li>
 									<g:link controller="Reporte" action="reporteDePtu"  
-											params="[reporte: 'CalculoPTU',ejercicio:'2014']"> PTU</g:link>
+											params="[reporte: 'CalculoPTU',ejercicio:"${ptuInstance.ejercicio}"]"> PTU</g:link>
 									<g:link controller="Reporte" action="reporteDePtu"  
-											params="[reporte: 'ISR_PTU',ejercicio:'2014']"> ISR PTU</g:link>
+											params="[reporte: 'ISR_PTU',ejercicio:"${ptuInstance.ejercicio}"]"> ISR PTU</g:link>
 									<g:link controller="Reporte" action="reporteDePtu"  
-											params="[reporte: 'NetoPTU',ejercicio:'2014']"> Neto PTU</g:link>
+											params="[reporte: 'NetoPTU',ejercicio:"${ptuInstance.ejercicio}"]"> Neto PTU</g:link>
 									<g:link controller="Reporte" action="reporteDePtu"  
-											params="[reporte: 'AcumuladoPTU',ejercicio:'2014']"> Acumulado PTU</g:link>
+											params="[reporte: 'AcumuladoPTU',ejercicio:"${ptuInstance.ejercicio}"]"> Acumulado PTU</g:link>
 									
+
 								</li>
+								<li>
+									<button class="btn btn-default" data-toggle="modal" data-target="#calendarioForm"> Recibo De PTU</button>
+								</li>
+								
 							</ul>
 						</div>
 						
 					</div>
 					<g:render template="detGrid"/>
+					<g:render template="reciboPTU" />
 				</div>
 			</div>
 		</div>

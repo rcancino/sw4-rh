@@ -9,8 +9,8 @@ class OtraDeduccionController {
 	
 	
 	def index(Long max){
-    	params.max = Math.min(max ?: 15, 100)
-		params.sort=params.sort?:'lastUpdated'
+    	params.max = Math.min(max ?: 500, 1000)
+		params.sort=params.sort?:'id'
 		params.order='desc'
 		[otraDeduccionInstanceList:OtraDeduccion.list(params)
 		,otraDeduccionInstanceListTotal:OtraDeduccion.count()]

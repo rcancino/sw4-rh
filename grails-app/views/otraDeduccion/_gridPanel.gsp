@@ -11,7 +11,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${otraDeduccionInstanceList?.sort{it.empleado.nombre}}" var="row">
+		<g:each in="${otraDeduccionInstanceList}" var="row">
 			<tr>
 				<td>
 					<g:link action="edit" id="${row.id}">
@@ -33,6 +33,3 @@
 		</g:each>
 	</tbody>
 </table>
-<div class="pagination">
-	<g:paginate total="${otraDeduccionInstanceListTotal ?: 0}" />
-</div>

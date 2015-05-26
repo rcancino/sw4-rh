@@ -103,8 +103,14 @@ class ExportadorController {
 				
 				if(it.empleado.id==260 )
 					claveSucInd="0269"
+				
 				if(it.empleado.id==245 )
 					claveSucInd="0515"
+
+				if(it.empleado.id==246 ){
+					claveSucInd="0269"
+					tipoCtaInd="01"
+				}
 				
 				def numCtaInd=it.empleado.salario.clabe.padLeft(20,"0")
 				def referencia="0000000001".padRight(40)

@@ -30,7 +30,7 @@ class AjusteIsr {
 					
 		
 		if(baseGravable<=0.0){
-			println "la base gravable es menor a cero"
+			//println "la base gravable es menor a cero"
 			return
 			
 		}

@@ -38,7 +38,9 @@ import mx.gob.sat.nomina.NominaDocument.Nomina.Percepciones
 import mx.gob.sat.nomina.NominaDocument.Nomina.Percepciones.Percepcion
 import grails.transaction.Transactional
 
-import grails.transaction.Transactional
+import com.edicom.ediwinws.cfdi.client.CfdiClient
+import org.bouncycastle.util.encoders.Base64
+import com.edicom.ediwinws.service.cfdi.CancelaResponse
 
 @Transactional
 class CfdiService {
@@ -120,19 +122,18 @@ class CfdiService {
 			def diasTrabajados=0
 			def faltas=0
 			
-			if(!nominaEmpleado.empleado.controlDeAsistencia){
-				   diasTrabajados= nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones-(nominaEmpleado.asistencia.faltasManuales+(nominaEmpleado.asistencia.faltasManuales*0.167)+ nominaEmpleado.incapacidades)
-				
-			}else{
-				  if(nominaEmpleado.empleado.alta<=nominaEmpleado.asistencia.calendarioDet.inicio){
+			if(nominaEmpleado.asistencia){
+				if(!nominaEmpleado.empleado.controlDeAsistencia){
+					diasTrabajados= nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones-(nominaEmpleado.asistencia.faltasManuales+(nominaEmpleado.asistencia.faltasManuales*0.167)+ nominaEmpleado.incapacidades)
+				}else{
+					if(nominaEmpleado.empleado.alta<=nominaEmpleado.asistencia.calendarioDet.inicio){
 					  //diasTrabajados=nominaEmpleado.diasDelPeriodo-(nominaEmpleado.faltas+ nominaEmpleado.fraccionDescanso + nominaEmpleado.incapacidades)
 					  diasTrabajados=nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones				 
-				  }else{
-				  	diasTrabajados=nominaEmpleado.diasTrabajados-(nominaEmpleado.asistencia.faltasManuales+nominaEmpleado.incapacidades)
-				  }
-				
-				}
-			
+				  	}else{
+				  		diasTrabajados=nominaEmpleado.diasTrabajados-(nominaEmpleado.asistencia.faltasManuales+nominaEmpleado.incapacidades)
+				  	}
+				}		
+     		}
 			 def diasLab=new BigDecimal(diasTrabajados).setScale(6, RoundingMode.HALF_EVEN)
 			setNumDiasPagados(diasLab)
 			
@@ -277,5 +278,44 @@ class CfdiService {
 		node.validate(options);
 		return errors;
 		
+	}
+
+
+	@Transactional
+	def CancelacionDeCfdi cancelar(Cfdi cfdi,String comentario){
+
+		CancelacionDeCfdi cancel=new CancelacionDeCfdi()
+		cancel.cfdi=cfdi
+		
+
+		def empresa=Empresa.first()
+		//byte[] pfxData=empresa.certificadoDigitalPfx
+		byte[] pfxData=empresa.certificadoDigitalPfx //grailsApplication.mainContext.getResource("/WEB-INF/sat/gasoc.pfx").file.readBytes()
+		String[] uuids=[cfdi.uuid]
+		def client=new CfdiClient()
+		CancelaResponse res=client.cancelCfdi(
+				empresa.usuarioPac
+				, empresa.passwordPac
+				, empresa.getRfc()
+				, uuids
+				, pfxData
+				, empresa.passwordPfx);
+		String msg=res.getText()
+		println 'Message: '+ new String(msg)
+		//cancel.message=Base64.decode(msg)
+		String aka=res.getAck()
+		//println 'Aka:'+aka
+
+		cancel.aka=Base64.decode(aka.getBytes())
+		cancel.save failOnError:true
+
+		def nominaEmpleado=NominaEmpleado.findByCfdi(cfdi)
+		if(nominaEmpleado){
+			cancel.comentario="Nomina por empleado origen: "+nominaEmpleado.id
+			nominaEmpleado.cfdi=null
+			nominaEmpleado.save()
+		}
+		return cancel
+
 	}
 }

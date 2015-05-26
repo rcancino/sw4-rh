@@ -214,8 +214,11 @@ class PtuService {
 
         if(!ptuDet.noAsignado){
             def calculoAnual=CalculoAnual.findByEjercicioAndEmpleadoAndCalculoAnual(ptuDet.ptu.ejercicio,ptuDet.empleado,true)
+
             if(calculoAnual){
-                ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)>0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
+                ptuDet.isrAcreditable=(calculoAnual.resultado-calculoAnual.aplicado)!=0.0?(calculoAnual.resultado-calculoAnual.aplicado):0.0
+            }else{
+                ptuDet.isrAcreditable=0.0
             }  
         }else{
             ptuDet.isrAcreditable=0.0
@@ -247,7 +250,7 @@ class PtuService {
         if(ptuDet.empleado.status!='BAJA'){
             percepcion*=0.75
         }else{
-            percepcion*=0.90
+            percepcion*=0.75
         }
         
         def otraDeducciones=buscarOtrasDeducciones(ptuDet.empleado)
@@ -260,6 +263,8 @@ class PtuService {
             }else{
                 ptuDet.otrasDed=percepcion
             }
+        }else{
+             ptuDet.otrasDed=0
         }
         
         def prestamo=buscarPrestamo(ptuDet.empleado)
@@ -270,7 +275,10 @@ class PtuService {
             }else{
                 ptuDet.prestamo=percepcion
             }
+        }else{
+            ptuDet.prestamo=0
         }
+
         ptuDet.porPagarNeto=ptuDet.porPagarBruto-ptuDet.pensionA-ptuDet.otrasDed-ptuDet.prestamo
         
     }

@@ -42,18 +42,26 @@
 								<td ><g:formatNumber number="${ajuste.baseGravable-ajuste.permisoRetardoAcu-ajuste.limiteInferior}" format="#,###.##"/></td>
 							</tr>
 							<tr>
-								<td> Tarifa</td>
+								<td> % Sobre excedente del L.I.</td>
 								<td ><g:formatNumber number="${ajuste.tarifa}" format="#,###.##"/></td>
-							</tr>
-							<tr>
-								<td> Cuota Fija</td>
-								<td ><g:formatNumber number="${ajuste.cuotaFija}" format="#,###.##"/></td>
 							</tr>
 							<tr>
 								<td> Impuesto marginal</td>
 								<td ><g:formatNumber
 								 number="${((ajuste.baseGravable-ajuste.permisoRetardoAcu -ajuste.limiteInferior)*ajuste.tarifa)/100}" 
 								format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Cuota Fija</td>
+								<td ><g:formatNumber number="${ajuste.cuotaFija}" format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Impuesto Determinado</td>
+								<td ><g:formatNumber number="${ajuste.impuestoMensual}" format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Subsidio al Empleo</td>
+								<td ><g:formatNumber number="${ajuste.subsidioMensual}" format="#,###.##"/></td>
 							</tr>
 							
 						</tbody>
@@ -75,6 +83,14 @@
 						</thead>
 						<tbody >
 							<tr>
+								<td> Impuesto del periodo</td>
+								<td ><g:formatNumber number="${ajuste.impuestoFinal}" format="#,###.##"/></td>
+							</tr>
+							<tr>
+								<td> Subsidio al empleo del periodo</td>
+								<td ><g:formatNumber number="${ajuste.subsidioFinal*-1.0}" format="#,###.##"/></td>
+							</tr>
+							<tr>
 								<td> Impuesto Acumulado</td>
 								<td ><g:formatNumber number="${ajuste.impuestoAcumulado}" type="currency"/></td>
 							</tr>
@@ -83,14 +99,6 @@
 								<td ><g:formatNumber number="${ajuste.subsidioAcumulado}" format="#,###.##"/></td>
 							</tr>
 							<tr>
-								<td> Impuesto Final</td>
-								<td ><g:formatNumber number="${ajuste.impuestoFinal}" format="#,###.##"/></td>
-							</tr>
-							<tr>
-								<td> Subsidio Final</td>
-								<td ><g:formatNumber number="${ajuste.subsidioFinal*-1.0}" format="#,###.##"/></td>
-							</tr>
-								<tr>
 								<td> Resultado Impuesto</td>
 								<td ><g:formatNumber number="${ajuste.resultadoImpuesto}" format="#,###.##"/></td>
 							</tr>
@@ -99,17 +107,40 @@
 								<td ><g:formatNumber number="${ajuste.resultadoSubsidio*-1.0}" format="#,###.##"/></td>
 							</tr>
 							<tr>
+								<td>Impuesto a cargo 
+								</td>
+								<td >
+									<g:if test="${ajuste.resultadoSubsidio>0.0 && ajuste.impuestoAcumulado>0.0}">
+										<g:formatNumber 
+											number="${ (ajuste.resultadoSubsidio.abs()-ajuste.impuestoAcumulado) >0.0 ? (ajuste.resultadoSubsidio.abs()-ajuste.impuestoAcumulado):0.0}" 
+											format="#,###.##"/>
+									</g:if>
+									<g:else>0.0</g:else>
+									
+								</td>
+							</tr>
+							<tr>
+								<td>Subsidio a favor
+								</td>
+								<td >
+									<g:if test="${ajuste.resultadoSubsidio>0.0 && ajuste.impuestoAcumulado>0.0}">
+										<g:formatNumber 
+											number="${ (ajuste.resultadoSubsidio.abs()-ajuste.impuestoAcumulado) <0.0 ? (ajuste.resultadoSubsidio.abs()-ajuste.impuestoAcumulado):0.0}" 
+											format="#,###.##"/>
+									</g:if>
+									<g:else>0.0</g:else>
+									
+								</td>
+							</tr>
+							<tr>
 								<td> Subsidio Empleo Aplicado</td>
 								<td ><g:formatNumber number="${ajuste.resultadoSubsidioAplicado}" format="#,###.##"/></td>
 							</tr>
 							<tr>
-								<td> Impuesto Determinado</td>
-								<td ><g:formatNumber number="${ajuste.impuestoMensual}" format="#,###.##"/></td>
+								<td> Subsidio aplicado acumulado (mes)</td>
+								<td ><g:formatNumber number="${ajuste.subsidioAplicado+ajuste.resultadoSubsidioAplicado}" format="#,###.##"/></td>
 							</tr>
-							<tr>
-								<td> Subsidio al Empleo</td>
-								<td ><g:formatNumber number="${ajuste.subsidioMensual}" format="#,###.##"/></td>
-							</tr>
+							
 						</tbody>
 						<tfoot>
 							<tr>

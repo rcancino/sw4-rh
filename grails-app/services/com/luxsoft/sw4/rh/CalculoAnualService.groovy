@@ -299,6 +299,55 @@ class CalculoAnualService {
 		}
 		ne.actualizar()
 	}
+
+
+	def actualizarSaldos(Empleado empleado,def ejercicio){
+
+		def calculo=CalculoAnual.find (
+				"from CalculoAnual c where c.ejercicio=? and c.empleado=?  "
+				,[ejercicio,empleado])
+		if(calculo){
+			def aplicado=buscarAplicado(empleado,ejercicio)
+			def ret=buscarDeducciones(empleado,ejercicio)
+			calculo.aplicado=aplicado-ret
+			calculo.save flush:true
+		}
+		
+	}
+
+
+	def buscarAplicado(Empleado empleado,def ejercicio){
+
+		def aplicacionInicial=NominaPorEmpleadoDet.find(
+					"from NominaPorEmpleadoDet d "+
+					" where  d.parent.empleado=? "+
+					" and d.concepto.clave=? "+
+					" and d.parent.nomina.ejercicio=? order by d.parent.nomina.folio desc",
+					[empleado,"P033",ejercicio])
+
+		def aplicado=NominaPorEmpleadoDet.executeQuery(
+					"select sum(d.importeExcento) from NominaPorEmpleadoDet d "+
+					" where  d.parent.empleado=? "+
+					" and d.concepto.clave=? "+
+					" and d.parent.nomina.ejercicio=?",
+					[empleado,"P033",ejercicio+1])
+		
+
+		def res=aplicado.get(0)?:0.0
+		def ainicial=aplicacionInicial?.importeExcento?:0.0
+		return res+ainicial
+	}
+
+	def buscarDeducciones(Empleado empleado,def ejercicio){
+		def deducciones=NominaPorEmpleadoDet.executeQuery(
+					"select sum(d.importeExcento) from NominaPorEmpleadoDet d "+
+					" where  d.parent.empleado=? "+
+					" and d.concepto.clave=? "+
+					" and d.parent.nomina.ejercicio=?",
+					[empleado,"D015",ejercicio+1])
+
+		return deducciones.get(0)?:0.0
+	}
 	
 	
     

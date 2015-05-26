@@ -29,13 +29,17 @@
 	<parameter name="NOMINA" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="UBICACION" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL,'BANAMEX' AS BANCO,N.FORMA_DE_PAGO
-,(ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1) AS DIAS_PERIODO,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
+,(case when n.tipo='GENERAL' then ROUND(TO_DAYS(N.periodo_fecha_final)-TO_DAYS(N.periodo_fecha_inicial),0)+1 else 0 end) AS DIAS_PERIODO,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=E.UBICACION_ID) AS SUCURSAL
 ,X.ID,concat(X.CLAVE,'') AS CLAVE_E,CONCAT(ifnull(x.apellido_paterno,"")," ",ifnull(x.apellido_materno,"")," ",X.nombres) AS NOMBRE_E,X.RFC AS RFC_E,X.CURP,X.ALTA
 ,(SELECT s.NUMERO FROM seguridad_Social s where s.empleado_id=x.id) as NUM_IMSS,E.salario_diario_base,E.salario_diario_integrado
 ,E.FALTAS,E.INCAPACIDADES
-,(case	when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)+round((e.vacaciones),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)) from asistencia a where a.id=e.asistencia_id )),0) 
-	when x.alta<=N.periodo_fecha_inicial then (round(((-(timestampdiff(minute,N.periodo_fecha_final,(case when x.alta>N.periodo_fecha_inicial then x.alta else N.periodo_fecha_inicial end))/60)/24)+1),0)  -   (e.faltas+(e.fraccion_descanso))	-(e.incapacidades))  
-	else  ifnull(round((e.dias_trabajados),0)-((select (a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) end) as DIAS_TRAB
+,(case when n.tipo='GENERAL' then (
+		case	
+			when x.control_de_asistencia is false then  ifnull(round((e.dias_trabajados),0)+round((e.vacaciones),0)-((select sum(a.faltas_manuales+(0.167*a.faltas_manuales)+a.incapacidades) from asistencia a where a.id=e.asistencia_id )),0) 
+			when x.alta<=N.periodo_fecha_inicial then (e.dias_trabajados+e.vacaciones)
+		else  
+		ifnull(round((e.dias_trabajados),0)-((select (a.faltas_manuales) from asistencia a where a.id=e.asistencia_id ))-e.incapacidades,0) end
+	) else 0 end) as DIAS_TRAB
 ,E.subsidio_empleo_aplicado AS SUBS_APLIC
 ,ifnull((SELECT ifnull(z.importe_gravado,0) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id and X.clave='P001'),0) as sueldo
 ,ifnull((SELECT ifnull(z.importe_gravado,0)+ifnull(z.importe_excento,0) FROM nomina_por_empleado_det z JOIN concepto_de_nomina X ON(X.ID=Z.CONCEPTO_ID) where z.parent_id=e.id and X.clave='P021'),0) as subsEmpleo
@@ -86,7 +90,7 @@ WHERE N.ID=$P{NOMINA} and U.CLAVE like $P{UBICACION}]]></queryString>
 	<field name="salario_diario_integrado" class="java.math.BigDecimal"/>
 	<field name="FALTAS" class="java.lang.Integer"/>
 	<field name="INCAPACIDADES" class="java.lang.Integer"/>
-	<field name="DIAS_TRAB" class="java.lang.Double"/>
+	<field name="DIAS_TRAB" class="java.math.BigDecimal"/>
 	<field name="SUBS_APLIC" class="java.math.BigDecimal"/>
 	<field name="sueldo" class="java.math.BigDecimal"/>
 	<field name="subsEmpleo" class="java.math.BigDecimal"/>
@@ -1319,7 +1323,7 @@ $F{IMPORTE_GRAVADO}.doubleValue()!=0.0 && $F{CONCEPTO}.equals( "P" )
 					<textElement textAlignment="Left" verticalAlignment="Bottom">
 						<font fontName="Arial" pdfFontName="Helvetica" size="7" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{DIAS_TRAB}]]></textFieldExpression>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{DIAS_TRAB}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
