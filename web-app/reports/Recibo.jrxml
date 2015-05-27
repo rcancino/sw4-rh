@@ -50,6 +50,8 @@
 	<parameter name="FECHA_INGRESO_LABORAL" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="SUCURSAL" isForPrompting="false" class="java.lang.String"/>
 	<parameter name="FALTAS" isForPrompting="false" class="java.lang.String"/>
+	<parameter name="TIPO" isForPrompting="true" class="java.lang.String"/>
+	<parameter name="SUB_EMPLEO_APLIC" isForPrompting="false" class="java.math.BigDecimal"/>
 
 	<field name="GRUPO" class="java.lang.String"/>
 	<field name="DESCRIPCION" class="java.lang.String"/>
@@ -908,6 +910,32 @@
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<text><![CDATA[NOMBRE Y FIRMA DEL TRABAJADOR]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="279"
+						y="1"
+						width="46"
+						height="15"
+						key="textField-150"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$P{SUB_EMPLEO_APLIC}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						x="161"
+						y="1"
+						width="118"
+						height="15"
+						key="staticText-197"/>
+					<box></box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<text><![CDATA[SUB.EMPLEO APLICADO  :  ]]></text>
 				</staticText>
 			</band>
 		</summary>

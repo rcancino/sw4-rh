@@ -85,6 +85,8 @@ class CfdiPrintUtils {
 		parametros['TIPO_CONTRATO']=nomina.tipoContrato
 		//parametros['SALARIO_DIARIO_BASE']=nomina.salarioBaseCotApor
 		//parametros['SALARIO_DIARIO_INTEGRADO']=nomina.salarioDiarioIntegrado
+
+
 		
 		parametros['FECHA_INICIAL']=nomina.fechaInicialPago?.format("yyyy-MM-dd")
 		parametros['FECHA_FINAL']=nomina.fechaFinalPago?.format("yyyy-MM-dd")
@@ -189,7 +191,10 @@ class CfdiPrintUtils {
 				}
 			}
 			parametros['DIAS_TRABAJADOS']=diasTrabajados
-			
+
+			parametros['SUB_EMPLEO_APLIC']=nominaPorEmpleado.subsidioEmpleoAplicado
+
+
 //			if(nominaPorEmpleado?.asistencia?.diasTrabajados>0){
 //				parametros['DIAS_TRABAJADOS']=(com.luxsoft.sw4.MonedaUtils.round(nominaPorEmpleado.asistencia.diasTrabajados)) as String
 //			}else{
@@ -333,7 +338,10 @@ class CfdiPrintUtils {
 			}
 			parametros['FALTAS']=com.luxsoft.sw4.MonedaUtils.round(faltas,2) as String
 			parametros['DIAS_TRABAJADOS']=com.luxsoft.sw4.MonedaUtils.round(diasTrabajados,2) as String
-		}
+		}	
+			parametros['SUB_EMPLEO_APLIC']=nominaPorEmpleado.subsidioEmpleoAplicado
+
+			
 		
 		
 		return parametros;

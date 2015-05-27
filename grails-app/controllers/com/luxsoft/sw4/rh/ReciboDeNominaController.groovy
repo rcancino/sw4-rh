@@ -284,6 +284,9 @@ class ReciboDeNominaController {
 		def faltas=(com.luxsoft.sw4.MonedaUtils.round(ne.faltas+ne.incapacidades)) as String
 		repParams['FALTAS']=faltas
 		*/
+
+		repParams['SUB_EMPLEO_APLIC']=ne.subsidioEmpleoAplicado //as String
+
 		repParams['FECHA_INGRESO_LABORAL']=empleado.alta.format("yyyy-MM-dd")
 		repParams['NFISCAL']=ne.id as String
 		repParams['FECHA_INICIAL']=n.periodo.fechaInicial?.format("yyyy-MM-dd")
@@ -323,7 +326,7 @@ class ReciboDeNominaController {
 		def percepciones=ne.conceptos.findAll{it.concepto.tipo=='PERCEPCION'}
 		
 		def modelData=deducciones.collect { cc ->
-			def res=[
+			def res=[ 
 				'GRUPO':cc.concepto.tipo,
 				'CLAVE':cc.concepto.clave,
 				'DESCRIPCION':cc.concepto.descripcion,
