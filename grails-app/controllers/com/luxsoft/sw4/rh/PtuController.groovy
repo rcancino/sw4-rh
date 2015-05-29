@@ -138,6 +138,23 @@ class PtuController {
         redirect action:'show',params:[id:ptuInstance.id]
     }
 
+    @NotTransactional
+    def recalcularPagoDeBajas(Ptu ptuInstance){
+        if (ptuInstance == null) {
+            notFound()
+            return
+        }
+        def partidas=ptuInstance.partidas.grep {it.empleado.status=='BAJA' && !it.noAsignado && !it.nominaPorEmpleado}
+        partidas.each{
+            log.info('Actualizando pago para: '+it.empleado)
+            ptuService.calcularPago(it)
+            it.save flush:true
+        }
+        //ptuInstance.save flush:true
+        //redirect action:'show',params:[id:ptuInstance.id]
+        redirect action:'asignacionCalendario' ,id:ptuInstance.id
+    }
+
     def getPartidas(Ptu ptuInstance){
         def data=ptuInstance.partidas.collect{
             [nombre:it.empleado.nombre,
@@ -150,7 +167,26 @@ class PtuController {
 
     def asignacionCalendario(Ptu ptuInstance){
         def partidas=ptuInstance.partidas.grep {it.empleado.status=='BAJA' && !it.noAsignado}
-        [ptuInstance:ptuInstance,partidas:partidas]
+        def calendarios=CalendarioDet
+            .findAll('from CalendarioDet d where d.calendario.comentario=? and d.calendario.ejercicio=? and d.folio>1'
+                ,['PTU',ptuInstance.ejercicio+1])
+        //println 'Calendarios: '+calendarios.size()+ " Ptu ejercicio: "+ptuInstance.ejercicio
+        [ptuInstance:ptuInstance,partidas:partidas,calendarios:calendarios]
+    }
+
+    @Transactional
+    def asignarCalendario(Ptu ptuInstance){
+        def calendarioDet=CalendarioDet.get(params.calendarioDet)
+        assert calendarioDet,'No se definio ningun calendario'
+        println "Asignando calendario $calendarioDet BAJAS de PTU: "+ptuInstance.id
+        println 'params: '+params
+        params.partidas.each{
+            def det=PtuDet.get(it)
+            det.calendarioDet=calendarioDet
+            det.save flush:true
+        }
+        redirect action:'asignacionCalendario' ,id:ptuInstance.id
+
     }
 
     def recibosDePTU(NominaCommand command){
@@ -185,10 +221,10 @@ class PtuController {
  
 }
 
-   @Validateable
-class NominaCommand{
-    Nomina nomina   
-    static constraints={
-         nomina nullable:false
-    }
-}
+// @Validateable
+// class NominaCommand{
+//     Nomina nomina   
+//     static constraints={
+//          nomina nullable:false
+//     }
+// }
