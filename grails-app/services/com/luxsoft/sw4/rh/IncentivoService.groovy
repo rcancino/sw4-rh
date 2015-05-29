@@ -6,6 +6,8 @@ import grails.transaction.NotTransactional
 import com.luxsoft.sw4.Mes
 import com.luxsoft.sw4.Periodo
 
+import org.joda.time.LocalTime
+
 @Transactional
 class IncentivoService {
 
@@ -196,6 +198,8 @@ class IncentivoService {
 		if(minutos>49){
 			perdida+=0.125
 		}
+
+
 		log.info 'Perdida: '+perdida
 		bono2=bono2*(1-perdida)	
 		
@@ -205,18 +209,60 @@ class IncentivoService {
 		incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
 		//incentivo.incentivo=incentivo.ingresoBase*bono2
 		incentivo.incentivo=(incentivo.ingresoBase*proporcion)*bono2
-		
-		//Es valido
+
 		def mes=Mes.findMesByNombre(incentivo.mes)
-		boolean valido=validarEmpleadoParaIncentivoMensual(incentivo.empleado,incentivo.ejercicio,mes)
-		if(!valido){
+		 
+		boolean participo= validarAsistenciaSalidaInv(incentivo.empleado,incentivo.ejercicio,mes)
+
+		if(!participo){
 			incentivo.tasaBono2=0.0
 			incentivo.incentivo=0.0
 			incentivo.comentario='NO PARTICIPO INVENTARIO'
 		}
+
+		//Es valido
+		
+		boolean valido=validarEmpleadoParaIncentivoMensual(incentivo.empleado,incentivo.ejercicio,mes)
+		if(!valido){
+			incentivo.tasaBono2=0.0
+			incentivo.incentivo=0.0
+			incentivo.comentario='NO PARTICIPO INVENTARIO (NUEVO)'
+		}
 		
 		log.info "Perdida: ${perdida} Proporcion: $proporcion Ingreso base:${incentivo.ingresoBase} Bono2 :${bono2}"
 		return incentivo
+    }
+
+
+    def boolean validarAsistenciaSalidaInv(Empleado e,Integer ejercicio,Mes mes){
+
+    	
+    	def inventario=CalendarioDet.find(
+		"from CalendarioDet det  where det.calendario.ejercicio=? and det.mes=? and det.calendario.tipo=? and det.calendario.comentario=?",
+		[ejercicio,mes.nombre,'ESPECIAL','INVENTARIO'])
+		
+
+
+
+		def asistenciaInv=AsistenciaDet.find("from  AsistenciaDet d where  d.fecha=? and d.asistencia.empleado=?",[inventario.inicio,e])
+
+		def  salidaRegistrada;
+
+		if(asistenciaInv.salida2){
+		 	salidaRegistrada=asistenciaInv.salida2
+		}else if(asistenciaInv.salida1){
+		 		salidaRegistrada=asistenciaInv.salida1
+		}else if(asistenciaInv.entrada1){
+		 	salidaRegistrada=asistenciaInv.entrada1
+		}else{
+		 		return false
+		}
+		 	LocalTime salidaInv=LocalTime.fromDateFields(salidaRegistrada)
+	 	// 16 * 60 = 960  corresponde a las 16:00 horas el dia del inventario en minutos
+	 	if(((salidaInv.getHourOfDay()*60)+salidaInv.getMinuteOfHour())<(16*60)){
+			return false
+		}
+		 return true	
     }
 	
 	def calcularChecadasFaltantes(List registros){
@@ -460,6 +506,7 @@ class IncentivoService {
 		println 'Validando participacion en inventario: '+inventario+ ' Ejercicio: '+ejercicio+ ' Mes: '+mes
 		if(inventario){
 			log.info 'Evaluando calendario de inventario: '+inventario
+
 			return alta<=inventario.inicio
 		}
 		return true

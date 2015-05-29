@@ -97,10 +97,12 @@ class PtuService {
         ptu.partidas.each{
             if(!it.noAsignado){
                 it.montoDias=it.diasPtu*ptu.factorDias
-                it.montoSalario=it.topeAnual*ptu.factorSalario    
+                it.montoSalario=it.topeAnual*ptu.factorSalario 
+                it.montoPtu= it.montoDias+it.montoSalario   
             }else{
                 it.montoDias=0.0
                 it.montoSalario=0.0
+                it.montoPtu=0.0
             }
             
         }

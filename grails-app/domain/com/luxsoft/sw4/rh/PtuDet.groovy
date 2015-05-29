@@ -82,9 +82,10 @@ class PtuDet {
 		noAsignadoComentario nullable:true
 		montoDias scale:6
 		montoSalario scale:6
+		montoPtu sacale:6
     }
 
-    static transients = ['antiguedad','salarioNeto','periodo','montoPtu']
+    static transients = ['antiguedad','salarioNeto','periodo']
 
     static belongsTo = [ptu: Ptu]
 
@@ -113,9 +114,9 @@ class PtuDet {
 		return (salario+vacaciones)-retardos
 	}
 
-	def getMontoPtu(){
-		return montoDias+montoSalario
-	}    
+	//def getMontoPtu(){
+	//	return montoDias+montoSalario
+	//}    
 
 
 }
