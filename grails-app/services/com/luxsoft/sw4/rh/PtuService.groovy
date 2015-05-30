@@ -144,49 +144,41 @@ class PtuService {
         ptu.salarioMinimoGeneral=zona.salario
         ptu.topeSmg=ptu.salarioMinimoGeneral*15
         ptu.partidas.each{
-            calcularImpuestosPorPartida(it);
+            it.ptuExcento=it.montoPtu>=ptu.topeSmg?ptu.topeSmg:it.montoPtu
+            it.ptuGravado=it.montoPtu-it.ptuExcento
+            it.salarioDiario=it.empleado.salario.salarioDiario
+            if(it.empleado.salario.periodicidad=='QUINCENAL'){
+                it.salarioMensual=it.salarioDiario*31
+                if(it.noAsignado || it.empleado.baja){
+                    it.salarioMensual=0.0
+                }
+            }
+            else{
+                it.salarioMensual=it.salarioDiario*28
+                if(it.noAsignado || it.empleado.baja){
+                    it.salarioMensual=0.0
+                }
+            }
+            it.incentivo=it.salarioMensual*0.10
+            it.totalMensualGravado=it.ptuGravado+it.salarioMensual+it.incentivo
+            it.with{
+                def base=totalMensualGravado
+                tmgIsr=calcularImpuesto(base)
+                tmgSubsidio=buscarSubsidio(base)?:0.0
+                tmgResultado=tmgIsr-tmgSubsidio
+
+                // Impuestos de salarioMensual+incentivo
+
+                base=salarioMensual+incentivo
+                smiIsr=calcularImpuesto(base)
+                smiSubsidio=buscarSubsidio(base)?:0.0
+                smiResultado=smiIsr-smiSubsidio
+
+                isrPorRetener=tmgResultado-smiResultado
+
+            }
             calcularPago it
            
-        }
-    }
-
-    def calcularImpuestosPorPartida(PtuDet ptuDet){
-        def zona=ZonaEconomica.findByClave('A')
-        def salarioMinimoGeneral=ptuDet.ptu.salarioMinimoGeneral=zona.salario
-        def topeSmg=salarioMinimoGeneral*15
-        
-        ptuDet.ptuExcento=ptuDet.montoPtu>=topeSmg?topeSmg:ptuDet.montoPtu
-        ptuDet.ptuGravado=ptuDet.montoPtu-ptuDet.ptuExcento
-        ptuDet.salarioDiario=ptuDet.empleado.salario.salarioDiario
-        if(ptuDet.empleado.salario.periodicidad=='QUINCENAL'){
-            ptuDet.salarioMensual=ptuDet.salarioDiario*31
-            if(ptuDet.noAsignado || ptuDet.empleado.baja){
-                ptuDet.salarioMensual=0.0
-            }
-        }
-        else{
-            ptuDet.salarioMensual=ptuDet.salarioDiario*28
-            if(ptuDet.noAsignado || ptuDet.empleado.baja){
-                ptuDet.salarioMensual=0.0
-            }
-        }
-        ptuDet.incentivo=ptuDet.salarioMensual*0.10
-        ptuDet.totalMensualGravado=ptuDet.ptuGravado+ptuDet.salarioMensual+ptuDet.incentivo
-        ptuDet.with{
-            def base=totalMensualGravado
-            tmgIsr=calcularImpuesto(base)
-            tmgSubsidio=buscarSubsidio(base)?:0.0
-            tmgResultado=tmgIsr-tmgSubsidio
-
-            // Impuestos de salarioMensual+incentivo
-
-            base=salarioMensual+incentivo
-            smiIsr=calcularImpuesto(base)
-            smiSubsidio=buscarSubsidio(base)?:0.0
-            smiResultado=smiIsr-smiSubsidio
-
-            isrPorRetener=tmgResultado-smiResultado
-
         }
     }
 
