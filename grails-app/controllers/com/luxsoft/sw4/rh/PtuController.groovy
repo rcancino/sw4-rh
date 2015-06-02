@@ -146,8 +146,8 @@ class PtuController {
         }
         def partidas=ptuInstance.partidas.grep {it.empleado.status=='BAJA' && !it.noAsignado && !it.nominaPorEmpleado}
         partidas.each{
-            log.info('Actualizando pago para: '+it.empleado)
-            ptuService.calcularPago(it)
+            log.info('Actualizando impuestos para petu de : '+it.empleado)
+            ptuService.calcularImpuestos(it)
             it.save flush:true
         }
         //ptuInstance.save flush:true
@@ -176,14 +176,20 @@ class PtuController {
 
     @Transactional
     def asignarCalendario(Ptu ptuInstance){
-        def calendarioDet=CalendarioDet.get(params.calendarioDet)
-        assert calendarioDet,'No se definio ningun calendario'
-        println "Asignando calendario $calendarioDet BAJAS de PTU: "+ptuInstance.id
-        println 'params: '+params
+        def calID=params.int('calendarioDet')
+         def calendarioDet=null
+        if(calID)
+            calendarioDet=CalendarioDet.get(params.calendarioDet)
+       
+        //assert calendarioDet,'No se definio ningun calendario'
+        //println "Asignando calendario $calendarioDet BAJAS de PTU: "+ptuInstance.id
+        //println 'params: '+params
+        
         params.partidas.each{
             def det=PtuDet.get(it)
             det.calendarioDet=calendarioDet
             det.save flush:true
+           
         }
         redirect action:'asignacionCalendario' ,id:ptuInstance.id
 

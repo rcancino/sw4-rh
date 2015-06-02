@@ -712,12 +712,14 @@ class NominaService {
 				// 	,importeExcento:0.0
 				// 	,comentario:'PENDIENTE')
 				// ne.addToConceptos(p2)
-				
-				
+				def conceptoClave='D002'
+				if(ptu.isrPorRetener<0.0){
+					conceptoClave='P021'
+				}
 				def d1=new NominaPorEmpleadoDet(
-					concepto:ConceptoDeNomina.findByClave('D002')
+					concepto:ConceptoDeNomina.findByClave(conceptoClave)
 					,importeGravado:0.0
-					,importeExcento:ptu.isrPorRetener
+					,importeExcento:ptu.isrPorRetener.abs()
 					,comentario:'PENDIENTE')
 				ne.addToConceptos(d1)
 				if(ptu.isrAcreditable>0){

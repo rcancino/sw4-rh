@@ -44,8 +44,8 @@
 							<ul class="dropdown-menu">
 								<li>
 									<g:link action="recalcularPagoDeBajas" class="" id="${ptuInstance.id}"
-										onclick="return confirm('Recalcular pago PTU empleados con status BAJA?');">
-										 Recalcular Pago
+										onclick="return confirm('Recalcular PTU empleados con status BAJA?');">
+										 Recalcular
 									</g:link>
 								</li>
 								<li >
@@ -67,6 +67,7 @@
 								<th>E</th>
 								<th>Asig</th>
 								<th>Neto</th>
+								<th>Monto PTU</th>
 								<th>Calendario</th>
 								<th>Asignar</th>
 								<th>Nomina</th>
@@ -91,6 +92,7 @@
 										</g:else>
 									</td>
 									<td>${formatNumber(number:row.porPagarNeto, type:'currency')}</td>
+									<td>${formatNumber(number:row.montoPtu, type:'currency')}</td>
 									<td>
 										${fieldValue(bean:row,field:"calendarioDet.calendario.tipo")}
 										${fieldValue(bean:row,field:"calendarioDet.calendario.comentario")}

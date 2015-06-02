@@ -182,6 +182,47 @@ class PtuService {
         }
     }
 
+    def calcularImpuestos(PtuDet it){
+        def zona=ZonaEconomica.findByClave('A')
+        def ptu=it.ptu
+        ptu.salarioMinimoGeneral=zona.salario
+        ptu.topeSmg=ptu.salarioMinimoGeneral*15
+        it.ptuExcento=it.montoPtu>=ptu.topeSmg?ptu.topeSmg:it.montoPtu
+        it.ptuGravado=it.montoPtu-it.ptuExcento
+        it.salarioDiario=it.empleado.salario.salarioDiario
+        if(it.empleado.salario.periodicidad=='QUINCENAL'){
+            it.salarioMensual=it.salarioDiario*31
+            if(it.noAsignado || it.empleado.baja){
+                it.salarioMensual=0.0
+            }
+        }
+        else{
+            it.salarioMensual=it.salarioDiario*28
+            if(it.noAsignado || it.empleado.baja){
+                it.salarioMensual=0.0
+            }
+        }
+        it.incentivo=it.salarioMensual*0.10
+        it.totalMensualGravado=it.ptuGravado+it.salarioMensual+it.incentivo
+        it.with{
+            def base=totalMensualGravado
+            tmgIsr=calcularImpuesto(base)
+            tmgSubsidio=buscarSubsidio(base)?:0.0
+            tmgResultado=tmgIsr-tmgSubsidio
+
+            // Impuestos de salarioMensual+incentivo
+
+            base=salarioMensual+incentivo
+            smiIsr=calcularImpuesto(base)
+            smiSubsidio=buscarSubsidio(base)?:0.0
+            smiResultado=smiIsr-smiSubsidio
+
+            isrPorRetener=tmgResultado-smiResultado
+
+        }
+        calcularPago it
+    }
+
     
     
     private BigDecimal calcularImpuesto(BigDecimal percepciones){
