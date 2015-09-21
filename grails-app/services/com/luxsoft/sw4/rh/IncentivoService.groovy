@@ -218,6 +218,8 @@ class IncentivoService {
 			incentivo.tasaBono2=0.0
 			incentivo.incentivo=0.0
 			incentivo.comentario='NO PARTICIPO INVENTARIO'
+		}else{
+			incentivo.comentario=''
 		}
 
 		//Es valido
@@ -227,6 +229,8 @@ class IncentivoService {
 			incentivo.tasaBono2=0.0
 			incentivo.incentivo=0.0
 			incentivo.comentario='NO PARTICIPO INVENTARIO (NUEVO)'
+		}else{
+			incentivo.comentario=''
 		}
 		
 		log.info "Perdida: ${perdida} Proporcion: $proporcion Ingreso base:${incentivo.ingresoBase} Bono2 :${bono2}"
@@ -259,7 +263,7 @@ class IncentivoService {
 		}
 		 	LocalTime salidaInv=LocalTime.fromDateFields(salidaRegistrada)
 	 	// 16 * 60 = 960  corresponde a las 16:00 horas el dia del inventario en minutos
-	 	if(((salidaInv.getHourOfDay()*60)+salidaInv.getMinuteOfHour())<(16*60)){
+	 	if(((salidaInv.getHourOfDay()*60)+salidaInv.getMinuteOfHour())<(15*60)){
 			return false
 		}
 		 return true	

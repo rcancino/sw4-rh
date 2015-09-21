@@ -25,7 +25,7 @@ class AjusteIsr {
 		
 		def baseGravable=NominaPorEmpleadoDet
 		.executeQuery("select sum(d.baseGravable) from NominaPorEmpleado d "
-					+" where d.empleado=? and d.nomina.calendarioDet.mes=?",[ne.empleado,mes])[0]
+					+" where d.empleado=? and d.nomina.calendarioDet.calendario.ejercicio=? and d.nomina.calendarioDet.mes=?",[ne.empleado,ejercicio,mes])[0]
 		
 					
 		
@@ -38,8 +38,8 @@ class AjusteIsr {
 			
 		def permisoRetardoAcu=NominaPorEmpleadoDet
 			.executeQuery("select sum(det.importeGravado+det.importeExcento) from NominaPorEmpleadoDet det "
-					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.mes=? "
-					+" and det.concepto.clave=?  ",[ne.empleado,mes,'D012'])[0]?:0.0
+					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.calendario.ejercicio=? and det.parent.nomina.calendarioDet.mes=? "
+					+" and det.concepto.clave=?  ",[ne.empleado,ejercicio,mes,'D012'])[0]?:0.0
 		
 		 baseGravable-=permisoRetardoAcu
 		
@@ -59,13 +59,13 @@ class AjusteIsr {
 	
 	    def impuestoAcumulado=NominaPorEmpleadoDet
 			.executeQuery("select sum(det.importeGravado+det.importeExcento) from NominaPorEmpleadoDet det "
-					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.mes=? "
-					+" and det.concepto.clave=? and det.parent.cfdi is not null ",[ne.empleado,mes,'D002'])[0]?:0.0
+					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.calendario.ejercicio=? and det.parent.nomina.calendarioDet.mes=? "
+					+" and det.concepto.clave=? and det.parent.cfdi is not null ",[ne.empleado,ejercicio,mes,'D002'])[0]?:0.0
   
 	    def subsidioAcumulado=NominaPorEmpleadoDet
 			.executeQuery("select sum(det.importeGravado+det.importeExcento) from NominaPorEmpleadoDet det "
-					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.mes=? "
-					+" and det.concepto.clave=? and det.parent.cfdi is not null ",[ne.empleado,mes,'P021'])[0]?:0.0
+					+" where det.parent.empleado=? and det.parent.nomina.calendarioDet.calendario.ejercicio=? and det.parent.nomina.calendarioDet.mes=? "
+					+" and det.concepto.clave=? and det.parent.cfdi is not null ",[ne.empleado,ejercicio,mes,'P021'])[0]?:0.0
   
 	
   
@@ -137,8 +137,8 @@ class AjusteIsr {
 		 //Calcular el subsidio aplicado
 		 def subsidioAplicado=NominaPorEmpleado
 				.executeQuery("select sum(ne.subsidioEmpleoAplicado) from NominaPorEmpleado ne "
-					+" where ne.empleado=? and ne.nomina.calendarioDet.mes=? and ne.cfdi is not null"
-					,[ne.empleado,mes])[0]?:0.0
+					+" where ne.empleado=? and ne.nomina.calendarioDet.calendario.ejercicio=? and ne.nomina.calendarioDet.mes=? and ne.cfdi is not null"
+					,[ne.empleado,ejercicio,mes])[0]?:0.0
 			log.info "Aplicado"+subsidioAplicado +"Mensual"+subsidioMensual
 				
 		 def resultadoSubsidioAplicado=subsidioMensual-subsidioAplicado

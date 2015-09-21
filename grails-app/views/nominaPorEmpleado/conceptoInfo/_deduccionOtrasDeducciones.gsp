@@ -3,7 +3,7 @@
 <table class="table table-striped table-bordered popup-table">
 	<thead >
 		<tr >
-			<th class="text-center">Prestamo (Saldo)</th>
+			<th class="text-center">Otras (Saldo)</th>
 			<th class="text-center"><g:formatNumber number="${prestamo.saldo}" type="currency"/></th>
 		</tr>
 	</thead>
@@ -30,9 +30,10 @@
 			<td>Tope</td>
 			<td class="success"><g:formatNumber number="${tope}" type="currency"/></td>
 		</tr>
+
 		<tr>
-			<td>Otras Ded</td>
-			<td class="success"><g:formatNumber number="${otras}" type="currency"/></td>
+			<td>Prestamo</td>
+			<td class="success"><g:formatNumber number="${otroPrestamo}" type="currency"/></td>
 		</tr>
 		
 		

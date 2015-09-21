@@ -58,7 +58,7 @@ class ProcesadorDeSueldo {
 			ne.faltas=asistencia.faltasManuales
 			
 			ne.fraccionDescanso=(1/6*ne.faltas)
-			ne.diasTrabajados=asistencia.diasTrabajados-ne.faltas-ne.fraccionDescanso
+			ne.diasTrabajados=asistencia.diasTrabajados-ne.faltas-ne.fraccionDescanso-ne.incapacidades
 		}else{
 			ne.diasTrabajados=ne.diasDelPeriodo-ne.faltas-ne.fraccionDescanso-ne.vacaciones-ne.incapacidades-asistencia.paternidad
 			

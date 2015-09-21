@@ -40,6 +40,9 @@
 ,SUM(CASE WHEN A.UBICACION_ID=6  THEN A.GRAVADO ELSE 0 END) AS VTA_GRV
 ,SUM(CASE WHEN A.UBICACION_ID=6  THEN A.EXENTO ELSE 0 END) AS VTA_EXT
 ,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z join nomina zz on(zz.id=z.nomina_id) where zz.PERIODICIDAD='QUINCENAL' AND zz.FOLIO=$P{FOLIO} AND zz.EJERCICIO=$P{EJERCICIO} AND zz.TIPO=$P{TIPO} and z.ubicacion_id=6)) as VTA_SUBS_E_APLIC
+,SUM(CASE WHEN A.UBICACION_ID=1  THEN A.GRAVADO ELSE 0 END) AS AND_GRV
+,SUM(CASE WHEN A.UBICACION_ID=1  THEN A.EXENTO ELSE 0 END) AS AND_EXT
+,((SELECT sum(z.subsidio_empleo_aplicado) FROM nomina_por_empleado z where z.nomina_id=A.NOM_ID and z.ubicacion_id=1)) as AND_SUBS_E_APLIC
 ,EMPLEADOS
 FROM  (
 SELECT Y.NOMBRE AS EMPRESA,Y.RFC,Y.REGISTRO_PATRONAL,N.ID AS NOM_ID,N.FOLIO,N.TIPO,N.PERIODICIDAD,n.PERIODO_FECHA_INICIAL,N.PERIODO_FECHA_FINAL,N.TOTAL
@@ -86,6 +89,9 @@ GROUP BY A.CONCEPTO,A.CLAVE,A.DESCRIPCION,A.CLAVE_SAT]]></queryString>
 	<field name="VTA_GRV" class="java.math.BigDecimal"/>
 	<field name="VTA_EXT" class="java.math.BigDecimal"/>
 	<field name="VTA_SUBS_E_APLIC" class="java.math.BigDecimal"/>
+	<field name="AND_GRV" class="java.math.BigDecimal"/>
+	<field name="AND_EXT" class="java.math.BigDecimal"/>
+	<field name="AND_SUBS_E_APLIC" class="java.math.BigDecimal"/>
 	<field name="EMPLEADOS" class="java.lang.Long"/>
 
 	<sortField name="CONCEPTO" order="Descending" />
@@ -145,6 +151,24 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 	<variable name="VTA_GRUPO_EXENTO" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO1" calculation="Sum">
 		<variableExpression><![CDATA[$F{VTA_EXT}]]></variableExpression>
 	</variable>
+	<variable name="AND_DEDUCCIONES" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Double(
+$F{CONCEPTO}.equals( "D" ) ? 
+$F{AND_EXT}.doubleValue()+$F{AND_GRV}.doubleValue()
+: 0.0 )]]></variableExpression>
+	</variable>
+	<variable name="AND_PERCEPCIONES" class="java.lang.Double" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[new Double(
+$F{CONCEPTO}.equals( "P" ) ? 
+$F{AND_EXT}.doubleValue()+$F{AND_GRV}.doubleValue()
+: 0.0 )]]></variableExpression>
+	</variable>
+	<variable name="AND_GRUPO_GRAVADO" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO1" calculation="Sum">
+		<variableExpression><![CDATA[$F{AND_GRV}]]></variableExpression>
+	</variable>
+	<variable name="AND_GRUPO_EXENTO" class="java.math.BigDecimal" resetType="Group" resetGroup="GRUPO1" calculation="Sum">
+		<variableExpression><![CDATA[$F{AND_EXT}]]></variableExpression>
+	</variable>
 
 		<group  name="GRUPO1" >
 			<groupExpression><![CDATA[$F{CONCEPTO}]]></groupExpression>
@@ -169,7 +193,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 			<band height="27"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="473"
+						x="524"
 						y="3"
 						width="48"
 						height="12"
@@ -183,7 +207,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="425"
+						x="476"
 						y="15"
 						width="96"
 						height="12"
@@ -197,7 +221,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="425"
+						x="476"
 						y="3"
 						width="48"
 						height="12"
@@ -211,7 +235,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="76"
+						x="31"
 						y="3"
 						width="157"
 						height="12"
@@ -225,7 +249,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="431"
+						x="482"
 						y="1"
 						width="42"
 						height="0"
@@ -234,7 +258,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="479"
+						x="530"
 						y="1"
 						width="42"
 						height="0"
@@ -243,7 +267,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="431"
+						x="482"
 						y="3"
 						width="42"
 						height="0"
@@ -252,7 +276,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="479"
+						x="530"
 						y="3"
 						width="42"
 						height="0"
@@ -261,7 +285,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="281"
+						x="236"
 						y="3"
 						width="48"
 						height="12"
@@ -275,7 +299,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="233"
+						x="188"
 						y="15"
 						width="96"
 						height="12"
@@ -289,7 +313,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="233"
+						x="188"
 						y="3"
 						width="48"
 						height="12"
@@ -303,7 +327,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="239"
+						x="194"
 						y="1"
 						width="42"
 						height="0"
@@ -312,7 +336,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="287"
+						x="242"
 						y="1"
 						width="42"
 						height="0"
@@ -321,7 +345,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="239"
+						x="194"
 						y="3"
 						width="42"
 						height="0"
@@ -330,7 +354,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="287"
+						x="242"
 						y="3"
 						width="42"
 						height="0"
@@ -339,7 +363,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="377"
+						x="332"
 						y="3"
 						width="48"
 						height="12"
@@ -353,7 +377,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="329"
+						x="284"
 						y="15"
 						width="96"
 						height="12"
@@ -367,7 +391,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="329"
+						x="284"
 						y="3"
 						width="48"
 						height="12"
@@ -381,7 +405,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<line direction="TopDown">
 					<reportElement
-						x="335"
+						x="290"
 						y="1"
 						width="42"
 						height="0"
@@ -390,7 +414,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="383"
+						x="338"
 						y="1"
 						width="42"
 						height="0"
@@ -399,7 +423,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="335"
+						x="290"
 						y="3"
 						width="42"
 						height="0"
@@ -408,7 +432,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<line direction="TopDown">
 					<reportElement
-						x="383"
+						x="338"
 						y="3"
 						width="42"
 						height="0"
@@ -417,7 +441,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="76"
+						x="31"
 						y="15"
 						width="157"
 						height="12"
@@ -429,6 +453,84 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[" ".concat($F{CONCEPTO}.equals("P")?" PERCEPCIONES ":" DEDUCCIONES ").concat("           TOTAL : ")]]></textFieldExpression>
 				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="428"
+						y="3"
+						width="48"
+						height="12"
+						key="textField-178"/>
+					<box>					<topPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{AND_GRUPO_EXENTO}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="15"
+						width="96"
+						height="12"
+						key="textField-179"/>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{AND_GRUPO_GRAVADO}.doubleValue()+$V{AND_GRUPO_EXENTO}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="3"
+						width="48"
+						height="12"
+						key="textField-180"/>
+					<box>					<topPen lineWidth="0.0"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$V{AND_GRUPO_GRAVADO}]]></textFieldExpression>
+				</textField>
+				<line direction="TopDown">
+					<reportElement
+						x="386"
+						y="1"
+						width="42"
+						height="0"
+						key="line-22"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="434"
+						y="1"
+						width="42"
+						height="0"
+						key="line-23"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="386"
+						y="3"
+						width="42"
+						height="0"
+						key="line-24"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
+				<line direction="TopDown">
+					<reportElement
+						x="434"
+						y="3"
+						width="42"
+						height="0"
+						key="line-25"/>
+					<graphicElement stretchType="NoStretch"/>
+				</line>
 			</band>
 			</groupFooter>
 		</group>
@@ -466,7 +568,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</line>
 				<staticText>
 					<reportElement
-						x="57"
+						x="12"
 						y="131"
 						width="19"
 						height="28"
@@ -481,7 +583,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="109"
+						x="64"
 						y="131"
 						width="124"
 						height="28"
@@ -496,7 +598,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="425"
+						x="476"
 						y="145"
 						width="48"
 						height="14"
@@ -511,7 +613,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="76"
+						x="31"
 						y="131"
 						width="33"
 						height="28"
@@ -945,7 +1047,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="425"
+						x="476"
 						y="131"
 						width="96"
 						height="14"
@@ -960,7 +1062,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="281"
+						x="236"
 						y="145"
 						width="48"
 						height="14"
@@ -975,7 +1077,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="233"
+						x="188"
 						y="145"
 						width="48"
 						height="14"
@@ -990,7 +1092,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="233"
+						x="188"
 						y="131"
 						width="96"
 						height="14"
@@ -1005,7 +1107,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="377"
+						x="332"
 						y="145"
 						width="48"
 						height="14"
@@ -1020,7 +1122,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="329"
+						x="284"
 						y="145"
 						width="48"
 						height="14"
@@ -1035,7 +1137,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="329"
+						x="284"
 						y="131"
 						width="96"
 						height="14"
@@ -1050,7 +1152,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<staticText>
 					<reportElement
-						x="473"
+						x="524"
 						y="145"
 						width="48"
 						height="14"
@@ -1072,13 +1174,58 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 						key="rectangle-1"/>
 					<graphicElement stretchType="NoStretch"/>
 				</rectangle>
+				<staticText>
+					<reportElement
+						x="428"
+						y="145"
+						width="48"
+						height="14"
+						key="staticText-198"/>
+					<box>					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[EXENTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="380"
+						y="145"
+						width="48"
+						height="14"
+						key="staticText-199"/>
+					<box>					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[GRAVADO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						x="380"
+						y="131"
+						width="96"
+						height="14"
+						key="staticText-200"/>
+					<box>					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+				<text><![CDATA[ANDRADE]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
 			<band height="12"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="57"
+						x="12"
 						y="0"
 						width="19"
 						height="12"
@@ -1093,7 +1240,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="473"
+						x="524"
 						y="0"
 						width="48"
 						height="12"
@@ -1108,7 +1255,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="109"
+						x="64"
 						y="0"
 						width="124"
 						height="12"
@@ -1123,7 +1270,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="425"
+						x="476"
 						y="0"
 						width="48"
 						height="12"
@@ -1138,7 +1285,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="76"
+						x="31"
 						y="0"
 						width="33"
 						height="12"
@@ -1153,7 +1300,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="281"
+						x="236"
 						y="0"
 						width="48"
 						height="12"
@@ -1168,7 +1315,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="233"
+						x="188"
 						y="0"
 						width="48"
 						height="12"
@@ -1183,7 +1330,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="377"
+						x="332"
 						y="0"
 						width="48"
 						height="12"
@@ -1198,7 +1345,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="329"
+						x="284"
 						y="0"
 						width="48"
 						height="12"
@@ -1210,6 +1357,36 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
 					</textElement>
 				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{VTA_GRV}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="428"
+						y="0"
+						width="48"
+						height="12"
+						key="textField-181"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{AND_EXT}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="0"
+						width="48"
+						height="12"
+						key="textField-182"/>
+					<box>					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Right">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{AND_GRV}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -1331,7 +1508,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 			<band height="48"  isSplitAllowed="true" >
 				<staticText>
 					<reportElement
-						x="155"
+						x="110"
 						y="3"
 						width="78"
 						height="15"
@@ -1346,7 +1523,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="233"
+						x="188"
 						y="3"
 						width="96"
 						height="15"
@@ -1361,7 +1538,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="329"
+						x="284"
 						y="3"
 						width="96"
 						height="15"
@@ -1376,7 +1553,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="425"
+						x="476"
 						y="3"
 						width="96"
 						height="15"
@@ -1391,7 +1568,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="233"
+						x="188"
 						y="18"
 						width="96"
 						height="12"
@@ -1407,7 +1584,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="95"
+						x="50"
 						y="18"
 						width="138"
 						height="12"
@@ -1423,7 +1600,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="329"
+						x="284"
 						y="18"
 						width="96"
 						height="12"
@@ -1439,7 +1616,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="425"
+						x="476"
 						y="18"
 						width="96"
 						height="12"
@@ -1455,7 +1632,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</textField>
 				<staticText>
 					<reportElement
-						x="122"
+						x="77"
 						y="33"
 						width="112"
 						height="15"
@@ -1470,7 +1647,7 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="236"
+						x="191"
 						y="33"
 						width="76"
 						height="15"
@@ -1480,6 +1657,37 @@ $F{VTA_EXT}.doubleValue()+$F{VTA_GRV}.doubleValue()
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.Long"><![CDATA[$F{EMPLEADOS}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="3"
+						width="96"
+						height="15"
+						key="textField-183"/>
+					<box>					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($V{AND_PERCEPCIONES}.doubleValue()-$V{AND_DEDUCCIONES}.doubleValue())]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="380"
+						y="18"
+						width="96"
+						height="12"
+						key="textField-184">
+							<printWhenExpression><![CDATA[new Boolean($F{CONCEPTO}.equals( "D" ))]]></printWhenExpression>
+						</reportElement>
+					<box>					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" pdfFontName="Helvetica" size="8" isBold="false" isItalic="false" isUnderline="false"/>
+					</textElement>
+				<textFieldExpression   class="java.math.BigDecimal"><![CDATA[$F{AND_SUBS_E_APLIC}]]></textFieldExpression>
 				</textField>
 			</band>
 		</summary>

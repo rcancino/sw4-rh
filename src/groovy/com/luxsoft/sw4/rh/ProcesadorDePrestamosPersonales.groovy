@@ -27,8 +27,10 @@ class ProcesadorDePrestamosPersonales {
 			
 			log.info "Aplicando decucccon para prestamo vigente: ${prestamo}"
 			
-			def percepciones=getPercepciones(ne)
 			
+			def percepciones=getPercepciones(ne)
+			def deducciones=getRetencionesPrecedentes(ne)
+			/*
 			def deducciones=0
 			["D002","D001","D013","D007","D006","D012","D014"].each{ clave->
 				def c=ne.conceptos.find {it.concepto.clave==clave}
@@ -41,6 +43,12 @@ class ProcesadorDePrestamosPersonales {
 			
 			log.info 'Deducciones calculadas: '+deducciones
 			log.info 'Percepcion maxima calculada: '+retMaxima
+			*/
+			def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+			//def retMaxima=( (ne.salarioDiarioBase-salarioMinimo)*(ne.diasDelPeriodo-ne.incapacidades-ne.faltas) )*0.3
+			def diasNetos=ne.diasDelPeriodo-ne.incapacidades-ne.faltas
+			def retMaxima=percepciones-deducciones-(salarioMinimo*diasNetos)
+			retMaxima*=0.3
 			
 			def otrasDeducciones=ne.conceptos.find {it.concepto.clave=="D005"}
 			if(otrasDeducciones){
@@ -75,8 +83,18 @@ class ProcesadorDePrestamosPersonales {
 	}
 	
 	private BigDecimal getPercepciones(NominaPorEmpleado ne){
-		return ne.getPercepciones()
+		def invalidas=['P019','P021','P033']
+		def res=0.0
+		ne.conceptos.each{
+			if(it.concepto.tipo=='PERCEPCION'){
+				if(!invalidas.contains(it.concepto.clave) ){
+					res+=it.getTotal()
+				}
+			}
+		}
+		return res;
 	}
+
 	private BigDecimal getDeducciones(){
 		
 	}
@@ -85,7 +103,7 @@ class ProcesadorDePrestamosPersonales {
 		
 		def acu=0.0
 		ne.conceptos.each{
-			if(it.concepto.clave=='D006'){
+			if(it.concepto.clave=='D012'){
 				acu+=it.getTotal()
 			}
 		}
@@ -97,11 +115,19 @@ class ProcesadorDePrestamosPersonales {
 	def getModel(NominaPorEmpleadoDet det) {
 		def ne=det.parent
 		def prestamo=buscarPrestamo(ne)
-		
+		def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+		def retMaxima=( (ne.salarioDiarioBase-salarioMinimo)*(ne.diasDelPeriodo-ne.incapacidades-ne.faltas) )*0.3
+		def otrasDeducciones=ne.conceptos.find {it.concepto.clave=="D005"}
 		def model=[prestamo:prestamo
-			,percepcion:getPercepciones(ne)
+			,salarioDiario:ne.salarioDiarioBase
+			,salarioMinimo:salarioMinimo
+			,diasTrabajados:(ne.diasDelPeriodo-ne.incapacidades-ne.faltas)
+			,factor:0.3
+			,tope:retMaxima
+			,otras:otrasDeducciones?.total
+			,total:det.getTotal()
 			]
-		
+		/*
 		def deducciones=[]
 		["D002","D001","D013","D007","D006","D012"].each{ clave->
 			def c=ne.conceptos.find {it.concepto.clave==clave}
@@ -119,6 +145,7 @@ class ProcesadorDePrestamosPersonales {
 		def abono=ne.conceptos.find {it.concepto.clave=="D004"}
 		
 		model.total=abono.getTotal()
+		*/
 		return model
 	}
 	

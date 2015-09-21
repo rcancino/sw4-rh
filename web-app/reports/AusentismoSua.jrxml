@@ -38,7 +38,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 join asistencia a on(a.empleado_id=e.id) join asistencia_det d on (d.asistencia_id=a.id) JOIN 	seguridad_social s on (s.empleado_id=e.id)
 left join baja_de_empleado b on (b.empleado_id=e.id)
  where d.fecha BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} and d.tipo='falta' and e.control_de_asistencia is true
-and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.fecha  )) and a.dias_trabajados=0
+and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.fecha  )) 
  order by e.apellido_paterno,e.apellido_materno,e.nombres]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>

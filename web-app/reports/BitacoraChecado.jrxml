@@ -34,6 +34,7 @@
 	<queryString><![CDATA[SELECT
 u.clave as 'ubic',e.id,e.CLAVE AS clavemp,P.numero_de_trabajador AS NUMERO,CONCAT(IFNULL(apellido_paterno,''),' ',apellido_materno,' ',nombres) as emp
 ,A.periodo_fecha_inicial,A.periodo_fecha_final,C.FECHA AS CHECADA,D.FECHA AS ASIST ,C.HORA
+,(case when c.lector=1 then 'TAC' when c.lector=3 then 'AND' when c.lector=5 then 'BOL' when c.lector=7 then '5FE' when c.lector=-10 then 'CA4' else 'N/D' end) as ubicacion
 FROM empleado E join perfil_de_empleado p on (p.empleado_id=e.id) JOIN ubicacion U ON (U.ID=P.ubicacion_id)
 JOIN asistencia a on (a.empleado_id=e.id) join asistencia_det d on (a.id=d.asistencia_id )
 join checado c on (p.numero_de_trabajador=c.numero_de_empleado AND D.FECHA=C.FECHA)
@@ -50,25 +51,13 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 	<field name="CHECADA" class="java.sql.Date"/>
 	<field name="ASIST" class="java.sql.Date"/>
 	<field name="HORA" class="java.sql.Time"/>
+	<field name="ubicacion" class="java.lang.String"/>
 
 
 		<group  name="FECHA" >
 			<groupExpression><![CDATA[$F{CHECADA}]]></groupExpression>
 			<groupHeader>
-			<band height="14"  isSplitAllowed="true" >
-				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
-					<reportElement
-						x="6"
-						y="0"
-						width="100"
-						height="14"
-						key="textField"/>
-					<box></box>
-					<textElement>
-						<font pdfFontName="Helvetica" isBold="false"/>
-					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{CHECADA}]]></textFieldExpression>
-				</textField>
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 			</groupHeader>
 			<groupFooter>
@@ -77,7 +66,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 			</groupFooter>
 		</group>
 		<background>
-			<band height="49"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</background>
 		<title>
@@ -85,7 +74,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 			</band>
 		</title>
 		<pageHeader>
-			<band height="65"  isSplitAllowed="true" >
+			<band height="55"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="357"
@@ -115,7 +104,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<staticText>
 					<reportElement
 						x="416"
-						y="45"
+						y="41"
 						width="25"
 						height="11"
 						key="staticText-5"/>
@@ -128,7 +117,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<staticText>
 					<reportElement
 						x="416"
-						y="34"
+						y="30"
 						width="25"
 						height="11"
 						key="staticText-6"/>
@@ -141,7 +130,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="443"
-						y="34"
+						y="30"
 						width="100"
 						height="11"
 						key="textField-8"/>
@@ -154,7 +143,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="443"
-						y="45"
+						y="41"
 						width="100"
 						height="11"
 						key="textField-9"/>
@@ -167,7 +156,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="68"
-						y="34"
+						y="30"
 						width="44"
 						height="11"
 						key="textField-11"/>
@@ -180,7 +169,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="113"
-						y="34"
+						y="30"
 						width="177"
 						height="11"
 						key="textField-12"/>
@@ -193,7 +182,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 				<staticText>
 					<reportElement
 						x="6"
-						y="34"
+						y="30"
 						width="57"
 						height="11"
 						key="staticText-30"/>
@@ -231,49 +220,105 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 					<reportElement
 						x="6"
 						y="7"
-						width="100"
+						width="84"
 						height="14"
 						key="staticText-31"/>
 					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
 				<text><![CDATA[FECHA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="106"
+						x="90"
 						y="7"
-						width="54"
+						width="45"
 						height="14"
 						key="staticText-32"/>
 					<box></box>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="10"/>
 					</textElement>
 				<text><![CDATA[HORA]]></text>
 				</staticText>
+				<staticText>
+					<reportElement
+						x="135"
+						y="7"
+						width="33"
+						height="14"
+						key="staticText-33"/>
+					<box></box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+				<text><![CDATA[SUC]]></text>
+				</staticText>
 			</band>
 		</columnHeader>
 		<detail>
-			<band height="13"  isSplitAllowed="true" >
+			<band height="14"  isSplitAllowed="true" >
+				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="6"
+						y="0"
+						width="84"
+						height="13"
+						key="textField">
+							<printWhenExpression><![CDATA[new Boolean($V{FECHA_COUNT}.doubleValue()<2.0)]]></printWhenExpression>
+						</reportElement>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center">
+						<font pdfFontName="Helvetica" size="10" isBold="false"/>
+					</textElement>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{CHECADA}]]></textFieldExpression>
+				</textField>
 				<textField isStretchWithOverflow="false" pattern="HH:mm" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="106"
+						x="90"
 						y="0"
-						width="54"
+						width="45"
 						height="13"
 						key="textField"/>
-					<box></box>
-					<textElement>
-						<font size="8"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center">
+						<font size="10"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Time"><![CDATA[$F{HORA}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="135"
+						y="0"
+						width="33"
+						height="13"
+						key="textField-13"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center">
+						<font size="10"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{ubicacion}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
 		<columnFooter>
-			<band height="14"  isSplitAllowed="true" >
+			<band height="8"  isSplitAllowed="true" >
 			</band>
 		</columnFooter>
 		<pageFooter>
@@ -509,7 +554,7 @@ ORDER BY C.FECHA ASC,C.HORA ASC]]></queryString>
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="50"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</summary>
 </jasperReport>

@@ -50,8 +50,9 @@ FROM
 asistencia_det D JOIN asistencia A ON (A.id=D.asistencia_id) JOIN empleado E ON (E.ID=A.empleado_id) JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) JOIN ubicacion U ON  (P.ubicacion_id=U.ID)
 JOIN turno T ON ( P.turno_id=T.ID)  JOIN calendario_det C ON (C.ID=A.CALENDARIO_DET_ID)
 LEFT JOIN baja_de_empleado B ON (B.EMPLEADO_ID=E.ID)
-WHERE A.CALENDARIO_DET_ID=$P{CALENDARIODET} AND  d.TIPO NOT IN ('ASISTENCIA','DESCANSO')
-and e.control_de_asistencia is true
+WHERE A.CALENDARIO_DET_ID=$P{CALENDARIODET} AND  d.TIPO NOT IN ('ASISTENCIA','DESCANSO') 
+ AND E.STATUS<>'BAJA' AND (B.FECHA<E.ALTA or B.ID IS NULL OR D.FECHA<=IFNULL(B.FECHA,'3015/01/01'))
+and e.control_de_asistencia is true 
 ORDER BY U.ID
 )AS X
 WHERE fecha BETWEEN ini and final
@@ -189,35 +190,35 @@ order by sucursal,emp]]></queryString>
 				</textField>
 				<staticText>
 					<reportElement
-						x="484"
+						x="473"
 						y="40"
 						width="25"
 						height="11"
 						key="staticText-5"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<text><![CDATA[AL:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="417"
+						x="395"
 						y="40"
 						width="25"
 						height="11"
 						key="staticText-6"/>
 					<box></box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<text><![CDATA[DEL:]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
-						x="377"
+						x="348"
 						y="40"
-						width="40"
+						width="47"
 						height="11"
 						key="staticText-21"/>
 					<box></box>
@@ -228,26 +229,26 @@ order by sucursal,emp]]></queryString>
 				</staticText>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="509"
+						x="498"
 						y="40"
-						width="42"
+						width="53"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{ASISTENCIA_FECHA_FINAL}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="442"
+						x="420"
 						y="40"
-						width="42"
+						width="53"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{ASISTENCIA_FECHA_INICIAL}]]></textFieldExpression>
@@ -260,8 +261,8 @@ order by sucursal,emp]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="12"
-						width="29"
+						y="11"
+						width="39"
 						height="11"
 						forecolor="#000000"
 						key="staticText-8"
@@ -286,22 +287,12 @@ order by sucursal,emp]]></queryString>
 						key="line-5"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
-				<line direction="TopDown">
-					<reportElement
-						x="0"
-						y="23"
-						width="552"
-						height="2"
-						forecolor="#666666"
-						key="line-6"/>
-					<graphicElement stretchType="NoStretch"/>
-				</line>
 				<staticText>
 					<reportElement
 						mode="Opaque"
 						x="39"
-						y="12"
-						width="29"
+						y="11"
+						width="37"
 						height="11"
 						forecolor="#000000"
 						key="staticText-22"
@@ -320,7 +311,7 @@ order by sucursal,emp]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="76"
-						y="12"
+						y="11"
 						width="143"
 						height="11"
 						forecolor="#000000"
@@ -340,8 +331,8 @@ order by sucursal,emp]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="219"
-						y="12"
-						width="44"
+						y="11"
+						width="55"
 						height="11"
 						forecolor="#000000"
 						key="staticText-24"
@@ -359,9 +350,9 @@ order by sucursal,emp]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="263"
-						y="12"
-						width="46"
+						x="274"
+						y="11"
+						width="54"
 						height="11"
 						forecolor="#000000"
 						key="staticText-25"
@@ -379,9 +370,9 @@ order by sucursal,emp]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="310"
-						y="12"
-						width="54"
+						x="328"
+						y="11"
+						width="143"
 						height="11"
 						forecolor="#000000"
 						key="staticText-26"
@@ -391,11 +382,23 @@ order by sucursal,emp]]></queryString>
 					<bottomPen lineWidth="0.0" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 </box>
-					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[TIPO]]></text>
 				</staticText>
+				<line direction="TopDown">
+					<reportElement
+						mode="Opaque"
+						x="0"
+						y="23"
+						width="551"
+						height="1"
+						forecolor="#666666"
+						backcolor="#FFFFFF"
+						key="line-6"/>
+					<graphicElement stretchType="NoStretch" fill="Solid" />
+				</line>
 			</band>
 		</columnHeader>
 		<detail>
@@ -404,7 +407,7 @@ order by sucursal,emp]]></queryString>
 					<reportElement
 						x="0"
 						y="0"
-						width="29"
+						width="39"
 						height="11"
 						key="textField">
 							<printWhenExpression><![CDATA[new Boolean($V{EMPLEADO_COUNT}.longValue()==1)]]></printWhenExpression>
@@ -434,7 +437,7 @@ order by sucursal,emp]]></queryString>
 					<reportElement
 						x="39"
 						y="0"
-						width="29"
+						width="37"
 						height="11"
 						key="textField">
 							<printWhenExpression><![CDATA[new Boolean($V{EMPLEADO_COUNT}.longValue()==1)]]></printWhenExpression>
@@ -449,23 +452,25 @@ order by sucursal,emp]]></queryString>
 					<reportElement
 						x="219"
 						y="0"
-						width="44"
+						width="55"
 						height="11"
 						key="textField"/>
-					<box></box>
-					<textElement>
+					<box>					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.util.Date"><![CDATA[$F{FECHA}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="263"
+						x="274"
 						y="0"
-						width="47"
+						width="54"
 						height="11"
 						key="textField"/>
-					<box></box>
+					<box>					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
@@ -473,29 +478,18 @@ order by sucursal,emp]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="310"
+						x="328"
 						y="0"
 						width="143"
 						height="11"
 						key="textField"/>
-					<box></box>
+					<box>					<bottomPen lineWidth="0.5" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
 					<textElement>
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TIPO}]]></textFieldExpression>
 				</textField>
-				<line direction="TopDown">
-					<reportElement
-						mode="Opaque"
-						x="219"
-						y="10"
-						width="233"
-						height="1"
-						forecolor="#CCCCCC"
-						backcolor="#FFFFFF"
-						key="line-7"/>
-					<graphicElement stretchType="NoStretch" fill="Solid" />
-				</line>
 			</band>
 		</detail>
 		<columnFooter>

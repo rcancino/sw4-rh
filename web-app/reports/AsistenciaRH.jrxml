@@ -50,7 +50,7 @@
 ,TIME_FORMAT((SELECT MAX(x.entrada1) FROM asistencia_det x where x.asistencia_id=a.id and x.fecha= DATE(DATE_ADD(C.asistencia_fecha_inicial, INTERVAL 15 DAY)) ),'%H:%i') as reg16
 FROM EMPLEADO E JOIN perfil_de_empleado P ON(E.ID=P.empleado_id) JOIN asistencia A ON(A.empleado_id=E.ID) JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id) LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
-WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<E.ALTA)
+WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<=E.ALTA)
 group by E.id,E.clave,CONCAT(E.apellido_paterno," ",E.apellido_materno," ",E.nombres),P.numero_de_trabajador
 UNION
 SELECT E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,'1SAL' AS tipo,(SELECT U.descripcion FROM ubicacion U WHERE P.UBICACION_ID=U.ID) AS UBICACION
@@ -78,7 +78,7 @@ JOIN asistencia A ON(A.empleado_id=E.ID)
 JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
 LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
-WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<E.ALTA)
+WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<=E.ALTA)
 group by E.id,E.clave,CONCAT(E.apellido_paterno," ",E.apellido_materno," ",E.nombres),P.numero_de_trabajador
 UNION
 SELECT E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,'2ENT' AS tipo,(SELECT U.descripcion FROM ubicacion U WHERE P.UBICACION_ID=U.ID) AS UBICACION
@@ -106,7 +106,7 @@ JOIN asistencia A ON(A.empleado_id=E.ID)
 JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
 LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
-WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<E.ALTA)
+WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<=E.ALTA)
 group by E.id,E.clave,CONCAT(E.apellido_paterno," ",E.apellido_materno," ",E.nombres),P.numero_de_trabajador
 UNION
 SELECT E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,'2SAL' AS tipo,(SELECT U.descripcion FROM ubicacion U WHERE P.UBICACION_ID=U.ID) AS UBICACION
@@ -134,7 +134,7 @@ JOIN asistencia A ON(A.empleado_id=E.ID)
 JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
 LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
-WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<E.ALTA)
+WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID}  AND (B.ID is null OR B.FECHA<=E.ALTA)
 group by E.id,E.clave,CONCAT(E.apellido_paterno," ",E.apellido_materno," ",E.nombres),P.numero_de_trabajador
 UNION
 SELECT E.id,E.clave,CONCAT(ifnull(E.apellido_paterno,"")," ",ifnull(E.apellido_materno,"")," ",E.nombres) AS nombre,P.numero_de_trabajador,'3TOT' AS tipo,(SELECT U.descripcion FROM ubicacion U WHERE P.UBICACION_ID=U.ID) AS UBICACION
@@ -194,7 +194,7 @@ JOIN asistencia A ON(A.empleado_id=E.ID)
 JOIN asistencia_det D ON(A.ID=D.asistencia_id)
 JOIN calendario_det C ON(C.id=A.calendario_det_id)
 LEFT JOIN baja_de_empleado B ON(B.EMPLEADO_ID=E.ID)
-WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID} AND (B.ID is null OR B.FECHA<E.ALTA)
+WHERE C.ID=$P{CALENDARIO_ID} AND P.UBICACION_ID=$P{UBICACION_ID} AND (B.ID is null OR B.FECHA<=E.ALTA)
 group by E.id,E.clave,CONCAT(E.apellido_paterno," ",E.apellido_materno," ",E.nombres),P.numero_de_trabajador]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>

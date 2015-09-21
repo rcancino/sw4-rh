@@ -26,16 +26,30 @@ class ProcesadorDeOtrasDeducciones {
 		if(deduccion) {
 			
 			log.debug "Aplicando decucccon para otras deducciones  vigente: ${deduccion.id}"
-			
+			/*
 			def percepciones=getPercepciones(ne)
 			
 			def deducciones=getRetencionesPrecedentes(ne)
 			
 			def retMaxima=(percepciones-deducciones)*0.3
-			
 			log.debug 'Deducciones calculadas: '+deducciones
 			log.info 'Retencion maxima permitida: '+retMaxima
+			*/
 			
+			//def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+			//def retMaxima=( (ne.salarioDiarioBase-salarioMinimo)*(ne.diasDelPeriodo-ne.incapacidades-ne.faltas) )*0.3
+
+			def percepciones=getPercepciones(ne)
+			def deducciones=getRetencionesPrecedentes(ne)
+			
+			def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+
+			def diasNetos=ne.diasDelPeriodo-ne.incapacidades-ne.faltas
+			def retMaxima=percepciones-deducciones-(salarioMinimo*diasNetos)
+			retMaxima*=0.3
+			
+			
+
 			if(retMaxima){
 				def saldo=deduccion.saldo
 				
@@ -108,12 +122,23 @@ class ProcesadorDeOtrasDeducciones {
 	}
 	
 	private BigDecimal getPercepciones(NominaPorEmpleado ne){
-		return ne.getPercepciones()
+		def invalidas=['P019','P021','P033']
+		def res=0.0
+		ne.conceptos.each{
+			if(it.concepto.tipo=='PERCEPCION'){
+				if(!invalidas.contains(it.concepto.clave) ){
+					res+=it.getTotal()
+				}
+			}
+		}
+		return res;
 	}
 	
+	/*
 	private BigDecimal getRetencionesPrecedentes(NominaPorEmpleado ne) {
 		def deducciones=0
-		["D002","D001","D013","D007","D006","D012","D014"].each{ clave->
+		//["D002","D001","D013","D007","D006","D012","D014"].each{ clave->
+		["D012"].each{ clave->
 				def c=ne.conceptos.find {it.concepto.clave==clave}
 				if(c){
 					log.info 'Deduccion previa: '+c
@@ -121,6 +146,18 @@ class ProcesadorDeOtrasDeducciones {
 				}
 			}
 		return deducciones
+	}
+	*/
+	
+	private BigDecimal getRetencionesPrecedentes(NominaPorEmpleado ne) {
+		
+		def acu=0.0
+		ne.conceptos.each{
+			if(it.concepto.clave=='D012'){
+				acu+=it.getTotal()
+			}
+		}
+		return acu;
 	}
 	
 	private Prestamo buscarPrestamo(NominaPorEmpleado ne) {
@@ -133,13 +170,27 @@ class ProcesadorDeOtrasDeducciones {
 	
 	def getModel(NominaPorEmpleadoDet det) {
 		def ne=det.parent
-		def deduccion=buscarOtraDeduccion(ne)
-		def model=[:]
+		def prestamo=buscarOtraDeduccion(ne)
+		def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+		//def retMaxima=( (ne.salarioDiarioBase-salarioMinimo)*ne.diasTrabajados )*0.3
+		def retMaxima=( (ne.salarioDiarioBase-salarioMinimo)*(ne.diasDelPeriodo-ne.incapacidades-ne.faltas) )*0.3
+		
+		def otrasPrestamo=ne.conceptos.find {it.concepto.clave=="D004"}
+		def model=[prestamo:prestamo
+			,salarioDiario:ne.salarioDiarioBase
+			,salarioMinimo:salarioMinimo
+			,diasTrabajados:(ne.diasDelPeriodo-ne.incapacidades-ne.faltas)
+			,factor:0.3
+			,tope:retMaxima
+			,otroPrestamo:otrasPrestamo.getTotal()
+			,total:det.getTotal()
+			]
+		
 		return model
 	}
 	
 	def getTemplate() {
-		return "/nominaPorEmpleado/conceptoInfo/deduccionOtraDeduccion"
+		return "/nominaPorEmpleado/conceptoInfo/deduccionOtrasDeducciones"
 	}
 	
 	String toString() {
