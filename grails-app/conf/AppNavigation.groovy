@@ -55,6 +55,7 @@ navigation={
 				vacaciones(controller:'vacaciones',action:'index')
 				tiempoExtra(controller:'tiempoExtra',action:'index',titleText:'Tiempo Extra')
 			}
+			assitenciaImss(controller:'asistenciaImss',action:'index'){}
 			incentivo(controller:'incentivo',action:'index')
 			
 			

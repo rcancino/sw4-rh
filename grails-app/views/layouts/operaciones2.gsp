@@ -30,7 +30,7 @@
 			
 			<!-- Task panel -->
 			<div class="col-md-2">
-				<div class="panel panel-primary">
+				<div class="panel panel-default">
 					<div class="panel-heading">Consultas</div>
 					<div class="task-panel">
 						
