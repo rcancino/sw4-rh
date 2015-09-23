@@ -89,6 +89,15 @@
 					
 
 				</fieldset>
+				<div class="form-group">
+					<label for="Asistencia" class="control-label col-sm-3">Asistencia</label>
+					<div class="col-sm-9">
+						<g:link controller="asistencia" action="show" id="${asistenciaImssInstance.asistencia.id}" 
+							class="btn btn-default">
+							${asistenciaImssInstance.asistencia.id}
+						</g:link>
+					</div>
+				</div>
 				</form>
 			</div>
 			

@@ -18,13 +18,19 @@ class AsistenciaImssDet {
 	@BindingFormat('dd/MM/yyyy')
 	Date cambio
 
+	Date dateCreated
+
+	Date lastUpdated
+
     static constraints = {
     	tipo inList:['INCAPACIDAD','FALTA']
-    	subTipo nullable:true,maxSize:20
+    	cambio nullable: true
+    	subTipo nullable:true,maxSize:200
     }
 
     static mapping = {
 		fecha type:'date'
+		cambio type:'date'
 	}
 
 	static belongsTo = [asistenciaImss:AsistenciaImss]

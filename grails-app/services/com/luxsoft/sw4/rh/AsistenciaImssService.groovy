@@ -9,7 +9,7 @@ class AsistenciaImssService {
     	log.info 'Generando asistencia de calendario: '+cal
 
     	def query=Asistencia.where {
-    	    calendarioDet==cal &&(partidas{tipo=='INCAPACIDAD' || tipo=='FALTA'})
+    	    calendarioDet==cal &&(partidas{tipo=='INCAPACIDAD' || tipo=='FALTA' || (tipo=='INCIDENCIA' && comentario=='INCIDENCIA PERMISO') })
     	}
     	query.list().each{
     		
@@ -70,19 +70,27 @@ class AsistenciaImssService {
     		}
     	}
     	disponibles=disponibles.sort().reverse()
-    	//println 'Disponibles:'+disponibles
+    	
     	asistencia.asistencia.partidas.each{
     		if(it.tipo=='INCAPACIDAD'){
-    			asistencia.addToPartidas(fecha:it.fecha,tipo:it.tipo,subTipo:'PENDIENTE',cambio:it.fecha)
-			}else if(it.tipo=='FALTA'){
-				//def fecha=map[it]?:null
-				def fecha=disponibles?disponibles.pop():null
-
-				asistencia.addToPartidas(fecha:it.fecha,tipo:it.tipo,subTipo:'PENDIENTE',cambio:fecha)
-			}else{
-				//asistencia.addToPartidas(fecha:it.fecha,tipo:it.tipo,subTipo:'PENDIENTE',cambio:it.fecha)
+    			asistencia.addToPartidas(fecha:it.fecha,tipo:'INCAPACIDAD',subTipo:it.comentario,cambio:it.fecha)
+			}else if(it.tipo=='FALTA'  ) {
+                def det=new AsistenciaImssDet(fecha:it.fecha,tipo:'FALTA',subTipo:it.comentario)
+                if(disponibles)
+                    det.cambio=disponibles.pop()
+				asistencia.addToPartidas(det)
+			}else if(it.tipo=='INCIDENCIA' && it.comentario=='INCIDENCIA PERMISO'){
+                def det=new AsistenciaImssDet(fecha:it.fecha,tipo:'FALTA',subTipo:it.comentario)
+                if(disponibles)
+                    det.cambio=disponibles.pop()
+                asistencia.addToPartidas(det)
 			}
     	}
+        asistencia.partidas.each{
+            if(!it.validate())
+                println 'Validando partida:'+ it.errors
+        }
+        
     	asistencia.save failOnError:true,flush:true
     }
 

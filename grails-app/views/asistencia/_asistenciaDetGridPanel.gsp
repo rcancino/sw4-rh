@@ -15,7 +15,7 @@
 			<th>RMay(Com)</th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Min NL"/></th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Hrs Tr"/></th>
-			<th><g:message code="asistenciaDet.tipo.label" default="Tipo"/></th>
+			<th><g:message code="asistenciaDet.comentario.label" default="Comentario"/></th>
 			<th>M</th>
 			<th>TE</th>
 			<th>CH</th>
@@ -40,7 +40,7 @@
 				<td><g:fieldValue bean="${row}" field="retardoComida"/> </td>
 				<td><g:fieldValue bean="${row}" field="minutosNoLaborados"/> </td>
 				<td><g:fieldValue bean="${row}" field="horasTrabajadas"/> </td>
-				<td><g:fieldValue bean="${row}" field="tipo"/> </td>
+				<td><g:fieldValue bean="${row}" field="comentario"/> </td>
 				
 				<td>
 					<g:if test="${row.manual }">
