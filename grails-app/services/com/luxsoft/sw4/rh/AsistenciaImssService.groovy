@@ -9,7 +9,8 @@ class AsistenciaImssService {
     	log.info 'Generando asistencia de calendario: '+cal
 
     	def query=Asistencia.where {
-    	    calendarioDet==cal &&(partidas{tipo=='INCAPACIDAD' || tipo=='FALTA' || (tipo=='INCIDENCIA' && comentario=='INCIDENCIA PERMISO') })
+    	    //calendarioDet==cal &&(partidas{tipo=='INCAPACIDAD' || tipo=='FALTA' || (tipo=='INCIDENCIA' && comentario=='INCIDENCIA PERMISO') })
+            calendarioDet==cal &&(partidas{tipo=='INCAPACIDAD' || tipo=='FALTA' || (tipo=='INCIDENCIA_F') })
     	}
     	query.list().each{
     		
@@ -79,7 +80,8 @@ class AsistenciaImssService {
                 if(disponibles)
                     det.cambio=disponibles.pop()
 				asistencia.addToPartidas(det)
-			}else if(it.tipo=='INCIDENCIA' && it.comentario=='INCIDENCIA PERMISO'){
+			//}else if(it.tipo=='INCIDENCIA' && it.comentario=='INCIDENCIA PERMISO'){
+            }else if(it.tipo=='INCIDENCIA_F'){
                 def det=new AsistenciaImssDet(fecha:it.fecha,tipo:'FALTA',subTipo:it.comentario)
                 if(disponibles)
                     det.cambio=disponibles.pop()
