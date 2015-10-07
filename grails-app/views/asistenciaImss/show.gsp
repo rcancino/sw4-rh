@@ -123,7 +123,11 @@
 								<td><g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/></td>
 								<td>${fieldValue(bean:row,field:"tipo")}</td>
 								<td>${fieldValue(bean:row,field:"subTipo")}</td>
-								<td><g:formatDate date="${row.cambio}" format="dd/MM/yyyy"/></td>
+								<td>
+									<g:link controller="asistenciaImssDet" action="edit" id="${row.id}">
+										<g:formatDate date="${row.cambio}" format="dd/MM/yyyy"/>
+									</g:link>
+								</td>
 							</tr>
 						</g:each>
 					</tbody>
