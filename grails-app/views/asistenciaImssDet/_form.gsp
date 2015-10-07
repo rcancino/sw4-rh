@@ -5,12 +5,14 @@
 		<g:hiddenField name="version" value="${asistenciaImssDetInstance.version}" />
 	
 		<f:with bean="${asistenciaImssDetInstance }">
-			<f:field property="fecha" />
+			
 			<fieldset disabled>
+				<f:field property="fecha" />
 				<f:field property="tipo"  input-class="form-control"/>
 				<f:field property="subTipo" input-class="form-control"/>
-				<f:field property="cambio"  input-class="form-control"/>
+				
 			</fieldset>
+			<f:field property="cambio"  input-class="form-control"/>
 			
 			
 		</f:with>
