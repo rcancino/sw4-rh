@@ -77,8 +77,14 @@ class AguinaldoService {
 		def periodo=Periodo.getPeriodoAnual(aguinaldo.ejercicio)
 		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
 		def empleado =aguinaldo.empleado
-		aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-		aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		if(empleado.salario.periodicidad == 'SEMANAL')
+			periodo =new Periodo('24/11/2014','25/11/2015'))
+		else
+			periodo = new  Periodo('25/11/2014','26/11/2015')
+		aguinaldo.fechaInicial= periodo.fechaInicial
+		aguinaldo.fechaFinal = periodo.fechaFinal
+		//aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+		//aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
 		if(empleado.alta>aguinaldo.fechaInicial){
 			
 			aguinaldo.fechaInicial=empleado.alta
@@ -90,7 +96,11 @@ class AguinaldoService {
 		aguinaldo.sueldoMensual=aguinaldo.empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
 		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 		aguinaldo.diasParaBono=aguinaldo.getDiasDelEjercicio()
-		
+		if(aguinaldo.empleado.salario.periodicidad == 'SEMANAL')
+			registrarFaltas(aguinaldo,new Periodo('24/11/2014','25/11/2015'))
+		else
+			registrarFaltas(aguinaldo,new Periodo('25/11/2014','26/11/2015'))
+
     	log.info "Calculando aguinaldo: "+aguinaldo
 		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
 		aguinaldo.diasParaAguinaldo=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades
@@ -107,7 +117,7 @@ class AguinaldoService {
 			}
 		}
 		
-		aguinaldo.diasParaBono=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades-aguinaldo.permisoEspecial
+		aguinaldo.diasParaBono=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades-aguinaldo.permisoEspecial-aguinaldo.incapacidadesMAT-aguinaldo.incapacidadesRTT-aguinaldo.incapacidadesRTE
 		def factorBono=(aguinaldo.diasDeBono/diasDelEjercicioReales)*aguinaldo.diasParaBono
 		aguinaldo.bonoPreliminar=factorBono*aguinaldo.salario
 		aguinaldo.bono=aguinaldo.bonoPreliminar*aguinaldo.porcentajeBono
@@ -221,6 +231,49 @@ class AguinaldoService {
 		a.netoPagado=a.subTotal-a.pensionA-a.otrasDed-a.prestamo
 		
 		
+	}
+
+	def registrarFaltas(Aguinaldo a,Periodo p){
+		def rows = AsistenciaDet
+			.findAll("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?",
+			[a.empleado,p.fechaInicial,p.fechaFinal])
+
+		def faltas = rows.count{(it.tipo == 'FALTA' || it.tipo == 'INCIDENCIA_F') && it.asistencia.empleado.controlDeAsistencia }
+
+		def permisos = rows.count{it.tipo == 'INCIDENCIA' && it.comentario == 'INCIDENCIA PERMISO_P'}
+
+		def incapacidades = rows.count{it.tipo == 'INCAPACIDAD' && it.comentario=='INCAPACIDAD EG'}
+
+		def incapacidadesRTT=rows.count{it.tipo == 'INCAPACIDAD' && it.comentario=='INCAPACIDAD RTT'}
+
+		def incapacidadesRTE=rows.count{it.tipo == 'INCAPACIDAD' && it.comentario=='INCAPACIDAD RTE'}
+
+		def incapacidadesMAT=rows.count{it.tipo == 'INCAPACIDAD' && it.comentario=='INCAPACIDAD MAT'}
+
+
+		a.faltas=faltas
+		a.incapacidades=incapacidades
+	 	a.permisoEspecial=permisos
+	 	a.incapacidadesRTT=incapacidadesRTT
+	 	a.incapacidadesRTE=incapacidadesRTE
+	 	a.incapacidadesMAT=incapacidadesMAT
+
+	}
+
+	def buscarAsistencias(Aguinaldo aguinaldo){
+		def p = null
+		if(aguinaldo.empleado.salario.periodicidad == 'SEMANAL')
+			p = new Periodo('24/11/2014','25/11/2015')
+		else
+			p = new Periodo('25/11/2014','26/11/2015')
+		def rows = AsistenciaDet
+		.findAll("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?",
+		[aguinaldo.empleado,p.fechaInicial,p.fechaFinal])
+		def res = []
+		res.addAll(rows.findAll{it.tipo == 'FALTA' || it.tipo == 'INCIDENCIA_F'}.sort{it.fecha})
+		res.addAll(rows.findAll{it.tipo == 'INCIDENCIA' && it.comentario == 'INCIDENCIA PERMISO_P'}.sort({it.fecha}))
+		res.addAll(rows.findAll{it.tipo == 'INCAPACIDAD' }.sort({it.fecha}))
+		return res
 	}
 	
 	private PensionAlimenticia buscarPension(Empleado e) {

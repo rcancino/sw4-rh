@@ -237,7 +237,10 @@ class SalarioService {
 							
 							
 							
-							found.varDia=found.variable/found.diasLabBim
+							if(found.diasLabBim)
+								found.varDia=found.variable/found.diasLabBim
+							else 
+								found.varDia=0
 							
 							def sdiNvo=found.sdiF+found.varDia
 							found.sdiCalc=sdiNvo

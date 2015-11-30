@@ -37,6 +37,11 @@ class AguinaldoController {
         redirect action:'index'
     }
 
+    def edit(Aguinaldo a){
+        def asistencias = aguinaldoService.buscarAsistencias(a)
+        [aguinaldoInstance:a,asistencias:asistencias]
+    }
+
     def create(){
         [aguinaldoInstance:new EmpleadoPorEjercicioCommand(ejercicio:session.ejercicio)]
     }

@@ -64,13 +64,22 @@
 				</button>
 				<ul class="dropdown-menu">
 					<li>
-						<a href="#">Pendiente</a>
+						<a  data-toggle="modal"	data-target="#reporteDeAusentismoSua"> Ausentismo SUA	</a>
+					</li>
+					<li>
+						<a  data-toggle="modal"	data-target="#reporteDeAusentismoSuaAsist"> Ausentismo SUA Asistencia	</a>
+					</li>
+					<li>
+						<a  data-toggle="modal"	data-target="#reporteDeComparativoSua"> Comparativo SUA	</a>
 					</li>
 				</ul>
 			</div><%-- end .btn-group reportes --%>
 		</div><%-- end .col-md button panel --%>
 		
 	</div>	
+	<g:render template="reporteDeAusentismoSua"/>
+	<g:render template="reporteDeComparativoSua"/>
+	<g:render template="reporteDeAusentismoSuaAsist"/>
 </content><!-- end .gridTask -->
 	
 <content tag="panelBody">

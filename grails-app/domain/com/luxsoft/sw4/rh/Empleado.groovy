@@ -71,11 +71,11 @@ class Empleado  implements Serializable{
 	static transients = ['nombre']
 
 	String getNombre() {
-		return "${apellidoPaterno?:''} $apellidoMaterno $nombres"
+		return "${apellidoPaterno?:''} ${apellidoMaterno?:''} $nombres"
 	}
 	
     String toString(){
-    	return "${apellidoPaterno?:''} $apellidoMaterno $nombres "
+    	return "${apellidoPaterno?:''} ${apellidoMaterno?:''} $nombres "
     }
 	
 }

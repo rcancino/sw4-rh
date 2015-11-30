@@ -114,7 +114,7 @@ class ExportadorController {
 				
 				def numCtaInd=it.empleado.salario.clabe.padLeft(20,"0")
 				def referencia="0000000001".padRight(40)
-				def beneficiario=it.empleado.nombre.replace("Ñ","N").padRight(55)
+				def beneficiario=it.empleado.nombre.replace("Ã‘","N").padRight(55)
 				def blanco1=StringUtils.leftPad("",40)
 				def blanco2=StringUtils.leftPad("",24)
 				def ultimo="0000000000"
@@ -686,6 +686,8 @@ def generarAusentismoSua(PeriodoCommand command){
 		def registroPatronal=emp.registroPatronal
 		def fechaIni=command.fechaInicial
 		def fechaFin=command.fechaFinal
+        //def fechaIni=new Date("2015/09/01")
+        //def fechaFin=new Date("2015/09/30")
 		def formato = new DecimalFormat("###")
 		def formatoDec = new DecimalFormat(".####")
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
@@ -698,32 +700,31 @@ def generarAusentismoSua(PeriodoCommand command){
 		def diasInc=""
 		def sdiOAp="0000000"
 	   
-		  def ausentismos=AsistenciaDet.findAll("from AsistenciaDet i where  i.fecha between ? and ? and i.tipo='falta' "
-												,[fechaIni,fechaFin]).sort{it.asistencia.empleado}.each{calculo ->
-			
-			BajaDeEmpleado baja =BajaDeEmpleado.find("from BajaDeEmpleado b where b.empleado=? and b.fecha>=?",[calculo.asistencia.empleado,calculo.asistencia.empleado.alta])
+		  def ausentismos=AsistenciaImssDet.findAll("from AsistenciaImssDet i where  i.cambio between ? and ? and i.tipo='falta' "
+												,[fechaIni,fechaFin]).sort{it.asistenciaImss.empleado}.each{calculo ->
+            BajaDeEmpleado baja =BajaDeEmpleado.find("from BajaDeEmpleado b where b.empleado=? and b.fecha>=?",[calculo.asistenciaImss.empleado,calculo.asistenciaImss.empleado.alta])
 			def fechaBaja=baja? baja.fecha :new Date()
-		   
-			if(calculo.asistencia.empleado.controlDeAsistencia==true && calculo.asistencia.diasTrabajados==0.0 && calculo.fecha>=calculo.asistencia.empleado.alta && calculo.fecha<= fechaBaja ){
-			  
-
-			   numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistencia.empleado).numero.replace('-','')
-				 tipoMov="11"
-			   fechaMov=df.format(calculo.fecha)
+            
+            if(calculo.asistenciaImss.empleado.controlDeAsistencia==true  && calculo.fecha>=calculo.asistenciaImss.empleado.alta && calculo.fecha<= fechaBaja ){
+              numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistenciaImss.empleado).numero.replace('-','')
+              tipoMov="11"
+			  fechaMov=df.format(calculo.cambio)
+			  folioInc="        "
+			  diasInc="01"
+              append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+            }else if(calculo.asistenciaImss.empleado.controlDeAsistencia==true && calculo.asistenciaImss.asistencia.diasTrabajados!=0.0 && calculo.asistenciaImss.asistencia.faltasManuales>0 && calculo.fecha<= fechaBaja ){
+              
+               numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistenciaImss.empleado).numero.replace('-','')
+			   tipoMov="11"
+			   fechaMov=df.format(calculo.cambio)
 			   folioInc="        "
 			   diasInc="01"
 			  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
-			}else if(calculo.asistencia.empleado.controlDeAsistencia==true && calculo.asistencia.diasTrabajados!=0.0 && calculo.asistencia.faltasManuales>0 && calculo.fecha<= fechaBaja ){
-			 
-			  numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistencia.empleado).numero.replace('-','')
-				 tipoMov="11"
-			   fechaMov=df.format(calculo.fecha)
-			   folioInc="        "
-			   diasInc="01"
-			  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
-			}else{
-			 }
-		}
+              
+            }
+            
+            
+          }
 		
 	}
 	

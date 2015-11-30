@@ -365,9 +365,10 @@ class IncentivoService {
 		log.info 'Checadas faltantes: '+checadasFaltantes
 		if(checadasFaltantes>0){
 			
-			bono.tasaBono2=0.0
+			bono.tasaBono1=0.0
+			
 			bono.comentario="CANCELADO POR $checadasFaltantes CHECADA(S) FALTANTES"
-			log.info 'Checadas faltantes $checadasFaltantes cancelando bono2'
+			log.info "Checadas faltantes $checadasFaltantes cancelando bono1"
 		}
 		
 		//Casos especiales
@@ -375,6 +376,11 @@ class IncentivoService {
 			bono.tasaBono1=0.05
 			bono.tasaBono2=0.05
 		}
+
+
+					bono.minutosNoLaborados=asistencia.minutosNoLaborados
+					bono.faltas=asistencia.faltas
+					bono.checadasFaltantes=checadasFaltantes
 		
 		return bono
     }
@@ -423,13 +429,13 @@ class IncentivoService {
 		def checadasFaltantesComida=calcularChecadasFaltantesComida(asistencia.partidas)
 		if(checadasFaltantesComida>0){
 			bono.tasaBono2=0.0
-			bono.comentario="B1 (CANCELADO POR $checadasFaltantesComida CHEC FALTANTES)"
+			bono.comentario="B2 (CANCELADO POR $checadasFaltantesComida CHEC FALTANTES)"
 		}
 		
 		def checadasFaltantes=calcularChecadasFaltantesPrincipales(asistencia.partidas)
 		if(checadasFaltantes>0){
 			bono.tasaBono1=0.0
-			bono.comentario+=" B2 (CANCELADO POR $checadasFaltantes CHEC FALTANTES)"
+			bono.comentario+=" B1 (CANCELADO POR $checadasFaltantes CHEC FALTANTES)"
 		}
 		
 		 return bono

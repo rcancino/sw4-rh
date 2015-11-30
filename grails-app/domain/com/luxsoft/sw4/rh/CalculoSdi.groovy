@@ -1,4 +1,4 @@
-package com.luxsoft.sw4.rh
+  package com.luxsoft.sw4.rh
 
 import org.grails.databinding.BindingFormat
 

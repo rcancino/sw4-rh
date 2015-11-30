@@ -26,8 +26,20 @@
 			<td><g:formatNumber number="${it.faltas}"/></td>
 		</tr>
 		<tr>
-			<td>Incapacidades</td>
+			<td>Incapacidades EG</td>
 			<td><g:formatNumber number="${it.incapacidades}"/></td>
+		</tr>
+		<tr>
+			<td>Incapacidades MAT</td>
+			<td><g:formatNumber number="${it.incapacidadesMAT}"/></td>
+		</tr>
+		<tr>
+			<td>Incapacidades RTT</td>
+			<td><g:formatNumber number="${it.incapacidadesRTT}"/></td>
+		</tr>
+		<tr>
+			<td>Incapacidades RTE</td>
+			<td><g:formatNumber number="${it.incapacidadesRTE}"/></td>
 		</tr>
 		<tr>
 			<td>Permiso p</td>
@@ -56,10 +68,21 @@
 		</tr>
 	</thead>
 	<tbody class="text-right">
-		<tr>
+	<tr>
 			<td>Aguinaldo</td>
 			<td><g:formatNumber number="${it.aguinaldo}" format="#,###.##"/></td>
 		</tr>
+		<tr>
+			<td>Aguinaldo excento</td>
+			<td><g:formatNumber number="${it.aguinaldoExcento}" format="#,###.##"/></td>
+		</tr>
+		<tr>
+			<td>Aguinaldo gravable</td>
+			<td><g:formatNumber number="${it.aguinaldoGravado}" format="#,###.##"/></td>
+		</tr>
+		
+		
+		
 		<tr>
 			<td>Bono preliminar</td>
 			<td><g:formatNumber number="${it.bonoPreliminar}" format="#,###.##"/></td>
@@ -73,20 +96,12 @@
 			<td><g:formatNumber number="${it.bono}" format="#,###.##"/></td>
 		</tr>
 		<tr>
-			<td>Total</td>
-			<td><g:formatNumber number="${it.bono + it.aguinaldo}" format="#,###.##"/></td>
-		</tr>
-		<tr>
-			<td>Aguinaldo excento</td>
-			<td><g:formatNumber number="${it.aguinaldoExcento}" format="#,###.##"/></td>
-		</tr>
-		<tr>
-			<td>Aguinaldo gravable</td>
-			<td><g:formatNumber number="${it.aguinaldoGravado}" format="#,###.##"/></td>
-		</tr>
-		<tr>
 			<td>Total gravable</td>
 			<td><g:formatNumber number="${it.totalGravable}" format="#,###.##"/></td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td><g:formatNumber number="${it.bono + it.aguinaldo}" format="#,###.##"/></td>
 		</tr>
 		
 	</tbody>

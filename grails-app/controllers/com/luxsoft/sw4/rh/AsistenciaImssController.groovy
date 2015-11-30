@@ -5,6 +5,8 @@ package com.luxsoft.sw4.rh
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 import grails.plugin.springsecurity.annotation.Secured
+import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
+import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 
 @Transactional(readOnly = true)
 @Secured(['ROLE_ADMIN'])
@@ -142,6 +144,17 @@ class AsistenciaImssController {
             }
             '*'{ render status: NO_CONTENT }
         }
+    }
+
+
+def jasperService
+    
+    def reporteAusentismoSua(){
+        def reportDef = new JasperReportDef(
+            name:'AusentismoSua',
+            fileFormat:JasperExportFormat.PDF_FORMAT,
+            parameters:params
+            )
     }
 
 

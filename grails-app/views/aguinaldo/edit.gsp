@@ -74,6 +74,33 @@
 			
 		</div><!-- end .row 3 -->
 
+		<div class =" row">
+			<fieldset>
+				<legend>Faltas / Incidencias / Permisos</legend>
+			</fieldset>
+			<table id="aguinaldoGrid" class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+			<th>Fecha</th>
+			<th>Tipo</th>
+			<th>Comentario</th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<g:each in="${asistencias}" var="row">
+			<tr>
+				<td><g:formatDate date="${row.fecha}" format="dd/MM/yyyy"/></td>
+				<td>${fieldValue(bean:row,field:"tipo")}</td>
+				<td>${fieldValue(bean:row,field:"comentario")}</td>
+				
+				
+			</tr>
+		</g:each>
+	</tbody>
+</table>
+		</div>
+
 	</div>
 	
 	

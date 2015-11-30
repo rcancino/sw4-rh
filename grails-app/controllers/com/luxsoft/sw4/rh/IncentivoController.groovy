@@ -21,6 +21,7 @@ class IncentivoController {
 
 	def index() {
 		def calendarioDet
+		
 		def tipo=params.tipo?:'QUINCENA'
 		def target=""
 		

@@ -24,7 +24,7 @@ class Aguinaldo {
 	Integer diasDeAguinaldo=15
 	Integer diasDeBono=30
 	Integer faltas=0
-	Integer incapacidades=0
+	Integer incapacidades=0  //Corresponde a incapacidades EG
 	Integer permisoEspecial=0
 
 	Integer diasParaAguinaldo=0
@@ -68,6 +68,11 @@ class Aguinaldo {
 	BigDecimal otrasDed=0.0
 	BigDecimal prestamo=0.0
 	BigDecimal netoPagado=0.0
+
+
+	Integer incapacidadesRTT=0
+	Integer incapacidadesRTE=0
+	Integer incapacidadesMAT=0
 
 	Date dateCreated
 	Date lastUpdated

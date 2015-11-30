@@ -28,7 +28,7 @@ class NominaController {
 	def calculoAnualService
     
     def index(Integer max) {
-        params.max = Math.min(max ?: 60, 100)
+        params.max = 1000  //Math.min(max ?: 60, 100)
 		params.periodicidad=params.periodicidad?:'QUINCENAL'
 		params.sort=params.sort?:'lastUpdated'
 		params.order='desc'

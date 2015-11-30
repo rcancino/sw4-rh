@@ -8,7 +8,10 @@
 			<th>Ant</th>
 			<th>Salario</th>
 			<th>Faltas</th>
-			<th>Inc</th>
+			<th>Inc EG</th>
+			<th>Inc MAT</th>
+			<th>Inc RTE</th>
+			<th>Inc RTT</th>
 			<th>Lab(A)</th>
 			<th>Dias(A)</th>
 			<th>Aguinaldo</th>
@@ -19,6 +22,7 @@
 			<th>Bono</th>
 			<th>Total</th>
 			<th>Per E</th>
+
 		</tr>
 	</thead>
 	<tbody>
@@ -37,6 +41,9 @@
 				<td><g:formatNumber number="${row.empleado.salario.salarioDiario}" format="####.####"/></td>
 				<td><g:formatNumber number="${row.faltas}" format="######"/></td>
 				<td><g:formatNumber number="${row.incapacidades}" format="######"/></td>
+				<td><g:formatNumber number="${row.incapacidadesMAT}" format="######"/></td>
+				<td><g:formatNumber number="${row.incapacidadesRTE}" format="######"/></td>
+				<td><g:formatNumber number="${row.incapacidadesRTT}" format="######"/></td>
 				<td><g:formatNumber number="${row.diasParaAguinaldo}" format="######"/></td>
 				<td><g:formatNumber number="${row.diasDeAguinaldo}" format="######"/></td>
 				<td><g:formatNumber number="${row.aguinaldo}" type="currency"/></td>
