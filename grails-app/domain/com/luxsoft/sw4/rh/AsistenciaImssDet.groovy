@@ -18,6 +18,8 @@ class AsistenciaImssDet {
 	@BindingFormat('dd/MM/yyyy')
 	Date cambio
 
+	Boolean excluir = false
+
 	Date dateCreated
 
 	Date lastUpdated

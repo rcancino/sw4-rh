@@ -23,6 +23,7 @@ class AsistenciaImss {
 	
 	@BindingFormat('dd/MM/yyyy')
 	Date finNomina
+
 	
 	Date dateCreated
 	

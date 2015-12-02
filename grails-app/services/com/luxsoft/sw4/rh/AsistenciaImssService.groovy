@@ -34,7 +34,7 @@ class AsistenciaImssService {
     }
 
     def actualizar(AsistenciaImss asistencia){
-    	log.debug 'Actualizando asistencia imss: '+asistencia
+    	log.info 'Actualizando asistencia imss: '+asistencia
     	if(asistencia.partidas)
     		asistencia.partidas.clear()
     	def fechas=new ArrayList((asistencia.calendarioDet.inicio..asistencia.calendarioDet.fin) )
@@ -92,8 +92,21 @@ class AsistenciaImssService {
             if(!it.validate())
                 println 'Validando partida:'+ it.errors
         }
-        
+        actualizarExcluir(asistencia)
     	asistencia.save failOnError:true,flush:true
+    }
+
+
+
+    def actualizarExcluir(AsistenciaImss asistencia){
+        asistencia.partidas.each{
+            if(it.cambio){
+                if( !it.fecha.isSameMonth(it.cambio) ) {
+                    it.excluir = it.fecha<it.cambio
+                }
+            }
+                
+        }
     }
 
     def eliminar(CalendarioDet calendario){

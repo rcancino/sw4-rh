@@ -115,6 +115,7 @@
 							<th>Tipo</th>
 							<th>Sub Tipo</th>
 							<th>Cambio</th>
+							<th>Excluir</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -128,6 +129,7 @@
 										<g:formatDate date="${row.cambio}" format="dd/MM/yyyy"/>
 									</g:link>
 								</td>
+								<td><g:checkBox name="myCheckbox" value="${row.excluir}" /></td>
 							</tr>
 						</g:each>
 					</tbody>
