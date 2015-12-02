@@ -30,7 +30,7 @@
 			<tr>
 				
 				<td>
-					<g:link action="edit" id="${row.id}">
+					<g:link action="show" id="${row.id}">
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>

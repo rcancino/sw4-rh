@@ -11,6 +11,8 @@ class AguinaldoController {
 
     static scaffold = true
 
+    static allowedMethods = [save: "POST", update: "PUT"]
+
     def aguinaldoService
 
     def jasperService
@@ -38,6 +40,33 @@ class AguinaldoController {
     }
 
     def edit(Aguinaldo a){
+        [aguinaldoInstance:a]
+    }
+
+    def update(){
+        
+        def a = Aguinaldo.get(params.id)
+        // [aguinaldoInstance:a]
+        def bono = params['porcentajeBono'] as BigDecimal
+        
+        println 'Bono:' +params.porcentajeBono
+
+
+
+        bindData(a,params,[exclude: ['id', 'version']])
+        
+        bono = bono/100
+        a.porcentajeBono = bono
+
+        //log.info 'Actualizando aguinaldo: '+params+ 'Bono: '+bono+ 'Manual: '+bono
+        
+        log.info 'Actualizando aguinaldo: '+a
+        a=aguinaldoService.calcular(a)
+        flash.message = "Aguinaldo ${a.id} actualizado"
+        redirect action:'show',params:[id:a.id]
+    }
+
+    def show(Aguinaldo a){
         def asistencias = aguinaldoService.buscarAsistencias(a)
         [aguinaldoInstance:a,asistencias:asistencias]
     }
@@ -54,7 +83,7 @@ class AguinaldoController {
 	
 	def recalcular(Aguinaldo a){
 		a=aguinaldoService.calcular(a)
-		redirect action:'edit',params:[id:a.id]
+		redirect action:'show',params:[id:a.id]
 		
 	}
 	
@@ -62,6 +91,8 @@ class AguinaldoController {
 		a=aguinaldoService.calcular(a)
 		redirect action:'edit',params:[id:a.id]
 	}
+
+
 
     def reporte(){
         def tipo=params.tipo
@@ -107,4 +138,11 @@ class AguinaldoController {
     }
 }
 
+class AguinaldoCommand {
+
+    Integer incapacidadesRTT=0
+    Integer incapacidadesRTE=0
+    Integer incapacidadesMAT=0
+
+}
 

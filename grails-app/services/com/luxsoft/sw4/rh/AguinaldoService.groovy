@@ -23,22 +23,25 @@ class AguinaldoService {
 		if(!aguinaldo){
 			log.info "Generando aguinaldo para $empleado ($ejercicio)"
 			aguinaldo=new Aguinaldo(empleado:empleado,ejercicio:ejercicio)
-			def periodo=Periodo.getPeriodoAnual(ejercicio)
-			aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-			aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+			def periodo=getCalendario(aguinaldo).asistencia
+			aguinaldo.fechaInicial=periodo.fechaInicial
+			aguinaldo.fechaFinal=periodo.fechaFinal
 			aguinaldo.salario=empleado.salario.salarioDiario
 			aguinaldo.sueldoMensual=empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
+			
 			if(empleado.alta>aguinaldo.fechaInicial){
-				
 				aguinaldo.fechaInicial=empleado.alta
 				aguinaldo.fechaFinal=periodo.fechaFinal
-				
 			}
 			
 			aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 			aguinaldo.diasParaBono=aguinaldo.getDiasDelEjercicio()
 			aguinaldo.save failOnError:true
 
+		}else{
+			if(aguinaldo.empleado.alta>aguinaldo.fechaInicial){
+
+			}
 		}
 		return aguinaldo
 	}
@@ -53,53 +56,63 @@ class AguinaldoService {
 			def empleado=Empleado.get(it)
 			try {
 				def aguinaldo=Aguinaldo.findOrCreateWhere(ejercicio: ejercicio,empleado:empleado)
+
 				def periodo=Periodo.getPeriodoAnual(aguinaldo.ejercicio)
-				aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-				aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
-				/*
-				if(aguinaldo.id==null){
-					def periodo=Periodo.getPeriodoAnual(ejercicio)
-					
-				}
-				*/
+				//aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+				//aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
 				calcular(aguinaldo)
 			}
 			catch(Exception e) {
 				log.error "Error calculando aguinaldo de $empleado ($ejercicio)",e
 			}
-			
 		}
+	}
+
+	def calS 
+	def calQ
+
+	def getCalendario(Aguinaldo a){
+		if(calS==null){
+			calS = CalendarioDet.where{calendario.tipo == 'SEMANA' && calendario.comentario == 'AGUINALDO' && calendario.ejercicio==2015}.first()
+		}
+		if(calQ == null){
+			calQ = CalendarioDet.where{calendario.tipo == 'QUINCENA' && calendario.comentario == 'AGUINALDO' && calendario.ejercicio==2015}.first()
+		}
+		if(a.empleado.salario.periodicidad == 'SEMANAL')
+			return calS
+		else if (a.empleado.salario.periodicidad == 'QUINCENAL')
+			return calQ
+		else 
+			throw new RuntimeException('Error en periodicidad de empleado '+a.empleado)
 	}
 
 
     def calcular(Aguinaldo aguinaldo) {
-		
-		def periodo=Periodo.getPeriodoAnual(aguinaldo.ejercicio)
-		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
-		def empleado =aguinaldo.empleado
-		if(empleado.salario.periodicidad == 'SEMANAL')
-			periodo =new Periodo('24/11/2014','25/11/2015'))
-		else
-			periodo = new  Periodo('25/11/2014','26/11/2015')
+
+		def cal = getCalendario(aguinaldo)
+		def periodo = cal.asistencia
+		log.info 'Periodo de aguinaldo: '+periodo+ ' Cal: '+cal.id
 		aguinaldo.fechaInicial= periodo.fechaInicial
 		aguinaldo.fechaFinal = periodo.fechaFinal
-		//aguinaldo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-		//aguinaldo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		
+		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
+		def empleado =aguinaldo.empleado
+		
+
 		if(empleado.alta>aguinaldo.fechaInicial){
-			
 			aguinaldo.fechaInicial=empleado.alta
 			aguinaldo.fechaFinal=periodo.fechaFinal
 			
 		}
+
 		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
 		aguinaldo.sueldoMensual=aguinaldo.empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
 		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 		aguinaldo.diasParaBono=aguinaldo.getDiasDelEjercicio()
-		if(aguinaldo.empleado.salario.periodicidad == 'SEMANAL')
-			registrarFaltas(aguinaldo,new Periodo('24/11/2014','25/11/2015'))
-		else
-			registrarFaltas(aguinaldo,new Periodo('25/11/2014','26/11/2015'))
+
+		if(!aguinaldo.manual)
+			registrarFaltas(aguinaldo)
 
     	log.info "Calculando aguinaldo: "+aguinaldo
 		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
@@ -108,14 +121,13 @@ class AguinaldoService {
 		aguinaldo.aguinaldo=factor*aguinaldo.salario
 		
 		log.info "Aguinaldo factor: ${factor} Salario:${aguinaldo.empleado.salario.salarioDiario} Aguinaldo:${aguinaldo.aguinaldo}"
-    	if(aguinaldo.porcentajeBono<1.0 && aguinaldo.porcentajeBono>0.0){
-			
-		}else{
-			aguinaldo.porcentajeBono=1.0
+    	
+    	if(!aguinaldo.manual){
+    		aguinaldo.porcentajeBono=1.0
 			if(aguinaldo.antiguedad<diasDelEjercicioReales){
 				aguinaldo.porcentajeBono=0.0
 			}
-		}
+    	}
 		
 		aguinaldo.diasParaBono=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades-aguinaldo.permisoEspecial-aguinaldo.incapacidadesMAT-aguinaldo.incapacidadesRTT-aguinaldo.incapacidadesRTE
 		def factorBono=(aguinaldo.diasDeBono/diasDelEjercicioReales)*aguinaldo.diasParaBono
@@ -233,10 +245,12 @@ class AguinaldoService {
 		
 	}
 
-	def registrarFaltas(Aguinaldo a,Periodo p){
+	def registrarFaltas(Aguinaldo a){
+		if(a.manual) return
+		
 		def rows = AsistenciaDet
 			.findAll("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?",
-			[a.empleado,p.fechaInicial,p.fechaFinal])
+			[a.empleado,a.fechaInicial,a.fechaFinal])
 
 		def faltas = rows.count{(it.tipo == 'FALTA' || it.tipo == 'INCIDENCIA_F') && it.asistencia.empleado.controlDeAsistencia }
 
@@ -261,11 +275,9 @@ class AguinaldoService {
 	}
 
 	def buscarAsistencias(Aguinaldo aguinaldo){
-		def p = null
-		if(aguinaldo.empleado.salario.periodicidad == 'SEMANAL')
-			p = new Periodo('24/11/2014','25/11/2015')
-		else
-			p = new Periodo('25/11/2014','26/11/2015')
+		def c = getCalendario(aguinaldo)
+		def p = c.asistencia
+		
 		def rows = AsistenciaDet
 		.findAll("from AsistenciaDet a where a.asistencia.empleado=? and date(a.fecha) between ? and ?",
 		[aguinaldo.empleado,p.fechaInicial,p.fechaFinal])

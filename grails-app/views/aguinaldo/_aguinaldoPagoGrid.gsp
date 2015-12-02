@@ -1,4 +1,4 @@
-<table id="aguinaldoGrid" class="table table-striped table-bordered table-condensed table-small-font ">
+<table id="aguinaldoPagoGrid" class="table table-striped table-bordered table-condensed table-small-font ">
 	<thead>
 		<tr>
 			<th>Empleado</th>
@@ -39,7 +39,7 @@
 			<tr>
 				
 				<td class="table-small-font">
-					<g:link action="edit" id="${row.id}">
+					<g:link action="show" id="${row.id}">
 						${fieldValue(bean:row,field:"empleado.nombre")}
 					</g:link>
 				</td>

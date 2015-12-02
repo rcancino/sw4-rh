@@ -14,8 +14,9 @@ class CalendarioController {
 	def calendarioService
 
     def index(Integer max) { 
+    	log.info 'Calendarios....'
 		params.max = Math.min(max ?: 10, 100)
-		params.sort=params.sort?:'ejercicio'
+		params.sort='id'
 		params.order='desc'
 		respond Calendario.list(params), model:[calendarioInstanceCount: Calendario.count()]
 	}

@@ -8,7 +8,14 @@
 		</tr>
 	</thead>
 	<tbody class="text-right">
-		
+		%{-- <tr>
+			<td>Fecha Inicial</td>
+			<td><g:formatDate date="${it.fechaInicial}"/></td>
+		</tr>
+		<tr>
+			<td>Fecha Final</td>
+			<td><g:formatDate date="${it.fechaFinal}"/></td>
+		</tr> --}%
 		<tr>
 			<td>Días del ejercicio</td>
 			<td><g:formatNumber number="${it.diasDelEjercicio}"/></td>
@@ -90,6 +97,7 @@
 		<tr>
 			<td>Bono porcentaje</td>
 			<td><g:formatNumber number="${it.porcentajeBono}" type="percent"/></td>
+			
 		</tr>
 		<tr>
 			<td>Bono</td>
@@ -102,6 +110,19 @@
 		<tr>
 			<td>Total</td>
 			<td><g:formatNumber number="${it.bono + it.aguinaldo}" format="#,###.##"/></td>
+		</tr>
+
+		<tr>
+			<td>Cálculo </td>
+			<td>
+				<g:if test ="${it.manual}">
+					 Manual
+				</g:if>
+				<g:else>
+					Automático
+				</g:else>
+				
+			</td>
 		</tr>
 		
 	</tbody>

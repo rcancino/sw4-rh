@@ -74,6 +74,9 @@ class Aguinaldo {
 	Integer incapacidadesRTE=0
 	Integer incapacidadesMAT=0
 
+
+	Boolean manual = false
+
 	Date dateCreated
 	Date lastUpdated
 

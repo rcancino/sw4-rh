@@ -109,11 +109,29 @@
 		</div><!--  end .row 3 Grid -->
 	</div>
 	
-	<%--<g:render template="/_common/cambioDeEjercicioDialog"/>
-	
-	--%><r:script>
+		<r:script>
 			$(function(){
-				var table=$(".aguinaldoGrid").dataTable({
+				var table=$("#aguinaldoGrid").dataTable({
+			        "paging":   false,
+			        "ordering": false,
+			        "info":     false,
+			         "dom":'t'
+    				});
+
+				var table2=$("#aguinaldoCalculoGrid").dataTable({
+			        "paging":   false,
+			        "ordering": false,
+			        "info":     false,
+			         "dom":'t'
+    				});
+
+				var table3=$("#aguinaldoCalculoImpuestoGrid").dataTable({
+			        "paging":   false,
+			        "ordering": false,
+			        "info":     false,
+			         "dom":'t'
+    				});
+				var table4=$("#aguinaldoPagoGrid").dataTable({
 			        "paging":   false,
 			        "ordering": false,
 			        "info":     false,
@@ -122,14 +140,24 @@
     				
     				$("#nombreField").keyup(function(){
       					table.DataTable().column(0).search( $(this).val() ).draw();
+      					table2.DataTable().column(0).search( $(this).val() ).draw();
+      					table3.DataTable().column(0).search( $(this).val() ).draw();
+      					table4.DataTable().column(0).search( $(this).val() ).draw();
+
 					});
 					
     				$("#ubicacionField").keyup(function(){
       					table.DataTable().column(1).search( $(this).val() ).draw();
+      					table2.DataTable().column(1).search( $(this).val() ).draw();
+      					table3.DataTable().column(1).search( $(this).val() ).draw();
+      					table4.DataTable().column(1).search( $(this).val() ).draw();
 					});
 					
 					$("#tipoField").keyup(function(){
       					table.DataTable().column(2).search( $(this).val() ).draw();
+      					table2.DataTable().column(2).search( $(this).val() ).draw();
+      					table3.DataTable().column(2).search( $(this).val() ).draw();
+      					table4.DataTable().column(2).search( $(this).val() ).draw();
 					});
 					
 			});
