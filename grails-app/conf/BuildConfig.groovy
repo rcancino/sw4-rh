@@ -77,6 +77,7 @@ grails.project.dependency.resolution = {
 		build ':jetty:2.0.3'
 
         // plugins for the compile step
+        // plugins needed at runtime but not for compilation
         compile ":scaffolding:2.0.2"
         compile ':cache:1.1.1'
 
