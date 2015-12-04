@@ -231,15 +231,18 @@ class AguinaldoService {
 			}
 		}
 		
-		def prestamo=buscarPrestamo(a.empleado)
+		def prestamos=buscarPrestamos(a.empleado)
 		
-		if(prestamo){
-			if(prestamo.saldo<=percepcion){
-				a.prestamo=prestamo.saldo
+		def saldo = prestamos.sum(0.0,{it.saldo})
+		
+		if(saldo){
+			if(saldo<=percepcion){
+				a.prestamo=saldo
 			}else{
 				a.prestamo=percepcion
 			}
 		}
+
 		a.netoPagado=a.subTotal-a.pensionA-a.otrasDed-a.prestamo
 		
 		
@@ -298,6 +301,12 @@ class AguinaldoService {
 		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
 			,[e],[max:1])
 		return prestamos?prestamos[0]:null
+	}
+
+	private def buscarPrestamos(Empleado e) {
+		def prestamos=Prestamo.findAll("from Prestamo p where p.saldo>0 and p.empleado=? order by p.saldo desc"
+			,[e])
+		return prestamos
 	}
 	
 	private OtraDeduccion buscarOtrasDeducciones(Empleado e){
