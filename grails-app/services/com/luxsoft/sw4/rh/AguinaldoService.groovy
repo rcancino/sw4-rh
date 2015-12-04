@@ -26,7 +26,7 @@ class AguinaldoService {
 			def periodo=getCalendario(aguinaldo).asistencia
 			aguinaldo.fechaInicial=periodo.fechaInicial
 			aguinaldo.fechaFinal=periodo.fechaFinal
-			aguinaldo.salario=empleado.salario.salarioDiario
+			aguinaldo.salario=empleado.salario.salarioDiario?:emplado.salario.salarioVariable
 			aguinaldo.sueldoMensual=empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
 			
 			if(empleado.alta>aguinaldo.fechaInicial){
