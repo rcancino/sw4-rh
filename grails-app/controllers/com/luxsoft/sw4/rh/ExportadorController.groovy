@@ -700,7 +700,7 @@ def generarAusentismoSua(PeriodoCommand command){
 		def diasInc=""
 		def sdiOAp="0000000"
 	   
-		  def ausentismos=AsistenciaImssDet.findAll("from AsistenciaImssDet i where  i.cambio between ? and ? and i.tipo='falta' "
+		  def ausentismos=AsistenciaImssDet.findAll("from AsistenciaImssDet i where  i.fecha between ? and ? and i.tipo='falta' and excluir=false "
 												,[fechaIni,fechaFin]).sort{it.asistenciaImss.empleado}.each{calculo ->
             BajaDeEmpleado baja =BajaDeEmpleado.find("from BajaDeEmpleado b where b.empleado=? and b.fecha>=?",[calculo.asistenciaImss.empleado,calculo.asistenciaImss.empleado.alta])
 			def fechaBaja=baja? baja.fecha :new Date()

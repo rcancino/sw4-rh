@@ -75,7 +75,17 @@ class NominaController {
 	
 	def actualizarPartidas(Long id) {
 		//def nomina=nominaService.actualizarPartidas(Nomina.get(id))
+
 		def nomina =Nomina.get(id)
+
+		if(nomina.tipo == 'AGUINALDO' ){
+			nominaService.actualizarAguinaldo(nomina)
+			nominaService.depurar(id)
+			flash.message="Nomina de Aguinaldo actualizada"
+			redirect action:'show',params:[id:id]
+			return
+		}
+
 		if(nomina.tipo=='PTU'){
 			nominaService.actualizarPtu(nomina)
 			flash.message="Nomina de PTU actualizada"

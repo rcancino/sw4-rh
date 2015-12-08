@@ -38,8 +38,8 @@ FROM
 empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.id=p.turno_id) join ubicacion u on (u.id=p.ubicacion_id)
 join asistencia_imss a on(a.empleado_id=e.id) join asistencia aa on(aa.id=a.asistencia_id) join asistencia_imss_det d on (d.asistencia_imss_id=a.id) JOIN 	seguridad_social s on (s.empleado_id=e.id)
 left join baja_de_empleado b on (b.empleado_id=e.id)
- where d.cambio BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} and d.tipo='falta' and e.control_de_asistencia is true
-and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.fecha  ))
+ where d.fecha BETWEEN $P{FECHA_INI} and $P{FECHA_FIN} and d.tipo='falta' and e.control_de_asistencia is true
+and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.fecha  )) and d.excluir is false
  order by e.apellido_paterno,e.apellido_materno,e.nombres]]></queryString>
 
 	<field name="id" class="java.lang.Long"/>
@@ -307,7 +307,7 @@ and (d.fecha>=e.alta and (d.fecha <= ifnull(b.fecha,CURRENT_DATE)  or e.alta>b.f
 					<textElement>
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$F{cambio}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$F{fecha}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement

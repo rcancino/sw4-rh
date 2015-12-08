@@ -26,7 +26,13 @@ class AguinaldoService {
 			def periodo=getCalendario(aguinaldo).asistencia
 			aguinaldo.fechaInicial=periodo.fechaInicial
 			aguinaldo.fechaFinal=periodo.fechaFinal
-			aguinaldo.salario=empleado.salario.salarioDiario?:emplado.salario.salarioVariable
+			aguinaldo.salario=empleado.salario.salarioDiario
+			if(aguinaldo.empleado.salario.salarioDiario<=0.0){
+				aguinaldo.salario=aguinaldo.empleado.salario.salarioVariable
+			}
+ println "Salario variable "+aguinaldo.empleado.salario.salarioVariable +" Aguinaldo salario  "aguinaldo.salario
+
+
 			aguinaldo.sueldoMensual=empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
 			
 			if(empleado.alta>aguinaldo.fechaInicial){
@@ -107,7 +113,14 @@ class AguinaldoService {
 
 		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
+
+		if(aguinaldo.empleado.salario.salarioDiario<=0.0){
+				aguinaldo.salario=aguinaldo.empleado.salario.salarioVariable
+			}
+	
+
 		aguinaldo.sueldoMensual=aguinaldo.empleado.salario.periodicidad=='SEMANAL'?aguinaldo.salario*31:aguinaldo.salario*32
+		
 		aguinaldo.diasParaAguinaldo=aguinaldo.getDiasDelEjercicio()
 		aguinaldo.diasParaBono=aguinaldo.getDiasDelEjercicio()
 
@@ -115,7 +128,7 @@ class AguinaldoService {
 			registrarFaltas(aguinaldo)
 
     	log.info "Calculando aguinaldo: "+aguinaldo
-		aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
+		//aguinaldo.salario=aguinaldo.empleado.salario.salarioDiario
 		aguinaldo.diasParaAguinaldo=aguinaldo.diasDelEjercicio-aguinaldo.faltas-aguinaldo.incapacidades
 		def factor=(aguinaldo.diasDeAguinaldo/diasDelEjercicioReales)*aguinaldo.diasParaAguinaldo
 		aguinaldo.aguinaldo=factor*aguinaldo.salario
