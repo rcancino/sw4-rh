@@ -32,8 +32,10 @@
 	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT concat(ifnull(e.apellido_paterno,"")," ",e.apellido_materno," ",e.nombres ) AS empleado,date(e.alta)as fecha_alta
-,i.fecha_inicial,i.fecha_final,i.referencia_imms,(TO_DAYS(i.fecha_final)-TO_DAYS(fecha_inicial))+1 as dias_inc
+,i.fecha_inicial,i.fecha_final,i.referencia_imms
+,(TO_DAYS((CASE WHEN fecha_final>$P{FECHA_FIN} then $P{FECHA_FIN} else fecha_final end))-TO_DAYS((CASE WHEN fecha_inicial<$P{FECHA_INI} then $P{FECHA_INI} else fecha_inicial end)))+1 as dias_inc
 ,s.numero,t.descripcion as TURNO
+,(case when i.tipo_id=2 then 'EG' when i.tipo_id=3 then 'MAT' when i.tipo_id=1 and i.comentario like 'TRAYECTO %' then 'RTT' else 'RTE' end) as rama
 FROM 
 empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.id=p.turno_id) join ubicacion u on (u.id=p.ubicacion_id)
  JOIN 	seguridad_social s on (s.empleado_id=e.id) JOIN incapacidad i on (i.empleado_id=e.id) 
@@ -48,6 +50,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 	<field name="dias_inc" class="java.lang.Integer"/>
 	<field name="numero" class="java.lang.String"/>
 	<field name="TURNO" class="java.lang.String"/>
+	<field name="rama" class="java.lang.String"/>
 
 	<variable name="TOTAL_DIAS" class="java.lang.Integer" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{dias_inc}]]></variableExpression>
@@ -182,7 +185,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 						mode="Opaque"
 						x="0"
 						y="9"
-						width="180"
+						width="200"
 						height="11"
 						forecolor="#000000"
 						key="staticText-23"
@@ -200,7 +203,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="256"
+						x="276"
 						y="9"
 						width="56"
 						height="11"
@@ -220,7 +223,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="180"
+						x="200"
 						y="9"
 						width="76"
 						height="11"
@@ -240,9 +243,9 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="465"
+						x="485"
 						y="9"
-						width="65"
+						width="45"
 						height="11"
 						forecolor="#000000"
 						key="staticText-30"
@@ -255,12 +258,12 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[TURNO]]></text>
+				<text><![CDATA[RAMA]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="312"
+						x="332"
 						y="9"
 						width="56"
 						height="11"
@@ -280,7 +283,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="368"
+						x="388"
 						y="9"
 						width="24"
 						height="11"
@@ -300,7 +303,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="392"
+						x="412"
 						y="9"
 						width="73"
 						height="11"
@@ -325,7 +328,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<reportElement
 						x="0"
 						y="3"
-						width="180"
+						width="200"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -336,7 +339,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="258"
+						x="278"
 						y="3"
 						width="56"
 						height="11"
@@ -349,7 +352,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="180"
+						x="200"
 						y="3"
 						width="76"
 						height="11"
@@ -362,20 +365,20 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="467"
+						x="487"
 						y="3"
-						width="63"
+						width="43"
 						height="11"
 						key="textField"/>
 					<box></box>
-					<textElement>
+					<textElement textAlignment="Center">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{TURNO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{rama}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="314"
+						x="334"
 						y="3"
 						width="56"
 						height="11"
@@ -388,7 +391,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="370"
+						x="390"
 						y="3"
 						width="24"
 						height="11"
@@ -401,7 +404,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="394"
+						x="414"
 						y="3"
 						width="73"
 						height="11"
@@ -655,7 +658,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="218"
+						x="238"
 						y="22"
 						width="150"
 						height="11"
@@ -674,7 +677,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="368"
+						x="388"
 						y="22"
 						width="24"
 						height="11"
@@ -689,7 +692,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="284"
+						x="304"
 						y="5"
 						width="84"
 						height="11"
@@ -708,7 +711,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="368"
+						x="388"
 						y="5"
 						width="24"
 						height="11"
