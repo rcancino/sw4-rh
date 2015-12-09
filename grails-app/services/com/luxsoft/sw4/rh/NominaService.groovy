@@ -327,7 +327,7 @@ class NominaService {
 		nomina.partidas.each{ ne ->
 			ne.conceptos.clear()
 			def aguinaldo=Aguinaldo.findByNominaPorEmpleado(ne)
-			if(aguinaldo){
+			if(aguinaldo && (aguinaldo.aguinaldoGravado || aguinaldo.aguinaldoExcento )){
 				log.info 'Actualizando aguinaldo: '+aguinaldo
 				//Percepcion 1
 				def p1=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('P002')
@@ -336,18 +336,21 @@ class NominaService {
 					,comentario:'PENDIENTE')
 				ne.addToConceptos(p1)
 				
-				def p2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('P011')
+				if(aguinaldo.bono){
+					def p2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('P011')
 					,importeGravado:aguinaldo.bono
 					,importeExcento:0.0
 					,comentario:'PENDIENTE')
-				ne.addToConceptos(p2)
+					ne.addToConceptos(p2)
+				}
 				
-				
-				def d1=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D002')
+				if(aguinaldo.isrPorRetener){
+					def d1=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D002')
 					,importeGravado:0.0
 					,importeExcento:aguinaldo.isrPorRetener
 					,comentario:'PENDIENTE')
-				ne.addToConceptos(d1)
+					ne.addToConceptos(d1)
+				}
 				
 				if(aguinaldo.pensionA){
 					def d2=new NominaPorEmpleadoDet(concepto:ConceptoDeNomina.findByClave('D007')

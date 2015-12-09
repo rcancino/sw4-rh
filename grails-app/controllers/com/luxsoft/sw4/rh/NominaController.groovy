@@ -37,12 +37,15 @@ class NominaController {
 		def periodos=CalendarioDet
 			.findAll('from CalendarioDet d where d.calendario.tipo=? and d.calendario.ejercicio=?',[tipo,ejercicio])
 		
-			def aguinaldos=CalendarioDet.findAll("from CalendarioDet d where d.calendario.comentario='AGUINALDO' and d.calendario.ejercicio=?"
+		/*
+			def aguinaldos=CalendarioDet
+			.findAll("from CalendarioDet d where d.calendario.comentario='AGUINALDO' and d.calendario.ejercicio=?"
 				,[ejercicio])
 			if(aguinaldos){
 				periodos.addAll(aguinaldos)
 			}
 			//println 'Aguinaldo: '+aguinaldo
+		*/
 		//
 		
 		def query=Nomina.where{periodicidad==params.periodicidad && ejercicio==session.ejercicio}
@@ -80,7 +83,6 @@ class NominaController {
 
 		if(nomina.tipo == 'AGUINALDO' ){
 			nominaService.actualizarAguinaldo(nomina)
-			nominaService.depurar(id)
 			flash.message="Nomina de Aguinaldo actualizada"
 			redirect action:'show',params:[id:id]
 			return
