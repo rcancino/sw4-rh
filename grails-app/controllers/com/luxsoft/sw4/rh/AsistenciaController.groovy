@@ -36,7 +36,7 @@ class AsistenciaController {
     		def list=Asistencia.findAll{calendarioDet==calendarioDet}
     		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
     	}
-    	def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
+    	def periodos=CalendarioDet.where{calendario.ejercicio==ejercicio && calendario.tipo==tipo}.list()
     	
     	[calendarioDet:calendarioDet,partidasMap:partidasMap,tipo:tipo,periodos:periodos]
     	//redirect action:'asistenciaQuincenal'
