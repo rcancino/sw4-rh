@@ -13,6 +13,8 @@ class AsistenciaController {
 	
 	def asistenciaService
 	def checadoService
+
+	
 	
 
 	def cargarAsistencia(Long calendarioDetId){
@@ -33,7 +35,8 @@ class AsistenciaController {
     	
     	def partidasMap=[]
     	if(calendarioDet){
-    		def list=Asistencia.findAll{calendarioDet==calendarioDet}
+    		//def list=Asistencia.findAll{calendarioDet==calendarioDet}
+    		def list=Asistencia.where{calendarioDet==calendarioDet}.list()
     		partidasMap=list.groupBy([{it.empleado.perfil.ubicacion.clave}])
     	}
     	def periodos=CalendarioDet.where{calendario.ejercicio==ejercicio && calendario.tipo==tipo}.list()
@@ -65,7 +68,7 @@ class AsistenciaController {
 		def ejercicio=session.ejercicio
 		def tipo=asistencia.calendarioDet.calendario.tipo
 		log.info 'Cargando calendarios para: '+tipo
-		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
+		def periodos=CalendarioDet.where{calendario.ejercicio==ejercicio && calendario.tipo==tipo}.list()
 		[asistenciaInstance:asistencia,asistenciaDetList:asistencia.partidas.sort(){it.fecha},periodos:periodos]
 	}
 

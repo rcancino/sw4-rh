@@ -26,7 +26,7 @@
     						<g:select id="periodoField" class="form-control"  
 								name="calendarioDet" 
 								from="${periodos}"
-								value="${calendarioActual}" 
+								value="${periodicidad} - ${calendarioActual} " 
 								optionKey="id" 
 								
 							/>

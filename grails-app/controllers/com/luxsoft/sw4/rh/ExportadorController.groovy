@@ -708,7 +708,7 @@ def generarAusentismoSua(PeriodoCommand command){
             if(calculo.asistenciaImss.empleado.controlDeAsistencia==true  && calculo.fecha>=calculo.asistenciaImss.empleado.alta && calculo.fecha<= fechaBaja ){
               numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistenciaImss.empleado).numero.replace('-','')
               tipoMov="11"
-			  fechaMov=df.format(calculo.cambio)
+			  fechaMov=df.format(calculo.fecha)
 			  folioInc="        "
 			  diasInc="01"
               append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
@@ -716,7 +716,7 @@ def generarAusentismoSua(PeriodoCommand command){
               
                numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.asistenciaImss.empleado).numero.replace('-','')
 			   tipoMov="11"
-			   fechaMov=df.format(calculo.cambio)
+			   fechaMov=df.format(calculo.fecha)
 			   folioInc="        "
 			   diasInc="01"
 			  append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")

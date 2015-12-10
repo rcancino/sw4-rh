@@ -5,7 +5,7 @@ import groovy.transform.ToString
 import groovy.transform.EqualsAndHashCode
 import org.grails.databinding.BindingFormat
 
-@ToString(includes='folio,inicio,fin',includeNames=true,includePackage=false)
+@ToString(includes='folio,inicio,fin,calendario',includeNames=true,includePackage=false)
 @EqualsAndHashCode(includes='folio')
 class CalendarioDet {
 	
@@ -44,6 +44,7 @@ class CalendarioDet {
 		fin type:'date'
 		fechaDePago:'date'
 		sort "inicio"
+		calendario lazy : false
 	}
 
 	def periodo(){
@@ -51,13 +52,12 @@ class CalendarioDet {
 	}
 
 	String toString(){
-		return "$calendario.tipo $folio  (${inicio.format('dd/MM/yyyy')} - ${fin.format('dd/MM/yyyy')}) ${calendario.comentario?:'NOMINA'}"
-		//return "Calendario Det: $folio "
-	//	return "CALENDARIODET  "
+	return "$calendario.tipo $folio  (${inicio.format('dd/MM/yyyy')} - ${fin.format('dd/MM/yyyy')}) ${calendario.comentario?:'NOMINA'}"
+    
 	}
 	
 	String toString2(){
-		return "$calendario.tipo $folio  $calendario.ejercicio $calendario.comentario?:'NOMINA'"
+	return "$calendario.tipo $folio  $calendario.ejercicio $calendario.comentario?:'NOMINA'"
 	}
 	
 }

@@ -29,7 +29,7 @@ class Calendario {
 	static hasMany=[periodos:CalendarioDet]
 	
 	static mapping = {
-		periodos cascade: "all-delete-orphan"
+		periodos cascade: "all-delete-orphan"  
 	}
 
 }
