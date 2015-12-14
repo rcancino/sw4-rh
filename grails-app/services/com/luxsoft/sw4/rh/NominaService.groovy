@@ -74,8 +74,11 @@ class NominaService {
 
 	@Transactional
 	def generar(Long calendarioDetId,String tipo,String formaDePago,String periodicidad){
-		log.info 'Generando nomina: '+tipo+ " Cal:"+calendarioDetId
+		
+
 		def calendarioDet=CalendarioDet.get(calendarioDetId)
+
+		log.info "Generando nomina $tipo $formaDePago $periodicidad $calendarioDet.calendario.comentario $calendarioDet.folio"
 		
 		//def periodicidad=calendarioDet.calendario.tipo=='SEMANA'?'SEMANAL':'QUINCENAL'
 		def periodo=calendarioDet.periodo()
@@ -96,6 +99,7 @@ class NominaService {
 		nomina.formaDePago=formaDePago
 		nomina.empresa=empresa
 		nomina.total=0.0
+		nomina.partidas = []
 		generarPartidas nomina
 		nomina.save(failOnError:true)
 		return nomina
