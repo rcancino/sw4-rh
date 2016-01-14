@@ -9,6 +9,8 @@
 			
 			<th>Bono Desemp.</th>
 			<th>Bono Prod.</th>
+			<th>Bono</th>
+			<th>Bono Antig</th>
 			<th>Dev. ISPT Ant.</th>
 			<th>Prima Dom. E.</th>
 			<th>Prima Dom. G.</th>
@@ -27,6 +29,7 @@
 			<th>Subs. Emp. A.</th>
 			<th>ISR</th>
 			<th>Compensacion SAF</th>
+			<th></th>
 			
 			
 		</tr>
@@ -45,6 +48,11 @@
 				
 				<td><g:formatNumber number="${row.bonoPorDesempeno}" format="###,###.##"/></td>
 				<td><g:formatNumber number="${row.bonoDeProductividad}" format="###,###.##"/></td>
+				
+				<td><g:formatNumber number="${row.bono}" format="###,###.##"/></td>
+				<td><g:formatNumber number="${row.bonoAntiguedad}" format="###,###.##"/></td>
+				
+
 				<td><g:formatNumber number="${row.devISPTAnt}" format="###,###.##"/></td>
 				<td><g:formatNumber number="${row.primaDominicalExenta}" format="###,###.##"/></td>
 				<td><g:formatNumber number="${row.primaDominicalGravada}" format="###,###.##"/></td>

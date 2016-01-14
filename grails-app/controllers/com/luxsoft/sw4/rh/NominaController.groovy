@@ -151,6 +151,7 @@ class NominaController {
 	}
 	
 	def actualizarSaldos(Nomina nominaInstance){
+		
 		nominaService.actualizarSaldos(nominaInstance)
 		flash.message="Saldos actualizados"
 		redirect action:'show',params:[id:nominaInstance.id]

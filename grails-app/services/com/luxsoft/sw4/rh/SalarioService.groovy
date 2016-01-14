@@ -11,6 +11,8 @@ import grails.transaction.NotTransactional
 import grails.events.Listener
 import groovy.sql.Sql
 
+import com.luxsoft.sw4.Empresa
+
 @Transactional
 class SalarioService {
 
@@ -224,6 +226,8 @@ class SalarioService {
 							found.compensacion=0.0
 							found.incentivo=0.0
 							found.bonoPorDesemp=0.0
+							found.bono=0.0
+							found.bonoPorAntiguedad=0.0
 							found.hrsExtrasDobles=0.0
 							found.hrsExtrasTriples=0.0
 							found.comisiones=0.0
@@ -232,7 +236,7 @@ class SalarioService {
 							actualizarVariables(found)
 							registrarTiempoExtraDoble(found)
 							found.with{
-								variable=compensacion+incentivo+bonoPorDesemp+hrsExtrasDobles+hrsExtrasTriples+comisiones+primaDom+vacacionesP
+								variable=compensacion+incentivo+bonoPorDesemp+hrsExtrasDobles+hrsExtrasTriples+comisiones+primaDom+vacacionesP+bono+bonoPorAntiguedad
 							}
 							
 							
@@ -285,16 +289,18 @@ class SalarioService {
 	private actualizarVariables(CalculoSdi sdi){
 		
 		def partidas=NominaPorEmpleadoDet
-		.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.concepto.id in(19,22,24,41,42,44) and d.parent.nomina.ejercicio=? and d.parent.nomina.calendarioDet.bimestre=?"
+		.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.concepto.id in(19,22,24,43,41,42,44,49,50) and d.parent.nomina.ejercicio=? and d.parent.nomina.calendarioDet.bimestre=?"
 				 ,[sdi.empleado,sdi.ejercicio,sdi.bimestre])
 	
 		sdi.compensacion=0.0
 		sdi.incentivo=0.0
 		sdi.bonoPorDesemp=0.0
-		
+		sdi.bono=0.0
+    	sdi.bonoPorAntiguedad=0.0
 		sdi.comisiones=0.0
 		sdi.primaDom=0.0
 		sdi.vacacionesP=0.0
+		Empresa emp=Empresa.first()
 	
 		partidas.each{it->
 			switch(it.concepto.id){
@@ -304,9 +310,10 @@ class SalarioService {
 				case 22:
 					sdi.incentivo+=it.importeGravado+it.importeExcento
 					break
-				case 24:
-					sdi.bonoPorDesemp+=it.importeGravado+it.importeExcento
-					break
+				case (emp.rfc.equals("PAP830101CR3")?24:43):
+						println "RFC "+emp.rfc+"  Concepto: "+it.concepto.id
+    				sdi.bonoPorDesemp+=it.importeGravado+it.importeExcento
+    				break
 				case 41:
 					sdi.comisiones+=it.importeGravado+it.importeExcento
 					break
@@ -316,6 +323,12 @@ class SalarioService {
 				case 44:
 					sdi.vacacionesP+=it.importeGravado+it.importeExcento
 					break
+					case 49:
+    				sdi.bono+=it.importeGravado+it.importeExcento
+    				break
+    			case 50:
+    				sdi.bonoPorAntiguedad+=it.importeGravado+it.importeExcento
+    				break
 			}
 		}
 		
@@ -474,11 +487,11 @@ SELECT (CASE WHEN (25)*(SELECT Z.SALARIO FROM zona_economica Z WHERE Z.CLAVE='A'
 		SELECT x.ID,X.CLAVE,X.ALTA
 		,(SELECT MAX(F.VAC_DIAS) FROM factor_de_integracion F 	WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0)+1 BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_DIAS	
 		,(SELECT MAX(F.VAC_PRIMA) FROM factor_de_integracion F WHERE ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0)+1 BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS VAC_PRIMA	
-		,(SELECT MAX(CASE 	WHEN X.ID in (245,244) THEN (15+2) 		
+		,(SELECT MAX(CASE 	WHEN X.ID in (245,244) THEN (15+1) 		
 							WHEN X.ID IN(274,273) THEN F.COB_DIAS WHEN  @TIPO THEN F.SEM_DIAS	ELSE F.QNA_DIAS END	) 
 			FROM factor_de_integracion F 	WHERE F.TIPO=(CASE WHEN MONTH('@FECHA_FIN')=12 THEN 2  WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') THEN 0 ELSE 2 END) AND
 			ROUND(-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24,0)+1 BETWEEN F.DIAS_DE AND F.DIAS_HASTA 	) AS AGNDO_DIAS
-		,(SELECT MAX(CASE 	WHEN X.ID in (245,244) THEN 1+ROUND((((F.VAC_DIAS*F.VAC_PRIMA)+(15+2))/365),4) 
+		,(SELECT MAX(CASE 	WHEN X.ID in (245,244) THEN 1+ROUND((((F.VAC_DIAS*F.VAC_PRIMA)+(15+1))/366),4) 
 							WHEN X.ID IN(274,273) THEN F.COB_FACTOR WHEN  @TIPO THEN F.SEM_FACTOR ELSE F.QNA_FACTOR END) 		
 			FROM factor_de_integracion F WHERE F.TIPO=(CASE WHEN MONTH('@FECHA_FIN')=12 THEN 2  WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') AND MONTH(X.ALTA)>=3 THEN 1 WHEN YEAR(X.ALTA)=YEAR('@FECHA_FIN') THEN 0 ELSE 2 END) AND 	
 			ROUND((-(TIMESTAMPDIFF(MINUTE,'@FECHA_ULT_MODIF',X.ALTA)/60)/24),0)+1 BETWEEN F.DIAS_DE AND F.DIAS_HASTA ) AS FACTOR	

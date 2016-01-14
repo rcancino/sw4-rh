@@ -8,8 +8,12 @@ class IncapacidadService {
 
     def salvar(Incapacidad incapacidad) {
 		incapacidad.save failOnError:true
+
+
 		return incapacidad
     }
+
+ 
 	
 	def eliminar(Incapacidad incapacidad) {
 		incapacidad.delete flush:true

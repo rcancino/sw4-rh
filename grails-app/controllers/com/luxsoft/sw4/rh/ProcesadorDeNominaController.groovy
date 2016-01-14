@@ -184,6 +184,9 @@ nominaEmpleado.actualizar()
 	import java.math.*
 
 	def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+
+	println 'Salario Minimo------------------------------'+salarioMinimo
+
 	def sdi=empleado.salario.salarioDiarioIntegrado
 	def diasTrabajados=nominaEmpleado.nomina.getDiasPagados()
 

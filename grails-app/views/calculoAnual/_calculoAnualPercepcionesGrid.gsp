@@ -4,6 +4,14 @@
 			<th>Empleado</th>
 			<th>Ubicacion</th>
 			<th>T</th>
+			<th>Alta</th>
+			<th>Antiguedad</th>
+			<th>S.Diario</th>
+			<th>Faltas</th>
+			<th>Incapacidades</th>
+			<th>Resutado</th>
+			<th>Proyectado</th>
+			<th>Sueldo</th>
 			<th>Comisiones</th>
 			<th>Vacaciones</th>
 			<th>Vacaciones P</th>

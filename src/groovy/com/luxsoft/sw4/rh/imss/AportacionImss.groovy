@@ -35,7 +35,7 @@ class ZonaEconomica{
 	BigDecimal salario
 	
 	static def valores=[
-		new ZonaEconomica(clave:'A',salario:70.10),
+		new ZonaEconomica(clave:'A',salario:73.04),
 		new ZonaEconomica(clave:'B',salario:63.77),
 		new ZonaEconomica(clave:'C',salario:64.76),
 		new ZonaEconomica(clave:'D',salario:61.38),

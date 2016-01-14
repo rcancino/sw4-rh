@@ -57,6 +57,8 @@ class CalculoSdi {
 	BigDecimal compensacion=0.0
 	BigDecimal incentivo=0.0
 	BigDecimal bonoPorDesemp=0.0
+	BigDecimal bono=0.0
+	BigDecimal bonoPorAntiguedad=0.0
 	BigDecimal hrsExtrasDobles=0.0
 	BigDecimal hrsExtrasTriples=0.0
 	BigDecimal comisiones=0.0
@@ -77,6 +79,8 @@ class CalculoSdi {
 	Integer bimestre
 	
 	String status='REVISION'
+
+
 
 	//Date fecha
 

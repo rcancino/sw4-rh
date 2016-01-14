@@ -17,6 +17,11 @@
 							<f:field property="fechaInicial" input-class="form-control" />
 							<f:field property="fechaFinal" input-class="form-control" />
 							<f:field property="comentario" input-class="form-control" />
+							<f:field property="porcentaje" input-class="form-control" />
+							<f:field property="tipoRiesgo" input-class="form-control" />
+							<f:field property="secuela" input-class="form-control" />
+							<f:field property="control" input-class="form-control" />
+						  					
 						</f:with>
 					</fieldset>
 					<div class="form-group">

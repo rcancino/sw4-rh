@@ -34,9 +34,19 @@ class Incapacidad {
 	
 	Date lastUpdated
 
+	Integer porcentaje
+	String tipoRiesgo
+	String secuela
+	String control
+
+
     static constraints = {
     	
     	comentario nullable:true,maxSize:250
+    	porcentaje 	nullable:true
+    	tipoRiesgo	nullable:true,inList:['ACCIDENTE DE TRABAJO','ACCIDENTE TRAYECTO','ENFERMEDAD PROFESIONAL']
+    	secuela		nullable:true,inList:['NINGUNA','INCAPACIDAD TEMPORAL','VALUACION INICIAL PROVISIONAL','VALUACION INICIAL DEFINITIVA','DEFUNCION','RECAIDA','VALUACION POST ALTA']
+    	control		nullable:true,inList:['UNICA','INICIAL','SUBSECUENTE','ALTA O ST-2','PRENATAL','ENLACE','POSTNATAL']
     }
 
 	static transients=['dias']

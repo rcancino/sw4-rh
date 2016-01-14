@@ -78,15 +78,19 @@ class CalculoSdiService {
 			found.compensacion=0.0
 			found.incentivo=0.0
 			found.bonoPorDesemp=0.0
+			found.bono=0.0
+			found.bonoPorAntiguedad=0.0
 			found.hrsExtrasDobles=0.0
 			found.hrsExtrasTriples=0.0
 			found.comisiones=0.0
 			found.primaDom=0.0
 			found.vacacionesP=0.0
+		
 			actualizarVariables(found)
+
 			registrarTiempoExtraDoble(found)
 			found.with{
-				variable=compensacion+incentivo+bonoPorDesemp+hrsExtrasDobles+hrsExtrasTriples+comisiones+primaDom+vacacionesP
+				variable=compensacion+incentivo+bonoPorDesemp+bono+bonoPorAntiguedad+hrsExtrasDobles+hrsExtrasTriples+comisiones+primaDom+vacacionesP
 			}
 
 			if(found.diasLabBim)
@@ -136,27 +140,37 @@ class CalculoSdiService {
     private actualizarVariables(CalculoSdi sdi){
     	
     	def partidas=NominaPorEmpleadoDet
-    	.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.concepto.id in(19,22,24,41,42,44) and d.parent.nomina.ejercicio=? and d.parent.nomina.calendarioDet.bimestre=?"
+    	.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.concepto.id in(19,22,24,41,42,44,49,50) and d.parent.nomina.ejercicio=? and d.parent.nomina.calendarioDet.bimestre=?"
     			 ,[sdi.empleado,sdi.ejercicio,sdi.bimestre])
-    
+    		
     	sdi.compensacion=0.0
     	sdi.incentivo=0.0
     	sdi.bonoPorDesemp=0.0
-    	
+    	sdi.bono=0.0
+    	sdi.bonoPorAntiguedad=0.0
     	sdi.comisiones=0.0
     	sdi.primaDom=0.0
     	sdi.vacacionesP=0.0
     
     	partidas.each{it->
+
     		switch(it.concepto.id){
+    		
     			case 19:
     				sdi.compensacion+=it.importeGravado+it.importeExcento
     				break
     			case 22:
     				sdi.incentivo+=it.importeGravado+it.importeExcento
     				break
-    			case 24:
+    				/**Parche para utilizar en Kyo**/	
+    			case (emp.rfc.equals("PAP830101CR3")?24:43):
     				sdi.bonoPorDesemp+=it.importeGravado+it.importeExcento
+    				break
+    			case 49:
+    				sdi.bono+=it.importeGravado+it.importeExcento
+    				break
+    			case 50:
+    				sdi.bonoPorAntiguedad+=it.importeGravado+it.importeExcento
     				break
     			case 41:
     				sdi.comisiones+=it.importeGravado+it.importeExcento
@@ -196,20 +210,20 @@ class CalculoSdiService {
 select x.id,x.clave,x.alta
 		,(select max(f.vac_dias) from factor_de_integracion f 	where round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta ) as vac_dias	
 		,(select max(f.vac_prima) from factor_de_integracion f where round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta ) as vac_prima	
-		,(select max(case 	when x.id in (245,244) then (15+2) 		
+		,(select max(case 	when x.id in (245,244) then (15+1) 		
 							when x.id in(274,273) then f.cob_dias when  @tipo then f.sem_dias	else f.qna_dias end	) 
-			from factor_de_integracion f 	where f.tipo=(case when year(x.alta)=year('@fecha_fin') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_fin') then 0 else 2 end) and
+			from factor_de_integracion f 	where f.tipo=(case when month('@fecha_fin')=12 then 2  when year(x.alta)=year('@fecha_fin') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_fin') then 0 else 2 end) and
 			round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta 	) as agndo_dias
-		,(select max(case 	when x.id in (245,244) then 1+round((((f.vac_dias*f.vac_prima)+(15+2))/365),4) 
+		,(select max(case 	when x.id in (245,244) then 1+round((((f.vac_dias*f.vac_prima)+(15+1))/366),4) 
 							when x.id in(274,273) then f.cob_factor when  @tipo then f.sem_factor else f.qna_factor end) 		
-			from factor_de_integracion f where f.tipo=(case when year(x.alta)=year('@fecha_fin') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_fin') then 0 else 2 end) and 	
+			from factor_de_integracion f where f.tipo=(case when month('@fecha_fin')=12 then 2  when year(x.alta)=year('@fecha_fin') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_fin') then 0 else 2 end) and 	
 			round((-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24),0)+1 between f.dias_de and f.dias_hasta ) as factor	
 		,ifnull((case	when x.control_de_asistencia is false then  sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )) 
 				when x.alta<='@fecha_ini' then sum(e.faltas) else round((-(timestampdiff(minute,'@fecha_fin',x.alta)/60)/24)+1,0)-round(sum(e.dias_trabajados),0) end),0) as faltas 
 		,sum(e.incapacidades) as incapacidades
-		,(case	when x.control_de_asistencia is false then  ifnull(round(sum(e.dias_trabajados),0)-sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) 
+		,(case	when x.control_de_asistencia is false then  ifnull(round(sum(e.dias_trabajados),0)+round(sum(e.vacaciones),0)-sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) 
 				when x.alta<='@fecha_ini' then (round(((-(timestampdiff(minute,'@fecha_fin',(case when x.alta>'@fecha_ini' then x.alta else '@fecha_ini' end))/60)/24)+1),0)  -   sum(e.faltas)	-sum(e.incapacidades))  
-				else  ifnull(round(sum(e.dias_trabajados),0)-sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) end) as dias_lab_bim 
+				else  ifnull(round(sum(e.dias_trabajados),0)+round(sum(e.vacaciones),0)-sum((select sum(a.faltas_manuales) from asistencia a where a.id=e.asistencia_id )),0) end) as dias_lab_bim 
 		from nomina n 						
 		join nomina_por_empleado e on(e.nomina_id=n.id)
 		join empleado x on(x.id=e.empleado_id)

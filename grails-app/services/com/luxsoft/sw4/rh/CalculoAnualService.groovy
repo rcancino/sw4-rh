@@ -15,6 +15,7 @@ import com.luxsoft.sw4.rh.acu.*
 
 import java.math.BigDecimal;
 import java.math.RoundingMode
+import com.luxsoft.sw4.Empresa
 
 @Transactional
 class CalculoAnualService {
@@ -43,8 +44,10 @@ class CalculoAnualService {
 		CalculoAnual.executeUpdate("delete from CalculoAnual c where c.empleado=? and c.ejercicio=?",[e,ejercicio])
 		def calculo=CalculoAnual.findOrCreateWhere(ejercicio: ejercicio,empleado:e)
 		def periodo=Periodo.getPeriodoAnual(calculo.ejercicio)
-		calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-		calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		//calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+		//calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		calculo.fechaInicial=periodo.fechaInicial
+		calculo.fechaFinal=periodo.fechaFinal
 		calculo.empleado=e
 		calcular(calculo)
 	}
@@ -54,8 +57,10 @@ class CalculoAnualService {
 		def periodo=Periodo.getPeriodoAnual(calculo.ejercicio)
 		def diasDelEjercicioReales=periodo.fechaFinal-periodo.fechaInicial+1
 		def empleado =calculo.empleado
-		calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
-		calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		//calculo.fechaInicial=DateUtils.addMonths(periodo.fechaInicial,-1)
+		//calculo.fechaFinal=DateUtils.addMonths(periodo.fechaFinal,-1)
+		calculo.fechaInicial=periodo.fechaInicial
+		calculo.fechaFinal=periodo.fechaFinal
 		if(empleado.alta>calculo.fechaInicial){
 			
 			calculo.fechaInicial=empleado.alta
@@ -74,11 +79,11 @@ class CalculoAnualService {
 		
 		def partidas=NominaPorEmpleadoDet
 		.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=?"+
-			" and d.concepto.id in(13,41,37,44,36,22,14,40,38,19,15,23,24,31,42,20,45,34,35,33,2,12,43) "+
+			" and d.concepto.id in(13,41,37,44,36,22,14,40,38,19,15,43,23,24,31,42,20,45,34,35,33,2,12,43,49,50 )"+
 			" and d.parent.nomina.ejercicio=? "
 				,[anual.empleado,anual.ejercicio])
 		
-		
+		Empresa emp=Empresa.first()
 		
 		partidas.each{it->
 			
@@ -117,9 +122,12 @@ class CalculoAnualService {
 				case 19:
 					anual.compensacion+=it.importeGravado
 					break
-				case 15:
-					anual.ptuExenta+=it.importeExcento
-					anual.ptuGravada+=it.importeGravado
+				/**Parche para utilizar en Kyo**/	
+				case (emp.rfc.equals("PAP830101CR3")?15:43):
+					
+				    	anual.ptuExenta+=it.importeExcento
+						anual.ptuGravada+=it.importeGravado
+				    
 					break
 				case 23:
 					anual.bonoDeProductividad+=it.importeGravado
@@ -156,6 +164,15 @@ class CalculoAnualService {
 				case 12:
 				anual.retardos+=it.importeExcento
 					break
+				case 49:
+					print 'Acumulando: '+it+ ' a bono: '+anual.bono
+					anual.bono += it.importeGravado
+					print 'Res:______'+anual.bono
+					break
+				case 50:
+					anual.bonoAntiguedad += it.importeGravado
+					break
+
 
 			}
 			
@@ -171,7 +188,7 @@ class CalculoAnualService {
 		anual.totalGravado=0.0
 		def netoGravado=0.0
 		anual.with{
-			totalGravado=sueldo+comisiones+vacaciones+vacacionesPagadas+primaVacacionalGravada+incentivo+aguinaldoGravable+indemnizacionGravada+primaDeAntiguedadGravada+compensacion+ptuGravada+bonoDeProductividad+bonoPorDesempeno+primaDominicalGravada+gratificacion+permisoPorPaternidad+tiempoExtraDobleGravado+tiempoExtraTripleGravado
+			totalGravado=sueldo+comisiones+vacaciones+vacacionesPagadas+primaVacacionalGravada+incentivo+aguinaldoGravable+indemnizacionGravada+primaDeAntiguedadGravada+compensacion+ptuGravada+bonoDeProductividad+bonoPorDesempeno+primaDominicalGravada+gratificacion+permisoPorPaternidad+tiempoExtraDobleGravado+tiempoExtraTripleGravado+bono+bonoAntiguedad
 			totalExento=primaVacacionalExenta+aguinaldoExento+indemnizacionExenta+primaDeAntiguedadExenta+ptuExenta+primaDominicalExenta+tiempoExtraDobleExento  
 			total=totalGravado+totalExento
 			netoGravado=totalGravado-retardos
@@ -217,7 +234,8 @@ class CalculoAnualService {
 			return
 		
 		}
-		if(anual.empleado.baja && anual.empleado.baja<diciembre.fechaInicial){
+		//if(anual.empleado.baja && anual.empleado.baja<diciembre.fechaInicial){
+		if(anual.empleado.baja && anual.empleado.baja.fecha<=diciembre.fechaFinal){
 			anual.calculoAnual=false
 			return
 		}

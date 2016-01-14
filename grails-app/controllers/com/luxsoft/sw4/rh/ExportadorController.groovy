@@ -800,6 +800,53 @@ def reporteDeIncapacidades(){
 	[reportCommand:new PeriodoCommand()]
 }
 
+def incapacidadesSuaDet(){
+	[reportCommand:new PeriodoCommand()]
+}
+
+def generarIncapacidadesSuaDet(PeriodoCommand command){
+	def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		Empresa emp=Empresa.first()
+  def registroPatronal=emp.registroPatronal
+  def fechaIni=command.fechaInicial
+  def fechaFin=command.fechaFinal
+  def formato = new DecimalFormat("###")
+  def formatoDec = new DecimalFormat(".####")
+  SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy")
+  Periodo periodo=new Periodo(fechaIni,fechaFin)
+ 
+    def incapacidades=Incapacidad.findAll("from Incapacidad i where  i.fechaInicial between ? and ? "
+                                          ,[fechaIni,fechaFin]).each{calculo ->
+ 
+    
+    def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
+    def tipoMov="12"
+    def fechaI=df.format(calculo.fechaInicial)
+    def fechaF=df.format(calculo.fechaFinal)
+    def folioInc= calculo.referenciaImms.padLeft(8)
+    def diasInc= (calculo.fechaFinal-calculo.fechaInicial+1).toString().padLeft(3,"0")
+    def porcentajeInc=calculo.porcentaje?calculo.porcentaje.toString().padLeft(3,"0"):'000'
+    def ramaInc=calculo.tipo.clave
+    def tipoRiesgo=calculo.tipoRiesgo=='ACCIDENTE DE TRABAJO'?1:calculo.tipoRiesgo=='ACCIDENTE TRAYECTO'?2:calculo.tipoRiesgo=='ENFERMEDAD PROFESIONAL'?3:'0'
+    def secuela=calculo.secuela=='NINGUNA' ? 1 : calculo.secuela=='INCAPACIDAD TEMPORAL' ? 2 :calculo.secuela=='VALUACION INICIAL PROVISIONAL' ? 3 : calculo.secuela=='VALUACION INICIAL DEFINITIVA' ? 4 :calculo.secuela== 'DEFUNCION' ? 5 : calculo.secuela== 'RECAIDA' ? 6 : calculo.secuela=='VALUACION POST ALTA' ? 7 : '0'
+    def control= calculo.control=='UNICA' ? 1 :calculo.control=='INICIAL'? 2 : calculo.control=='SUBSECUENTE' ? 3 : calculo.control=='ALTA O ST-2' ? 4 : calculo.control== 'PRENATAL' ? 5 : calculo.control== 'ENLACE' ? 6 : calculo.control=='POSTNATAL' ? 7 : '0' 
+   
+   // println calculo.empleado.id+"-"+calculo.empleado.status+"--"+registroPatronal+numSeguridadSocial+tipoMov+fechaI+folioInc+diasInc+sdiOAp+"fin"
+    println registroPatronal+"-"+numSeguridadSocial+"-"+tipoMov+"-"+fechaI+"-"+folioInc+"-"+diasInc+"-"+porcentajeInc+"-"+ramaInc+"-"+tipoRiesgo+"-"+secuela+"-"+control+"-"+fechaF
+	append(registroPatronal+numSeguridadSocial+tipoMov+fechaI+folioInc+diasInc+porcentajeInc+ramaInc+tipoRiesgo+secuela+control+fechaF+"\r\n")
+
+  }
+
+  	}
+
+  	String name="Incapacidades"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+}
+
 def infonavitSua(){
 	[reportCommand:new PeriodoCommand()]
 }

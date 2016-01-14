@@ -20,6 +20,8 @@
 			<th>Var Dia</th>
 			<th>SDI Nvo</th>
 			<th>Estatus</th>
+			<th>Bono</th>
+			<th>Bono Antiguedad</th>
 			<%--
 			
 			
@@ -49,12 +51,14 @@
 				<td><g:formatNumber number="${row.varDia}" format="###.##"/></td>
 				<td class="bg-success"><g:formatNumber number="${row.sdiNvo}" format="###.##"/></td>
 				<td>${row.status}</td>
+				<td>${row.bono}</td>
+				<td>${row.bonoPorAntiguedad}</td>
 				<%--
 				
 				
 				
 				
 			--%></tr>
-		</g:each>
+			</g:each>
 	</tbody>
 </table>

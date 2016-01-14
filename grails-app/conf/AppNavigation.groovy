@@ -162,6 +162,7 @@ navigation={
 			reporteDeAusentismo()
 			incapacidadesSua()
 			reporteDeIncapacidades()
+			incapacidadesSuaDet()
 			infonavitSua()
 			reporteDeInfonavit()
 			dimm(titleText:'DIMM')

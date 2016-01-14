@@ -115,6 +115,9 @@ class CalculoAnual {
 	
 	BigDecimal aplicado=0.0
 	
+	BigDecimal bono = 0.0
+
+	BigDecimal bonoAntiguedad = 0.0
 		
 	Date dateCreated
 	
@@ -124,6 +127,8 @@ class CalculoAnual {
     static constraints = {
 		empleado unique:['ejercicio']
 		nominaPorEmpleado nullable:true
+		bono nullable:true
+		bonoAntiguedad nullable:true
     }
 
     static mapping = {

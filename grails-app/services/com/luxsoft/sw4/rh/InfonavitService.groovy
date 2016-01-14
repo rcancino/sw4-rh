@@ -5,6 +5,7 @@ package com.luxsoft.sw4.rh
 import grails.transaction.Transactional
 
 import com.luxsoft.sw4.*
+import com.luxsoft.sw4.rh.tablas.ZonaEconomica;
 
 @Transactional
 class InfonavitService {
@@ -16,7 +17,9 @@ class InfonavitService {
 		def diasDelBimestre=periodo.fechaFinal-periodo.fechaInicial+1
 		log.info "Periodo base $periodo  Dias del periodo: $diasDelBimestre"
 		
-		
+	//	def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+	def zona=ZonaEconomica.findByClave('A')
+
 		log.info 'Generando registro de InfonavitDet '
 		def	det=new InfonavitDet(
 				ejercicio:ejercicio,
@@ -31,7 +34,8 @@ class InfonavitService {
 		det.seguroDeVivienda=15.00
 		det.salarioDiarioIntegrado=infonavit.empleado.salario.salarioDiarioIntegrado
 		//det.salarioMinimoGeneral=67.29
-		det.salarioMinimoGeneral=70.10
+		//det.salarioMinimoGeneral=salarioMinimo  //********cambio
+		det.salarioMinimoGeneral=zona.salario
 		det.faltas=0
 		det.incapacidades=0
 		det.saldo=infonavit.ultimaDiferencia
@@ -73,6 +77,10 @@ class InfonavitService {
 		def diasDelBimestre=periodo.fechaFinal-periodo.fechaInicial+1
 		log.info "Periodo base $periodo  Dias del periodo: $diasDelBimestre"
 		def det=InfonavitDet.find{infonavit==infonavit && ejercicio==ejercicio && bimestre==bimestre}
+
+		//def salarioMinimo=ZonaEconomica.valores.find(){it.clave='A'}.salario
+		def zona=ZonaEconomica.findByClave('A')
+
 		if(det==null){
 			log.info 'Generando registro de InfonavitDet '
 			det=new InfonavitDet(
@@ -86,7 +94,7 @@ class InfonavitService {
 		det.cuota=infonavit.cuotaFija
 		det.seguroDeVivienda=15.00
 		det.salarioDiarioIntegrado=infonavit.empleado.salario.salarioDiarioIntegrado
-		det.salarioMinimoGeneral=70.1
+		det.salarioMinimoGeneral=zona.salario
 		det.faltas=0
 		det.incapacidades=0
 		det.saldo=infonavit.ultimaDiferencia

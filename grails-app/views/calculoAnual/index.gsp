@@ -129,36 +129,39 @@
 			         "dom":'t'
     				});
 
+				var table2=$("#calculoAnualDeduccionesGrid").dataTable({
+			        "paging":   false,
+			        "ordering": false,
+			        "info":     false,
+			         "dom":'t'
+    				});
 				
-				// var table2=$("#calculoAnualPercepcionesGrid").dataTable({
-			 //        // "paging":   false,
-			 //        // "ordering": false,
-			 //        // "info":     false,
-			 //        //  "dom":'t'
-    // 				});
-				// var table3=$("#calculoAnualDeduccionesGrid").dataTable({
-			 //        "paging":   false,
-			 //        "ordering": false,
-			 //        "info":     false,
-			 //         "dom":'t'
-    // 				});
+				var table3=$("#calculoAnualPercepcionesGrid").dataTable({
+			        "paging":   false,
+			        "ordering": false,
+			        "info":     false,
+			         "dom":'t'
+    				});
+
+				
+				
     				
     				$("#nombreField").keyup(function(){
       					table1.DataTable().column(0).search( $(this).val() ).draw();
-      					//table2.DataTable().column(0).search( $(this).val() ).draw();
-      					//table3.DataTable().column(0).search( $(this).val() ).draw();
+      					table2.DataTable().column(0).search( $(this).val() ).draw();
+      					table3.DataTable().column(0).search( $(this).val() ).draw();
 					});
 					
     				$("#ubicacionField").keyup(function(){
       					table1.DataTable().column(1).search( $(this).val() ).draw();
-      					//table2.DataTable().column(1).search( $(this).val() ).draw();
-      					//table3.DataTable().column(1).search( $(this).val() ).draw();
+      					table2.DataTable().column(1).search( $(this).val() ).draw();
+      					table3.DataTable().column(1).search( $(this).val() ).draw();
 					});
 					
 					$("#tipoField").keyup(function(){
       					table1.DataTable().column(2).search( $(this).val() ).draw();
-      					//table2.DataTable().column(2).search( $(this).val() ).draw();
-      					//table3.DataTable().column(2).search( $(this).val() ).draw();
+      					table2.DataTable().column(2).search( $(this).val() ).draw();
+      					table3.DataTable().column(2).search( $(this).val() ).draw();
 					});
 					
 			});

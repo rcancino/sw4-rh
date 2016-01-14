@@ -44,7 +44,7 @@ class ControlDeVacaciones {
     }
 	
 	def getTotalTomados(){
-		return diasTomados+diasPagados
+		return diasTomados
 	}
 
     String toString(){

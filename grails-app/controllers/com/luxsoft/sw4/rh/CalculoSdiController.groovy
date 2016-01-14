@@ -20,7 +20,7 @@ class CalculoSdiController {
 		//params.order='desc'
 		def ejercicio=session.ejercicio
 		def bimestre=session.bimestre
-		def list=CalculoSdi.findAll("from CalculoSdi c where c.ejercicio=? and c.bimestre=?",[ejercicio,bimestre],params)
+		def list=CalculoSdi.findAll("from CalculoSdi c where c.ejercicio=? and c.bimestre=? and tipo='CALCULO_SDI'",[ejercicio,bimestre],params)
 		[calculoSdiInstanceList:list]
 		
 	}
