@@ -34,7 +34,7 @@
 	</parameter>
 	<parameter name="PERIODICIDAD" isForPrompting="true" class="java.lang.String"/>
 	<parameter name="FPAGO" isForPrompting="true" class="java.lang.String"/>
-	<queryString><![CDATA[SELECT E.id,E.clave,x.numero_de_trabajador as numTrab,CONCAT(ifnull(E.apellido_paterno,'')," ",ifnull(E.apellido_materno,'')," ",E.nombres) AS nombre,date(E.alta) as alta,s.periodicidad,s.forma_de_pago
+	<queryString><![CDATA[SELECT E.id,E.clave,x.numero_de_trabajador as numTrab,CONCAT(ifnull(E.apellido_paterno,'')," ",ifnull(E.apellido_materno,'')," ",E.nombres) AS nombre,date(E.alta) as alta,s.periodicidad,s.forma_de_pago,x.tipo
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=x.ubicacion_id) AS ubicacion,(SELECT U.descripcion FROM puesto U WHERE U.ID=x.puesto_id) AS puesto,(SELECT U.descripcion FROM departamento U WHERE U.ID=x.departamento_id) AS depto
 FROM EMPLEADO E JOIN salario s ON(s.empleado_id=e.id) join perfil_de_empleado x on(x.empleado_id=e.id)
 where e.status <>'BAJA' and s.periodicidad like $P{PERIODICIDAD} and s.forma_de_pago like $P{FPAGO}
@@ -47,6 +47,7 @@ order by 6,7,8,2]]></queryString>
 	<field name="alta" class="java.sql.Date"/>
 	<field name="periodicidad" class="java.lang.String"/>
 	<field name="forma_de_pago" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
 	<field name="ubicacion" class="java.lang.String"/>
 	<field name="puesto" class="java.lang.String"/>
 	<field name="depto" class="java.lang.String"/>
@@ -293,7 +294,7 @@ order by 6,7,8,2]]></queryString>
 						mode="Opaque"
 						x="305"
 						y="1"
-						width="39"
+						width="29"
 						height="28"
 						forecolor="#000000"
 						key="staticText-44"
@@ -306,7 +307,7 @@ order by 6,7,8,2]]></queryString>
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[FPAGO]]></text>
+				<text><![CDATA[F.PAG]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -351,9 +352,9 @@ order by 6,7,8,2]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="344"
+						x="358"
 						y="1"
-						width="125"
+						width="118"
 						height="28"
 						forecolor="#000000"
 						key="staticText-47"
@@ -371,9 +372,9 @@ order by 6,7,8,2]]></queryString>
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="469"
+						x="476"
 						y="1"
-						width="111"
+						width="104"
 						height="28"
 						forecolor="#000000"
 						key="staticText-48"
@@ -387,6 +388,26 @@ order by 6,7,8,2]]></queryString>
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[DEPARTAMENTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="334"
+						y="1"
+						width="24"
+						height="28"
+						forecolor="#000000"
+						key="staticText-49"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[SIND]]></text>
 				</staticText>
 			</band>
 		</columnHeader>
@@ -447,7 +468,7 @@ order by 6,7,8,2]]></queryString>
 					<reportElement
 						x="305"
 						y="0"
-						width="39"
+						width="29"
 						height="11"
 						key="textField-8"/>
 					<box></box>
@@ -484,9 +505,9 @@ order by 6,7,8,2]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="344"
+						x="358"
 						y="0"
-						width="125"
+						width="118"
 						height="11"
 						key="textField-11"/>
 					<box></box>
@@ -497,9 +518,9 @@ order by 6,7,8,2]]></queryString>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="469"
+						x="476"
 						y="0"
-						width="111"
+						width="104"
 						height="11"
 						key="textField-12"/>
 					<box></box>
@@ -507,6 +528,19 @@ order by 6,7,8,2]]></queryString>
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{depto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="334"
+						y="0"
+						width="24"
+						height="11"
+						key="textField-18"/>
+					<box></box>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{tipo}.substring(0, 1 )]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>

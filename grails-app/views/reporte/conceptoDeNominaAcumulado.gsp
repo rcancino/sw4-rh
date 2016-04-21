@@ -2,12 +2,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="layout" content="reportes"/>
-<title>Vacaciones por ejercicio</title>
+<title>Concepto de Nomina Acumulados</title>
 </head>
 <body>
 
 	<content tag="reporteTitle">
-		Vacaciones por ejercicio
+		Concepto de Nomina Acumulados
 	</content>
 	
 	<content tag="reportForm">
@@ -18,8 +18,8 @@
         </g:hasErrors>
 		<div class="col-sm-8">
 		
-		<g:form action="vacacionesEjercicio" class="form-horizontal">
-			<g:hiddenField name="reportName" value="ControlDeVacaciones"/>
+		<g:form action="conceptoDeNominaAcumulado" class="form-horizontal">
+			<g:hiddenField name="reportName" value="ConceptosDeNominaAcum"/>
 			<fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">

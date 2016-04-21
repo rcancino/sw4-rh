@@ -86,8 +86,24 @@ class ModificacionSalarialController {
     
     @Transactional
     def delete(Long id){
+
         def modificacion=ModificacionSalarial.get(id)
+
+        def calculoSdi = modificacion.calculoSdi
+       
+        modificacion.calculoSdi = null
         modificacion.delete(flush:true)
+        
+        //def calculoSdi=CalculoSdi.get(modificacion.calculoSdi.id)
+        //def calculoSdi=modificacion.calculoSdi
+
+        if(calculoSdi){
+        	
+        	calculoSdi.refresh()
+        	println "Eliminando el calculo Sdi para:" + modificacion.empleado
+        	println "El calculo Sdi es:" +calculoSdi.id
+        	calculoSdi.delete(flush:true)
+        }
         flash.message="Modificacion salarial ${id} eliminada"
         redirect action:'index'
     }

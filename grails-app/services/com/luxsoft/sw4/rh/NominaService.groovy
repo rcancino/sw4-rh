@@ -557,13 +557,16 @@ class NominaService {
 			log.info 'Actualizando vacaciones detectada P024 para  '+ne.empleado+ ' Importe: '+neDet.total+ " NominaEmpleado: "+ne.id
 			def control=ControlDeVacaciones.find("from ControlDeVacaciones v where v.ejercicio=? and v.empleado=?"
 				,[ne.nomina.ejercicio.toLong(),ne.empleado])
-			def data=NominaPorEmpleadoDet.executeQuery(
+			if(control){
+				def data=NominaPorEmpleadoDet.executeQuery(
 				"select sum(d.importeExcento),sum(d.importeGravado) from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.concepto.clave=? and d.parent.cfdi!=null",
 				[ne.empleado,ne.nomina.ejercicio,neDet.concepto.clave])
 
 
-			control.acumuladoExcento=data.get(0)[0]?:0.0
-			control.acumuladoGravado=data.get(0)[1]?:0.0
+				control.acumuladoExcento=data.get(0)[0]?:0.0
+				control.acumuladoGravado=data.get(0)[1]?:0.0
+			}
+			
 		}
 	}
 	
@@ -585,7 +588,7 @@ class NominaService {
 	
 	def actualizarCalculoAnual(NominaPorEmpleado ne){
 
-		calculoAnualService.actualizarSaldos(ne.empleado,ne.nomina.ejercicio-1)
+		calculoAnualService.actualizarSaldos(ne)
 		/*
 		def neDet=ne.conceptos.find{it.concepto.clave=='P033'}
 		if(neDet){

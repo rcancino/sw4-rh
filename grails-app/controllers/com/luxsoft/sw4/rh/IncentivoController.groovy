@@ -125,6 +125,8 @@ class IncentivoController {
 		def ejercicio=session.ejercicioIncentivoMensual
 		def mes=Mes.findMesByNombre(params.mes)
 		try {
+
+			println "********************************"+ejercicio
 			incentivoService.generarIncentivosMensuales(ejercicio,mes)
 			flash.message="Incentivos mensuales generados exitosamente $mes"
 		}

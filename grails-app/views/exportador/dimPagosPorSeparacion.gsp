@@ -1,26 +1,25 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="layout" content="reportes"/>
-<title>Vacaciones por ejercicio</title>
+<meta name="layout" content="exportadores"/>
+<title>DIM Pagos Por Separacion</title>
 </head>
 <body>
 
 	<content tag="reporteTitle">
-		Vacaciones por ejercicio
+		Layout DIM Pagos Por Separacion
 	</content>
-	
 	<content tag="reportForm">
 		<g:hasErrors bean="${reportCommand}">
             <div class="alert alert-danger">
                 <g:renderErrors bean="${reportCommand}" as="list" />
             </div>
         </g:hasErrors>
-		<div class="col-sm-8">
+		<div class="col-sm-6">
 		
-		<g:form action="vacacionesEjercicio" class="form-horizontal">
-			<g:hiddenField name="reportName" value="ControlDeVacaciones"/>
-			<fieldset>
+		<g:form action="generarDimPagosPorSeparacion" class="form-horizontal">
+			<%--<g:hiddenField name="reportName" value="Aviso"/>
+			--%><fieldset>
 				<legend> Parámetros</legend>
 				<f:with bean="${reportCommand}">
 					<f:field property="ejercicio" input-class="form-control"/>

@@ -15,6 +15,7 @@
 			<th>Dias E</th>
 			<th>Faltas</th>
 			<th>Inc</th>
+			<th>PPE</th>
 			<th>Dias PTU</th>
 			<th>Asig</th>
 			<th>Monto Días</th>
@@ -36,7 +37,7 @@
 			<th>ISR Acred</th>
 			<th>Pago Bruto</th>
 			<th>Pensión</th>
-			<th>Otreas</th>
+			<th>Otras</th>
 			<th>Prestamo</th>
 			<th>Neto</th> 
 			<th>Nuevo</th>
@@ -66,6 +67,7 @@
 				<td>${formatNumber(number:row.diasDelEjercicio,format:'##')}</td>
 				<td>${formatNumber(number:row.faltas,format:'##')}</td>
 				<td>${formatNumber(number:row.incapacidades,format:'##')}</td>
+				<td>${formatNumber(number:row.permisosP,format:'##')}</td>
 				<td>${formatNumber(number:row.diasPtu,format:'##')}</td>
 				<td>
 					<g:if test="${!row.noAsignado}">

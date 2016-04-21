@@ -14,6 +14,10 @@ import com.luxsoft.sw4.*
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import org.apache.commons.lang.WordUtils
+import java.math.*
+import com.luxsoft.sw4.rh.tablas.TarifaIsr
+
+
 
 @Secured(['ROLE_ADMIN','RH_USER'])
 @Transactional(readOnly = true)
@@ -196,7 +200,7 @@ class ExportadorController {
 		  
 		  if(calculo.sdiInf!=0.0  && calculo.tipo== 'CALCULO_SDI' ){
 			  
-		  
+		   if(calculo.sdiInf!= calculo.sdiAnterior){
 			numeroDeMovs=numeroDeMovs+1
 			
 		  def numeroSeguridadSocial= SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
@@ -228,7 +232,7 @@ class ExportadorController {
 			  def registro= registroPatronal+numeroSeguridadSocial+apellidoPaterno+apellidoMaterno+nombres+salarioBase+filler+tipoTrabajador+tipoSalario+tipoJornada+fechaMov+unidadMedica+filler2+tipoMov+guia+claveTrab+filler3+curp+identificador
 			  append(registro+"\r\n","UTF8")
 			  
-		   
+		   }
 		  }		 
 		}	
 	  }	
@@ -584,6 +588,8 @@ def generarModificacionBimestralSua(EjercicioBimestreCommand command){
 	   
 			 
 			 if(calculo.sdiInf!=0.0  && calculo.tipo== 'CALCULO_SDI' ){
+
+			 if(calculo.sdiInf!= calculo.sdiAnterior){
 				 def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
 				 def tipoMov="07"
 				 def fechaMov= fecha_aplic  //df.format(calculo.fechaFin+1)
@@ -591,6 +597,7 @@ def generarModificacionBimestralSua(EjercicioBimestreCommand command){
 				 def diasInc= StringUtils.leftPad("",2)
 				 def sdiOAp=calculo.sdiInf.toString().replace('.','').padLeft(7,"0")
 				 append(registroPatronal+numSeguridadSocial+tipoMov+fechaMov+folioInc+diasInc+sdiOAp+"\r\n")
+				}
 			 }
 		  
 		 
@@ -789,12 +796,683 @@ def generarIncapacidadesSua(PeriodoCommand command){
 	
 }
 
-	def exportadorDim
 	
-	def dim(){
-		def ejercicio=session.ejercicio
-		exportadorDim.generarLayuout(ejercicio)
+def dim(){
+		[reportCommand:new EjercicioCommand()]
+}
+
+def generarDim(EjercicioCommand command){
+
+	println "Generando Layout DIM Sueldos y Salarios"
+
+		def temp = File.createTempFile('temp', '.txt')
+	
+temp.with {
+	def p="|"
+ 	Periodo periodo=new Periodo()
+	def ejercicio=2015
+    SimpleDateFormat df= new SimpleDateFormat("dd/MM/yyyy")
+    def formato = new DecimalFormat("#####")
+  
+	def registros=0
+	def empleados=CalculoAnual.findAll("from CalculoAnual c where c.ejercicio=?  ",[ejercicio]).each{calculo ->
+  
+  	def yearAlta=periodo.obtenerYear(calculo.empleado.alta)
+    def yearBaja
+  	def bajaFecha  
+  
+    def mesIni="01"
+    def mesFin="12"
+  
+    def baja =BajaDeEmpleado.findAllByEmpleado(calculo.empleado)
+   
+    if (baja){
+      bajaFecha=new Date().parse('yyyy-MM-dd', baja.fecha.toString().replace('[','').replace(' 00:00:00.0]',''))  
+      yearBaja=periodo.obtenerYear(bajaFecha)
+      }else{
+       yearBaja=ejercicio+1
+    }
+  
+ 
+    
+    if(yearAlta==ejercicio){
+     mesIni=(periodo.obtenerMes(calculo.empleado.alta)+1).toString().padLeft(2,"0") 
+    } 
+    
+  if(yearBaja==ejercicio){
+      	mesFin=(periodo.obtenerMes(bajaFecha)+1).toString().padLeft(2,"0") 
+      }
+ 
+    def rfc=calculo.empleado.rfc.padLeft(13," ") 
+    def curp=calculo.empleado.curp.padLeft(18," ")
+    
+    def apellidoPaterno=calculo.empleado.apellidoPaterno  ? calculo.empleado.apellidoPaterno.replace('Ñ','N') : calculo.empleado.apellidoMaterno.replace('Ñ','N') 
+    def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.replace('Ñ','N') : "" 
+    def nombres= calculo.empleado.nombres.replace('Ñ','N')?:""  
+    def areaGeo="01"
+    def calculoAnual="1"
+        
+          
+    def tarifaUtilizada="1"
+    def tarifaUtiAct="2"
+    def proporcionDeSubsApl=""
+    def sindicalizado= PerfilDeEmpleado.findByEmpleado(calculo.empleado).tipo =="SINDICALIZADO"?"1":"2" 
+    def asimiladosASal="0"
+    def claveEntidad="09"
+    def montoAportaciones=""
+    def aplicoMonto="0"
+    def montoAportacionesDed=""
+    def montoAportacionesDedPat=""
+      
+        //SELECCION DE TEMAS
+        
+    def pagosPorSeparacion="2"
+    def asimilados="2"
+    def pagosPatron="1"
+    
+        //SUELDOS
+        
+    def sueldosGra=0
+    def sueldosExc=0
+    def gratificacionAnualGra=0
+    def gratificacionAnualExc=0
+    def viaticosGra=0
+    def viaticosExc=0
+    def tiempExtraGra=0
+    def tiempoExtraExc=0
+    def primaVacGra=0
+    def primaVacExc=0
+    def primaDomGra=0
+    def primaDomExc=0
+    def ptuGra=0
+    def ptuExc=0
+    def gastosMedGra=0
+    def gastosMedExc=0
+    def fondoDeAhorroGra=0
+    def fondoDeAhorroExc=0
+    def cajaDeAhorroGra=0
+    def cajaDeAhorroExc=0
+    def valesDespensaGra=0
+    def valesDespensaExc=0
+    def gastosFuneralesGra=0
+    def gastosFuneralesExc=0
+    def contribucionesTrabGra=0
+    def contribucionesTrabExc=0
+    def premioPuntGra=0
+    def premioPuntExc=0
+    def primaSeguroVidaGra=0
+    def primaSeguroVidaExc=0
+    def gastosMedMayGra=0
+    def gastosMedMayExc=0
+    def valesRestGra=0
+    def valesRestExc=0
+    def valesGasolinaGra=0
+    def valesGasolinaExc=0
+    def valesRopaGra=0
+    def valesRopaExc=0
+    def ayudaRentaGra=0
+    def ayudaRentaExc=0
+    def ayudaArtEscGra=0
+    def ayudaArtEscExc=0
+    def ayudaAnteojosGra=0
+    def ayudaAnteojosExc=0
+    def ayudaTransporteGra=0
+    def ayudaTransporteExc=0
+    def cuotasSindicalesGra=0
+    def cuotasSindicalesExc=0
+    def subsIncapGra=0
+    def subsIncapExc=0
+    def becasGra=0
+    def becasExc=0
+    def pagosOtrosGra=0
+    def pagosOtrosExc=0
+    def OtrosIngreGra=0
+    def otrosIngreExc=0
+    def sumaIngreSalGra=0
+    def sumaIngreSalExc=0
+    def impuestoRet=0
+    def impuestoRetOtros=0
+    def saf=0
+    def safAnt=0
+    def sumaCreditoTrab=0
+    def credSalEntregado=0
+    def totalIngresosPrestPrevSocial=0
+    def ingresosExcPrestPrevSocial=0
+    def sumaSueldos=0
+    def impuestoLocalIngresos=0
+    def subsEmpleoTrab=0
+    
+    ///IMPUESTO SOBRE LA RENTA RESUMEN
+    
+    def aportacionesVoDed=0
+    def ISRTarifAnual=0
+    def subsidioAcreditable=0
+    def subsidioNoAcreditable=0
+    def impuestoSobreIngreAcu=0
+    def impuestoSobreIngreNoAcu=0
+    def impuestoLocalASueldos=0
+    def subsidioEmpleoEjercicio=0
+    
+  
+    
+   def empleadoIndemnizacion=NominaPorEmpleadoDet.executeQuery("select d.parent.empleado from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and finiquito is true"
+                                                             ,[calculo.empleado,ejercicio])
+      
+      	if(!empleadoIndemnizacion ){
+      	
+        		
+      
+    
+		    calculoAnual=calculo.calculoAnual?"1":"2"
+     
+     		sueldosGra=(calculo.sueldo+calculo.vacaciones+calculo.vacacionesPagadas+calculo.comisiones+calculo.permisoPorPaternidad-calculo.retardos).setScale(0, RoundingMode.HALF_EVEN)
+     		sueldosExc=0
+     		gratificacionAnualGra=calculo.aguinaldoGravable.setScale(0, RoundingMode.HALF_EVEN)
+     		gratificacionAnualExc=calculo.aguinaldoExento.setScale(0, RoundingMode.HALF_EVEN)
+     		viaticosGra=0
+     		viaticosExc=0
+     		tiempExtraGra=(calculo.tiempoExtraDobleGravado+calculo.tiempoExtraTripleGravado).setScale(0, RoundingMode.HALF_EVEN)
+     		tiempoExtraExc=calculo.tiempoExtraDobleExento.setScale(0, RoundingMode.HALF_EVEN)
+     		primaVacGra=calculo.primaVacacionalGravada.setScale(0, RoundingMode.HALF_EVEN)
+     		primaVacExc=calculo.primaVacacionalExenta.setScale(0, RoundingMode.HALF_EVEN)
+     		primaDomGra=calculo.primaDominicalGravada.setScale(0, RoundingMode.HALF_EVEN)
+     		primaDomExc=calculo.primaDominicalExenta.setScale(0, RoundingMode.HALF_EVEN)
+     		ptuGra=calculo.ptuGravada.setScale(0, RoundingMode.HALF_EVEN)
+     		ptuExc=calculo.ptuExenta.setScale(0, RoundingMode.HALF_EVEN)
+     		gastosMedGra=0
+     		gastosMedExc=0
+     		fondoDeAhorroGra=0
+     		fondoDeAhorroExc=0
+     		cajaDeAhorroGra=0
+     		cajaDeAhorroExc=0
+     		valesDespensaGra=0
+     		valesDespensaExc=0
+     		gastosFuneralesGra=0
+     		gastosFuneralesExc=0
+     		contribucionesTrabGra=0
+     		contribucionesTrabExc=0
+     		premioPuntGra=0
+     		premioPuntExc=0
+     		primaSeguroVidaGra=0
+     		primaSeguroVidaExc=0
+     		gastosMedMayGra=0
+     		gastosMedMayExc=0
+     		valesRestGra=0
+     		valesRestExc=0
+     		valesGasolinaGra=0
+     		valesGasolinaExc=0
+     		valesRopaGra=0
+     		valesRopaExc=0
+     		ayudaRentaGra=0
+     		ayudaRentaExc=0
+     		ayudaArtEscGra=0
+     		ayudaArtEscExc=0
+     		ayudaAnteojosGra=0
+     		ayudaAnteojosExc=0
+     		ayudaTransporteGra=0
+     		ayudaTransporteExc=0
+     		cuotasSindicalesGra=0
+     		cuotasSindicalesExc=0
+     		subsIncapGra=0
+     		subsIncapExc=0
+     		becasGra=0
+     		becasExc=0
+     		pagosOtrosGra=0
+     		pagosOtrosExc=0
+     		OtrosIngreGra=(calculo.incentivo+calculo.bonoDeProductividad+calculo.bonoPorDesempeno+calculo.compensacion+calculo.bono+calculo.bonoAntiguedad).setScale(0, RoundingMode.HALF_EVEN)
+    		otrosIngreExc=0
+     		sumaIngreSalGra=calculo.totalGravado.setScale(0, RoundingMode.HALF_EVEN)
+     		sumaIngreSalExc=calculo.totalExento.setScale(0, RoundingMode.HALF_EVEN)
+     		impuestoRet=calculo.ISR.setScale(0, RoundingMode.HALF_EVEN)
+     		impuestoRetOtros=0
+     		//saf=calculo.resultado.setScale(0, RoundingMode.HALF_EVEN)>0 ? calculo.resultado.setScale(0, RoundingMode.HALF_EVEN) :0
+     		saf=calculo.calculoAnual? calculo.resultado.setScale(0, RoundingMode.HALF_EVEN) :0
+  
+			def calculoAnt=CalculoAnual.findByEjercicioAndEmpleado(calculo.ejercicio-1,calculo.empleado)  
+  
+     		safAnt= 0 //calculoAnt? (calculoAnt.calculoAnual ? (calculoAnt.resultado-calculo.aplicado).setScale(0, RoundingMode.HALF_EVEN) : 0)  :0
+  
+     		sumaCreditoTrab=0
+     		credSalEntregado=0
+  
+     		totalIngresosPrestPrevSocial=0
+     		ingresosExcPrestPrevSocial=0
+  
+     		sumaSueldos=calculo.total.setScale(0, RoundingMode.HALF_EVEN)
+     		impuestoLocalIngresos=0
+    		subsEmpleoTrab=calculo.subsEmpPagado.setScale(0, RoundingMode.HALF_EVEN)
+    
+   			 ///IMPUESTO SOBRE LA RENTA RESUMEN
+    
+     		aportacionesVoDed=0
+    		ISRTarifAnual=calculo.calculoAnual?calculo.impuestoDelEjercicio.setScale(0, RoundingMode.HALF_EVEN):0
+  			subsidioAcreditable=0
+     		subsidioNoAcreditable=0
+     		impuestoSobreIngreAcu=0
+     		impuestoSobreIngreNoAcu=0
+     		impuestoLocalASueldos=0
+     		subsidioEmpleoEjercicio=calculo.subsEmpAplicado.setScale(0, RoundingMode.HALF_EVEN)
+      
+       
+    		def registro=mesIni+p+mesFin+p +rfc+p+curp+p+apellidoPaterno+p+apellidoMaterno+p+nombres+p+areaGeo+p+calculoAnual+p+tarifaUtilizada+p+tarifaUtiAct+p+proporcionDeSubsApl+p+sindicalizado+p+asimiladosASal+p+claveEntidad+
+      		p+p+p+p+p+p+p+p+p+p+p+
+       		montoAportaciones+p+aplicoMonto+p+montoAportacionesDed+p+montoAportacionesDedPat+p+pagosPorSeparacion+p+asimilados+p+pagosPatron+
+        	p+sueldosGra+p+sueldosExc+p+gratificacionAnualGra+p+gratificacionAnualExc+p+viaticosGra+p+viaticosExc+p+tiempExtraGra+p+tiempoExtraExc+p+
+        	primaVacGra+p+primaVacExc+p+primaDomGra+p+primaDomExc+p+ptuGra+p+ptuExc+p+gastosMedGra+p+gastosMedExc+p+fondoDeAhorroGra+p+
+        	fondoDeAhorroExc+p+cajaDeAhorroGra+p+cajaDeAhorroExc+p+valesDespensaGra+p+valesDespensaExc+p+gastosFuneralesGra+p+gastosFuneralesExc+p+
+        	contribucionesTrabGra+p+contribucionesTrabExc+p+premioPuntGra+p+premioPuntExc+p+primaSeguroVidaGra+p+primaSeguroVidaExc+p+gastosMedMayGra+p+
+        	gastosMedMayExc+p+valesRestGra+p+valesRestExc+p+valesGasolinaGra+p+valesGasolinaExc+p+valesRopaGra+p+valesRopaExc+p+ayudaRentaGra+p+
+        	ayudaRentaExc+p+ayudaArtEscGra+p+ayudaArtEscExc+p+ayudaAnteojosGra+p+ayudaAnteojosExc+p+ayudaTransporteGra+p+ayudaTransporteExc+p+
+        	cuotasSindicalesGra+p+cuotasSindicalesExc+p+subsIncapGra+p+subsIncapExc+p+becasGra+p+becasExc+p+pagosOtrosGra+p+ pagosOtrosExc+p+
+        	OtrosIngreGra+p+otrosIngreExc+p+sumaIngreSalGra+p+sumaIngreSalExc+p+impuestoRet+p+impuestoRetOtros+p+saf+p+safAnt+p+sumaCreditoTrab+p+
+       	 	credSalEntregado+p+totalIngresosPrestPrevSocial+p+ingresosExcPrestPrevSocial+p+sumaSueldos+p+impuestoLocalIngresos+p+subsEmpleoTrab+p+
+        	aportacionesVoDed+p+ISRTarifAnual+p+subsidioAcreditable+p+subsidioNoAcreditable+p+impuestoSobreIngreAcu+p+impuestoSobreIngreNoAcu+p+
+       	 	impuestoLocalASueldos+p+subsidioEmpleoEjercicio+p
+    
+   			append(registro+"\r\n","UTF8")
+    
+    
+  			}
+        
+  		}
+	 }
+
+	String name="DIM Sueldos"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+		
+}
+
+def dimPagosPorSeparacion(){
+		[reportCommand:new EjercicioCommand()]
+}
+
+
+def generarDimPagosPorSeparacion(){
+		println "Generando Layout DIM Sueldos y Salarios"
+
+		def temp = File.createTempFile('temp', '.txt')
+	
+	temp.with {
+		def p="|"
+ Periodo periodo=new Periodo()
+	def ejercicio=2015
+    SimpleDateFormat df= new SimpleDateFormat("dd/MM/yyyy")
+    def formato = new DecimalFormat("#####")
+  
+def registros=0
+def empleados=CalculoAnual.findAll("from CalculoAnual c where c.ejercicio=?  ",[ejercicio]).each{calculo ->
+  
+ 
+  
+  
+  
+  def yearAlta=periodo.obtenerYear(calculo.empleado.alta)
+    def yearBaja
+  	def bajaFecha  
+  
+    def mesIni="01"
+    def mesFin="12"
+  
+  	def rfc=calculo.empleado.rfc.padLeft(13," ") 
+    def curp=calculo.empleado.curp.padLeft(18," ")
+    
+    def apellidoPaterno=calculo.empleado.apellidoPaterno  ? calculo.empleado.apellidoPaterno.replace('Ñ','N') : calculo.empleado.apellidoMaterno.replace('Ñ','N') 
+    def apellidoMaterno=calculo.empleado.apellidoPaterno ? calculo.empleado.apellidoMaterno.replace('Ñ','N') : "" 
+    def nombres= calculo.empleado.nombres.replace('Ñ','N')?:"" 
+    def areaGeo="01"
+    def calculoAnual="1"
+        
+          
+    def tarifaUtilizada="1"
+    def tarifaUtiAct="2"
+    def proporcionDeSubsApl=""
+    def sindicalizado= PerfilDeEmpleado.findByEmpleado(calculo.empleado).tipo =="SINDICALIZADO"?"1":"2" 
+    def asimiladosASal="0"
+    def claveEntidad="09"
+    def montoAportaciones=""
+    def aplicoMonto="0"
+    def montoAportacionesDed=""
+    def montoAportacionesDedPat=""
+      
+        //SELECCION DE TEMAS
+        
+    def pagosPorSeparacion="1"
+    def asimilados="2"
+    def pagosPatron="1"
+  
+  
+   //SUELDOS
+        
+    def sueldosGra=0
+    def sueldosExc=0
+    def gratificacionAnualGra=0
+    def gratificacionAnualExc=0
+    def viaticosGra=0
+    def viaticosExc=0
+    def tiempExtraGra=0
+    def tiempoExtraExc=0
+    def primaVacGra=0
+    def primaVacExc=0
+    def primaDomGra=0
+    def primaDomExc=0
+    def ptuGra=0
+    def ptuExc=0
+    def gastosMedGra=0
+    def gastosMedExc=0
+    def fondoDeAhorroGra=0
+    def fondoDeAhorroExc=0
+    def cajaDeAhorroGra=0
+    def cajaDeAhorroExc=0
+    def valesDespensaGra=0
+    def valesDespensaExc=0
+    def gastosFuneralesGra=0
+    def gastosFuneralesExc=0
+    def contribucionesTrabGra=0
+    def contribucionesTrabExc=0
+    def premioPuntGra=0
+    def premioPuntExc=0
+    def primaSeguroVidaGra=0
+    def primaSeguroVidaExc=0
+    def gastosMedMayGra=0
+    def gastosMedMayExc=0
+    def valesRestGra=0
+    def valesRestExc=0
+    def valesGasolinaGra=0
+    def valesGasolinaExc=0
+    def valesRopaGra=0
+    def valesRopaExc=0
+    def ayudaRentaGra=0
+    def ayudaRentaExc=0
+    def ayudaArtEscGra=0
+    def ayudaArtEscExc=0
+    def ayudaAnteojosGra=0
+    def ayudaAnteojosExc=0
+    def ayudaTransporteGra=0
+    def ayudaTransporteExc=0
+    def cuotasSindicalesGra=0
+    def cuotasSindicalesExc=0
+    def subsIncapGra=0
+    def subsIncapExc=0
+    def becasGra=0
+    def becasExc=0
+    def pagosOtrosGra=0
+    def pagosOtrosExc=0
+    def otrosIngreGra=0
+    def otrosIngreExc=0
+    def sumaIngreSalGra=0
+    def sumaIngreSalExc=0
+    def impuestoRet=0
+    def impuestoRetOtros=0
+    def saf=0
+    def safAnt=0
+    def sumaCreditoTrab=0
+    def credSalEntregado=0
+    def totalIngresosPrestPrevSocial=0
+    def ingresosExcPrestPrevSocial=0
+    def sumaSueldos=0
+    def impuestoLocalIngresos=0
+    def subsEmpleoTrab=0
+  
+  //INDEMNIZACIONES
+      		//NO
+     def ingresosTotPAgParc=0
+     def montoDiarioJubi=0
+     def noPagoUnicoJubi=0
+     def totalPagoUnaExhib=0
+     def numeroDias=0
+     def ingresosExeNo=0
+     def ingresosGravNo=0
+     def ingresosAcum=0
+     def ingresosNoAcum=0
+     def inpuestoRetenido=0
+      
+      		//SI
+                                                                      
+     def totalPagOtrosSep=0
+     def aosDeServicio=0
+     def ingresosExe=0
+     def ingresosGrav=0
+     def ingresosAcuUltimoSueldoMen=0
+     def impuestoCorrespUltSueldoMen=0
+     def ingresosNoAcumulables=0
+     def impuestoRetenido=0
+  
+  
+  
+  
+   	
+ 	 
+    def baja =BajaDeEmpleado.findAllByEmpleado(calculo.empleado)
+  if(baja){
+  	bajaFecha=new Date().parse('yyyy-MM-dd', baja.fecha.toString().replace('[','').replace(' 00:00:00.0]','')) 
+   	
+    
+    
+      def nominaIndemnizacion=NominaPorEmpleadoDet.executeQuery("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.parent.nomina.ejercicio=? and d.parent.finiquito is true"
+                                                                ,[calculo.empleado,ejercicio]).each{ nominaDet ->
+       
+        
+        if(nominaDet.concepto.id==40 || nominaDet.concepto.id==38 ){
+      		
+            totalPagOtrosSep= (totalPagOtrosSep+nominaDet.importeGravado+nominaDet.importeExcento).setScale(0, RoundingMode.HALF_EVEN)
+          	ingresosExe=(ingresosExe+nominaDet.importeExcento).setScale(0, RoundingMode.HALF_EVEN)
+          	ingresosGrav=(ingresosGrav+nominaDet.importeGravado).setScale(0, RoundingMode.HALF_EVEN)
+          	
+          
+        }
+        
+        
+      }
+      
+      if(nominaIndemnizacion ){
+      	
+        println "Generando Layout para "+ calculo.empleado
+      
+       	mesFin=(periodo.obtenerMes(bajaFecha)+1).toString().padLeft(2,"0") 
+      
+      //INDEMNIZACIONES
+      		//NO
+      ingresosTotPAgParc=0
+      montoDiarioJubi=0
+      noPagoUnicoJubi=0
+      totalPagoUnaExhib=0
+      numeroDias=0
+      ingresosExeNo=0
+      ingresosGravNo=0
+      ingresosAcum=0
+      ingresosNoAcum=0
+      inpuestoRetenido=0
+      
+      		//SI
+        
+        
+                                                                                        
+      
+        
+      aosDeServicio=((bajaFecha-calculo.empleado.alta)/365).setScale(0, RoundingMode.HALF_EVEN)
+      
+      
+       ingresosAcuUltimoSueldoMen= (calculo.salario*30).setScale(0, RoundingMode.HALF_EVEN)
+        
+        
+        
+       def tarifa=TarifaIsr.findAll("from TarifaIsr t where  t.limiteInferior < ? and t.limiteSuperior >= ? and t.ejercicio=?  ",[ingresosAcuUltimoSueldoMen,ingresosAcuUltimoSueldoMen,ejercicio])
+        
+        if(tarifa){
+      		impuestoCorrespUltSueldoMen = ingresosAcuUltimoSueldoMen-tarifa.limiteInferior
+          	impuestoCorrespUltSueldoMen*= tarifa.porcentaje
+          	impuestoCorrespUltSueldoMen/=100
+          	impuestoCorrespUltSueldoMen+=tarifa.cuotaFija
+            impuestoCorrespUltSueldoMen=impuestoCorrespUltSueldoMen.setScale(0,RoundingMode.HALF_EVEN)
+        }
+        
+        
+     
+          
+        
+      
+        
+      ingresosNoAcumulables=(ingresosGrav-ingresosAcuUltimoSueldoMen)>0? (ingresosGrav-ingresosAcuUltimoSueldoMen).setScale(0, RoundingMode.HALF_EVEN) :0 
+        
+      
+        
+        def tarifaIng=TarifaIsr.findAll("from TarifaIsr t where  t.limiteInferior < ? and t.limiteSuperior >= ? and t.ejercicio=?  ",[(BigDecimal)ingresosGrav,(BigDecimal)ingresosGrav,ejercicio])
+        
+        if(tarifaIng){
+      		impuestoRetenido = ingresosGrav-tarifa.limiteInferior
+          	impuestoRetenido*= tarifa.porcentaje
+          	impuestoRetenido/=100
+          	impuestoRetenido+=tarifa.cuotaFija
+            impuestoRetenido=impuestoRetenido.setScale(0,RoundingMode.HALF_EVEN)
+        }
+      
+    
+    
+      //SUELDOS
+      
+      calculoAnual=calculo.calculoAnual?"1":"2"
+     
+     sueldosGra=(calculo.sueldo+calculo.vacaciones+calculo.vacacionesPagadas+calculo.comisiones+calculo.permisoPorPaternidad-calculo.retardos).setScale(0, RoundingMode.HALF_EVEN)
+     sueldosExc=0
+     gratificacionAnualGra=calculo.aguinaldoGravable.setScale(0, RoundingMode.HALF_EVEN)
+     gratificacionAnualExc=calculo.aguinaldoExento.setScale(0, RoundingMode.HALF_EVEN)
+     viaticosGra=0
+     viaticosExc=0
+     tiempExtraGra=(calculo.tiempoExtraDobleGravado+calculo.tiempoExtraTripleGravado).setScale(0, RoundingMode.HALF_EVEN)
+     tiempoExtraExc=calculo.tiempoExtraDobleExento.setScale(0, RoundingMode.HALF_EVEN)
+     primaVacGra=calculo.primaVacacionalGravada.setScale(0, RoundingMode.HALF_EVEN)
+     primaVacExc=calculo.primaVacacionalExenta.setScale(0, RoundingMode.HALF_EVEN)
+     primaDomGra=calculo.primaDominicalGravada.setScale(0, RoundingMode.HALF_EVEN)
+     primaDomExc=calculo.primaDominicalExenta.setScale(0, RoundingMode.HALF_EVEN)
+     ptuGra=calculo.ptuGravada.setScale(0, RoundingMode.HALF_EVEN)
+     ptuExc=calculo.ptuExenta.setScale(0, RoundingMode.HALF_EVEN)
+     gastosMedGra=0
+     gastosMedExc=0
+     fondoDeAhorroGra=0
+     fondoDeAhorroExc=0
+     cajaDeAhorroGra=0
+     cajaDeAhorroExc=0
+     valesDespensaGra=0
+     valesDespensaExc=0
+     gastosFuneralesGra=0
+     gastosFuneralesExc=0
+     contribucionesTrabGra=0
+     contribucionesTrabExc=0
+     premioPuntGra=0
+     premioPuntExc=0
+     primaSeguroVidaGra=0
+     primaSeguroVidaExc=0
+     gastosMedMayGra=0
+     gastosMedMayExc=0
+     valesRestGra=0
+     valesRestExc=0
+     valesGasolinaGra=0
+     valesGasolinaExc=0
+     valesRopaGra=0
+     valesRopaExc=0
+     ayudaRentaGra=0
+     ayudaRentaExc=0
+     ayudaArtEscGra=0
+     ayudaArtEscExc=0
+     ayudaAnteojosGra=0
+     ayudaAnteojosExc=0
+     ayudaTransporteGra=0
+     ayudaTransporteExc=0
+     cuotasSindicalesGra=0
+     cuotasSindicalesExc=0
+     subsIncapGra=0
+     subsIncapExc=0
+     becasGra=0
+     becasExc=0
+     pagosOtrosGra=0
+     pagosOtrosExc=0
+     otrosIngreGra=(calculo.incentivo+calculo.bonoDeProductividad+calculo.bonoPorDesempeno+calculo.compensacion+calculo.bono+calculo.bonoAntiguedad).setScale(0, RoundingMode.HALF_EVEN)
+     otrosIngreExc=0
+     sumaIngreSalGra=calculo.totalGravado.setScale(0, RoundingMode.HALF_EVEN)
+     sumaIngreSalExc=calculo.totalExento.setScale(0, RoundingMode.HALF_EVEN)
+     /*Se resta ISR de bajas de ISR de Sueldo de bajas*/
+     impuestoRet=(calculo.ISR.setScale(0, RoundingMode.HALF_EVEN))-impuestoRetenido
+     impuestoRetOtros=0
+     //saf=calculo.resultado.setScale(0, RoundingMode.HALF_EVEN)>0 ? calculo.resultado.setScale(0, RoundingMode.HALF_EVEN) :0
+     saf=0
+  
+	def calculoAnt=CalculoAnual.findByEjercicioAndEmpleado(calculo.ejercicio-1,calculo.empleado)  
+  
+     safAnt= 0 //calculoAnt? (calculoAnt.calculoAnual ? (calculoAnt.resultado-calculo.aplicado).setScale(0, RoundingMode.HALF_EVEN) : 0)  :0
+  
+     sumaCreditoTrab=0
+     credSalEntregado=0
+  
+     totalIngresosPrestPrevSocial=0
+     ingresosExcPrestPrevSocial=0
+  
+     sumaSueldos=calculo.total.setScale(0, RoundingMode.HALF_EVEN)
+     impuestoLocalIngresos=0
+     subsEmpleoTrab=calculo.subsEmpPagado.setScale(0, RoundingMode.HALF_EVEN)
+      
+      
+      
+      
+      
+      
+     ///IMPUESTO SOBRE LA RENTA RESUMEN
+    
+     def aportacionesVoDed=0
+     def ISRTarifAnual=calculo.calculoAnual?calculo.impuestoDelEjercicio.setScale(0, RoundingMode.HALF_EVEN):0
+  	 def subsidioAcreditable=0
+     def subsidioNoAcreditable=0
+     def impuestoSobreIngreAcu=0
+     def impuestoSobreIngreNoAcu=0
+     def impuestoLocalASueldos=0
+     def subsidioEmpleoEjercicio=calculo.subsEmpAplicado.setScale(0, RoundingMode.HALF_EVEN)
+       
+       
+     def registro=mesIni+p+mesFin+p +rfc+p+curp+p+apellidoPaterno+p+apellidoMaterno+p+nombres+p+areaGeo+p+calculoAnual+p+tarifaUtilizada+p+tarifaUtiAct+p+proporcionDeSubsApl+p+sindicalizado+p+asimiladosASal+p+claveEntidad+
+       p+p+p+p+p+p+p+p+p+p+p+
+       montoAportaciones+p+aplicoMonto+p+montoAportacionesDed+p+montoAportacionesDedPat+p+pagosPorSeparacion+p+asimilados+p+pagosPatron+p+
+       //INDEMNIZACIONES
+       ingresosTotPAgParc+p+montoDiarioJubi+p+noPagoUnicoJubi+p+totalPagoUnaExhib+p+numeroDias+p+ingresosExeNo+p+ingresosGravNo+p+ingresosAcum+p+
+       ingresosNoAcum+p+inpuestoRetenido+p+totalPagOtrosSep+p+aosDeServicio+p+ingresosExe+p+ingresosGrav+p+ingresosAcuUltimoSueldoMen+p+impuestoCorrespUltSueldoMen+p+ingresosNoAcumulables+p+
+       impuestoRetenido+p+
+       //SUELDOS
+       sueldosGra+p+sueldosExc+p+gratificacionAnualGra+p+gratificacionAnualExc+p+viaticosGra+p+viaticosExc+p+tiempExtraGra+p+tiempoExtraExc+p+
+        primaVacGra+p+primaVacExc+p+primaDomGra+p+primaDomExc+p+ptuGra+p+ptuExc+p+gastosMedGra+p+gastosMedExc+p+fondoDeAhorroGra+p+
+        fondoDeAhorroExc+p+cajaDeAhorroGra+p+cajaDeAhorroExc+p+valesDespensaGra+p+valesDespensaExc+p+gastosFuneralesGra+p+gastosFuneralesExc+p+
+        contribucionesTrabGra+p+contribucionesTrabExc+p+premioPuntGra+p+premioPuntExc+p+primaSeguroVidaGra+p+primaSeguroVidaExc+p+gastosMedMayGra+p+
+        gastosMedMayExc+p+valesRestGra+p+valesRestExc+p+valesGasolinaGra+p+valesGasolinaExc+p+valesRopaGra+p+valesRopaExc+p+ayudaRentaGra+p+
+        ayudaRentaExc+p+ayudaArtEscGra+p+ayudaArtEscExc+p+ayudaAnteojosGra+p+ayudaAnteojosExc+p+ayudaTransporteGra+p+ayudaTransporteExc+p+
+        cuotasSindicalesGra+p+cuotasSindicalesExc+p+subsIncapGra+p+subsIncapExc+p+becasGra+p+becasExc+p+pagosOtrosGra+p+ pagosOtrosExc+p+
+        otrosIngreGra+p+otrosIngreExc+p+sumaIngreSalGra+p+sumaIngreSalExc+p+impuestoRet+p+impuestoRetOtros+p+saf+p+safAnt+p+sumaCreditoTrab+p+
+        credSalEntregado+p+totalIngresosPrestPrevSocial+p+ingresosExcPrestPrevSocial+p+sumaSueldos+p+impuestoLocalIngresos+p+subsEmpleoTrab+p+
+       //IMPUESTO
+       aportacionesVoDed+p+ISRTarifAnual+p+subsidioAcreditable+p+subsidioNoAcreditable+p+impuestoSobreIngreAcu+p+impuestoSobreIngreNoAcu+p+
+       impuestoLocalASueldos+p+subsidioEmpleoEjercicio+p
+       
+    
+
+      
+    registros=registros+1
+    
+    
+   append(registro+"\r\n","UTF8")
+     
+     }
+    
+   
+  }
+   
+  	
+ 
+  }
 	}
+	String name="DIM Pagos Por Separacion"+new Date().format("dd_MM_yyyy")+".txt"
+	response.setContentType("application/octet-stream")
+	response.setHeader("Content-disposition", "attachment; filename=\"$name\"")
+	response.outputStream << temp.newInputStream()
+}
+
 
 def reporteDeIncapacidades(){
 	[reportCommand:new PeriodoCommand()]

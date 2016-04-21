@@ -51,6 +51,8 @@ class NominaPorEmpleado {
 	
 	Date lastUpdated
 
+	Boolean finiquito=false
+
     static constraints = {
     	comentario nullable:true,maxSize:200
 		antiguedadEnSemanas nullable:false,minSize:1

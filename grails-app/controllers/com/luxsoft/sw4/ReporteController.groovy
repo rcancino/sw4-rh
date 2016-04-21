@@ -326,6 +326,45 @@ class ReporteController {
 			,fileName:repParams.reportName)
 	}
 
+
+	def conceptoDeNominaAcumulado(EjercicioCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new EjercicioCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecutar reporte'
+			render view:'conceptoDeNominaAcumulado',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['EJERCICIO']=command.ejercicio 
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:command.ejercicio+'_'+repParams.reportName)
+	}
+
+	def programacionDeVacaciones(EjercicioCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new EjercicioCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecutar reporte'
+			render view:'programacionDeVacaciones',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['EJERCICIO']=command.ejercicio 
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:command.ejercicio+'_'+repParams.reportName)
+	}
+
+	
+
 	def nomina(ReporteDeNominaCommand command){
 		def repParams=[:]
 		repParams['TIPO']=command.tipo

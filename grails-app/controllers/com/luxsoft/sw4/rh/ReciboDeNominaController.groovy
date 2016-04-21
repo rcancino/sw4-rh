@@ -312,8 +312,8 @@ class ReciboDeNominaController {
 				  		diasTrabajados=nominaPorEmpleado.diasTrabajados+nominaPorEmpleado.vacaciones
 				  		faltas=nominaPorEmpleado.diasDelPeriodo-nominaPorEmpleado.diasTrabajados-nominaPorEmpleado.vacaciones
 					}else{
-					  diasTrabajados=nominaPorEmpleado.diasTrabajados-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
-				 	  faltas=(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+					  diasTrabajados=nominaPorEmpleado.diasTrabajados //-(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
+				 	  faltas= nominaPorEmpleado.faltas+nominaPorEmpleado.fraccionDescanso+nominaPorEmpleado.incapacidades //(nominaPorEmpleado.asistencia.faltasManuales+nominaPorEmpleado.incapacidades)
 			   	    }
 			    }
 			}		

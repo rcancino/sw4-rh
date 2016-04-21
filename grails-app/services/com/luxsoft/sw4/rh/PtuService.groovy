@@ -7,12 +7,14 @@ import com.luxsoft.sw4.rh.imss.*
 import com.luxsoft.sw4.rh.tablas.SubsidioEmpleo
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
+import groovy.sql.Sql
 
 import java.math.RoundingMode
 
 @Transactional
 class PtuService {
 	
+    def dataSource
 
 	def save(Ptu ptu){
         ptu?.partidas?.clear()
@@ -21,6 +23,9 @@ class PtuService {
         	def det=actualizarPercepciones(new PtuDet(empleado:it,noAsignado:false),ptu.ejercicio)
         	ptu.addToPartidas(det)
         }
+        
+        buscarFaltasIncapacidades ptu
+        buscarPermisop ptu
         ptu.save failOnError:true
         recalcular ptu
         return ptu
@@ -31,9 +36,66 @@ class PtuService {
             .executeQuery("select distinct n.empleado from NominaPorEmpleado n where n.nomina.ejercicio=?",ejercicio)
         return list
 	}
+
+    def buscarFaltasIncapacidades(Ptu ptu){
+               ptu.partidas.each{ptuDet ->
+                    buscarFaltasIncapacidades(ptuDet,ptu.ejercicio)
+               }  
+
+
+    }
+
+    def buscarFaltasIncapacidades(PtuDet ptuDet,def ejercicio){
+
+        def ausentismos=NominaPorEmpleado
+            .executeQuery(
+                "from NominaPorEmpleado n where n.nomina.ejercicio=? "
+                +" and n.empleado=? "
+                ,[ejercicio,ptuDet.empleado])
+            ptuDet.faltas=ausentismos.sum(0.0){it.faltas}
+//            ptuDet.incapacidades=ausentismos.sum(0.0){it.incapacidades}
+
+             Sql sql =new Sql(dataSource) 
+
+            
+             sql.eachRow("""SELECT ifnull(sum(CASE    WHEN YEAR(I.FECHA_INICIAL)=YEAR(I.FECHA_FINAL) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0)
+                        WHEN YEAR(I.FECHA_INICIAL)=? THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,DATE(CONCAT(YEAR(I.FECHA_INICIAL),'-12-31')),I.fecha_inicial)/60)/24)+1),0)
+                        WHEN YEAR(I.FECHA_INICIAL)<YEAR(I.FECHA_FINAL) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,DATE(CONCAT(YEAR(I.FECHA_FINAL),'-01-01')))/60)/24)+1),0)
+                        ELSE ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0) END),0) AS dias
+                        FROM incapacidad i where (year(i.fecha_inicial)=? or year(i.fecha_final)=?) and i.empleado_id=? and (i.tipo_id=2 or (i.comentario like 'TRAYECTO%' AND i.tipo_id=1))"""
+                        ,[ejercicio,ejercicio,ejercicio,ptuDet.empleado.id]){row ->
+                               ptuDet.incapacidades=row.dias
+                        }
+
+            
+
+    }
+  
+
+    def buscarPermisop(Ptu ptu){
+
+        println 'Buscando Permisos P'
+        Sql sql=new Sql(dataSource)
+        ptu.partidas.each{ptuDet ->
+            sql.eachRow("""SELECT ifnull(sum(CASE    WHEN YEAR(I.FECHA_INICIAL)=YEAR(I.FECHA_FINAL) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0)
+                        WHEN YEAR(I.FECHA_INICIAL)=? THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,DATE(CONCAT(YEAR(I.FECHA_INICIAL),'-12-31')),I.fecha_inicial)/60)/24)+1),0)
+                        WHEN YEAR(I.FECHA_INICIAL)<YEAR(I.FECHA_FINAL) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,DATE(CONCAT(YEAR(I.FECHA_FINAL),'-01-01')))/60)/24)+1),0)
+                        ELSE ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0) END),0) AS dias
+                        FROM incidencia i where tipo='PERMISO_P' and (year(i.fecha_inicial)=? or year(i.fecha_final)=?) and i.empleado_id=?"""
+                        ,[ptu.ejercicio,ptu.ejercicio,ptu.ejercicio,ptuDet.empleado.id]){row->
+
+
+                            ptuDet.permisosP=row.dias
+            }
+
+        }
+
+    }
     
 
     def actualizarPercepciones(PtuDet ptuDet,def ejercicio){
+
+      
     	
     	def SALARIO='P001'
 		def VACACIONES='P025'
@@ -51,6 +113,8 @@ class PtuService {
     	ptuDet.vacaciones=movimientos.sum(0.0){it.concepto.clave==VACACIONES?it.getTotal():0.0}
     	ptuDet.comisiones=movimientos.sum(0.0){it.concepto.clave==COMISION?it.getTotal():0.0}
     	ptuDet.retardos=movimientos.sum(0.0){it.concepto.clave==RETARDOS?it.getTotal():0.0}
+        //Fix Falta e incapav
+
         if(ptuDet.empleado.id==209){
             ptuDet.retardos-=72.86
         }
@@ -63,6 +127,9 @@ class PtuService {
     }
 
     def recalcular(Ptu ptu){
+
+        
+
         def tope=ptu.getSalarioTope()
         ptu.partidas.each{
             it.topeAnual=it.total>tope?tope:it.total

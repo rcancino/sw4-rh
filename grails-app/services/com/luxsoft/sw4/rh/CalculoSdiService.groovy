@@ -4,6 +4,7 @@ import grails.transaction.Transactional
 import groovy.sql.Sql
 import com.luxsoft.sw4.Periodo
 import com.luxsoft.sw4.rh.tablas.ZonaEconomica;
+import com.luxsoft.sw4.Empresa
 
 @Transactional
 class CalculoSdiService {
@@ -40,9 +41,17 @@ class CalculoSdiService {
 		def zona=ZonaEconomica.findByClave('A')
 		
 		//log.info "Calculo SDI para $m.empleado $ejercicio  bimestre $bimestre tipo $tipo ${inicio.format('dd/MM/yyyy')} a ${fin.format('dd/MM/yyyy')}"
-		
-		def query=sqlPorBimestre
-		.replaceAll('@FECHA_INI'.toLowerCase(),inicio.format('yyyy/MM/dd'))
+
+		def query=sqlPorEmpleado
+
+		if(m.empleado.alta< fin){
+ 			
+ 			  query=sqlPorBimestre
+
+			}
+
+
+		query=query.replaceAll('@FECHA_INI'.toLowerCase(),inicio.format('yyyy/MM/dd'))
 		.replaceAll('@FECHA_FIN'.toLowerCase(),fin.format('yyyy/MM/dd'))
 		.replaceAll('@FECHA_ULT_MODIF'.toLowerCase(),m.fecha.format('yyyy/MM/dd'))
 		.replaceAll('@TIPO'.toLowerCase()," s.periodicidad=\'SEMANAL\'")
@@ -51,7 +60,7 @@ class CalculoSdiService {
 		Sql sql=new Sql(dataSource)
 		sql.eachRow(query,[m.empleado.id]){ row->
 			def empleado=m.empleado
-
+				
 			//def found=CalculoSdi.findByEmpleadoAndEjercicioAndBimestreAndTipo(empleado,ejercicio,bimestre,m.tipo)
 			//if(!found){
 			def	found=new CalculoSdi(
@@ -63,6 +72,9 @@ class CalculoSdiService {
 					fechaFin:fin
 					)//.save flush:true
 			//}
+
+
+
 			found.sdiAnterior=empleado.salario.salarioDiarioIntegrado
 			found.sdbAnterior=empleado.salario.salarioDiario
 			found.sdb=m.salarioNuevo
@@ -74,6 +86,8 @@ class CalculoSdiService {
 			found.factor=row.FACTOR
 			found.sdiF=found.sdb*found.factor
 			found.diasLabBim=row.DIAS_LAB_BIM
+
+			
 			
 			found.compensacion=0.0
 			found.incentivo=0.0
@@ -119,7 +133,9 @@ class CalculoSdiService {
 			}else{
 				found.sdiInf=found.sdiNvo
 			}
-			if(empleado.alta>inicio){
+			if(empleado.alta>fin){
+				found.diasBim=0
+			}else if(empleado.alta>inicio){
 				found.diasBim=fin-empleado.alta+1
 			}else{
 				found.diasBim=fin-inicio+1
@@ -134,13 +150,15 @@ class CalculoSdiService {
 			m.save failOnError:true
 		}
 
+		
+
     }
 
 
     private actualizarVariables(CalculoSdi sdi){
     	
     	def partidas=NominaPorEmpleadoDet
-    	.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.concepto.id in(19,22,24,41,42,44,49,50) and d.parent.nomina.ejercicio=? and d.parent.nomina.calendarioDet.bimestre=?"
+    	.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=? and d.concepto.id in(19,22,24,41,42,44,49,50,43) and d.parent.nomina.ejercicio=? and d.parent.nomina.calendarioDet.bimestre=?"
     			 ,[sdi.empleado,sdi.ejercicio,sdi.bimestre])
     		
     	sdi.compensacion=0.0
@@ -151,6 +169,8 @@ class CalculoSdiService {
     	sdi.comisiones=0.0
     	sdi.primaDom=0.0
     	sdi.vacacionesP=0.0
+
+    	Empresa emp=Empresa.first()
     
     	partidas.each{it->
 
@@ -233,5 +253,26 @@ select x.id,x.clave,x.alta
 		where x.id=? and s.periodicidad='@periodo' and date(n.periodo_fecha_inicial)>='@fecha_ini' and date(n.periodo_fecha_final)<='@fecha_fin'  and (b.id is null or ( x.alta>date(b.fecha) and x.status<>'baja') )
 		group by x.id
 
+"""
+
+String sqlPorEmpleado="""
+		select x.id,x.clave,x.alta
+		,(select max(f.vac_dias) from factor_de_integracion f 	where round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta ) as vac_dias	
+		,(select max(f.vac_prima) from factor_de_integracion f where round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta ) as vac_prima	
+		,(select max(case 	when x.id in (245,244) then (15+1) 		
+							when x.id in(274,273) then f.cob_dias when  @tipo then f.sem_dias	else f.qna_dias end	) 
+			from factor_de_integracion f 	where f.tipo=(case when month('@fecha_ult_modif')=12 then 2  when year(x.alta)=year('@fecha_ult_modif') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_ult_modif') then 0 else 2 end) and
+			round(-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24,0)+1 between f.dias_de and f.dias_hasta 	) as agndo_dias
+		,(select max(case 	when x.id in (245,244) then 1+round((((f.vac_dias*f.vac_prima)+(15+1))/366),4) 
+							when x.id in(274,273) then f.cob_factor when  @tipo then f.sem_factor else f.qna_factor end) 		
+			from factor_de_integracion f where f.tipo=(case when month('@fecha_ult_modif')=12 then 2  when year(x.alta)=year('@fecha_ult_modif') and month(x.alta)>=3 then 1 when year(x.alta)=year('@fecha_ult_modif') then 0 else 2 end) and 	
+			round((-(timestampdiff(minute,'@fecha_ult_modif',x.alta)/60)/24),0)+1 between f.dias_de and f.dias_hasta ) as factor
+		,0 as dias_lab_bim , 0 as faltas, 0 as incapacidades
+		from empleado x
+		join salario s on(s.empleado_id=x.id)
+		join perfil_de_empleado p on(p.empleado_id=x.id)
+		left join baja_de_empleado b on(b.empleado_id=x.id)
+		where x.id=? 
+		group by x.id
 """
 }

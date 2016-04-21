@@ -105,7 +105,10 @@ class NominaController {
 				return
 			}else{
 				def ne=nominaPorEmpleadoService.actualizarNominaPorEmpleado(it.id)
-				nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
+				//if(!ne.cfdi){
+					nominaPorEmpleadoService.depurarNominaPorEmpleado(ne.id)
+				//	}else{ println "La Nomina Por Empleado ya fue timbrada"}
+				
 			}
 		}
 		nominaService.depurar(id)

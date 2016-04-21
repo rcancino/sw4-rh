@@ -57,7 +57,10 @@ class NominaPorEmpleadoService {
 	
 	@Transactional
 	def actualizarNominaPorEmpleado(Long id) {
+
 		NominaPorEmpleado ne=NominaPorEmpleado.get(id)
+
+		
 		log.info 'Actualizando nomina '+ne.empleado
 		ne.conceptos.clear()
 		ne.save flush:true
@@ -65,6 +68,7 @@ class NominaPorEmpleadoService {
 		NominaPorEmpleado res= procesadorDeNomina.procesar(ne)
 		depurarNominaPorEmpleado(res)
 		return res
+
 	}
 	
 	@Transactional

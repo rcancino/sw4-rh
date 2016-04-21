@@ -30,9 +30,14 @@
 	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
 	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT e.id ,I.ID AS folio,CONCAT(E.apellido_paterno,' ',E.apellido_materno,' ',E.nombres) AS nombre,SI.clave,SI.descripcion ,P.jornada
-,I.fecha_inicial,I.fecha_final,ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0) AS dias,I.referencia_imms,I.comentario
+,I.fecha_inicial,I.fecha_final,ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0) AS dias_ant
+,I.referencia_imms,I.comentario
 ,(SELECT U.descripcion FROM ubicacion U WHERE U.ID=P.ubicacion_id) AS ubicacion
 ,(SELECT U.descripcion FROM departamento U WHERE U.ID=P.departamento_id) AS departamento
+,(CASE 	WHEN YEAR(I.FECHA_INICIAL)=YEAR(I.FECHA_FINAL) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0)
+		WHEN YEAR(I.FECHA_INICIAL)=YEAR($P{FECHA_FIN}) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,DATE(CONCAT(YEAR(I.FECHA_INICIAL),'-12-31')),I.fecha_inicial)/60)/24)+1),0)
+		WHEN YEAR(I.FECHA_INICIAL)<YEAR(I.FECHA_FINAL) THEN ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,DATE(CONCAT(YEAR(I.FECHA_FINAL),'-01-01')))/60)/24)+1),0)
+	ELSE ROUND((FLOOR(-(TIMESTAMPDIFF(MINUTE,I.fecha_final,I.fecha_inicial)/60)/24)+1),0) END) AS dias
 FROM incapacidad I JOIN empleado E ON(E.ID=I.empleado_id) 
 JOIN sat_incapacidad SI ON(SI.ID=I.tipo_id)
 JOIN perfil_de_empleado P ON(P.empleado_id=E.ID)
@@ -48,11 +53,14 @@ and e.iD=$P{EMPLEADO_ID}]]></queryString>
 	<field name="jornada" class="java.lang.String"/>
 	<field name="fecha_inicial" class="java.sql.Date"/>
 	<field name="fecha_final" class="java.sql.Date"/>
-	<field name="dias" class="java.math.BigDecimal"/>
+	<field name="dias_ant" class="java.math.BigDecimal"/>
 	<field name="referencia_imms" class="java.lang.String"/>
 	<field name="comentario" class="java.lang.String"/>
 	<field name="ubicacion" class="java.lang.String"/>
 	<field name="departamento" class="java.lang.String"/>
+	<field name="dias" class="java.math.BigDecimal"/>
+
+	<sortField name="fecha_inicial" />
 
 	<variable name="TOTAL_DIAS" class="java.math.BigDecimal" resetType="Report" calculation="Sum">
 		<variableExpression><![CDATA[$F{dias}]]></variableExpression>
@@ -125,7 +133,7 @@ and e.iD=$P{EMPLEADO_ID}]]></queryString>
 					<reportElement
 						x="72"
 						y="52"
-						width="127"
+						width="226"
 						height="11"
 						key="textField-58"/>
 					<box>					<topPen lineWidth="0.25" lineColor="#CCCCCC"/>
@@ -438,7 +446,7 @@ and e.iD=$P{EMPLEADO_ID}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="358"
-						y="2"
+						y="3"
 						width="45"
 						height="22"
 						key="staticText-89"/>
@@ -457,7 +465,7 @@ and e.iD=$P{EMPLEADO_ID}]]></queryString>
 					<reportElement
 						mode="Opaque"
 						x="403"
-						y="2"
+						y="3"
 						width="80"
 						height="22"
 						key="staticText-91"/>

@@ -25,7 +25,7 @@ class CalculoAnualService {
 	def calcular(Integer ejercicio){
 		//CalculoAnual.executeUpdate("delete from CalculoAnual c where c.ejercicio=?",[ejercicio])
 		def ids=NominaPorEmpleado.executeQuery(
-			"select distinct(n.empleado.id) from NominaPorEmpleado n where n.nomina.ejercicio=? and n.empleado.status!='BAJA'",[ejercicio])
+			"select distinct(n.empleado.id) from NominaPorEmpleado n where n.nomina.ejercicio=? ",[ejercicio])
 		log.info "Generando calculando anual para $ids.size empleados del ejercicio $ejercicio"
 		ids.each{ 
 			def empleado=Empleado.get(it)
@@ -79,7 +79,7 @@ class CalculoAnualService {
 		
 		def partidas=NominaPorEmpleadoDet
 		.findAll("from NominaPorEmpleadoDet d where d.parent.empleado=?"+
-			" and d.concepto.id in(13,41,37,44,36,22,14,40,38,19,15,43,23,24,31,42,20,45,34,35,33,2,12,43,49,50 )"+
+			" and d.concepto.id in(13,41,37,44,36,22,14,40,38,18,19,15,43,23,24,31,42,20,45,34,35,33,2,12,43,49,50 )"+
 			" and d.parent.nomina.ejercicio=? "
 				,[anual.empleado,anual.ejercicio])
 		
@@ -120,6 +120,9 @@ class CalculoAnualService {
 					anual.primaDeAntiguedadGravada+=it.importeGravado
 					break
 				case 19:
+					anual.compensacion+=it.importeGravado
+					break
+				case 18:
 					anual.compensacion+=it.importeGravado
 					break
 				/**Parche para utilizar en Kyo**/	
@@ -319,17 +322,44 @@ class CalculoAnualService {
 	}
 
 
-	def actualizarSaldos(Empleado empleado,def ejercicio){
+	def actualizarSaldos(NominaPorEmpleado ne){
 
-		def calculo=CalculoAnual.find (
-				"from CalculoAnual c where c.ejercicio=? and c.empleado=?  "
-				,[ejercicio,empleado])
+		def empleado = ne.empleado
+
+		def calculo= CalculoAnual.find("from CalculoAnual c where c.empleado=? and date(c.fechaFinal)=?",[empleado,ne.nomina.periodo.fechaFinal])
+
+		def inicial = 0.0
+		def acumulado = 0.0
+
 		if(calculo){
-			def aplicado=buscarAplicado(empleado,ejercicio)
-			def ret=buscarDeducciones(empleado,ejercicio)
-			calculo.aplicado=aplicado-ret
-			calculo.save flush:true
+		  	def percepcion = ne.conceptos.find{it.concepto.clave=='P033'}
+		  	//log.info 'Found: '+percepcion
+		  	if(percepcion)
+		  		inicial=percepcion.total
+		  	calculo.aplicado=inicial
+		  	calculo.save failOnError:true,flush:true
+		  
+		}else{
+		  def ejercicio = ne.nomina.ejercicio-1
+		  calculo= CalculoAnual.find("from CalculoAnual c where c.empleado=? and c.ejercicio=?",[empleado,ejercicio])
+		  if(calculo){
+		  	def fechaInicial = calculo.fechaFinal
+		  def fechaFinal = Periodo.getPeriodoAnual(ejercicio+1).fechaFinal-1
+		  def per = new Periodo(fechaInicial,fechaFinal)
+		  
+		  acumulado=NominaPorEmpleadoDet.executeQuery(
+						"select sum(d.importeExcento) from NominaPorEmpleadoDet d "+
+						" where  d.parent.empleado=? "+
+						" and d.concepto.clave=? "+
+		  				" and date(d.parent.nomina.periodo.fechaFinal) between ? and ? ",
+						[empleado,"P033",per.fechaInicial,per.fechaFinal]).get(0)?:0.0
+		  calculo.aplicado = acumulado
+		  calculo.save failOnError:true,flush:true
+		  log.info "Inicial: ${inicial} Acumulado:${acumulado}"
+		  }
+		  
 		}
+		
 		
 	}
 

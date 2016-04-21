@@ -1,6 +1,7 @@
 package com.luxsoft.sw4.rh
 
 import org.apache.commons.logging.LogFactory
+import com.luxsoft.sw4.Empresa
 
 class ProcesadorDeSueldo {
 	
@@ -11,6 +12,7 @@ class ProcesadorDeSueldo {
 	private static final log=LogFactory.getLog(this)
 	
 	def procesar(NominaPorEmpleado ne) {
+		Empresa emp=Empresa.first()
 		if(ne.asistencia==null)
 			return
 		
@@ -37,8 +39,9 @@ class ProcesadorDeSueldo {
 		ne.salarioDiarioBase=salarioDiario
 		ne.salarioDiarioIntegrado=empleado.salario.salarioDiarioIntegrado
 		ne.diasDelPeriodo=ne.nomina.getDiasPagados()
-		if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4){
-			ne.diasDelPeriodo=15
+		
+		if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4 && emp.rfc.equals("PAP830101CR3")){
+			ne.diasDelPeriodo=15-ne.vacaciones
 		}
 		ne.faltas=asistencia.faltas+asistencia.incidencias
 		/*
@@ -52,8 +55,8 @@ class ProcesadorDeSueldo {
 		
 		//Calculo de dias trabajados y sueldo
 		if(asistencia.diasTrabajados>0.0){
-			if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4){
-				asistencia.diasTrabajados=15
+			if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4 && emp.rfc.equals("PAP830101CR3")){
+				asistencia.diasTrabajados=15-asistencia.vacaciones
 			}
 			ne.faltas=asistencia.faltasManuales
 			
@@ -85,12 +88,13 @@ class ProcesadorDeSueldo {
 	}
 	
 	def getModel(NominaPorEmpleadoDet det) {
+		Empresa emp=Empresa.first()
 		def ne=det.parent
 		def model=[:]
 		model.salario=ne.salarioDiarioBase
 		model.diasDelPeriodo=ne.nomina.getDiasPagados()
-		if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4){
-			model.diasDelPeriodo=15
+		if(ne.nomina.periodicidad=='QUINCENAL' && ne.nomina.folio==4 && emp.rfc.equals("PAP830101CR3")){
+			model.diasDelPeriodo=15-ne.vacaciones
 		}
 		model.faltas=ne.faltas
 		model.incapacidades=ne.incapacidades

@@ -33,6 +33,7 @@
 ,FECHA_INI,FECHA_FIN,SDB,SDB_ANTERIOR,C.SDI_ANTERIOR,SMG,TOPE_SMG,YEARS,DIAS,VAC_DIAS,VAC_PRIMA,AGNDO_DIAS,FACTOR,SDIF,DIAS_BIM,FALTAS,INCAPACIDADES,M.TIPO
 ,DIAS_LAB_BIM,COMPENSACION,INCENTIVO,BONO_POR_DESEMP,HRS_EXTRAS_DOBLES,HRS_EXTRAS_TRIPLES,COMISIONES,PRIMA_DOM,VACACIONESP,VARIABLE,VAR_DIA,SDI_CALC,SDI_NVO,SDI_INF,M.ID AS FOLIO
 ,(SELECT U.numero FROM seguridad_social U WHERE U.ID=x.id) AS NSS
+,(SELECT y.rfc from empresa y) as RFC
 from 	empleado X 
 		JOIN salario S ON(S.EMPLEADO_ID=X.ID)
 		JOIN perfil_de_empleado P ON(P.EMPLEADO_ID=X.ID)
@@ -89,6 +90,7 @@ from 	empleado X
 	<field name="SDI_INF" class="java.math.BigDecimal"/>
 	<field name="FOLIO" class="java.lang.Long"/>
 	<field name="NSS" class="java.lang.String"/>
+	<field name="RFC" class="java.lang.String"/>
 
 		<background>
 			<band height="0"  isSplitAllowed="true" >
@@ -1745,27 +1747,6 @@ from 	empleado X
 					</textElement>
 				<text><![CDATA[COMISIONES]]></text>
 				</staticText>
-				<staticText>
-					<reportElement
-						mode="Opaque"
-						x="133"
-						y="364"
-						width="127"
-						height="13"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						key="staticText-54"/>
-					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
-</box>
-					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
-						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[BONO POR DESEMPEÑO]]></text>
-				</staticText>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="272"
@@ -2314,7 +2295,9 @@ from 	empleado X
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA[$F{AGNDO_DIAS}.doubleValue()==46 ? "1 " :
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{AGNDO_DIAS}.doubleValue()==16 ? "1 " :
+$F{AGNDO_DIAS}.doubleValue()==46 ? "1 " :
+$F{AGNDO_DIAS}.doubleValue()==17 ? "2 " :
 $F{AGNDO_DIAS}.doubleValue()==47 ? "2 " : "0"]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
@@ -2510,6 +2493,26 @@ $F{AGNDO_DIAS}.doubleValue()==45 ? "30 " : "0"]]></textFieldExpression>
 						<font pdfFontName="Helvetica-Bold" size="8" isBold="true" isUnderline="true"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{NSS}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="133"
+						y="364"
+						width="127"
+						height="13"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						key="textField-54"/>
+					<box>					<pen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#CCCCCC"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#CCCCCC"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
+						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{RFC}.equals( "PAP830101CR3" ) ? "BONO POR DESEMPEÑO" : "DIA FESTIVO"]]></textFieldExpression>
 				</textField>
 			</band>
 		</columnHeader>

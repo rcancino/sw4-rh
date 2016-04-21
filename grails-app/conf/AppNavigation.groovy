@@ -98,6 +98,7 @@ navigation={
 				detallePorConcepto()
 				acumuladoDeNominasPorConcepto()
 				calificacionDeIncentivos()
+				conceptoDeNominaAcumulado()
 			}
 			salarios(controller:'reporte'){
 				historicoDeSalarios(controller:'reporte',titleText:'Historico de salarios')
@@ -133,6 +134,7 @@ navigation={
 				faltasIncapacidadesPeriodo()
 				minutosPorPagar()
 				ausentismoPorDia()
+				programacionDeVacaciones()
 				
 			}
 			
@@ -165,7 +167,8 @@ navigation={
 			incapacidadesSuaDet()
 			infonavitSua()
 			reporteDeInfonavit()
-			dimm(titleText:'DIMM')
+			dim(titleText:'DIM Sueldos')
+			dimPagosPorSeparacion (titleText:'DIM Pagos Por Separacion')	
 			rfc(titleText:'RFC')
 			reporteDeRFC()
 			
