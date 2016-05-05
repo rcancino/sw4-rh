@@ -17,7 +17,7 @@ class PtuDet {
 	BigDecimal total=0.0
 	BigDecimal topeAnual=0.0
 	
-	Integer antiguedad=0
+	Integer antiguedad=0  
 	Integer diasDelEjercicio=0
 
 	Boolean noAsignado

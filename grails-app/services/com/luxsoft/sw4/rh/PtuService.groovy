@@ -33,7 +33,7 @@ class PtuService {
 
 	def buscarEmpleadosDelEjercicio(def ejercicio){
 		def list=NominaPorEmpleado
-            .executeQuery("select distinct n.empleado from NominaPorEmpleado n where n.nomina.ejercicio=?",ejercicio)
+            .executeQuery("select distinct n.empleado from NominaPorEmpleado n where n.nomina.ejercicio=? and n.nomina.tipo='GENERAL'",ejercicio)
         return list
 	}
 

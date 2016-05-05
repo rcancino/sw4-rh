@@ -45,7 +45,8 @@ FROM CALENDARIO C JOIN calendario_det D ON (C.ID=D.calendario_id)
 JOIN asistencia A  ON ( A.calendario_det_id=D.ID ) JOIN asistencia_det S ON (S.asistencia_id= A.ID )
 JOIN empleado E ON (E.ID=A.empleado_id) JOIN perfil_de_empleado P ON (P.empleado_id=E.ID) 
 JOIN ubicacion U ON  (P.ubicacion_id=U.ID) LEFT JOIN baja_de_empleado B ON (B.EMPLEADO_ID=E.ID) 
-WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA','INCAPACIDAD')]]></queryString>
+WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA','INCAPACIDAD')
+ AND (s.fecha>=e.alta or e.status='REINGRESO') and (b.fecha is null or (s.fecha<=b.fecha or e.alta>b.fecha))]]></queryString>
 
 	<field name="EJERCICIO" class="java.lang.Integer"/>
 	<field name="ubicacion" class="java.lang.String"/>
@@ -58,8 +59,14 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 	<field name="tipo" class="java.lang.String"/>
 	<field name="REFERENCIA" class="java.lang.String"/>
 
+	<variable name="FALTAS_TOTAL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[$F{tipo}.equals( "FALTA" ) ? new Long(1) : new Long(0)]]></variableExpression>
+	</variable>
+	<variable name="INCAPACIDAD_TOTAL" class="java.lang.Long" resetType="Report" calculation="Sum">
+		<variableExpression><![CDATA[!$F{tipo}.equals( "FALTA" ) ? new Long(1) : new Long(0)]]></variableExpression>
+	</variable>
 		<background>
-			<band height="49"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</background>
 		<title>
@@ -67,7 +74,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 			</band>
 		</title>
 		<pageHeader>
-			<band height="69"  isSplitAllowed="true" >
+			<band height="57"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="364"
@@ -97,9 +104,9 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 				<staticText>
 					<reportElement
 						mode="Opaque"
-						x="0"
-						y="35"
-						width="70"
+						x="445"
+						y="43"
+						width="59"
 						height="11"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
@@ -112,12 +119,12 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="8" isBold="false" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[EJERCICIO :]]></text>
+				<text><![CDATA[EJERCICIO : ]]></text>
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="70"
-						y="46"
+						y="32"
 						width="127"
 						height="11"
 						key="textField-9"/>
@@ -135,7 +142,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="46"
+						y="32"
 						width="70"
 						height="11"
 						forecolor="#000000"
@@ -154,7 +161,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="70"
-						y="57"
+						y="43"
 						width="71"
 						height="11"
 						key="textField-10"/>
@@ -168,7 +175,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 					<reportElement
 						mode="Opaque"
 						x="0"
-						y="57"
+						y="43"
 						width="70"
 						height="11"
 						forecolor="#000000"
@@ -186,9 +193,9 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 				</staticText>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
-						x="70"
-						y="35"
-						width="127"
+						x="504"
+						y="43"
+						width="37"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -360,7 +367,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 			</band>
 		</detail>
 		<columnFooter>
-			<band height="46"  isSplitAllowed="true" >
+			<band height="0"  isSplitAllowed="true" >
 			</band>
 		</columnFooter>
 		<pageFooter>
@@ -596,12 +603,12 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 			</band>
 		</lastPageFooter>
 		<summary>
-			<band height="50"  isSplitAllowed="true" >
+			<band height="20"  isSplitAllowed="true" >
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
 						x="220"
-						y="11"
-						width="100"
+						y="9"
+						width="33"
 						height="11"
 						key="textField"/>
 					<box></box>
@@ -614,7 +621,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 					<reportElement
 						mode="Opaque"
 						x="120"
-						y="11"
+						y="9"
 						width="100"
 						height="11"
 						forecolor="#000000"
@@ -628,7 +635,7 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None">
 						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<text><![CDATA[TOTAL DE REGISTROS   :]]></text>
+				<text><![CDATA[TOTAL DE REGISTROS : ]]></text>
 				</staticText>
 				<line direction="TopDown">
 					<reportElement
@@ -640,6 +647,74 @@ WHERE C.ejercicio=$P{EJERCICIO} AND E.ID=$P{EMPLEADO_ID} AND S.tipo IN ('FALTA',
 						key="line-7"/>
 					<graphicElement stretchType="NoStretch"/>
 				</line>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="253"
+						y="9"
+						width="51"
+						height="11"
+						forecolor="#000000"
+						key="staticText-32"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[FALTAS : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="304"
+						y="9"
+						width="29"
+						height="11"
+						forecolor="#000000"
+						key="textField-11"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{FALTAS_TOTAL}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement
+						mode="Opaque"
+						x="333"
+						y="9"
+						width="100"
+						height="11"
+						forecolor="#000000"
+						key="staticText-33"
+						isPrintInFirstWholeBand="true"/>
+					<box>					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<text><![CDATA[INCAPACIDADES : ]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="433"
+						y="9"
+						width="30"
+						height="11"
+						forecolor="#000000"
+						key="textField-12"/>
+					<box></box>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None">
+						<font fontName="Arial" pdfFontName="Helvetica-Bold" size="8" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.Long"><![CDATA[$V{INCAPACIDAD_TOTAL}]]></textFieldExpression>
+				</textField>
 			</band>
 		</summary>
 </jasperReport>
