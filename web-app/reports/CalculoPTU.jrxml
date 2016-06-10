@@ -56,7 +56,7 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 join ubicacion u on (u.id=p.ubicacion_id)
 where pt.ejercicio=$P{EJERCICIO}
 group by e.id
-order by 21 ASC,2 DESC,44 ASC,1 ASC]]></queryString>
+order by 21 ASC,2 DESC,45 ASC,1 ASC]]></queryString>
 
 	<field name="nombre" class="java.lang.String"/>
 	<field name="periodicidad" class="java.lang.String"/>

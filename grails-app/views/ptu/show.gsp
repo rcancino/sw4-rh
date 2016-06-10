@@ -1,6 +1,7 @@
-<html>
+<html >
 <head>
-	<meta charset="UTF-8">
+	<meta charset="UTF-8" >
+	 
 	<title>PTU (${ptuInstance.ejercicio})</title>
 	<r:require modules="forms,datatables"/>
 </head>

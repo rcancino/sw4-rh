@@ -8,7 +8,6 @@ import com.luxsoft.sw4.rh.tablas.SubsidioEmpleo
 import org.codehaus.groovy.grails.plugins.jasper.JasperExportFormat
 import org.codehaus.groovy.grails.plugins.jasper.JasperReportDef
 import groovy.sql.Sql
-
 import java.math.RoundingMode
 
 @Transactional
@@ -114,13 +113,14 @@ class PtuService {
     	ptuDet.comisiones=movimientos.sum(0.0){it.concepto.clave==COMISION?it.getTotal():0.0}
     	ptuDet.retardos=movimientos.sum(0.0){it.concepto.clave==RETARDOS?it.getTotal():0.0}
         //Fix Falta e incapav
-
+/*
         if(ptuDet.empleado.id==209){
             ptuDet.retardos-=72.86
         }
         if(ptuDet.empleado.id==54){
             ptuDet.retardos-=6.07
         }
+        */
     	ptuDet.total=(ptuDet.salario+ptuDet.vacaciones+ptuDet.comisiones)-ptuDet.retardos
     	log.info " ptuDet $ptuDet.empleado( $ejercicio ) actualizado"
     	return ptuDet
@@ -136,9 +136,9 @@ class PtuService {
             it.diasDelEjercicio=calcularDiasDelEjercicio it
             it.diasPtu=it.diasDelEjercicio-it.faltas-it.incapacidades-it.permisosP
            //Fix temporal
-            if(it.empleado.id==45){
+           /* if(it.empleado.id==45){
                 it.diasPtu=292
-            }
+            }*/
             it.noAsignado=it.diasPtu<60 
             if(it.empleado.id==260 || it.empleado.id==280 || it.empleado.id==246){
                 it.noAsignado=true
@@ -186,6 +186,11 @@ class PtuService {
         def periodo=ptuDet.getPeriodo()
         def alta=ptuDet.empleado.alta
         def baja=ptuDet.empleado?.baja?.fecha
+        def diasReingreso=0
+        def fechaSuperior=periodo.fechaFinal
+        def fechaDeInicio=periodo.fechaInicial
+        
+        //def yearAlta=obtenerYear(alta)
 
         def de=0
         if(!baja){
@@ -196,12 +201,36 @@ class PtuService {
             de=periodo.fechaFinal-alta+1
           }
         }else{
+
           if(baja<periodo.fechaInicial && (baja>alta)){
             de=0
           }else{
-            def fechaSuperior=(baja<periodo.fechaFinal && baja>alta)?baja:periodo.fechaFinal
-            def fechaDeInicio=alta<periodo.fechaInicial?periodo.fechaInicial:alta
-            de=fechaSuperior-fechaDeInicio+1
+
+                println "Calculando la fecha de la baja para el empleado"+ptuDet.empleado+" con baja"+baja
+                    Calendar c=Calendar.getInstance();
+                                 c.setTime(baja);
+                        def yearBaja=c.get(Calendar.YEAR);
+                    Calendar c1=Calendar.getInstance();
+                                 c1.setTime(alta);
+                        def yearAlta=c1.get(Calendar.YEAR);
+
+                println "El año de la baja es:  "+yearBaja
+
+                /*Evaluacion dias del Ejercicio Reingreso y baja en el mismo año*/
+                    if(baja<alta && ptuDet.ptu.ejercicio== yearBaja){
+                            diasReingreso=baja-periodo.fechaInicial+1
+                    }
+                /*Evaluacion de fecha inicial y fecha final para dias del ejercicio*/
+                    if(baja<periodo.fechaFinal && baja>alta && ptuDet.ptu.ejercicio== yearBaja){
+                        fechaSuperior=baja
+                    }
+                    if(alta>periodo.fechaInicial && alta<baja && ptuDet.ptu.ejercicio== yearAlta){
+                        fechaDeInicio=alta
+                    }
+                    if(alta>periodo.fechaInicial && alta>baja && ptuDet.ptu.ejercicio== yearAlta){
+                        fechaDeInicio=alta
+                    }
+            de=(fechaSuperior-fechaDeInicio+1)+diasReingreso
           }
         }
     }
@@ -216,13 +245,13 @@ class PtuService {
             it.salarioDiario=it.empleado.salario.salarioDiario
             if(it.empleado.salario.periodicidad=='QUINCENAL'){
                 it.salarioMensual=it.salarioDiario*31
-                if(it.noAsignado || it.empleado.baja){
+                if(it.noAsignado || (it.empleado.baja && it.empleado.baja.fecha>it.empleado.alta)){
                     it.salarioMensual=0.0
                 }
             }
             else{
                 it.salarioMensual=it.salarioDiario*28
-                if(it.noAsignado || it.empleado.baja){
+                if(it.noAsignado || (it.empleado.baja && it.empleado.baja.fecha>it.empleado.alta)){
                     it.salarioMensual=0.0
                 }
             }

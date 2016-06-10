@@ -81,19 +81,19 @@ case when c.id in (40,31,33,47) then "Y"else "X" end as control,b.mes, a.ejercic
 ,(SELECT 
 count(*)
 FROM nomina n join nomina_por_empleado ne  on (n.id=ne.nomina_id) join calendario_det c on (c.id=n.calendario_det_id)
-where mes=$P{MES} and n.periodicidad='SEMANAL' AND NE.TOTAL<>0 AND TIPO='GENERAL' and n.ejercicio=2015) AS empleadoS_SEM
+where mes=$P{MES} and n.periodicidad='SEMANAL' AND NE.TOTAL<>0 AND TIPO='GENERAL' and n.ejercicio=$P{EJERCICIO}) AS empleadoS_SEM
 ,(SELECT 
 count(*)
 FROM calendario_det  O JOIN calendario N ON (N.ID=O.calendario_id)
-where mes=$P{MES} and TIPO='SEMANA' and n.ejercicio=2015 and n.comentario like '%NOMINA%') AS SEMANAS
+where mes=$P{MES} and TIPO='SEMANA' and n.ejercicio=$P{EJERCICIO} and n.comentario like '%NOMINA%') AS SEMANAS
 ,(SELECT 
 count(*)
 FROM nomina n join nomina_por_empleado ne  on (n.id=ne.nomina_id) join calendario_det c on (c.id=n.calendario_det_id)
-where mes=$P{MES} and n.periodicidad='QUINCENAL' AND NE.TOTAL<>0 AND TIPO='GENERAL' and n.ejercicio=2015) AS empleadoS_QUIN
+where mes=$P{MES} and n.periodicidad='QUINCENAL' AND NE.TOTAL<>0 AND TIPO='GENERAL' and n.ejercicio=$P{EJERCICIO}) AS empleadoS_QUIN
 ,(SELECT 
 count(*)
 FROM calendario_det  O JOIN calendario N ON (N.ID=O.calendario_id)
-where mes=$P{MES} and TIPO='QUINCENA'  and n.ejercicio=2015 and n.comentario like '%NOMINA%') AS QUINCENAS
+where mes=$P{MES} and TIPO='QUINCENA'  and n.ejercicio=$P{EJERCICIO} and n.comentario like '%NOMINA%') AS QUINCENAS
 FROM 
 calendario a join calendario_det b on (b.calendario_id=a.id) join
 NOMINA N ON ( N.calendario_det_id= b.ID )

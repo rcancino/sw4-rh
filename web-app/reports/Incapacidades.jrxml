@@ -29,8 +29,8 @@
 	<parameter name="NomReporte" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["REPORTE DE INCAPACIDADES"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA_INI" isForPrompting="true" class="java.util.Date"/>
-	<parameter name="FECHA_FIN" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA_INICIAL" isForPrompting="true" class="java.util.Date"/>
+	<parameter name="FECHA_FINAL" isForPrompting="true" class="java.util.Date"/>
 	<queryString><![CDATA[SELECT concat(ifnull(e.apellido_paterno,"")," ",e.apellido_materno," ",e.nombres ) AS empleado,date(e.alta)as fecha_alta
 ,i.fecha_inicial,i.fecha_final,i.referencia_imms,(TO_DAYS(i.fecha_final)-TO_DAYS(fecha_inicial))+1 as dias_inc
 ,s.numero,t.descripcion as TURNO
@@ -39,7 +39,7 @@
 FROM 
 empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.id=p.turno_id) join ubicacion u on (u.id=p.ubicacion_id)
  JOIN 	seguridad_social s on (s.empleado_id=e.id) JOIN incapacidad i on (i.empleado_id=e.id) 
- and i.fecha_inicial between $P{FECHA_INI} and $P{FECHA_FIN}
+ and i.fecha_inicial between $P{FECHA_INICIAL} and $P{FECHA_FINAL}
  order by e.apellido_paterno]]></queryString>
 
 	<field name="empleado" class="java.lang.String"/>
@@ -143,7 +143,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INI}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_INICIAL}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="dd/MM/yyyy" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -156,7 +156,7 @@ empleado e join perfil_de_empleado p on (e.id=p.empleado_id) join turno t on (t.
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FIN}]]></textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[$P{FECHA_FINAL}]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageHeader>
