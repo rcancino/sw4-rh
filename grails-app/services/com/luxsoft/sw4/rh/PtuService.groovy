@@ -127,18 +127,12 @@ class PtuService {
     }
 
     def recalcular(Ptu ptu){
-
-        
-
         def tope=ptu.getSalarioTope()
         ptu.partidas.each{
             it.topeAnual=it.total>tope?tope:it.total
             it.diasDelEjercicio=calcularDiasDelEjercicio it
             it.diasPtu=it.diasDelEjercicio-it.faltas-it.incapacidades-it.permisosP
-           //Fix temporal
-           /* if(it.empleado.id==45){
-                it.diasPtu=292
-            }*/
+          
             it.noAsignado=it.diasPtu<60 
             if(it.empleado.id==260 || it.empleado.id==280 || it.empleado.id==246){
                 it.noAsignado=true
@@ -180,6 +174,40 @@ class PtuService {
         return ptu
     }
 
+    def recalcularEspecial(Ptu ptu){
+        
+        def tope=ptu.getSalarioTope()
+        def partidas = ptu.partidas.findAll {it.tipo == 2 && it.empleado.id != 283}
+        //def partidas = ptu.partidas.findAll {it.tipo == 2 }
+        
+
+        def montoe = partidas.sum 0.0, {it.montoDias+it.montoSalario} 
+        montoe *= 0.25
+        ptu.montoe = montoe
+
+        def montoDias=ptu.montoe*0.5
+        def montoSalario=ptu.montoe*0.5
+        
+        def topeAnualAcumulado = partidas.sum 0.0,{it.topeAnual}
+
+        def diasPtu = partidas.sum 0.0,{it.diasPtu}
+
+        def factorDias = montoDias/diasPtu
+        def factorSalario = montoSalario/topeAnualAcumulado
+        def topeAnual = partidas.max({if(it.empleado.perfil.tipo=='SINDICALIZADO') it.getSalarioNeto()})
+
+        partidas.each{
+
+            it.montoDias=it.diasPtu*factorDias
+            it.montoSalario=it.topeAnual*factorSalario 
+            it.montoPtu= it.montoDias+it.montoSalario 
+            println 'Recalculado :'+it
+        }
+        calcularImpuestos ptu
+        
+        ptu.save flush:true
+        return ptu
+    }
 
     def calcularDiasDelEjercicio(PtuDet ptuDet){
 

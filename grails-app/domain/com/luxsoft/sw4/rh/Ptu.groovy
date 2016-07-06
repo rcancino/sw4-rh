@@ -28,6 +28,8 @@ class Ptu {
 	BigDecimal sindicalizadoMaximo
 	String sindicalizadoNombre
 
+	BigDecimal montoe = 0.0
+
 	Date dateCreated
 	Date lastUpdated
 
@@ -38,6 +40,7 @@ class Ptu {
 		factorSalario scale:6
 		sindicalizadoNombre nullable:true
 		sindicalizadoMaximo nullable:true
+		montoe nullable: true
     }
 
     static mapping = {

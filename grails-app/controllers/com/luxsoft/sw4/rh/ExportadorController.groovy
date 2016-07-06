@@ -494,7 +494,20 @@ def reportePorPeriodo(PeriodoCommand command){
 	repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
 	ByteArrayOutputStream  pdfStream=runReport(repParams)
 	render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
-		,fileName:repParams.reportName)
+		,fileName:repParams.reportName+".pdf")
+}
+
+private runReport(Map repParams){
+	log.info 'Ejecutando reporte  '+repParams
+	def nombre=WordUtils.capitalize(repParams.reportName)
+	def reportDef=new JasperReportDef(
+		name:nombre
+		,fileFormat:JasperExportFormat.PDF_FORMAT
+		,parameters:repParams
+		)
+	ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+	return pdfStream
+	
 }
 
 def bajasSua(){
@@ -1664,18 +1677,7 @@ def reporteDeRFC(){
 
 
 
-private runReport(Map repParams){
-	log.info 'Ejecutando reporte  '+repParams
-	def nombre=WordUtils.capitalize(repParams.reportName)
-	def reportDef=new JasperReportDef(
-		name:nombre
-		,fileFormat:JasperExportFormat.PDF_FORMAT
-		,parameters:repParams
-		)
-	ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
-	return pdfStream
-	
-}
+
 
 
 

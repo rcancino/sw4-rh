@@ -36,11 +36,11 @@
 	<queryString><![CDATA[SELECT CONCAT(ifnull(E.apellido_paterno,'')," ",ifnull(E.apellido_materno,'')," ",E.nombres) AS nombre,substr(s.periodicidad,1,1) as periodicidad
 ,ptd.ptu_excento,ptd.ptu_gravado,ptd.salario_diario,ptd.salario_mensual,ptd.incentivo,ptd.total_mensual_gravado
 ,ptd.tmg_isr,ptd.tmg_subsidio,ptd.tmg_resultado,ptd.smi_isr,ptd.smi_subsidio,ptd.smi_resultado,ptd.isr_por_retener,ptd.isr_acreditable,ptd.pensiona,ptd.prestamo,ptd.otras_ded,ptd.por_pagar_neto
-,(case  when ptd.no_asignado is false and e.status<>'BAJA' then '1.- PERSONAL QUE SE ENCUENTRA ACTUALMENTE LABORANDO CON DERECHO A PTU'
-	when ptd.no_asignado is false and e.status='BAJA' then '2.- PERSONAL QUE SE DIO DE BAJA CON DERECHO A PTU'
-	when ptd.no_asignado is true and e.status<>'BAJA' and ptd.dias_ptu<60  and e.id not in(260,280,246) then '4.- PERSONAL QUE SE ENCUENTRA ACTUALMENTE LABORANDO SIN DERECHO A PTU POR HABER LABORADO MENOS DE 60 DIAS EN EL AÑO'
-	when ptd.no_asignado is true and e.status='BAJA' and ptd.dias_ptu<60  and e.id not in(260,280,246) then '5.- PERSONAL QUE SE DIO DE BAJA SIN DERECHO A PTU POR HABER LABORADO MENOS DE 60 DIAS EN EL AÑO'	
-	when ptd.no_asignado is true and e.id in(260,280,246) then '3.- DIRECTORES Y GERENTES SIN DERECHO A PTU'
+,(case  when ptd.tipo=1 then '1.- PERSONAL QUE SE ENCUENTRA ACTUALMENTE LABORANDO CON DERECHO A PTU'
+	when ptd.tipo=2 then '2.- PERSONAL QUE SE DIO DE BAJA CON DERECHO A PTU'
+	when ptd.tipo=4 then '4.- PERSONAL QUE SE ENCUENTRA ACTUALMENTE LABORANDO SIN DERECHO A PTU POR HABER LABORADO MENOS DE 60 DIAS EN EL AÑO'
+	when ptd.tipo=5 then '5.- PERSONAL QUE SE DIO DE BAJA SIN DERECHO A PTU POR HABER LABORADO MENOS DE 60 DIAS EN EL AÑO'	
+	when ptd.tipo=3 then '3.- DIRECTORES Y GERENTES SIN DERECHO A PTU'
 	else 'NO' end) as asignado
 ,(case when ptd.no_entregar is true then 'SI' else 'NO' end) as p_remanente
 ,pt.ejercicio,292281.42 as tope_sal_max_sind,pt.monto,pt.remanente,pt.monto_dias,pt.factor_dias,pt.monto_salario,pt.factor_salario,pt.monto+pt.remanente as total_ptu

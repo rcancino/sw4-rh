@@ -75,6 +75,12 @@ class PtuDet {
 
 	BigDecimal porPagarNeto=0.0
 
+	Integer tipo
+	Date alta
+	Date baja
+	String status
+
+
     static constraints = {
 		nominaPorEmpleado nullable:true
 		calendarioDet nullable:true
@@ -83,6 +89,15 @@ class PtuDet {
 		montoDias scale:6
 		montoSalario scale:6
 		montoPtu sacale:6
+		tipo nullable:true
+		alta nullable:true
+		baja nullable:true
+		status nullable:true, maxSize:10
+    }
+
+    static mappings = {
+    	alta type:'date'
+    	baja type:'date'
     }
 
     static transients = ['antiguedad','salarioNeto','periodo']

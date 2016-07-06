@@ -197,6 +197,19 @@ class ReporteController {
 		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 			,fileName:repParams.reportName)
 	}
+
+		private runReport(Map repParams){
+		log.info 'Ejecutando reporte  '+repParams
+		def nombre=WordUtils.capitalize(repParams.reportName)
+		def reportDef=new JasperReportDef(
+			name:nombre
+			,fileFormat:JasperExportFormat.PDF_FORMAT
+			,parameters:repParams
+			)
+		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
+		return pdfStream
+		
+	}
 	
 	def incapacidadesEmpleado(){
 		[reportCommand:new EmpleadoPorEjercicioCommand(ejercicio:session.ejercicio)]
@@ -424,18 +437,7 @@ class ReporteController {
 
 	
 	
-	private runReport(Map repParams){
-		log.info 'Ejecutando reporte  '+repParams
-		def nombre=WordUtils.capitalize(repParams.reportName)
-		def reportDef=new JasperReportDef(
-			name:nombre
-			,fileFormat:JasperExportFormat.PDF_FORMAT
-			,parameters:repParams
-			)
-		ByteArrayOutputStream  pdfStream=jasperService.generateReport(reportDef)
-		return pdfStream
-		
-	}
+
 	
 	private File findFile(String name){
 		return grailsApplication.mainContext.getResource("/reports/$name").file

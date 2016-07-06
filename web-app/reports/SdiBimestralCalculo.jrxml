@@ -761,7 +761,7 @@ AG   BN    FB ]]></text>
 							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==47)]]></printWhenExpression>
 						</reportElement>
 					<box></box>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[" 15     30     2 "]]></textFieldExpression>
@@ -776,10 +776,10 @@ AG   BN    FB ]]></text>
 							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==45)]]></printWhenExpression>
 						</reportElement>
 					<box></box>
-					<textElement textAlignment="Left">
+					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["   15     30 "]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" 15     30     0 "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -791,10 +791,10 @@ AG   BN    FB ]]></text>
 							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==15)]]></printWhenExpression>
 						</reportElement>
 					<box></box>
-					<textElement textAlignment="Left">
+					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
-				<textFieldExpression   class="java.lang.String"><![CDATA["   15 "]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" 15       0     0 "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="#,##0.00" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
 					<reportElement
@@ -858,7 +858,7 @@ AG   BN    FB ]]></text>
 							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==46)]]></printWhenExpression>
 						</reportElement>
 					<box></box>
-					<textElement textAlignment="Center">
+					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[" 15     30     1 "]]></textFieldExpression>
@@ -875,6 +875,36 @@ AG   BN    FB ]]></text>
 						<font size="8"/>
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA[$F{clasif}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="415"
+						y="0"
+						width="55"
+						height="11"
+						key="textField-26">
+							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==16)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" 15       0     1 "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" isBlankWhenNull="false" evaluationTime="Now" hyperlinkType="None"  hyperlinkTarget="Self" >
+					<reportElement
+						x="415"
+						y="0"
+						width="55"
+						height="11"
+						key="textField-27">
+							<printWhenExpression><![CDATA[new Boolean($F{agndo_dias}.doubleValue()==30)]]></printWhenExpression>
+						</reportElement>
+					<box></box>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[" 15     15     0 "]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
