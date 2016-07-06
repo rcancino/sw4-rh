@@ -87,8 +87,10 @@ navigation={
 			reglasDeEjecuccion(controller:'brNomina',action:'index',titleText:'Reglas de proceso'){
 				porNomina()
 				porConcepto()
+
 			}
 			concepto(controller:'',action:'index')
+			empresa(controller:'empresa', action:'edit')
 			
 		}
 		reportes(controller:'reporte'){
