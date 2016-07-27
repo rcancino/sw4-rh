@@ -28,7 +28,7 @@ grails.project.dependency.resolution = {
         // specify dependency exclusions here; for example, uncomment this to disable ehcache:
         excludes 'ehcache'
     }
-    log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
     legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
@@ -40,18 +40,21 @@ grails.project.dependency.resolution = {
         mavenLocal()
         grailsCentral()
         mavenCentral()
-        // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
-        mavenRepo "http://repository.codehaus.org"
+        mavenRepo "https://jcenter.bintray.com"
         
-        mavenRepo "http://repository.jboss.com/maven2/"
-		mavenRepo "http://download.java.net/maven/2/"
-        mavenRepo "http://repo.grails.org/grails/core"
-		mavenRepo "http://repo.spring.io/milestone/"
+        // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
+        //mavenRepo "http://repository.codehaus.org"
+        
+  //       mavenRepo "http://repository.jboss.com/maven2/"
+		// mavenRepo "http://download.java.net/maven/2/"
+  //       mavenRepo "http://repo.grails.org/grails/core"
+		// mavenRepo "http://repo.spring.io/milestone/"
 		
-		mavenRepo "http://repo.grails.org/grails/libs-releases/"
-		mavenRepo "http://m2repo.spockframework.org/ext/"
-		mavenRepo "http://m2repo.spockframework.org/snapshots/"
-		mavenRepo "http://repo.grails.org/grails/libs-releases/"
+		// mavenRepo "http://repo.grails.org/grails/libs-releases/"
+		// mavenRepo "http://m2repo.spockframework.org/ext/"
+		// mavenRepo "http://m2repo.spockframework.org/snapshots/"
+		// mavenRepo "http://repo.grails.org/grails/libs-releases/"
+        
 		
     }
 
@@ -74,7 +77,7 @@ grails.project.dependency.resolution = {
     plugins {
         // plugins for the build system only
         //build ":tomcat:7.0.50.1"
-		build ':jetty:2.0.3'
+		build ':jetty:3.0.0'
 
         // plugins for the compile step
         // plugins needed at runtime but not for compilation
