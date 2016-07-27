@@ -243,17 +243,23 @@ class AsistenciaService {
 				LocalTime inicio=it.turnoDet.entrada1
 				LocalTime entrada=LocalTime.fromDateFields(it.entrada1)
 				
-				def retraso=(((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour())-((inicio.getHourOfDay()*60)+inicio.getMinuteOfHour()))
 				
+				def retraso=(((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour())-((inicio.getHourOfDay()*60)+inicio.getMinuteOfHour()))
+				it.retardoMayor=retraso<0 ? 0: retraso
+				it.retardoMenor = 0 // Modificacion del 27 Julio de 2016 SE QUITA EL RETRASO MENOR
+
+				/* Modificacion del 27 Julio de 2016 SE QUITA EL RETRASO MENOR
 				if(retraso>0){
-					
 					if(retraso>0 && retraso<=10) {
 						it.retardoMenor=retraso
 					}
+					
 					if(retraso>10) {
 						it.retardoMayor=retraso
 					}
 				}
+				*/
+
 			}
 			
 			//Evaluacion de retardo comida
@@ -266,16 +272,18 @@ class AsistenciaService {
 					def tiempoDeComida=( ((entrada.getHourOfDay()*60)+entrada.getMinuteOfHour()) - ((salida.getHourOfDay()*60)+salida.getMinuteOfHour()) )
 					def retardoComida=tiempoDeComida-60
 					
+					/* Modificacion del 27 Julio de 2016 SE QUITA EL RETRASO MENOR COMIDA
 					if(retardoComida>0) {
 						if(retardoComida<=10){
 							it.retardoMenorComida=retardoComida
 						}else
 							it.retardoComida=retardoComida
 					}
+					*/
+					it.retardoMenorComida=0 // Modificacion del 27 Julio de 2016 TODO  A RETARDO COMIDA
+					it.retardoComida=retardoComida < 0 ? 0 : retardoComida
 				}
-				
 			}
-			
 			
 			def dia=it.fecha.toCalendar().get(Calendar.DAY_OF_WEEK)
 			
