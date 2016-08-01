@@ -87,19 +87,10 @@ class IncentivoService {
     @NotTransactional
 	//def generarIncentivosMensuales(CalendarioDet calendarioDet,Mes mes) {
     def generarIncentivosMensuales(Integer ejercicio,Mes mes) {
-
-    	//def asistencias=Asistencia.findAll{calendarioDet==calendarioDet}
-		/*
-    	def asistencias=Asistencia.executeQuery("from Asistencia a where a.calendarioDet=? and a.empleado.perfil.tipoDeIncentivo=?"
-    		,[calendarioDet,'MENSUAL'])
-    	if(!asistencias){
-    		throw new RuntimeException("No se han generado y procesado asistencias para la quincena $calendarioDet.folio")
-    	}
-    	*/
+    	
     	if(mes==null){
     		throw new RuntimeException("Se requiere el mes para el calculo")	
     	}
-		//def ejercicio=calendarioDet.calendario.ejercicio
 
 		def periodo = Periodo.getPeriodoEnUnMes(mes.clave,ejercicio)
 		def empleados=Empleado.findAll ("from Empleado e where e.perfil.tipoDeIncentivo=? and e.status in('ALTA','REINGRESO')"
@@ -132,13 +123,13 @@ class IncentivoService {
     }
 
     def calcularIncentivoMensual(Incentivo incentivo){
-		log.debug 'Calculando bono mensual: '+incentivo.empleado
+		log.info 'CALCULANDO BONO MENSUAL: '+incentivo.empleado
 		
     	def bono1=incentivo.tasaBono1
 		def bonoOriginal=bono1
 		
 		def per=new Periodo(incentivo.fechaInicial,incentivo.fechaFinal)
-		//def per=new Periodo('01/07/2014','21/07/2014')
+		
 		def inicio=per.fechaInicial
 		if(incentivo.empleado.alta>inicio)
 			inicio=incentivo.empleado.alta
@@ -158,35 +149,38 @@ class IncentivoService {
 		incentivo.checadasFaltantes=checadasFaltantes
 		incentivo.minutosNoLaborados=minutos
 		incentivo.faltas=faltas
-		println 'Incentivo manual: '+incentivo.manual
+		
 		if(incentivo.manual){
-			//def proporcion=calcularProporcion(incentivo)
-			//incentivo.tasaBono2=incentivo.tasaBono2*proporcion
 			incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
 			incentivo.incentivo=(incentivo.ingresoBase)*incentivo.tasaBono2
 			log.info "Incentivo manual proporcion  tasa: ${incentivo.tasaBono2}"
 			return incentivo
 		}
-		def bono2=0.0
+
+		def bono2=bono1
 		
 		if(faltas>2){
 			incentivo.tasaBono2=0.0
 			incentivo.incentivo=0.0
 			return incentivo;
 		}
-		
+		/* Modificacion a las reglas 28/07/2016
 		if(incentivo.calificacion=='MALA'){
 			incentivo.tasaBono2=0.0
 			incentivo.incentivo=0.0
 			return incentivo;
 		}
+		
 		if(incentivo.calificacion=='REGULAR'){
 			bono2=bono1/2
 		}
 		if(incentivo.calificacion=='BUENA'){
 			bono2=bono1
 		}
+		*/
 		
+		/* Modificacion a la reglas 28/07/2016
+		// Aplicacion de reglas por perdida
 		def perdida=0.0
 		
 		if(faltas==2){
@@ -199,15 +193,15 @@ class IncentivoService {
 			perdida+=0.125
 		}
 
-
 		log.info 'Perdida: '+perdida
 		bono2=bono2*(1-perdida)	
-		
+		*/
+	
 		def proporcion=calcularProporcion(incentivo)
 		log.info 'Proporcion: '+proporcion
     	incentivo.tasaBono2=bono2*proporcion
 		incentivo.ingresoBase=incentivo.empleado.salario.salarioDiario*30
-		//incentivo.incentivo=incentivo.ingresoBase*bono2
+		
 		incentivo.incentivo=(incentivo.ingresoBase*proporcion)*bono2
 
 		def mes=Mes.findMesByNombre(incentivo.mes)
@@ -233,7 +227,7 @@ class IncentivoService {
 			incentivo.comentario=''
 		}
 		
-		log.info "Perdida: ${perdida} Proporcion: $proporcion Ingreso base:${incentivo.ingresoBase} Bono2 :${bono2}"
+		//log.info "Perdida: ${perdida} Proporcion: $proporcion Ingreso base:${incentivo.ingresoBase} Bono2 :${bono2}"
 		return incentivo
     }
 

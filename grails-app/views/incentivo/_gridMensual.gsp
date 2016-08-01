@@ -13,6 +13,7 @@
 			<th>Obtenido </th>
 			<th>Incentivo($)</th>
 			<th>Pag</th>
+			<th>Manual</th>
 			
 			
 		</tr>
@@ -40,6 +41,7 @@
 				
 				<td><g:formatNumber number="${row.incentivo }" type="currency" /></td>
 				<td>${fieldValue(bean:row,field:"asistencia.calendarioDet.folio")}</td>
+				<td>${fieldValue(bean:row,field:"manual")}</td>
 				
 				
 			</tr>
