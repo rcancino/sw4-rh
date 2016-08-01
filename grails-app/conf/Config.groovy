@@ -153,6 +153,7 @@ log4j = {
 			off 'com.luxsoft.sw4.rh.ProcesadorDeOtrasDeducciones'
 			info 'com.luxsoft.sw4.rh.procesadores.AjusteIsr'
 			off 'com.luxsoft.sw4.rh.ExportadorDim'
+			debug 'com.luxsoft.sw4.rh.procesadores.ProcesadorDeChecadasFaltantes'
 
 			
 			

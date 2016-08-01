@@ -166,7 +166,7 @@ class AsistenciaService {
 		vacacionesService.procesar(asistencia)
 		incidenciaService.procesar(asistencia)
 		
-		procesadorDeChecadasFaltantes.procesar(asistencia)
+		//procesadorDeChecadasFaltantes.procesar(asistencia)
 		
 		if(!empleado.controlDeAsistencia){
 			asistencia.partidas.each{

@@ -17,8 +17,8 @@ class ProcesadorDeChecadasFaltantes {
 	
 	
 	def procesar(Asistencia asistencia) {
-		log.info 'Procesando checadas faltantes para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
-		asistencia.partidas.each{ it -> //Iteracion dia por dia
+		log.debug 'Procesando checadas faltantes para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
+		asistencia.partidas.findAll{it.tipo!='DESCANSO' && it.tipo!= 'FALTA'}.each{ it -> //Iteracion dia por dia
 
 			def turnoDet=it.turnoDet
 
@@ -36,12 +36,17 @@ class ProcesadorDeChecadasFaltantes {
 				if(it.entrada1) checadas ++
 				if(it.salida1) checadas ++
 					
-			} else {
+			} else if(turnoDet.salida2){  // Entre semana
 
 				if(it.entrada1) checadas ++
 				if(it.salida1) checadas ++
 				if(it.entrada2) checadas ++
 				if(it.salida2) checadas ++
+			} else { // Sabado
+				checadasRequeridas = 2
+				minimo = 2
+				if(it.entrada1) checadas ++
+				if(it.salida1) checadas ++
 			}
 
 			def faltantes = checadasRequeridas - checadas
