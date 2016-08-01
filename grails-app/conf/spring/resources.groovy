@@ -121,4 +121,5 @@ beans = {
 	procesadorDeDeduccionGenerica(ProcesadorDeDeduccionGenerica){}
 	
 	exportadorDim(ExportadorDim){}
+	procesadorDeChecadasFaltantes(ProcesadorDeChecadasFaltantes){}
 }

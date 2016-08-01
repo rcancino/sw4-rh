@@ -35,6 +35,8 @@ class AsistenciaService {
 	def grailsApplication
 	
 	def procesadorDeChecadas
+
+	def procesadorDeChecadasFaltantes
 	
 	def incapacidadService
 	
@@ -163,6 +165,8 @@ class AsistenciaService {
 		incapacidadService.procesar(asistencia)
 		vacacionesService.procesar(asistencia)
 		incidenciaService.procesar(asistencia)
+		
+		procesadorDeChecadasFaltantes.procesar(asistencia)
 		
 		if(!empleado.controlDeAsistencia){
 			asistencia.partidas.each{
