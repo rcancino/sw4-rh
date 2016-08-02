@@ -22,18 +22,18 @@ class ProcesadorDeChecadasFaltantes {
 		asistencia.partidas.findAll{it.tipo!='DESCANSO' && it.tipo!= 'FALTA'}.each{ it -> //Iteracion dia por dia
 
 			def turnoDet=it.turnoDet
-
+			def tipo = it.tipo
 			def diaFestivo=DiaFestivo.findByFecha(it.fecha)
 
 			def checadasRequeridas = 4
-			def minimo = 3
+			def maximosPermitidas = 2
 			def checadas = 0
 			
 
 			if(diaFestivo && diaFestivo.parcial) {
 
 				checadasRequeridas = 2
-				minimo = 2
+				maximosPermitidas = 0
 				if(it.entrada1) checadas ++
 				if(it.salida1) checadas ++
 					
@@ -45,23 +45,24 @@ class ProcesadorDeChecadasFaltantes {
 				if(it.salida2) checadas ++
 			} else { // Sabado
 				checadasRequeridas = 2
-				minimo = 2
+				maximosPermitidas = 0
 				if(it.entrada1) checadas ++
 				if(it.salida1) checadas ++
 			}
 
-			def faltantes = checadasRequeridas - checadas
-
-			if(checadas == checadasRequeridas){
+			int faltantes = checadasRequeridas - checadas
+			log.debug("${it.fecha.text()}  Checadas faltantes:  $faltantes   Maximos permitidas: $maximosPermitidas")
+			if(faltantes == 0){
 				log.info "OK ${asistencia.empleado} sin checadas faltantes el ${it.fecha.text()}"
+				it.tipo = tipo
 
-			} else if(checadas < minimo){
-				log.info "${asistencia.empleado} excede el minimo de checadas ${minimo} para  ${it.fecha.text()} acredita FALTA"
+			} else if(faltantes > maximosPermitidas){
+				log.info "FALTA por ${faltantes} CHECADAS FALTANTES"
 				it.comentario="FALTA POR ${faltantes} CHECADAS FALTANTES "
 				it.tipo='FALTA'
 			} else {
 				log.info " Procesando minutos no laborados por ${faltantes} checadas faltantes"
-				actualizarMinutosNolaborados(it)
+				actualizarMinutosNolaborados(it,faltantes)
 			}
 		}
 		return asistencia
@@ -81,10 +82,19 @@ class ProcesadorDeChecadasFaltantes {
 				det.minutosNoLaborados = getMinutos(turno.entrada1, turno.salida2)
 				return
 			}
-			if(!det.salida2) {
-				det.minutosNoLaborados = getMinutos(turno.entrada2, turno.salida2) 
+			if(!det.entrada2 && !det.salida2){
+				det.minutosNoLaborados = getMinutos(salida1, turno.salida2)
 				return
 			}
+			if(!det.salida1 && !det.salida2){
+				det.minutosNoLaborados = getMinutos(entrada2, turno.salida2) + 60 
+				return
+			}
+			if(!det.entrada1 && !det.entrada2){
+				det.minutosNoLaborados = getMinutos(turno.entrada1, salida1) + 60 
+				return
+			}
+			
 			if(!det.entrada2 && !det.salida2 ){
 				det.minutosNoLaborados = getMinutos(salida1,turno.salida2)
 				return
@@ -97,6 +107,8 @@ class ProcesadorDeChecadasFaltantes {
 				det.minutosNoLaborados = 60
 				return		
 			}
+
+			
 		}
 		if(faltantes == 1) {
 
@@ -117,7 +129,7 @@ class ProcesadorDeChecadasFaltantes {
 		
 	}
 
-	det getMinutos(LocalTime start, LocalTime end) {
+	def getMinutos(LocalTime start, LocalTime end) {
 		return Minutes.minutesBetween(start, end).getMinutes() 
 	}
 }
