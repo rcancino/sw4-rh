@@ -40,9 +40,17 @@
 					<li>
 						<a  data-toggle="modal"	data-target="#cumpleaniosForm"> Cumpleaños	</a>
 					</li>
+					<li>
+							<g:jasperReport
+          						jasper="${'EmpleadosCalificaciones'}"
+          						format="PDF"
+          						name="Calificacion">
+    						</g:jasperReport>
+					</li>
 				</ul>
 				</div>
 		</div>
+		
 		<g:render template="empleados"/>
 	    <g:render template="dialogCumple"/>
 		

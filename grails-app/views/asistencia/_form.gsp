@@ -53,7 +53,7 @@
 	<div class="col-md-6">
 		<g:form class="form-horizontal">
 			<div class="form-group">
-   				<label class="col-sm-3 control-label">Retardo menor</label>
+   				<label class="col-sm-3 control-label">Ret Menor</label>
     			<div class="col-sm-3">
       				<p class="form-control-static ">
       					<strong>${asistenciaInstance.retardoMenor}</strong>
@@ -61,7 +61,7 @@
       					</span>
       				--%></p>
     			</div>
-    			<label class="col-sm-3 control-label">Retardo mayor</label>
+    			<label class="col-sm-3 control-label">Retardo</label>
     			<div class="col-sm-3">
       				<p class="form-control-static">
       					<strong>${asistenciaInstance.retardoMayor}</strong>
@@ -80,7 +80,7 @@
       					<%--<span class="label label-warning"></span>
       				--%></p>
     			</div>
-    			<label class="col-sm-3 control-label">Ret may com</label>
+    			<label class="col-sm-3 control-label">Ret Comida</label>
     			<div class="col-sm-3">
     				<p class="form-control-static">
     					<strong>${asistenciaInstance.retardoComida}</strong>

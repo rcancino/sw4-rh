@@ -9,6 +9,7 @@
 	<content tag="reporteTitle">
 		Reporte de Incapacidades SUA
 	</content>
+	
 	<content tag="reportForm">
 		<g:hasErrors bean="${reportCommand}">
             <div class="alert alert-danger">
@@ -17,7 +18,7 @@
         </g:hasErrors>
 		<div class="col-sm-6">
 		
-		<g:form action="reportePorPeriodo" class="form-horizontal">
+		<g:form action="incapacidades" class="form-horizontal">
 			<g:hiddenField name="reportName" value="Incapacidades"/>
 			<fieldset>
 				<legend> Parámetros</legend>

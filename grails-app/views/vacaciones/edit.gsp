@@ -5,8 +5,18 @@
 </head>
 <body>
 	<div class="container">
+
+		
+		
+			<g:if test="${flash.error}">
+					<div class="alert alert-danger">
+						<h4 class="text-center">${flash.error}</h4>
+					</div>
+				</g:if>
+		
 	
 		<div class="row">
+		
 			<ul class="nav nav-tabs">
 				<li>
 					<g:link action="index" class="list-group-item" params="[tipo:tipo]">

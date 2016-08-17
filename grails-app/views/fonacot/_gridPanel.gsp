@@ -13,7 +13,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<g:each in="${fonacotInstanceList?.sort{it.empleado.nombre}}" var="row">
+		<g:each in="${fonacotInstanceList}" var="row">
 			<tr>
 				<td>
 					<g:link action="show" id="${row.id}">
@@ -40,6 +40,3 @@
 		</g:each>
 	</tbody>
 </table>
-<div class="pagination">
-	<g:paginate total="${prestamoInstanceCount ?: 0}" />
-</div>

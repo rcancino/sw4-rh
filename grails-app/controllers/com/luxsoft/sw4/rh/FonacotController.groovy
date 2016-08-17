@@ -11,6 +11,16 @@ class FonacotController {
 
     def fonacotService
 
+    def index(Integer max) {
+        
+        params.max = Math.min(max ?: 500, 1000)
+        def ejercicio=session.ejercicio
+        //def tipo=params.tipo?:'QUINCENAL'
+        def list=Fonacot.findAll("from Fonacot i   order by i.id desc")
+        
+        [fonacotInstanceList:list,prestamoInstanceCount:list.size()]
+    }
+
     def save(Fonacot fonacotInstance){
     	log.info 'Salvando  prestamo fonacot: '+fonacotInstance
     	fonacotInstance.retencionDiaria=0.0

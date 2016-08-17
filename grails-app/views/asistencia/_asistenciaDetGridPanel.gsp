@@ -10,9 +10,9 @@
 			<th><g:message code="asistenciaDet.entrada2.label" default="Ent 2"/></th>
 			<th><g:message code="asistenciaDet.salida2.label" default="Sal 2"/></th>
 			<th><g:message code="asistenciaDet.retardoMenor.label" default="Ret men"/></th>
-			<th><g:message code="asistenciaDet.retardoMayor.label" default="Ret may"/></th>
+			<th><g:message code="asistenciaDet.retardoMayor.label" default="Retardo"/></th>
 			<th>RMen(Com)</th>
-			<th>RMay(Com)</th>
+			<th>Ret(Com)</th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Min NL"/></th>
 			<th><g:message code="asistenciaDet.retardoComida.label" default="Hrs Tr"/></th>
 			<th><g:message code="asistenciaDet.comentario.label" default="Comentario"/></th>

@@ -486,7 +486,8 @@ def reportePorPeriodo(PeriodoCommand command){
 	if(command.hasErrors()){
 		log.info 'Errores de validacion al ejecurar reporte: '+ params
 		render view:WordUtils.uncapitalize(params.reportName),model:[reportCommand:command]
-		return [reportCommand:command]
+		//return [reportCommand:command]
+		return
 	}
 	def repParams=[:]
 	repParams['FECHA_INI']=command.fechaInicial
@@ -496,6 +497,25 @@ def reportePorPeriodo(PeriodoCommand command){
 	render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
 		,fileName:repParams.reportName+".pdf")
 }
+
+def incapacidades(PeriodoCommand command){
+		if(request.method=='GET'){
+			return [reportCommand:new PeriodoCommand()]
+		}
+		command.validate()
+		if(command.hasErrors()){
+			log.info 'Errores de validacion al ejecurar reporte'
+			render view:'incapacidades',model:[reportCommand:command]
+			return
+		}
+		def repParams=[:]
+		repParams['FECHA_INICIAL']=command.fechaInicial
+		repParams['FECHA_FINAL']=command.fechaFinal
+		repParams.reportName=params.reportName?:'FaltaNombre Del Reporte'
+		ByteArrayOutputStream  pdfStream=runReport(repParams)
+		render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+			,fileName:repParams.reportName+".pdf")
+	}
 
 private runReport(Map repParams){
 	log.info 'Ejecutando reporte  '+repParams

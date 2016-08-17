@@ -19,7 +19,7 @@ class ProcesadorDeChecadasFaltantes {
 	
 	def procesar(Asistencia asistencia) {
 		log.debug 'Procesando checadas faltantes para: '+asistencia.empleado+"  Periodo: "+asistencia.periodo
-		asistencia.partidas.findAll{it.tipo!='DESCANSO' && it.tipo!= 'FALTA'}.each{ it -> //Iteracion dia por dia
+		asistencia.partidas.findAll{it.tipo=='ASISTENCIA'}.each{ it -> //Iteracion dia por dia
 
 			def turnoDet=it.turnoDet
 			def tipo = it.tipo
@@ -45,7 +45,7 @@ class ProcesadorDeChecadasFaltantes {
 				if(it.salida2) checadas ++
 			} else { // Sabado
 				checadasRequeridas = 2
-				maximosPermitidas = 0
+				maximosPermitidas = 1
 				if(it.entrada1) checadas ++
 				if(it.salida1) checadas ++
 			}
@@ -65,6 +65,7 @@ class ProcesadorDeChecadasFaltantes {
 				actualizarMinutosNolaborados(it,faltantes)
 			}
 		}
+		asistencia.minutosNoLaborados=asistencia.partidas.sum 0,{it.minutosNoLaborados}
 		return asistencia
 	}
 
@@ -77,7 +78,7 @@ class ProcesadorDeChecadasFaltantes {
 		LocalTime salida2 = det.salida2 ? LocalTime.fromDateFields(det.salida2) : null
 		
 		if(faltantes == 2){
-			
+			/*
 			if(!det.entrada1 && !det.salida2){
 				det.minutosNoLaborados = getMinutos(turno.entrada1, turno.salida2)
 				return
@@ -107,11 +108,12 @@ class ProcesadorDeChecadasFaltantes {
 				det.minutosNoLaborados = 60
 				return		
 			}
-
+			*/
+			det.minutosNoLaborados += 120
 			
 		}
 		if(faltantes == 1) {
-
+			/*
 			if(!det.salida1 || !det.entrada2){
 				det.minutosNoLaborados = 60
 				return		
@@ -125,6 +127,8 @@ class ProcesadorDeChecadasFaltantes {
 				det.minutosNoLaborados = getMinutos(entrada2, turno.salida2) 
 				return		
 			}
+			*/
+			det.minutosNoLaborados += 60
 		}
 		
 	}

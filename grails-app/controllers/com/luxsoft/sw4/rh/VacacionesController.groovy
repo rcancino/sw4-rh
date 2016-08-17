@@ -3,6 +3,8 @@ package com.luxsoft.sw4.rh
 import static org.springframework.http.HttpStatus.*
 
 import com.luxsoft.sw4.Autorizacion;
+import groovy.sql.Sql
+import java.text.SimpleDateFormat
 
 import grails.plugin.springsecurity.annotation.Secured;
 import grails.transaction.Transactional
@@ -12,6 +14,8 @@ import grails.transaction.Transactional
 class VacacionesController {
 
 	def vacacionesService
+
+	def dataSource
 	
 	def index(Integer max) {
 		
@@ -55,6 +59,7 @@ class VacacionesController {
 			notFound()
 			return
 		}
+		flash.error=''
 		def ejercicio=session.ejercicio
 		def tipo=vacacionesInstance.empleado.salario.periodicidad=='SEMANAL'?'SEMANA':'QUINCENA'
 		def periodos=CalendarioDet.findAll{calendario.ejercicio==ejercicio && calendario.tipo==tipo}
@@ -88,14 +93,32 @@ class VacacionesController {
 		}
 		def dia=params.date('fecha', 'dd/MM/yyyy')
 
-		if(dia) {
+		SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd")
+
+		def dia1=df.format(dia)
+
+
+		def found
+		Sql sql=new Sql(dataSource)
+		sql.eachRow("select v.empleado_id from Vacaciones v join Vacaciones_dias d on (v.id=d.vacaciones_id) where v.empleado_id=? and date(d.dias_date) = ?",[vacacionesInstance.empleado.id,dia1]){
+			found=it
+		}
+			
+
+		if(dia && !found ) {
 			vacacionesInstance.addToDias(dia)
 			vacacionesInstance.save flush:true
 			//event('VacacionesTopic',vacacionesInstance.id)
 			if(vacacionesInstance.control)
 				vacacionesService.actualizarControl(vacacionesInstance.control)
 			flash.message="Fecha agregada"
+			flash.error=''
 		}
+		if(found)
+		{
+			flash.error="el ${dia1} ya esta asignado en vacaciones"
+		}
+
 		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
 	}
 	
@@ -109,6 +132,7 @@ class VacacionesController {
 			if(vacacionesInstance.control)
 				vacacionesService.actualizarControl(vacacionesInstance.control)
 			flash.message="Fecha eliminada"
+			flash.error=""
 		}
 		respond vacacionesInstance,[view:'edit',model:[tipo:vacacionesInstance.empleado.salario.periodicidad]]
 	}

@@ -326,23 +326,29 @@ class AsistenciaService {
 			if(salidaOficial){
 				
 				def salidaRegistrada=turnoDet.salida2?it.salida2:it.salida1
+				def salidaRegistradaFaltante=turnoDet.salida2?it.salida2:it.salida1
 				
-				if(salidaRegistrada==null)
+				if(salidaRegistrada==null){
 					//salidaRegistrada=it.salida1
 					salidaRegistrada=it.entrada2?it.entrada2:it.salida1
+
+				}
+					
 					
 				if(salidaRegistrada){
 					
 					LocalTime salida=LocalTime.fromDateFields(salidaRegistrada)
 					def horas=salidaOficial.getHourOfDay()- salida.getHourOfDay()
-					def minutos=salidaOficial.getMinuteOfHour() - salida.getMinuteOfHour()
-					
+					def minutos=salidaOficial.getMinuteOfHour() - salida.getMinuteOfHour()		
+
 					def salidaAnticipada=horas*60+minutos
 					
-					if(salidaAnticipada>0){
-						it.minutosNoLaborados+=salidaAnticipada
+					if(salidaRegistradaFaltante!=null && salidaAnticipada>0){
+					it.minutosNoLaborados+=salidaAnticipada
 					}
+
 				}
+				
 			}
 			
 			if(diaFestivo && !diaFestivo.parcial){

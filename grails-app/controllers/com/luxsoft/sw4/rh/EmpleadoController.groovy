@@ -83,7 +83,7 @@ class EmpleadoController {
 		try {
 			def found=Empleado.findByRfc(empleado.rfc)
 			if(found){
-				flash.message="RFC Ya está asignado a: "+found.nombre
+				flash.message="RFC Ya est asignado a: "+found.nombre
 				render view:'create' ,model:[empleadoInstance:empleado,edit:true]
 				return
 			}

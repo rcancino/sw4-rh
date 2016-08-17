@@ -126,6 +126,21 @@ class ModificacionSalarialController {
 		
 		
 	}
+
+
+
+	def modifcacionSalarialReport(EjercicioBimestreReportCommand command){
+			def repParams=[:]
+			repParams['EJERCICIO']=command.ejercicio
+			repParams['BIMESTRE']=command.bimestre
+			repParams['INICIA']=command.inicia
+			repParams.reportName='SdiModificacionSalario.pdf'
+			ByteArrayOutputStream  pdfStream=runReport(repParams)
+			render(file: pdfStream.toByteArray(), contentType: 'application/pdf'
+				,fileName:repParams.reportName)
+		}
+
+
 	
 
 	
@@ -146,7 +161,6 @@ class ModificacionSalarialController {
 
 
 
-
 import groovy.transform.ToString
 import grails.validation.Validateable
 
@@ -162,4 +176,19 @@ class ModificacionSearch{
 	@BindingFormat('dd/MM/yyyy')
 	Date fechaFinal
 	
+}
+
+@Validateable
+class EjercicioBimestreReportCommand{
+	
+	
+	Integer bimestre
+	Integer ejercicio
+	Date inicia
+	
+	static constraints={
+		ejercicio inList:2014..2025
+		bimestre inList:['1','2','3','4','5','6']
+		
+	}
 }
