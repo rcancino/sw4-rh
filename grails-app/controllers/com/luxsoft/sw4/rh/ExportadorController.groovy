@@ -101,7 +101,7 @@ class ExportadorController {
 				def decimalAbono=formatoDec.format(it.total-importeInd).replace('.','').padRight(2,"0")
 				def importeAbono= importeAbonos+""+decimalAbono
 				def tipoCtaInd="03"
-				if(it.empleado.id==280 || it.empleado.id==260 ||  it.empleado.id==245)
+				if(it.empleado.id==280 || it.empleado.id==260 ||  it.empleado.id==245 || it.empleado.id==271)
 				 	tipoCtaInd="01"
 				def claveSucInd="0270"
 				
@@ -115,6 +115,9 @@ class ExportadorController {
 					claveSucInd="0269"
 					tipoCtaInd="01"
 				}
+
+				if(it.empleado.id==271 )
+					claveSucInd="7002"
 				
 				def numCtaInd=it.empleado.salario.clabe.padLeft(20,"0")
 				def referencia="0000000001".padRight(40)
@@ -1533,7 +1536,7 @@ def generarIncapacidadesSuaDet(PeriodoCommand command){
  
     
     def numSeguridadSocial=SeguridadSocial.findByEmpleado(calculo.empleado).numero.replace('-','')
-    def tipoMov="12"
+    def tipoMov="4"
     def fechaI=df.format(calculo.fechaInicial)
     def fechaF=df.format(calculo.fechaFinal)
     def folioInc= calculo.referenciaImms.padLeft(8)

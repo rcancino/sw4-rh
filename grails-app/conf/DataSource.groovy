@@ -22,7 +22,7 @@ environments {
            //dbCreate = "update"
 			dbCreate="update"
 		 //url="jdbc:mysql://localhost/rhkyo?autoReconnect=true"
-			url="jdbc:mysql://localhost/rh?autoReconnect=true"
+			url="jdbc:mysql://10.10.1.76/rh?autoReconnect=true"
 		  //url = "jdbc:mysql://10.10.1.228/rh?autoReconnect=true"
 			//url="jdbc:mysql://10.10.6.1/rh?autoReconnect=true" //Kyo
             driverClassName = "com.mysql.jdbc.Driver"

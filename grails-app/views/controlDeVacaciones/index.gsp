@@ -49,7 +49,7 @@
 						</button>
 						<ul class="dropdown-menu">
 							<li>
-								<g:jasperReport jasper="ControlDeVacaiones"
+								<g:jasperReport jasper="ControlDeVacaciones"
 										format="PDF" name="General">
 									<g:hiddenField name="EJERCICIO" 
 											value="${ejercicio}" />

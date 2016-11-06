@@ -33,7 +33,7 @@ class ProcesadorDeChecadasFaltantes {
 			if(diaFestivo && diaFestivo.parcial) {
 
 				checadasRequeridas = 2
-				maximosPermitidas = 0
+				maximosPermitidas = 1
 				if(it.entrada1) checadas ++
 				if(it.salida1) checadas ++
 					

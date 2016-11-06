@@ -130,7 +130,7 @@ class CfdiService {
 					  //diasTrabajados=nominaEmpleado.diasDelPeriodo-(nominaEmpleado.faltas+ nominaEmpleado.fraccionDescanso + nominaEmpleado.incapacidades)
 					  diasTrabajados=nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones				 
 				  	}else{
-				  		diasTrabajados=nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones //-(nominaEmpleado.asistencia.faltasManuales+nominaEmpleado.incapacidades)
+				  		diasTrabajados=nominaEmpleado.diasTrabajados+nominaEmpleado.vacaciones+nominaEmpleado.asistencia.paternidad //-(nominaEmpleado.asistencia.faltasManuales+nominaEmpleado.incapacidades)
 				  	}
 				}		
      		}

@@ -26,12 +26,12 @@
 	<parameter name="COMPANY" isForPrompting="false" class="java.lang.String">
 		<defaultValueExpression ><![CDATA["PAPEL S.A. DE C.V."]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FECHA_INI" isForPrompting="false" class="java.util.Date"/>
-	<parameter name="FECHA_FIN" isForPrompting="false" class="java.util.Date"/>
-	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.Integer"/>
+	<parameter name="EJERCICIO" isForPrompting="true" class="java.lang.String"/>
 	<queryString><![CDATA[SELECT substr(s.periodicidad,1,1) as per,u.clave as ubicacion,e.id,e.clave,concat(ifnull(e.apellido_paterno,''),' ',ifnull(e.apellido_materno,''),' ',ifnull(e.nombres,'')) as nombre,e.alta,e.status,b.fecha as baja
 ,round((TO_DAYS((case when b.fecha is null or b.fecha<e.alta then current_date else b.fecha end))-TO_DAYS(e.alta))/(365),2) AS anios
 ,c.antiguedad_years,c.dias_trasladados,c.dias_vacaciones,c.dias_tomados,c.dias_pagados,(c.dias_trasladados+c.dias_vacaciones-c.dias_tomados-c.dias_pagados) as saldo
+,(SELECT count(*) FROM vacaciones v join vacaciones_dias d on(v.id=d.vacaciones_id) where v.empleado_id=e.id and year(d.dias_date) =$P{EJERCICIO} ) as diasTmNom
+,c.dias_tomados-(SELECT count(*) FROM vacaciones v join vacaciones_dias d on(v.id=d.vacaciones_id) where v.empleado_id=e.id and year(d.dias_date) =$P{EJERCICIO} ) as diasDif
 FROM control_de_vacaciones c
 join empleado e on (c.empleado_id=e.id) join salario s on(s.empleado_id=e.id)
  join perfil_de_empleado p on (p.empleado_id=e.id) join ubicacion u on (p.ubicacion_id=u.id)
@@ -55,6 +55,8 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 	<field name="dias_tomados" class="java.lang.Integer"/>
 	<field name="dias_pagados" class="java.lang.Integer"/>
 	<field name="saldo" class="java.lang.Long"/>
+	<field name="diasTmNom" class="java.lang.Long"/>
+	<field name="diasDif" class="java.lang.Long"/>
 
 
 		<group  name="SUCURSAL" isStartNewPage="true" >
@@ -145,7 +147,7 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-Oblique" size="10" isBold="false" isItalic="true" isUnderline="true" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -313,7 +315,7 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double($P{EJERCICIO}.doubleValue()-1.0)]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[new Double(new Double($P{EJERCICIO}).doubleValue()-1.0)]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -347,7 +349,7 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -419,7 +421,7 @@ left join baja_de_empleado b on(b.empleado_id=e.id)
 					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" lineSpacing="Single">
 						<font fontName="Arial" pdfFontName="Helvetica-BoldOblique" size="7" isBold="true" isItalic="true" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Integer"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{EJERCICIO}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
