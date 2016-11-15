@@ -113,6 +113,33 @@
                     </div>
                 </div>
           </div>
+
+          <div class="panel panel-default">
+          <div class="panel-heading" role="tab" id="headingTwo">
+              <h4 class="panel-title">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapse3">
+                    Certificado PFX
+                </a>
+              </h4>
+          </div>
+          <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+              <div class="panel-body">
+                <div class="form-group">
+                  <textarea name="certificadoPfx" rows="8" cols="50" class="form-control" disabled>
+                    ${empresaInstance.getCertificadoPfx()}
+                  </textarea>
+                </div>
+                    <g:uploadForm class="form-inline" action="registrarCertificadoPfx" id="${empresaInstance.id}">
+                      <div class="form-group">
+                          <label for="inputFile">Actualizar archivo</label>
+                          <input type="file" name="file" autocomplete="off" class="form-control ">
+                       </div> 
+                      <g:submitButton class="btn btn-primary" name="aceptar"value="Aceptar" />
+                    </g:uploadForm>
+              </div>
+          </div>
+        </div>
+        
           </div>
 
         
